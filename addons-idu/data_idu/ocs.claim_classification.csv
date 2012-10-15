@@ -1,0 +1,101 @@
+id,code,name,parent_id/id,enabled
+__export__.cso_category_1,1,Mantenimiento Malla Vial Arterial e Intermedia (IDU),,True
+__export__.cso_category_2,2,Huecos Malla Vial  Arterial e Intermedia (IDU),,True
+__export__.cso_category_3,3,Consulta Proyectos de Infraestructura (IDU),,True
+__export__.cso_category_4,4,Contribución de Valorización (IDU),,True
+__export__.cso_category_5,5,Obras de infraestructura en ejecución (IDU),,True
+__export__.cso_category_6,6,Obras IDU en Espacio público,,True
+__export__.cso_category_7,7,Predios para obras de Infraestructura IDU,,True
+__export__.cso_category_8,8,Seguridad ciudadana en obras IDU,,True
+__export__.cso_category_9,9,Impacto socioeconómico por obras IDU,,True
+__export__.cso_category_10,10,Accesibilidad personas en condiciones de discapacidad (Obras IDU),,True
+__export__.cso_category_11,11,Componente social  (obras IDU),,True
+__export__.cso_category_12,12,Componente ambiental  (obras IDU),,True
+__export__.cso_category_13,13,Componente Seguridad Industrial y Salud Ocupacional - SISO  (obras IDU),,True
+__export__.cso_category_14,14,Imagen Institucional IDU,,True
+__export__.cso_category_15,15,Trámites laborales internos,,True
+__export__.cso_category_16,16,Trámites a cargo de otras entidades remitidos a IDU,,True
+__export__.cso_category_17,17,Trámites administrativos externos,,True
+__export__.cso_category_18,18,Información sobre Trámites y Servicios,,True
+__export__.cso_category_19,19,Queja contra servidores públicos IDU,,True
+__export__.cso_category_20,20,Denuncias sobre actuación IDU,,True
+__export__.cso_category_21,1.1,Malla Vial Arterial,__export__.cso_category_1,True
+__export__.cso_category_22,1.2,Malla Vial Intermedia,__export__.cso_category_1,True
+__export__.cso_category_23,1.3,Malla Vial Local Convenios IDU,__export__.cso_category_1,True
+__export__.cso_category_24,2.1,Daños causados por huecos,__export__.cso_category_2,True
+__export__.cso_category_25,2.2,Reporte de huecos,__export__.cso_category_2,True
+__export__.cso_category_26,3.1,Reserva Vial,__export__.cso_category_3,True
+__export__.cso_category_27,3.2,Solicitud de Información de Futuros Proyectos ,__export__.cso_category_3,True
+__export__.cso_category_28,4.1,Actualización de datos,__export__.cso_category_4,True
+__export__.cso_category_29,4.2,Facilidades de pago y/ó Cobro Coactivo,__export__.cso_category_4,True
+__export__.cso_category_30,4.3,Devoluciones,__export__.cso_category_4,True
+__export__.cso_category_31,4.4,Estados de Cuenta,__export__.cso_category_4,True
+__export__.cso_category_32,4.5,Certificado para Trámite Notarial,__export__.cso_category_4,True
+__export__.cso_category_33,4.6,"Levantamiento de Gravamen, de Embargo o Terminación Proceso Ejecutivo",__export__.cso_category_4,True
+__export__.cso_category_34,4.7,Recursos Contra la Liquidación de Valorización,__export__.cso_category_4,True
+__export__.cso_category_35,4.8,Solicitud de Englobe ó Desenglobe,__export__.cso_category_4,True
+__export__.cso_category_36,4.9,Facturación,__export__.cso_category_4,True
+__export__.cso_category_37,4.10,Solicitudes de juzgados por Temas de Valorización,__export__.cso_category_4,True
+__export__.cso_category_38,4.11,Cobro de remanentes,__export__.cso_category_4,True
+__export__.cso_category_39,5.1,Actas de vecindad,__export__.cso_category_5,True
+__export__.cso_category_40,5.2,Daños a Predios por Obra,__export__.cso_category_5,True
+__export__.cso_category_41,5.3,Movilidad por Obras,__export__.cso_category_5,True
+__export__.cso_category_42,5.4,Cronograma de obra,__export__.cso_category_5,True
+__export__.cso_category_43,5.5,Proceso Contractual de las Obras de Infraestructura,__export__.cso_category_5,True
+__export__.cso_category_44,5.6,Solicitud Visita Técnica,__export__.cso_category_5,True
+__export__.cso_category_45,5.7,Sumideros,__export__.cso_category_5,True
+__export__.cso_category_46,5.8,Reconexión de Servicios Públicos,__export__.cso_category_5,True
+__export__.cso_category_47,5.9,Tala de Árboles en Obras IDU,__export__.cso_category_5,True
+__export__.cso_category_48,6.1,Andenes,__export__.cso_category_6,True
+__export__.cso_category_49,6.2,Antejardines,__export__.cso_category_6,True
+__export__.cso_category_50,6.3,Ciclo Ruta,__export__.cso_category_6,True
+__export__.cso_category_51,6.4,Fondo de Compensación de Parqueaderos,__export__.cso_category_6,True
+__export__.cso_category_52,6.5,Licencias de Excavación,__export__.cso_category_6,True
+__export__.cso_category_53,6.6,Mantenimiento Espacio Público,__export__.cso_category_6,True
+__export__.cso_category_54,6.7,Mobiliario Urbano,__export__.cso_category_6,True
+__export__.cso_category_55,6.8,Permiso de Uso Temporal de Espacio Público,__export__.cso_category_6,True
+__export__.cso_category_56,6.9,Puentes Peatonales,__export__.cso_category_6,True
+__export__.cso_category_57,7.1,Administración y Vigilancia de Predios ,__export__.cso_category_7,True
+__export__.cso_category_58,7.2,Avería de Predios por Demolición,__export__.cso_category_7,True
+__export__.cso_category_59,7.3,Adquisición Predial,__export__.cso_category_7,True
+__export__.cso_category_60,7.4,Gestión Social en Predios,__export__.cso_category_7,True
+__export__.cso_category_61,7.5,Afectación Vial,__export__.cso_category_7,True
+__export__.cso_category_62,8.1,Vandalismo e Inseguridad por Obra,__export__.cso_category_8,True
+__export__.cso_category_63,8.2,Daños Causados por Maquinaria y/o Equipos,__export__.cso_category_8,True
+__export__.cso_category_64,8.3,Deficiente Señalización,__export__.cso_category_8,True
+__export__.cso_category_65,8.4,Mala Ubicación de Senderos Peatonales,__export__.cso_category_8,True
+__export__.cso_category_66,9.1,Baja en ventas y/o Cierre de Locales,__export__.cso_category_9,True
+__export__.cso_category_67,9.2,Dificultad en el Acceso de la Mercancía y/o Daño de la Misma.,__export__.cso_category_9,True
+__export__.cso_category_68,10.1,Accesibilidad Deficiente,__export__.cso_category_10,True
+__export__.cso_category_69,10.2,Accidentes,__export__.cso_category_10,True
+__export__.cso_category_70,11.1,Atención Puntos CREA,__export__.cso_category_11,True
+__export__.cso_category_71,11.2,Control Social,__export__.cso_category_11,True
+__export__.cso_category_72,11.3,Invitaciones a reuniones con comunidad,__export__.cso_category_11,True
+__export__.cso_category_73,11.4,Participación Ciudadana,__export__.cso_category_11,True
+__export__.cso_category_74,12.1,Contaminación,__export__.cso_category_12,True
+__export__.cso_category_75,12.2,Directorio de proveedores ,__export__.cso_category_12,True
+__export__.cso_category_76,12.3,Disposición final de escombros de obras,__export__.cso_category_12,True
+__export__.cso_category_77,12.4,Información general ambiental,__export__.cso_category_12,True
+__export__.cso_category_78,13.1,Seguridad Industrial y Salud Ocupacional - SISO,__export__.cso_category_13,True
+__export__.cso_category_79,14.1,Información institucional publicada y divulgación ,__export__.cso_category_14,True
+__export__.cso_category_80,14.2,Atención  RED CADES,__export__.cso_category_14,True
+__export__.cso_category_81,14.3,Atención canales (OTC),__export__.cso_category_14,True
+__export__.cso_category_82,14.4,Atención Sedes IDU,__export__.cso_category_14,True
+__export__.cso_category_83,14.5,Felicitación por buena atención,__export__.cso_category_14,True
+__export__.cso_category_84,15.1,Trámites laborales personal de planta,__export__.cso_category_15,True
+__export__.cso_category_85,15.2,Trámites por prestación de servicios,__export__.cso_category_15,True
+__export__.cso_category_86,16.1,Empresas de Servicios Públicos,__export__.cso_category_16,True
+__export__.cso_category_87,16.2,Alcaldías Locales,__export__.cso_category_16,True
+__export__.cso_category_88,16.3,Unidad Administrativa Especial de Rehabilitación y Mantenimiento Vial-UAERMV,__export__.cso_category_16,True
+__export__.cso_category_89,16.4,Otras entidades,__export__.cso_category_16,True
+__export__.cso_category_90,17.1,Proveedores área administrativa,__export__.cso_category_17,True
+__export__.cso_category_91,17.2,Recepción obras de otras entidades,__export__.cso_category_17,True
+__export__.cso_category_92,17.3,Procesos de Selección,__export__.cso_category_17,True
+__export__.cso_category_93,18.1,Trámites y servicios ante el IDU,__export__.cso_category_18,True
+__export__.cso_category_94,18.2,Acciones jurídicas,__export__.cso_category_18,True
+__export__.cso_category_95,19.1,Agresión física y/o verbal de contratistas a la comunidad o actuación técnica indebida ,__export__.cso_category_19,True
+__export__.cso_category_96,19.2,Agresión física y/o verbal de funcionarios IDU a la comunidad o actuación técnica indebida ,__export__.cso_category_19,True
+__export__.cso_category_97,19.3,Agresión física  y/o verbal de interventores a la comunidad o actuación técnica indebida ,__export__.cso_category_19,True
+__export__.cso_category_98,20.1,No pago a trabajadores o subcontratistas,__export__.cso_category_20,True
+__export__.cso_category_99,20.2,Pérdida de materiales/daño de obra,__export__.cso_category_20,True
+__export__.cso_category_100,20.3,Tráfico de influencias,__export__.cso_category_20,True
