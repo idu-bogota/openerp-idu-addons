@@ -1,0 +1,9 @@
+<?php
+$openerp_server = 'http://localhost:8069/xmlrpc';
+$username = 'admin';
+$pwd = 'admin';
+$dbname = 'test';
+
+ini_set('include_path',dirname(__FILE__).'/../externals/zend/library');
+require_once 'Zend/Loader/Autoloader.php';
+Zend_Loader_Autoloader::getInstance();
