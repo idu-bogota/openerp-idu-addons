@@ -2,3 +2,4 @@
 externals/zend/
 phpWebServiceClient/config.inc.php
 externals/testmore-php/
+.settings/
