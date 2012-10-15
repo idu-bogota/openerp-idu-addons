@@ -6,7 +6,9 @@ Aquí se listan las instrucciones para instalar y configurar Eclipse como IDE pa
 Instalación en ubuntu 12.04
 ---------------------------
 *   Instalar eclipse y el soporte para GIT ejecutando
-    sudo apt-get install eclipse eclipse-egit
+
+        sudo apt-get install eclipse eclipse-egit
+
 *   Instalar el módulo PyDEV para desarrollo en Python
     * Ingresar a la opción del menú **Help > Install New Software**
     * En el cuadro de dialogo diligenciar **Work with:** con el valor http://pydev.org/updates y presionar la tecla **enter**
