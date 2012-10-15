@@ -1,0 +1,601 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+<menuitem name="Office of Citizen Service" id="menu_ocs"/>
+<menuitem name="Issues" id ="menu_ocs_issue" parent = "menu_ocs" sequence="1"/> 
+<menuitem name="Settings" id ="menu_ocs_settings" parent = "menu_ocs" sequence = "2"/>
+
+<!-- Point of citizen Service -->
+<record model="ir.ui.view" id="view_ocs_citizen_service_point_form">
+        <field name="name">ocs.citizen_service_point.form</field>
+        <field name="model">ocs.citizen_service_point</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Citizen Service Point">
+            	<field name="name" select="1"/>              
+                <field name="creation_date" select="0"/>                
+                <field name="close_date" select="0"/>
+                <field name="schedule" select="0"/>                       
+            </form>
+        </field>
+</record>    
+<record model="ir.ui.view" id="view_ocs_citizen_service_point_tree">
+        <field name="name">ocs.citizen_service_point.tree</field>
+        <field name="model">ocs.citizen_service_point</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Point of Citizen Service">
+                <field name="creation_date"/>
+                <field name="name"/>
+            </tree>
+        </field>
+</record>
+<record model="ir.actions.act_window" id="action_ocs_citizen_service_point">
+        <field name="name">Citizen Service Points</field>
+        <field name="res_model">ocs.citizen_service_point</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record> 
+<menuitem name="Citizen Service Point" id="menu_ocs_citizen_service_point" action="action_ocs_citizen_service_point" parent ="menu_ocs_settings" sequence="2" />
+
+<!-- res.partner.address -->
+
+<record model="ir.ui.view" id="view_res_partner_address_form_inherit">
+        <field name="name">res.partner.address.form.inherit</field>
+        <field name="model">res.partner.address</field>	    
+        <field name="type">form</field>
+		<field name="inherit_id" ref="geoengine_partner.geo_partner_address_view_form"/>
+        <field name="arch" type="xml">
+        <field name="name" position="after" >
+        	<field name="last_name" select ="1"/>
+        	<field name="gender" select ="0" />
+        	<newline />        
+        </field>
+        	<field name ="type" position ="replace"></field>
+		<field name="function" position="after">
+		  <newline />
+		  	 
+		     <field name="document_type" select="0"/>
+		     <field name="document_id" select="1"/>
+		</field>
+		<field name="email" position="before">		  
+		   <field name="facebook" select="0"/>         
+		   <field name="twitter" select="0"/>
+		</field>  
+		  <field name="zip" position="after">
+		  	<field name="neighborhood_id" select ="0"/>		  	
+		  	<field name="district_id" select ="0"/>
+		  </field>		
+        </field>
+</record> 
+
+
+<record model="ir.ui.view" id="view_res_partner_address_tree_ocs">
+        <field name="name">res.partner.address.tree.inherit_ocs</field>
+        <field name="model">res.partner.address</field>
+        <field name="type">tree</field>
+        <field name="inherit_id" ref="base.view_partner_address_tree"/>        	
+        <field name="arch" type="xml">           
+            <field name="name" position="replace"> 
+            	<field name="document_id" select ="1"/>
+	            <field name="full_name" select ="1"/>
+	            <field name="street"/>
+	            <field name="district_id"/>
+	        </field>
+	        <field name="partner_id" position="replace"></field>	        
+	        <field name="zip" position="replace"></field>
+	        <field name="city" position="replace"></field>
+	        <field name="country_id" position="replace"></field>
+	        <field name="type" position="replace"></field>
+        </field>
+</record>
+ 			<!--Search view --> 
+<record id="view_res_partner_address_search_ocs" model="ir.ui.view">
+            <field name="name">res.partner.address.select_ocs</field>
+            <field name="model">res.partner.address</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Contact">
+                    <group>
+                     <!--    <filter string="Document" name="customer" icon="terp-personal" domain="[('is_customer_add','=','1')]" />
+                        <filter string="Supplier" name="supplier"  icon="terp-personal" domain="[('is_supplier_add','=','1')]" /> -->
+                        <separator orientation="vertical"/>
+                        <field name="partner_id" string="Partner"/>
+                        <field name="name" />
+                        <field name="document_id"/>
+                        <field name="full_name" />
+                        <field name="country_id" />
+                    </group>
+                 </search>
+            </field>
+        </record> 
+ <!-- Form view  -->
+ 
+ <record model="ir.ui.view" id="view_res_partner_address_form_small">
+        <field name="name">res.partner.address.form.inherit_ocs_small</field>
+        <field name="model">res.partner.address</field>
+        <field name="priority" eval="10"/>
+        <field name="type">form</field>	
+        <field name="arch" type="xml">        
+            <form string="Citizens">            
+            	<group colspan="4" col="4">
+            	<separator string="Personal Information" colspan="4"/>         
+            		<field name="document_type"/>            	
+            		<field name="document_id"/>            	
+            		<field name="name"/>
+	            	<field name="last_name"/>
+	            	<field name="gender"/>
+	            </group>	            
+	            <group colspan="4" col="4">
+	            	<separator string="Job Information" colspan="4"/>	             
+	             	<field name="partner_id" colspan="2" context="{'form_view_ref' : 'view_ocs_res_partner_form_small','search_view_ref':'view_res_partner_address_search_ocs'}" />
+	             	<field name="function"/>
+	             	<field name="company_id" groups="base.group_multi_company" widget="selection" colspan="2"/>
+	             </group>	             
+	             <group colspan="2" col="2">
+	             	<separator string="Postal Address" colspan="4" col="4"/>
+	             	<field name="street"/>
+	             	<field name="neighborhood_id"/>	             	
+	             	<field name="district_id"/>  
+	             </group>	             	                        	
+	             <group colspan="2" col="2">
+	             	<separator string="Comunication" colspan="4" col="4"/>
+	             	<field name="phone"/> 
+	             	<field name="fax"/>	             	
+	             	<field name="mobile"/> 
+	             	<field name="email" widget="email"/>
+	             	<field name="facebook"/>
+	             	<field name="twitter"/>
+	             </group>	                   	           
+            </form>
+        </field>
+</record>
+
+<record model="ir.actions.act_window" id="action_ocs_res_partner_address">
+        <field name="name">Citizens</field>
+        <field name="res_model">res.partner.address</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form,tree</field>
+	<!-- />
+		<field name="view_id" ref="view_res_partner_address_tree_ocs"/>
+	-->
+		<field name="view_id" ref="view_res_partner_address_form_small"/>		
+		<field name="search_view_id" ref="view_res_partner_address_search_ocs"/>
+</record>
+    
+<menuitem name="Citizens" id="menu_ocs_res_partner_address" action="action_ocs_res_partner_address" parent ="menu_ocs_issue"/>        
+
+
+<!-- Neighborhood -->
+ <record model="ir.ui.view" id="view_ocs_neighborhood_form">
+        <field name="name">ocs.neighborhood.form</field>
+        <field name="model">ocs.neighborhood</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="ocs.neighborhood">                
+                <field name="code" select="0"/>
+                <field name="name" select="1"/>
+            </form>
+        </field>
+    </record>    
+    <record model="ir.ui.view" id="view_ocs_neighborhood">
+        <field name="name">ocs.neighborhood.tree</field>
+        <field name="model">ocs.neighborhood</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="ocs.neighborhood">
+                <field name="code"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>    
+    <record model="ir.actions.act_window" id="action_ocs_neighborhood">
+        <field name="name">Neighborhood</field>
+        <field name="res_model">ocs.neighborhood</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,geoengine</field>
+    </record>
+<menuitem name="Neighborhood" id="menu_ocs_neighborhood" action="action_ocs_neighborhood" parent ="menu_ocs_settings" sequence = "6"/>                
+
+<!-- District -->
+
+<record model="ir.ui.view" id="view_ocs_district_form">
+        <field name="name">ocs.district.form</field>
+        <field name="model">ocs.district</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="ocs.district">              
+                <field name="code" select="0"/>
+                <field name="name" select="1"/>             
+            </form>
+        </field>
+</record>
+
+<record model="ir.ui.view" id="view_ocs_district_tree">
+        <field name="name">ocs.district.tree</field>
+        <field name="model">ocs.district</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="ocs.district">
+                <field name="code"/>
+                <field name="name"/>                  
+            </tree>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_ocs_district">
+        <field name="name">Locality</field>
+        <field name="res_model">ocs.district</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,geoengine</field>
+    </record>
+<menuitem name="Districts" id="menu_ocs_district" action="action_ocs_district" parent ="menu_ocs_settings" sequence = "7"/>
+
+<!-- SubDistrict  -->
+<record model="ir.ui.view" id="view_ocs_sub_district_form">
+        <field name="name">ocs.sub_district.form</field>
+        <field name="model">ocs.sub_district</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="ocs.sub_district">
+                <field name="code" select="1"/>
+                <field name="name" select="1"/>                           
+            </form>
+        </field>
+</record>
+<record model="ir.ui.view" id="view_ocs_sub_district_tree">
+        <field name="name">ocs.sub_district.tree</field>
+        <field name="model">ocs.sub_district</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="ocs.sub_district">
+                <field name="name"/>
+                <field name="code"/>                                  
+            </tree>
+        </field>
+</record>    
+<record model="ir.actions.act_window" id="action_ocs_sub_district">
+        <field name="name">Sub District</field>
+        <field name="res_model">ocs.sub_district</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,geoengine</field>
+</record>
+<menuitem name="Sub District" id="menu_ocs_sub_district" action="action_ocs_sub_district" parent ="menu_ocs_settings" sequence = "8"/>
+
+
+<!-- Classification -->
+<record model="ir.ui.view" id="view_ocs_claim_classification_form">
+        <field name="name">ocs.claim_classification.form</field>
+        <field name="model">ocs.claim_classification</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Claim Classification">
+                <field name="id" select="0"/>
+                <field name="code" select="0"/>
+                <field name="name" select="1"/>                                
+                <field name="parent_id" select ="1" />
+                <field name="enabled" select="0"/>                           
+            </form>
+        </field>
+</record>
+<record model="ir.ui.view" id="view_ocs_claim_classification_tree">
+        <field name="name">ocs.claim_classification.tree</field>
+        <field name="model">ocs.claim_classification</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Claim Classification">               
+                <field name="code"/>
+                <field name="name"/>    
+                <field name="parent_id"/>
+                 <field name="enabled"/>                                 
+            </tree>
+        </field>
+</record>
+<record model="ir.actions.act_window" id="action_ocs_claim_classification">
+        <field name="name">Claim_Classification</field>
+        <field name="res_model">ocs.claim_classification</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+<menuitem name="Classification" id="menu_ocs_claim_classification" action="action_ocs_claim_classification" parent ="menu_ocs_settings" sequence = "2"/>
+
+<!-- Claims -->
+<record model="ir.ui.view" id="view_ocs_claim_form_inherit">
+        <field name="name">crm.claim.form.inherit</field>
+        <field name="model">crm.claim</field>	
+        <field name="type">form</field>
+		<field name="inherit_id" ref="crm_claim.crm_case_claims_form_view"/>
+        <field name="arch" type="xml">
+            <field name="state" position="replace" ></field>
+        	<field name ="name" position="before">
+           		<group col="8" colspan="4">
+                	<field name="state" select="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>                                    
+            	</group>           
+           </field>
+                     	
+        	<field name="date" position="replace">
+        		<field name="create_date" select="0" />
+        	</field>
+        	
+        	<field name="section_id" position="replace">
+        		<field name="csp_id" select ="0" widget="selection"/>
+        	</field>  
+        	      
+        	<field name="stage_id" position="replace">
+        		<field name="id" select ="1"/>
+        	</field>
+        	
+        	<button name="stage_previous" position="replace">        		        	 	        	 	
+        	</button>
+        	
+            <button name="stage_next" position="replace"></button>
+             
+            <field name="date_deadline" position="after">
+            	<group colspan="1" col="6">
+        			<field name="external_dms_id" select ="0"/>
+        	 		<field name="external_id" select ="0"/>
+        		</group>  
+            </field>
+                       	
+            <field name="user_fault" position="replace" >            	
+            	<field name="channel" select ="0" widget="selection"/>            	
+            </field> 
+            
+            <field name="ref" position="replace">
+            	 	<field name="classification_id" select ="0"/> 
+            		<field name="sub_classification_id" select="0"/>
+            </field>
+            <field name="partner_id" position="replace">
+            	<field name="partner_id" colspan="2" context="{'form_view_ref' : 'view_ocs_res_partner_form_small'}"
+            	on_change="onchange_partner_id(partner_id)" />
+            </field>
+            <field name="partner_address_id" position ="replace">
+            	<field name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)" 
+            	context="{'form_view_ref' : 'ocs.view_res_partner_address_form_small'}"/>
+            </field>            
+                       
+            <separator colspan="4" string="Claim/Action Description" position="after">            	
+            		<field name="claim_address" select ="0"/>            		
+            		<newline />
+            		<group colspan="6" col="6" />
+            		<field name="neighborhood_id" select ="0" />            		
+            		<field name="district_id" select ="0" />            		
+           </separator>
+                       
+            
+           <page string="Follow Up" position="replace">
+           	 <page string="Follow Up" >
+           	 	<separator string="Solution" colspan="4" />
+           	 		<field name="date_closed"/> 
+           	 		<field  name="resolution" colspan="4" nolabel="1" />
+				    <group col="8" colspan="4"> 	
+           	 		 <button name="case_cancel" string="Cancel"
+                                        states="draft,open,pending" type="workflow"
+                                        icon="gtk-cancel" />
+                     <button name="case_pending" string="Pending"
+                                        states="draft,open" type="workflow"
+                                        icon="gtk-media-pause" />
+                     <button name="case_open" string="Open"
+                                        states="draft,pending" type="workflow"
+                                        icon="gtk-go-forward" />
+                     <button name="case_close" string="Done"
+                                        states="open,pending" type="workflow"
+                                        icon="gtk-jump-to" />
+                     <button name="case_reset" string="Reset to Draft" states="done,cancel"
+                                        type="workflow" icon="gtk-convert" />
+       			</group>     
+           	 </page> 
+           </page>           
+           
+           <button string="Send New Email" position="replace" ></button>
+           
+           
+            		
+        </field>
+</record> 
+
+
+<record model="ir.ui.view" id="view_ocs_claim_tree_inherit">
+        <field name="name">crm.claim.tree.inherit</field>
+        <field name="model">crm.claim</field>	
+        <field name="type">tree</field>
+		<field name="inherit_id" ref="crm_claim.crm_case_claims_tree_view"/>
+        <field name="arch" type="xml">
+        	<field name="name" position="replace"></field>        	
+        	<field name="partner_id" position="replace">
+        		<field name="partner_address_id" select ="0"/>         	
+        	</field>
+        	<field name="date_action_next" position="replace">
+        		<field name="external_dms_id"/>         	
+        	</field>
+        	<field name="action_next" position="replace">        	        	         	
+        	</field>
+        </field>
+</record> 
+
+<record model="ir.actions.act_window" id="action_ocs_crm_claim">
+        <field name="name">Claims</field>
+        <field name="res_model">crm.claim</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,geoengine</field>
+</record>
+
+<menuitem name="Claims" id="menu_ocs_crm_claim" action="action_ocs_crm_claim" parent ="menu_ocs_issue"/>
+
+
+<!-- Res.Partner -->
+
+<!-- Vista para agregarle el nit a partner -->
+
+<record model="ir.ui.view" id="view_ocs_res_partner_inherit">
+        <field name="name">res.partner.inherit_ocs</field>
+        <field name="model">res.partner</field>	
+        <field name="type">form</field>
+		<field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">        	
+        	<field name="lang" position="before">
+        		<field name="partner_identificator"/>        	         	
+        	</field>
+        </field>
+</record> 
+
+
+<record model="ir.ui.view" id="view_ocs_res_partner_form_small">
+        <field name="name">res.partner.ocs_small</field>
+        <field name="model">res.partner</field>	
+        <field name="type">form</field>
+        <field name="arch" type="xml">        	
+        	<form string="Partner">
+        		<field name="name"/>
+        		<field name="title" widget="selection"/>        	
+        		<field name="partner_identificator"/>
+        	</form>
+        </field>
+</record>
+
+<!--GeoEngineViews-->
+
+<!-- OCS District -->
+
+<record id="ir_ui_view_district_basic_view" model="ir.ui.view">
+            <field name="name">ocs.district.zip.geo_view</field>
+            <field name="arch"><![CDATA[ 
+                <form >
+                    <field name="code"/>
+                    <field name="name"/>                                        
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">ocs.district</field>
+</record>
+
+
+<record id="geoengine_raster_layer_district" model="geoengine.raster.layer">
+            <field name="raster_type">osm</field>
+            <field name="name">District OSM</field>
+            <field name="view_id" ref="ir_ui_view_district_basic_view"/>
+            <field eval="0" name="overlay"/>
+</record>
+
+
+<record id="geoengine_vector_layer_district_main_poligones" model="geoengine.vector.layer">
+            <field name="geo_field_id" ref="ocs.field_ocs_district_geo_polygon"/>
+            <!-- <field name="geo_field_id" ref="base_geoengine_demo.field_dummy_zip_the_geom"/> -->
+            <field name="name">Districts</field>
+            <field name="view_id" ref="ir_ui_view_district_basic_view"/>
+            <field name="geo_repr">basic</field>
+            <field name="attribute_field_id" ref="field_ocs_district_name"/>
+            <field name="begin_color">#FF680A</field>
+</record>
+
+<!-- OCS Sub-District -->
+
+
+
+<record id="ir_ui_view_sub_district_basic_view" model="ir.ui.view">
+            <field name="name">ocs.sub_district.geo_view</field>
+            <field name="arch"><![CDATA[ 
+                <form >
+                    <field name="code"/>
+                    <field name="name"/>                                        
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">ocs.sub_district</field>
+</record>
+
+
+<record id="geoengine_raster_layer_sub_district" model="geoengine.raster.layer">
+            <field name="raster_type">osm</field>
+            <field name="name">Sub District OSM</field>
+            <field name="view_id" ref="ir_ui_view_sub_district_basic_view"/>
+            <field eval="0" name="overlay"/>
+</record>
+
+
+<record id="geoengine_vector_layer_sub_district_main_poligones" model="geoengine.vector.layer">
+            <field name="geo_field_id" ref="ocs.field_ocs_sub_district_geo_polygon"/>
+            <!-- <field name="geo_field_id" ref="base_geoengine_demo.field_dummy_zip_the_geom"/> -->
+            <field name="name">Sub Districts</field>
+            <field name="view_id" ref="ir_ui_view_sub_district_basic_view"/>
+            <field name="geo_repr">basic</field>
+            <field name="attribute_field_id" ref="field_ocs_sub_district_name"/>
+            <field name="begin_color">#FFF80A</field>
+</record>
+
+<!-- Claim  -->
+
+
+<record id="ir_ui_view_ocs_crm_claim_basic_view" model="ir.ui.view">
+            <field name="name">crm.claim.geo_view</field>
+            <field name="arch"><![CDATA[ 
+                <form >
+                    <field name="classification"/>
+                    <field name="sub_classification"/>                                        
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">crm.claim</field>
+</record>
+
+
+<record id="geoengine_raster_layer_crm_claim" model="geoengine.raster.layer">
+            <field name="raster_type">osm</field>
+            <field name="name">CRM Claim OSM</field>
+            <field name="view_id" ref="ir_ui_view_ocs_crm_claim_basic_view"/>
+            <field eval="0" name="overlay"/>
+</record>
+
+
+<record id="geoengine_vector_layer_crm_claim_all_claims" model="geoengine.vector.layer">
+            <field name="geo_field_id" ref="ocs.field_crm_claim_geo_point"/>
+        <!-- 
+        <field name="geo_field_id" ref="base_geoengine_demo.field_dummy_zip_the_geom"/> 
+        <field name="attribute_field_id" ref="field_crm_claim_name"/>
+        -->
+            <field name="name">Claims</field>
+            <field name="view_id" ref="ir_ui_view_ocs_crm_claim_basic_view"/>
+            <field name="geo_repr">basic</field>            
+            <field name="begin_color">#0FF80A</field>
+</record>
+
+
+<!-- Geo Engine Barrio  -->
+
+
+
+<record id="ir_ui_view_neighborhood_basic_view" model="ir.ui.view">
+            <field name="name">ocs.neighborhood.geo_view</field>
+            <field name="arch"><![CDATA[ 
+                <form >
+                    <field name="code"/>
+                    <field name="name"/>                                        
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">ocs.neighborhood</field>
+</record>
+
+
+<record id="geoengine_raster_layer_neighborhood" model="geoengine.raster.layer">
+            <field name="raster_type">osm</field>
+            <field name="name">Neighborhood OSM</field>
+            <field name="view_id" ref="ir_ui_view_neighborhood_basic_view"/>
+            <field eval="0" name="overlay"/>
+</record>
+
+
+<record id="geoengine_vector_layer_neighborhood_main_poligones" model="geoengine.vector.layer">
+            <field name="geo_field_id" ref="ocs.field_ocs_sub_district_geo_polygon"/>
+            <!-- <field name="geo_field_id" ref="base_geoengine_demo.field_dummy_zip_the_geom"/> -->
+            <field name="name">Neighborhood</field>
+            <field name="view_id" ref="ir_ui_view_neighborhood_basic_view"/>
+            <field name="geo_repr">basic</field>
+            <field name="attribute_field_id" ref="field_ocs_neighborhood_name"/>
+            <field name="begin_color">#F7F80A</field>
+</record>
+
+
+
+
+</data>
+</openerp>

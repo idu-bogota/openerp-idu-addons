@@ -1,0 +1,525 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* ocs
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.1-20121005-233110\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-10-14 19:53+0000\n"
+"PO-Revision-Date: 2012-10-14 19:53+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: ocs
+#: help:crm.claim,external_id:0
+msgid "External Claim System Identificator"
+msgstr "Radicado SDQS"
+
+#. module: ocs
+#: model:res.groups,name:ocs.group_ocs_user
+msgid "OCS User"
+msgstr "Usuario Oficina de Atención al Ciudadano"
+
+#. module: ocs
+#: field:ocs.claim_classification,parent_id:0
+msgid "Parent"
+msgstr "Padre"
+
+#. module: ocs
+#: field:ocs.citizen_service_point,schedule:0
+msgid "Schedule"
+msgstr "Agenda"
+
+#. module: ocs
+#: field:ocs.neighborhood,name:0
+msgid "Neighborhood Name"
+msgstr "Nombre del barrio"
+
+#. module: ocs
+#: model:ir.actions.act_window,name:ocs.action_ocs_district
+msgid "Locality"
+msgstr "Localidad"
+
+#. module: ocs
+#: model:ir.actions.act_window,name:ocs.action_ocs_citizen_service_point
+msgid "Citizen Service Points"
+msgstr "Punto de atención al ciudadano"
+
+#. module: ocs
+#: field:crm.claim,channel:0
+#: help:crm.claim,channel:0
+msgid "Case Channel"
+msgstr "Canal"
+
+#. module: ocs
+#: field:crm.claim,external_dms_id:0
+msgid "External DMS ID"
+msgstr "Radicado Orfeo"
+
+#. module: ocs
+#: model:geoengine.vector.layer,name:ocs.geoengine_vector_layer_sub_district_main_poligones
+msgid "Sub Districts"
+msgstr "UPZs"
+
+#. module: ocs
+#: field:ocs.sub_district,name:0
+msgid "Sub District Name :"
+msgstr "Nombre de la UPZ"
+
+#. module: ocs
+#: model:ir.actions.act_window,name:ocs.action_ocs_sub_district
+#: model:ir.ui.menu,name:ocs.menu_ocs_sub_district
+msgid "Sub District"
+msgstr "UPZ"
+
+#. module: ocs
+#: model:res.groups,name:ocs.group_ocs_manager
+msgid "OCS Manager"
+msgstr "Administrador Oficina de Atención al Ciudadano"
+
+#. module: ocs
+#: help:ocs.neighborhood,code:0
+msgid "Identify a Cadastral Code"
+msgstr "Identifica código catastral"
+
+#. module: ocs
+#: view:crm.claim:0
+msgid "Reset to Draft"
+msgstr "Cambiar a borrador"
+
+#. module: ocs
+#: selection:res.partner.address,gender:0
+msgid "Female"
+msgstr "Femenino"
+
+#. module: ocs
+#: model:ir.model,name:ocs.model_res_partner
+#: view:res.partner:0
+#: view:res.partner.address:0
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: ocs
+#: selection:res.partner.address,document_type:0
+msgid "NIT"
+msgstr "???NIT???"
+
+#. module: ocs
+#: field:crm.claim,district_id:0
+#: field:res.partner.address,district_id:0
+msgid "District"
+msgstr "Localidad"
+
+#. module: ocs
+#: view:crm.claim:0
+msgid "Send New Email"
+msgstr "Enviar nuevo email"
+
+#. module: ocs
+#: help:ocs.citizen_service_point,creation_date:0
+msgid "Date when Citizen Atention Point is installed"
+msgstr "Fecha de inicio del punto de atención al ciudadano "
+
+#. module: ocs
+#: selection:res.partner.address,document_type:0
+msgid "Passport"
+msgstr "Pasaporte"
+
+#. module: ocs
+#: field:ocs.citizen_service_point,creation_date:0
+msgid "Creation Date"
+msgstr "Fecha de creación"
+
+#. module: ocs
+#: view:res.partner.address:0
+msgid "Comunication"
+msgstr "Comunicación"
+
+#. module: ocs
+#: field:ocs.district,name:0
+msgid "District Name"
+msgstr "Nombre de la localidad"
+
+#. module: ocs
+#: model:ir.actions.act_window,name:ocs.action_ocs_claim_classification
+msgid "Claim_Classification"
+msgstr "Clasificación"
+
+#. module: ocs
+#: model:ir.ui.menu,name:ocs.menu_ocs_settings
+msgid "Settings"
+msgstr "Configuración"
+
+#. module: ocs
+#: help:ocs.sub_district,code:0
+msgid "Territory Code"
+msgstr "Código del territorio"
+
+#. module: ocs
+#: field:res.partner.address,last_name:0
+msgid "Last Name:"
+msgstr "Apellido:"
+
+#. module: ocs
+#: selection:res.partner.address,gender:0
+msgid "Male"
+msgstr "Masculino"
+
+#. module: ocs
+#: field:res.partner.address,full_name:0
+msgid "Full Name"
+msgstr "Nombre Completo"
+
+#. module: ocs
+#: field:crm.claim,neighborhood_id:0
+#: model:geoengine.vector.layer,name:ocs.geoengine_vector_layer_neighborhood_main_poligones
+#: model:ir.actions.act_window,name:ocs.action_ocs_neighborhood
+#: model:ir.ui.menu,name:ocs.menu_ocs_neighborhood
+#: field:res.partner.address,neighborhood_id:0
+msgid "Neighborhood"
+msgstr "Barrio"
+
+#. module: ocs
+#: help:crm.claim,claim_address:0
+msgid "Place of Claim"
+msgstr "Lugar del reclamo"
+
+#. module: ocs
+#: field:res.partner,partner_identificator:0
+msgid "Company Identificator"
+msgstr "NIT"
+
+#. module: ocs
+#: field:crm.claim,claim_address:0
+msgid "Claim Address"
+msgstr "Dirección del reclamo"
+
+#. module: ocs
+#: model:ir.model,name:ocs.model_ocs_sub_district
+#: view:ocs.sub_district:0
+msgid "ocs.sub_district"
+msgstr "UPZ"
+
+#. module: ocs
+#: model:ir.ui.menu,name:ocs.menu_ocs_issue
+msgid "Issues"
+msgstr "PQRs"
+
+#. module: ocs
+#: model:ir.model,name:ocs.model_res_partner_address
+msgid "Partner Addresses"
+msgstr "Direcciones de empresa"
+
+#. module: ocs
+#: help:ocs.citizen_service_point,name:0
+msgid "Description of Citizen Service Point point"
+msgstr "Descripción del punto de atención al ciudadano"
+
+#. module: ocs
+#: help:ocs.sub_district,name:0
+msgid "Sub-District name"
+msgstr "Nombre de la UPZ"
+
+#. module: ocs
+#: view:res.partner.address:0
+msgid "Search Contact"
+msgstr "Buscar contacto"
+
+#. module: ocs
+#: field:res.partner.address,facebook:0
+msgid "Facebook:"
+msgstr "Facebook:"
+
+#. module: ocs
+#: model:geoengine.raster.layer,name:ocs.geoengine_raster_layer_crm_claim
+msgid "CRM Claim OSM"
+msgstr "PQR"
+
+#. module: ocs
+#: view:ocs.citizen_service_point:0
+msgid "Point of Citizen Service"
+msgstr "Punto de atención al ciudadano"
+
+#. module: ocs
+#: help:crm.claim,external_dms_id:0
+msgid "External Document Management System Identificator"
+msgstr "Identificador en el sistema de gestión de documentos externo"
+
+#. module: ocs
+#: view:crm.claim:0
+msgid "Pending"
+msgstr "Pendiente"
+
+#. module: ocs
+#: model:ir.model,name:ocs.model_ocs_district
+#: view:ocs.district:0
+msgid "ocs.district"
+msgstr "Localidad"
+
+#. module: ocs
+#: field:crm.claim,csp_id:0
+msgid "CSP"
+msgstr "Punto de atención al ciudadano"
+
+#. module: ocs
+#: help:ocs.claim_classification,enabled:0
+msgid "If item is valid now"
+msgstr "Si el elemento es valido"
+
+#. module: ocs
+#: field:ocs.district,geo_polygon:0
+#: field:ocs.neighborhood,geo_polygon:0
+#: field:ocs.sub_district,geo_polygon:0
+msgid "Geometry"
+msgstr "Geometría "
+
+#. module: ocs
+#: model:ir.model,name:ocs.model_ocs_claim_classification
+msgid "ocs.claim_classification"
+msgstr "Clasificación del PQR"
+
+#. module: ocs
+#: model:ir.actions.act_window,name:ocs.action_ocs_res_partner_address
+#: model:ir.ui.menu,name:ocs.menu_ocs_res_partner_address
+#: view:res.partner.address:0
+msgid "Citizens"
+msgstr "Ciudadanos"
+
+#. module: ocs
+#: field:ocs.claim_classification,enabled:0
+msgid "Enabled"
+msgstr "Activo"
+
+#. module: ocs
+#: selection:res.partner.address,document_type:0
+msgid "CE"
+msgstr "Cédula de extranjería"
+
+#. module: ocs
+#: model:geoengine.vector.layer,name:ocs.geoengine_vector_layer_district_main_poligones
+#: model:ir.ui.menu,name:ocs.menu_ocs_district
+msgid "Districts"
+msgstr "Localidad"
+
+#. module: ocs
+#: field:res.partner.address,document_id:0
+msgid "Document Number"
+msgstr "Número de documento"
+
+#. module: ocs
+#: model:ir.model,name:ocs.model_ocs_neighborhood
+#: view:ocs.neighborhood:0
+msgid "ocs.neighborhood"
+msgstr "Barrio"
+
+#. module: ocs
+#: model:geoengine.vector.layer,name:ocs.geoengine_vector_layer_crm_claim_all_claims
+#: model:ir.actions.act_window,name:ocs.action_ocs_crm_claim
+#: model:ir.ui.menu,name:ocs.menu_ocs_crm_claim
+msgid "Claims"
+msgstr "PQRs"
+
+#. module: ocs
+#: model:ir.model,name:ocs.model_crm_claim
+msgid "Claim"
+msgstr "Reclamación"
+
+#. module: ocs
+#: field:ocs.claim_classification,code:0
+msgid "Code"
+msgstr "Código"
+
+#. module: ocs
+#: field:crm.claim,classification_id:0
+#: model:ir.ui.menu,name:ocs.menu_ocs_claim_classification
+msgid "Classification"
+msgstr "Criterio"
+
+#. module: ocs
+#: field:res.partner.address,twitter:0
+msgid "Twitter"
+msgstr "Twitter"
+
+#. module: ocs
+#: field:ocs.sub_district,code:0
+msgid "Territory Code :"
+msgstr "Código del territorio:"
+
+#. module: ocs
+#: view:crm.claim:0
+msgid "Done"
+msgstr "Realizada"
+
+#. module: ocs
+#: view:crm.claim:0
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: ocs
+#: view:crm.claim:0
+msgid "Open"
+msgstr "Abrir"
+
+#. module: ocs
+#: view:res.partner.address:0
+msgid "Personal Information"
+msgstr "Información personal"
+
+#. module: ocs
+#: field:crm.claim,geo_point:0
+#: field:ocs.citizen_service_point,geo_point:0
+msgid "Location"
+msgstr "Ubicación"
+
+#. module: ocs
+#: field:ocs.district,code:0
+msgid "District Code"
+msgstr "Código de la localidad"
+
+#. module: ocs
+#: help:crm.claim,csp_id:0
+#: model:ir.ui.menu,name:ocs.menu_ocs_citizen_service_point
+#: view:ocs.citizen_service_point:0
+msgid "Citizen Service Point"
+msgstr "Punto de atención al ciudadano"
+
+#. module: ocs
+#: help:res.partner.address,document_type:0
+msgid "Type of Identification Document for example: CC,TI.. etc"
+msgstr "Tipo de documento de identificación (CC, TI, .., etc)"
+
+#. module: ocs
+#: field:crm.claim,sub_classification_id:0
+msgid "Sub Classification"
+msgstr "Sub Criterio"
+
+#. module: ocs
+#: field:ocs.neighborhood,code:0
+msgid "Neighborhood Code"
+msgstr "Código del barrio"
+
+#. module: ocs
+#: view:crm.claim:0
+msgid "Claim/Action Description"
+msgstr "Descripción de la reclamación/acción"
+
+#. module: ocs
+#: model:geoengine.raster.layer,name:ocs.geoengine_raster_layer_sub_district
+msgid "Sub District OSM"
+msgstr "UPZ"
+
+#. module: ocs
+#: field:ocs.citizen_service_point,name:0
+msgid "Description"
+msgstr "Descripción"
+
+#. module: ocs
+#: sql_constraint:res.partner.address:0
+msgid "Combination document type, document id must be unique!!!"
+msgstr "Tipo de documento y número de documento deben ser unicos"
+
+#. module: ocs
+#: selection:res.partner.address,document_type:0
+msgid "CC"
+msgstr "Cédula de Ciudadanía"
+
+#. module: ocs
+#: help:ocs.citizen_service_point,schedule:0
+msgid "For example L-V 8:30 am -12:50 pm"
+msgstr "Por ejemplo L-V 8:30 am -12:50 pm"
+
+#. module: ocs
+#: selection:res.partner.address,document_type:0
+msgid "T.I"
+msgstr "Tarjeta de identidad"
+
+#. module: ocs
+#: view:crm.claim:0
+msgid "Follow Up"
+msgstr "Seguimiento"
+
+#. module: ocs
+#: field:ocs.citizen_service_point,close_date:0
+msgid "End Date"
+msgstr "Fecha de finalización"
+
+#. module: ocs
+#: help:ocs.citizen_service_point,close_date:0
+msgid "When citizen Atention Point is closed"
+msgstr "Cuando el punto de atención es cerrado"
+
+#. module: ocs
+#: field:ocs.claim_classification,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module: ocs
+#: field:res.partner.address,gender:0
+msgid "Gender"
+msgstr "Género"
+
+#. module: ocs
+#: model:ir.ui.menu,name:ocs.menu_ocs
+msgid "Office of Citizen Service"
+msgstr "Oficina de atención al ciudadano"
+
+#. module: ocs
+#: view:crm.claim:0
+msgid "Solution"
+msgstr "Solución"
+
+#. module: ocs
+#: model:geoengine.raster.layer,name:ocs.geoengine_raster_layer_neighborhood
+msgid "Neighborhood OSM"
+msgstr "Barrio OSM"
+
+#. module: ocs
+#: help:res.partner,partner_identificator:0
+msgid "Useful in Colombia to Store (NIT-Numero de Identificacion Tributaria)"
+msgstr "NIT-Número de Identificación Tributaria"
+
+#. module: ocs
+#: view:res.partner.address:0
+msgid "Job Information"
+msgstr "Información del trabajo"
+
+#. module: ocs
+#: field:ocs.claim_classification,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: ocs
+#: view:res.partner.address:0
+msgid "Postal Address"
+msgstr "Dirección postal"
+
+#. module: ocs
+#: model:geoengine.raster.layer,name:ocs.geoengine_raster_layer_district
+msgid "District OSM"
+msgstr "Localidad OSM"
+
+#. module: ocs
+#: model:ir.model,name:ocs.model_ocs_citizen_service_point
+msgid "ocs.citizen_service_point"
+msgstr "punto de atención al ciudadano"
+
+#. module: ocs
+#: field:crm.claim,external_id:0
+msgid "External ID"
+msgstr "SDQS"
+
+#. module: ocs
+#: view:ocs.claim_classification:0
+msgid "Claim Classification"
+msgstr "Clasificación del PQR"
+
+#. module: ocs
+#: field:res.partner.address,document_type:0
+msgid "Document Type"
+msgstr "Tipo de documento"
+
