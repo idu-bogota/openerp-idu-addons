@@ -1,6 +1,7 @@
 [submodule "externals/testmore-php"]
     path = externals/testmore-php
     url = https://github.com/shiflett/testmore.git
+
 [submodule "docs"]
-    path = docs
-    url = https://github.com/idu-bogota/openerp-idu-addons.wiki.git
+	path = docs
+	url = https://github.com/idu-bogota/openerp-idu-addons.wiki.git
