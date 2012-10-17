@@ -7,7 +7,11 @@
 		
 		<record id="group_ocs_manager" model="res.groups">
     		<field name="name">OCS Manager</field>
-		</record>		
+		</record>	
+		
+		<record model="ir.ui.menu" id="menu_ocs_reporting">
+        		<field eval="[(4, ref('group_ocs_manager'))]" name="groups_id"/>
+    	</record>	
 				
 		 <record model="ir.ui.menu" id="menu_ocs_settings">
         		<field eval="[(4, ref('group_ocs_manager'))]" name="groups_id"/>

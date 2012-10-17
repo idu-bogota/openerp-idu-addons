@@ -4,3 +4,4 @@ phpWebServiceClient/config.inc.php
 externals/testmore-php/
 docs/
 .settings/
+*.pyc
