@@ -25,6 +25,7 @@ from datetime import datetime
 from datetime import timedelta
 from crm import crm
 from crm_claim import crm_claim
+import re
 
 class Res_Partner(osv.osv):
     """Add Partner Identificator for Colomb        ia """
@@ -69,6 +70,26 @@ class ResPartnerAddress(geo_model.GeoModel):
                 res[citizen.id] = "{0},{1}".format(citizen.last_name, citizen.name)             
         return  res
     
+    def _chekdocument(self, cr, uid, ids, context = None):
+        """
+         Regex Validation for document id !Is valid only for Colombia,
+         !!! Warning to become in Spagethi Code....!!!!    
+        """        
+        is_valid_document = False        
+        for citizen in self.browse(cr, uid, ids,context=None):
+            if citizen.document_type == 'C' :                                    
+                if citizen.document_id != False:
+                    if re.match("^[0-9]+$", citizen.document_id) != None:
+                        is_valid_document = True
+                    else:
+                        is_valid_document = False #Empty document are permited....
+            else:
+                is_valid_document = True                
+        return is_valid_document 
+                    
+                   
+        
+        
     
     def _checkinputdata(self, cr, uid, ids, context = None):
         """
@@ -85,13 +106,13 @@ class ResPartnerAddress(geo_model.GeoModel):
         return is_valid_data
     
     _name = 'res.partner.address'
-    _inherit='res.partner.address' 
+    _inherit='res.partner.address'
     _columns = {
         'last_name':fields.char('Last Name:',size=128,required=True), 
         'name':fields.char('First Name',size=128,required=True), 
         'gender':fields.selection([('m','Male'),('f','Female')],'Gender'),                     
         'document_id': fields.char('Document Number', size=64,selectable=True),
-        'document_type': fields.selection([('C','CC'),('T','T.I'),('P','Passport'),('E','CE'),('N','NIT')],'Document Type',help='Type of Identification Document for example: CC,TI.. etc'),        
+        'document_type': fields.selection([('C','CC'),('T','T.I'),('P','Passport'),('E','CE')],'Document Type',help='Type of Identification Document for example: CC,TI.. etc'),        
         'twitter': fields.char('Twitter', size=64),
         'facebook':fields.char('Facebook:',size=240),        
         'district_id':fields.many2one('ocs.district','District'),        
@@ -104,10 +125,12 @@ class ResPartnerAddress(geo_model.GeoModel):
     _rec_name = 'document_id'          
     _order= "last_name asc"
     _sql_constraints = [
-        ('unique_cc_document_id','unique(document_type,document_id)','Combination document type, document id must be unique!!!')    
+        ('unique_cc_document_id','unique(document_type,document_id)','Combination document type, document id must be unique!!!'),
+        ('unique_email','unique(email)','This email is already registered'),    
     ]   
     _constraints = [
      (_checkinputdata,'You must type at least one of these: email, phone, cell phone, facebook or twitter to create a contact',['document_id']),
+     (_chekdocument,'When Document Type is CC, the document number must be numeric only!!!',['document_id']),
     ]
      
 ResPartnerAddress()
@@ -196,24 +219,35 @@ class crm_claim(geo_model.GeoModel):
        return [(r['id'], r['name']) for r in result]       
    
    _columns={
-        'description': fields.text('Description',required=True),
-        'priority': fields.selection([('h','High'),('n','Normal'),('l','Low')], 'Priority', required=True),
-        'external_id':fields.char('External ID',size=128,help='External Claim System Identificator'),
-        'external_dms_id': fields.char('External DMS ID',size=20,help='External Document Management System Identificator'),
-        'csp_id':fields.many2one('ocs.citizen_service_point','CSP',domain="[('close_date','=',False)]",help='Citizen Service Point',required=True),
-        'channel':fields.many2one('crm.case.channel','Case Channel',help='Case Channel',required=True),
+        #'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
+        'description': fields.text('Description',required=True,readonly=False,states={'done':[('readonly',True)]}),
+        'priority': fields.selection([('h','High'),('n','Normal'),('l','Low')], 'Priority', required=True, readonly=False,states={'done':[('readonly',True)]}),
+        'external_id':fields.char('External ID',size=128,help='External Claim System Identificator',readonly=False,states={'done':[('readonly',True)]}),
+        'external_dms_id': fields.char('External DMS ID',size=20,help='External Document Management System Identificator',readonly=False,states={'done':[('readonly',True)]}),
+        'csp_id':fields.many2one('ocs.citizen_service_point','CSP',domain="[('close_date','=',False)]",help='Citizen Service Point',required=True,readonly=False,states={'done':[('readonly',True)]}),
+        'channel':fields.many2one('crm.case.channel','Case Channel',help='Case Channel',required=True,readonly=False,states={'done':[('readonly',True)]}),
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="[('section_id','=',section_id),\
-                            ('object_id.model', '=', 'crm.claim')]",required=True),
+                            ('object_id.model', '=', 'crm.claim')]",required=True,readonly=False,states={'done':[('readonly',True)]}),
               
-        'claim_address':fields.char('Claim Address',size=256,help='Place of Claim'),
-        'district_id':fields.many2one('ocs.district','District'),        
-        'neighborhood_id':fields.many2one('ocs.neighborhood','Neighborhood'),
+        'claim_address':fields.char('Claim Address',size=256,help='Place of Claim',readonly=False,states={'done':[('readonly',True)]}),
+        'district_id':fields.many2one('ocs.district','District',readonly=False,states={'done':[('readonly',True)]}),        
+        'neighborhood_id':fields.many2one('ocs.neighborhood','Neighborhood',readonly=False,states={'done':[('readonly',True)]}),
         'geo_point':fields.geo_point('Location',srid=4668,readonly=True),
         'classification_id':fields.many2one('ocs.claim_classification','Classification', \
-                                               domain="[('parent_id','=',False),('enabled','=',True)]", required=True),
-        'sub_classification_id':fields.many2one('ocs.claim_classification','Sub Classification',domain="[('parent_id','=',classification_id),('enabled','=',True)]", required=True),
-        'name':fields.function(_get_full_name,type='char',string='Full Name',method=True)
+                                               domain="[('parent_id','=',False),('enabled','=',True)]", required=True,readonly=False,states={'done':[('readonly',True)]}),
+        'sub_classification_id':fields.many2one('ocs.claim_classification','Sub Classification',domain="[('parent_id','=',classification_id),('enabled','=',True)]", required=True,readonly=False,states={'done':[('readonly',True)]}),        
+        'name':fields.function(_get_full_name,type='char',string='Full Name',method=True),
+        #Se repiten campos del modelo original para poder controlarlos en los estados
+        'partner_id': fields.many2one('res.partner', 'Partner',readonly=False,states={'done':[('readonly',True)]}),
+        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
+                                # domain="[('partner_id','=',partner_id)]"
+                                 readonly=False,states={'done':[('readonly',True)]}),        
+        'email_from': fields.char('Email', size=128, help="These people will receive email.",readonly=False,states={'done':[('readonly',True)]}),
+        'partner_phone': fields.char('Phone', size=32,readonly=False,states={'done':[('readonly',True)]}),        
+        'resolution': fields.text('Resolution',readonly=False,states={'done':[('readonly',True)]}),
+        'date_deadline': fields.date('Deadline',readonly=False,states={'done':[('readonly',True)]}),
+        'user_id': fields.many2one('res.users', 'Responsible',readonly=False,states={'done':[('readonly',True)]}),
     }   
    _rec_name = 'classification'
    #time.strftime('%Y-%m-%d %H:%M:%S')

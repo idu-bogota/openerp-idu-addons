@@ -6,11 +6,7 @@
 <menuitem name="Settings" id ="menu_ocs_settings" parent = "menu_ocs" sequence = "3"/>
 <menuitem name="Reporting" id="menu_ocs_reporting" parent ="menu_ocs" sequence = "2"/>
 
-
-
-
 <!-- Case Categories -->
-
 <record model="ir.actions.act_window" id="action_ocs_crm_case_categories">
         <field name="name">Locality</field>
         <field name="res_model">crm.case.categ</field>
@@ -31,15 +27,9 @@
             <field name="view_mode">tree,graph</field>
             <field name="context">{"search_default_year":1,"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="help">Have a general overview of all claims processed in the system by sorting them with specific criteria.</field>
- </record>
- 
+ </record> 
  <menuitem name="Claim report" id="menu_ocs_report_claim_report" action="action_ocs_report_claim_report" parent="menu_ocs_reporting"/>
         
-
- 
-
-
-
 
 <!-- Point of citizen Service -->
 <record model="ir.ui.view" id="view_ocs_citizen_service_point_form">
@@ -75,6 +65,64 @@
 </record> 
 <menuitem name="Citizen Service Point" id="menu_ocs_citizen_service_point" action="action_ocs_citizen_service_point" parent ="menu_ocs_settings" sequence="2" />
 
+<!-- Res.Partner -->
+
+<!-- Vista para agregarle el nit a partner (Vista General)-->
+<record model="ir.ui.view" id="view_ocs_res_partner_inherit">
+        <field name="name">res.partner.inherit_ocs</field>
+        <field name="model">res.partner</field>	
+        <field name="type">form</field>
+		<field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">        	
+        	<field name="lang" position="before">
+        		<field name="partner_identificator" select ="1"/>        	         	
+        	</field>
+        </field>
+</record>
+<!-- Search View -->
+<record id="view_res_partner_search_ocs" model="ir.ui.view">
+            <field name="name">res.partner.search_ocs</field>
+            <field name="model">res.partner</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Contact">
+                    <group>                     
+                        <separator orientation="vertical"/>                       
+                        <field name="name" />
+                        <field name="partner_identificator"/>
+                    </group>
+                 </search>
+         </field>
+</record> 
+<!-- Tree View -->
+
+<record id="view_res_partner_tree_ocs_small" model="ir.ui.view">
+            <field name="name">res.partner.tree_ocs_small</field>
+            <field name="model">res.partner</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Search Partner">
+                        <field name="name" />
+                        <field name="partner_identificator"/>                  
+                </tree>
+         </field>
+</record>
+
+<!-- Form Small -->
+<record model="ir.ui.view" id="view_ocs_res_partner_form_small">
+        <field name="name">res.partner.ocs_small</field>
+        <field name="model">res.partner</field>	
+        <field name="type">form</field>
+        <field name="arch" type="xml">        	
+        	<form string="Partner">
+        		<field name="name"/>
+        		<field name="title" widget="selection"/>        	
+        		<field name="partner_identificator"/>
+        	</form>
+        </field>
+</record>
+
+
 <!-- res.partner.address -->
 
 <record model="ir.ui.view" id="view_res_partner_address_form_inherit">
@@ -95,7 +143,8 @@
 		     <field name="document_type" select="0"/>
 		     <field name="document_id" select="1"/>
 		</field>
-		<field name="email" position="before">		  
+		<field name="email" position="replace">
+		   <field name="email" select="1"/>		  
 		   <field name="facebook" select="0"/>         
 		   <field name="twitter" select="0"/>
 		</field>  
@@ -136,12 +185,11 @@
                     <group>
                      <!--    <filter string="Document" name="customer" icon="terp-personal" domain="[('is_customer_add','=','1')]" />
                         <filter string="Supplier" name="supplier"  icon="terp-personal" domain="[('is_supplier_add','=','1')]" /> -->
-                        <separator orientation="vertical"/>
-                        <field name="partner_id" string="Partner"/>
+                        <separator orientation="vertical"/>                        
                         <field name="name" />
+                        <field name="last_name" />
                         <field name="document_id"/>
-                        <field name="full_name" />
-                        <field name="country_id" />
+                        <field name="email"/>
                     </group>
                  </search>
             </field>
@@ -165,7 +213,7 @@
 	            </group>	            
 	            <group colspan="4" col="4">
 	            	<separator string="Job Information" colspan="4"/>	             
-	             	<field name="partner_id" colspan="2" context="{'form_view_ref' : 'view_ocs_res_partner_form_small','search_view_ref':'view_res_partner_address_search_ocs'}" />
+	             	<field name="partner_id" colspan="2" context="{'form_view_ref' : 'view_ocs_res_partner_form_small','tree_view_ref':'view_res_partner_tree_ocs_small','search_view_ref':'view_res_partner_search_ocs'}" />
 	             	<field name="function"/>
 	             	<field name="company_id" groups="base.group_multi_company" widget="selection" colspan="2"/>
 	             </group>	             
@@ -197,10 +245,8 @@
         <field name="res_model">res.partner.address</field>
         <field name="view_type">form</field>
         <field name="view_mode">form,tree</field>
-	<!-- />
-		<field name="view_id" ref="view_res_partner_address_tree_ocs"/>
-	-->
-		<field name="view_id" ref="view_res_partner_address_form_small"/>		
+		<field name="context">{'form_view_ref' : 'ocs.view_res_partner_address_form_small'}</field>
+		<field name="view_id" ref="view_res_partner_address_tree_ocs"/>		
 		<field name="search_view_id" ref="view_res_partner_address_search_ocs"/>
 </record>
     
@@ -386,7 +432,8 @@
             		<field name="sub_classification_id" select="0"/>
             </field>
             <field name="partner_id" position="replace">
-            	<field name="partner_id" colspan="2" context="{'form_view_ref' : 'view_ocs_res_partner_form_small'}"
+            	<field name="partner_id" colspan="2" 
+            	context="{'form_view_ref' : 'view_ocs_res_partner_form_small','tree_view_ref':'view_res_partner_tree_ocs_small','search_view_ref':'view_res_partner_search_ocs'}"
             	on_change="onchange_partner_id(partner_id)" />
             </field>
             <field name="partner_address_id" position ="replace">
@@ -486,35 +533,7 @@
 
 
 
-<!-- Res.Partner -->
 
-<!-- Vista para agregarle el nit a partner -->
-
-<record model="ir.ui.view" id="view_ocs_res_partner_inherit">
-        <field name="name">res.partner.inherit_ocs</field>
-        <field name="model">res.partner</field>	
-        <field name="type">form</field>
-		<field name="inherit_id" ref="base.view_partner_form"/>
-        <field name="arch" type="xml">        	
-        	<field name="lang" position="before">
-        		<field name="partner_identificator"/>        	         	
-        	</field>
-        </field>
-</record> 
-
-
-<record model="ir.ui.view" id="view_ocs_res_partner_form_small">
-        <field name="name">res.partner.ocs_small</field>
-        <field name="model">res.partner</field>	
-        <field name="type">form</field>
-        <field name="arch" type="xml">        	
-        	<form string="Partner">
-        		<field name="name"/>
-        		<field name="title" widget="selection"/>        	
-        		<field name="partner_identificator"/>
-        	</form>
-        </field>
-</record>
 
 <!--GeoEngineViews-->
 
