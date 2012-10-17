@@ -17,6 +17,7 @@ def main():
     parser.add_option("-i", "--init_module", dest="init_module", help="Init module")
     parser.add_option("-s", "--super_admin_pwd", dest="super_admin_pwd", help="Super Admin Password", default="admin")
     parser.add_option("-H", "--host", dest="host", help="OpenERP server host", default="http://localhost:8069")
+    parser.add_option("-c", "--config_file", dest="config_file", help="OpenERP config file", default="/etc/openerp/openerp-server.conf")
 
     (options, args) = parser.parse_args()
     #pprint.pprint(options);
@@ -71,7 +72,7 @@ def activate_postgis_15(options):
 
 def init_module(options):
     print "Installing module";
-    cmd_str = "sudo start-stop-daemon --start --chuid openerp --exec /usr/bin/openerp-server --  --stop-after-init -d %s -r openerp --config=/etc/openerp/openerp-server.conf -i %s" % (options.db_name, options.init_module)
+    cmd_str = "sudo start-stop-daemon --start --chuid openerp --exec /usr/bin/openerp-server --  --stop-after-init -d %s -r openerp --config=%s -i %s" % (options.db_name, options.config_file, options.init_module)
     call(cmd_str, shell=True)
     print "Restarting OpenERP";
     call('sudo /etc/init.d/openerp restart', shell=True)
