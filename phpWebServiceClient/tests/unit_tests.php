@@ -1,6 +1,6 @@
 <?php
 require dirname(__FILE__).'/../../externals/testmore-php/testmore.php';
-require('../config.inc.php');
+require(dirname(__FILE__).'/../config.inc.php');
 
 plan('no_plan');
 require_ok('../OpenErpOcs.php');
@@ -23,6 +23,7 @@ $partner_address_id->attributes = array(
     'document_id' => $time,
     'name' => 'name '.$time,
     'last_name' => 'lastname '.$time,
+    'email' => $time.'@email.com',
 );
 
 try {
@@ -56,13 +57,13 @@ $pqr = new OpenErpPqr($c);
 $pqr->attributes = array(
     'partner_id' => $partner_id,
     'partner_address_id' =>  $partner_address_id,
-    'categ_id' => array('name' => 'Policy Claim'),
-    'classification' => array('name' => 'test '.$time),
-    'sub_classification' => array('name' => 'sub test '.$time),
+    'categ_id' => array('name' => 'Valor reclamaciones'),
+    'classification_id' => array('name' => 'test '.$time),
+    'sub_classification_id' => array('name' => 'sub test '.$time),
     'description' => 'This is a PQR '.$time,
     'state' => 'pending',
     'priority' => 'h',
-    'pcs_id' => array('name' => 'my pcs '.$time),
+    'csp_id' => array('name' => 'my pcs '.$time),
     'channel' => array('name' => 'direct'),
     'external_dms_id' => $time
 );
@@ -98,16 +99,17 @@ $pqr->attributes = array(
         'document_id' => $time,
         'name' => 'name '.$time,
         'last_name' => 'lastname '.$time,
+        'email' => $time.'@email.com.co',
     ),
     'partner_id' => array(
         'name' => 'my organisation '.$time,
         'ref' => 'nit_'.$time,
     ),
-    'categ_id' => array('name' => 'Policy Claim'),
+    'categ_id' => array('name' => 'Valor reclamaciones'),
     'priority' => 'h',
     'classification_id' => array('name' => 'test '.$time),
     'sub_classification_id' => array('name' => 'sub test '.$time),
-    'pcs_id' => array('name' => 'my pcs '.$time),
+    'csp_id' => array('name' => 'my pcs '.$time),
     'description' => 'This is a PQR '.$time,
     'state' => 'pending',
     'channel' => array('name' => 'direct'),
@@ -124,14 +126,12 @@ catch(Exception $e) {
 
 // $client = new Zend_XmlRpc_Client($openerp_server.'/object');
 // $data = array(
-//   'partner_address_id' => 4,
-//   'partner_id' => 18,
 //   'categ_id' => 16,
-//   'priority' => 'h',
-//   'classification' => 1,
-//   'sub_classification' => 2,
-//   'pcs_id' => 15,
-//   'state' => 'open',
+//   'priority' => 'l',
+//   'classification_id' => 5,
+//   'sub_classification_id' => 6,
+//   'csp_id' => 1,
+//   'state' => 'draft',
 //   'channel' => 3,
 //   'description' => 'test',
 // );

@@ -59,11 +59,11 @@ class OpenErpPqr extends OpenErpObject {
             'partner_id' => array('compulsory' => 0, 'references' => array('classname' => 'OpenErpPartner','search_key' => 'ref')),
             'partner_address_id' => array('compulsory' => 0, 'references' => array('classname' => 'OpenErpPartnerAddress','search_key' => 'document_id')),
             'categ_id' => array('compulsory' => 1, 'references' => array('classname' => 'OpenErpOcsCategory')),
-            'classification' => array('compulsory' => 1, 'references' => array('classname' => 'OpenErpOcsClassification')),
-            'sub_classification' => array('compulsory' => 1, 'references' => array('classname' => 'OpenErpOcsClassification')),
+            'classification_id' => array('compulsory' => 1, 'references' => array('classname' => 'OpenErpOcsClassification')),
+            'sub_classification_id' => array('compulsory' => 1, 'references' => array('classname' => 'OpenErpOcsClassification')),
             'description' => array('compulsory' => 1, 'references' => FALSE),
             'state' => array('compulsory' => 1, 'references' => FALSE),
-            'pcs_id' => array('compulsory' => 1, 'references' => array('classname' => 'OpenErpOcsAttentionPoint')),
+            'csp_id' => array('compulsory' => 1, 'references' => array('classname' => 'OpenErpOcsAttentionPoint')),
             'channel' => array('compulsory' => 1, 'references' => array('classname' => 'OpenErpOcsChannel')),
             'external_dms_id' => array('compulsory' => 1, 'references' => FALSE),
             'priority' => array('compulsory' => 1, 'references' => FALSE),
@@ -103,8 +103,7 @@ class OpenErpOcsClassification extends OpenErpObject {
 
 class OpenErpOcsAttentionPoint extends OpenErpObject {
     protected function getClassName() {
-        # FIXME: citizen service point
-        return 'ocs.point_citizen_service';
+        return 'ocs.citizen_service_point';
     }
 
     protected function getAttributesMetadata() {
