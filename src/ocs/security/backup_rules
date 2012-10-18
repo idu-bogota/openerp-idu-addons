@@ -11,11 +11,8 @@ access_ocs_user_crm_add_note,ocs.user.crm.add.note,crm.model_crm_add_note,ocs.gr
 access_ocs_user_crm_case_channel,crm.user.crm.case.channel,crm.model_crm_case_channel,ocs.group_ocs_user,1,0,1,0
 access_ocs_user_crm_case_stage,crm.user.crm.case.stage,crm.model_crm_case_stage,ocs.group_ocs_user,1,0,0,0
 access_ocs_user_mail_message,mail.message.user.mail.message,mail.model_mail_message,ocs.group_ocs_user,1,0,1,0
-
 access_ocs_use_res_partner_category,base.user.res_partner_category,base.model_res_partner_category,ocs.group_ocs_user,1,0,0,0
-
 access_ocs_user_product_pricelist,product.pricelist.user.product.pricelist,product.model_product_pricelist,ocs.group_ocs_user,1,0,0,0
-
 access_ocs_manager_district,ocs.manager.district,ocs.model_ocs_district,ocs.group_ocs_manager,1,0,0,0
 access_ocs_manager_sub_district,ocs.manager.sub_district,ocs.model_ocs_sub_district,ocs.group_ocs_manager,1,0,0,0
 access_ocs_manager_neighborhood,ocs.manager.neighborhood,ocs.model_ocs_neighborhood,ocs.group_ocs_manager,1,0,0,0

@@ -5,8 +5,7 @@ de libreoffice y no se tiene el cuidado se separa por ";" y uno no se da cuenta 
 
 
 2. model_id:id -> cuando se llenan los datos de esta columna es importante la forma en que se define
-el campo 
-debe seguir los siguientes parametros:
+el campo debe seguir los siguientes parametros:
 
 
 modulo.model_funcion del modelo ejemplo:
