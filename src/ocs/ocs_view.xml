@@ -3,8 +3,19 @@
 <data>
 <menuitem name="Office of Citizen Service" id="menu_ocs"/>
 <menuitem name="Issues" id ="menu_ocs_issue" parent = "menu_ocs" sequence="1"/> 
-<menuitem name="Settings" id ="menu_ocs_settings" parent = "menu_ocs" sequence = "3"/>
+<menuitem name="Settings" id ="menu_ocs_settings" parent="menu_ocs" sequence = "3"/>
 <menuitem name="Reporting" id="menu_ocs_reporting" parent ="menu_ocs" sequence = "2"/>
+
+<!--crm case channel  -->
+
+
+<record model="ir.actions.act_window" id="action_ocs_crm_case_channel">
+        <field name="name">Case Channels</field>
+        <field name="res_model">crm.case.channel</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+<menuitem name="Case Channels" id="menu_ocs_settings_crm_case_channels" action="action_ocs_crm_case_channel" parent="menu_ocs_settings"/>
 
 <!-- Case Categories -->
 <record model="ir.actions.act_window" id="action_ocs_crm_case_categories">
@@ -529,12 +540,6 @@
 <menuitem name="Claims" id="menu_ocs_crm_claim" action="action_ocs_crm_claim" parent ="menu_ocs_issue"/>
 
 
-
-
-
-
-
-
 <!--GeoEngineViews-->
 
 <!-- OCS District -->
@@ -676,8 +681,6 @@
             <field name="attribute_field_id" ref="field_ocs_neighborhood_name"/>
             <field name="begin_color">#F7F80A</field>
 </record>
-
-
 
 
 </data>
