@@ -196,6 +196,24 @@ ocs_sub_district()
 class crm_claim(geo_model.GeoModel):
    _name = "crm.claim"
    _inherit = "crm.claim"   
+   
+   def test_response(self, cr, uid, ids, *args):
+       """
+       Check if Response Text is Empty      
+       """       
+       isResponsed = False
+       for claim in self.browse(cr,uid,ids,context=None):
+           response = claim.resolution
+           if response == False:
+               isResponsed = False
+               message = "Resolution text could not be Empty"
+           else:
+               isResponsed = True
+               message = "The claim: {0} -- has been closed".format(claim.name)
+       self.log(cr, uid, claim.id, message)
+       return isResponsed
+   
+   
    def _get_full_name(self,cr,uid,ids,fieldname,arg,context=None):
         """Get Full Name of Citizen """
         res = {}
@@ -216,7 +234,17 @@ class crm_claim(geo_model.GeoModel):
        obj = self.pool.get('ocs.claim_classification_id')
        ids = obj.search(cr, uid, [('parent_id','=',False)])
        result = obj.read(cr, uid, ids, ['name','id'], context)
-       return [(r['id'], r['name']) for r in result]       
+       return [(r['id'], r['name']) for r in result]
+   
+   def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
+        """This function returns value of partner email based on Partner Address
+           :param part: Partner's id
+           :param email: ignored
+        """
+        if not add:
+            return {'value': {'email_from': False}}
+        address = self.pool.get('res.partner.address').browse(cr, uid, add)
+        return {'value': {'email_from': address.email, 'partner_phone': address.phone,'claim_address':address.street}}
    
    _columns={
         #'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
@@ -256,21 +284,7 @@ class crm_claim(geo_model.GeoModel):
         'priority': lambda *a: 'l'
         }
    
-   def test_response(self, cr, uid, ids, *args):
-       """
-       Check if Response Text is Empty      
-       """       
-       isResponsed = False
-       for claim in self.browse(cr,uid,ids,context=None):
-           response = claim.resolution
-           if response == False:
-               isResponsed = False
-               message = "Resolution could not be Empty"
-           else:
-               isResponsed = True
-               message = "The claim: {0} -- has been closed".format(claim.name)
-       self.log(cr, uid, claim.id, message)
-       return isResponsed
+   
    
 crm_claim()
 
