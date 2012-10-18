@@ -107,7 +107,7 @@ msgstr "Empresa"
 #. module: ocs
 #: selection:res.partner.address,document_type:0
 msgid "NIT"
-msgstr "???NIT???"
+msgstr "NIT"
 
 #. module: ocs
 #: field:crm.claim,district_id:0
