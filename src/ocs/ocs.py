@@ -277,6 +277,7 @@ class crm_claim(geo_model.GeoModel):
         'date_deadline': fields.date('Deadline',readonly=False,states={'done':[('readonly',True)]}),
         'user_id': fields.many2one('res.users', 'Responsible',readonly=False,states={'done':[('readonly',True)]}),
     }   
+   _order='create_date desc'
    _rec_name = 'classification'
    #time.strftime('%Y-%m-%d %H:%M:%S')
    _defaults = {
