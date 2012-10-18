@@ -193,6 +193,15 @@ class ocs_sub_district(geo_model.GeoModel):
     } 
 ocs_sub_district()
 
+class crm_case_categ(osv.osv):
+    "This class enable/Disable Categories according current politics"
+    _name="crm.case.categ"
+    _inherit="crm.case.categ"
+    _columns={
+        'active':fields.boolean('Active',help='Enable/Disable Case Category'),
+    }
+
+
 class crm_claim(geo_model.GeoModel):
    _name = "crm.claim"
    _inherit = "crm.claim"   
@@ -256,7 +265,9 @@ class crm_claim(geo_model.GeoModel):
         'channel':fields.many2one('crm.case.channel','Case Channel',help='Case Channel',required=True,readonly=False,states={'done':[('readonly',True)]}),
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="[('section_id','=',section_id),\
-                            ('object_id.model', '=', 'crm.claim')]",required=True,readonly=False,states={'done':[('readonly',True)]}),
+                            ('object_id.model', '=', 'crm.claim')],\
+                            ('active','=',True)",
+                            required=True,readonly=False,states={'done':[('readonly',True)]}),
               
         'claim_address':fields.char('Claim Address',size=256,help='Place of Claim',readonly=False,states={'done':[('readonly',True)]}),
         'district_id':fields.many2one('ocs.district','District',readonly=False,states={'done':[('readonly',True)]}),        
@@ -284,9 +295,6 @@ class crm_claim(geo_model.GeoModel):
         'date_deadline': lambda *a:  (datetime.now()+timedelta(days=9)).__format__('%Y-%m-%d %H:%M:%S'),
         'priority': lambda *a: 'l'
         }
-   
-   
-   
 crm_claim()
 
 

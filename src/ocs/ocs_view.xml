@@ -8,6 +8,17 @@
 
 <!--crm case channel  -->
 
+<record model="ir.ui.view" id="view_ocs_crm_case_channel_form_inherit">
+        <field name="name">crm.case.categ.form.inherit</field>
+        <field name="model">crm.case.categ</field>	
+        <field name="type">form</field>
+		<field name="inherit_id" ref="crm.crm_case_categ-view"/>
+        <field name="arch" type="xml">        	
+        	<field name="section_id" position="after">
+        		<field name="active" select ="1"/>        	         	
+        	</field>
+        </field>
+</record>
 
 <record model="ir.actions.act_window" id="action_ocs_crm_case_channel">
         <field name="name">Case Channels</field>
@@ -18,6 +29,9 @@
 <menuitem name="Case Channels" id="menu_ocs_settings_crm_case_channels" action="action_ocs_crm_case_channel" parent="menu_ocs_settings"/>
 
 <!-- Case Categories -->
+
+
+
 <record model="ir.actions.act_window" id="action_ocs_crm_case_categories">
         <field name="name">Locality</field>
         <field name="res_model">crm.case.categ</field>
