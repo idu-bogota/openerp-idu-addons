@@ -83,8 +83,8 @@
             <field name="act_to" ref="act_ocs_claim_in_progress"/>
             <field name="condition">True</field>
             <field name="signal">cas_reset</field>
-            <field name="role_id" ref="group_ocs_manager"/>
-  </record> 
+            <field name="group_id" ref="group_ocs_manager"/>
+  </record>
   
   <record id="ocs_tr_in_draft_to_cancel" model="workflow.transition">
             <field name="act_from" ref="act_ocs_claim_draft"/>
