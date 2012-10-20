@@ -52,8 +52,8 @@ function production {
     CONFIG_FILE=/etc/openerp/openerp-server.conf
     echo "Actualizando archivo de configuración de openerp-server en $CONFIG_FILE ..."
     echo "addons_path = /usr/share/pyshared/openerp/addons/,$ADDONS_PATH/addons-idu,$ADDONS_PATH/c2c-geoengine-addons" >> $CONFIG_FILE
-    echo "xmlrpc_interface = 127.0.0.1" >> $CONFIG_FILE
-    echo "netrpc_interface = 127.0.0.1" >> $CONFIG_FILE
+    echo "; xmlrpc_interface = 127.0.0.1" >> $CONFIG_FILE
+    echo "; netrpc_interface = 127.0.0.1" >> $CONFIG_FILE
     echo "db_list = False" >> $CONFIG_FILE
 }
 

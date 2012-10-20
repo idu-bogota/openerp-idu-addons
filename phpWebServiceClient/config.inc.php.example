@@ -1,8 +1,8 @@
 <?php
-$openerp_server = 'http://localhost:8069/xmlrpc';
+$openerp_server = 'https://192.168.56.101/xmlrpc';
 $username = 'admin';
-$pwd = 'admin';
-$dbname = 'test';
+$pwd = 'admin1';
+$dbname = 'openerp-idu';
 
 ini_set('include_path',dirname(__FILE__).'/../externals/zend/library');
 require_once 'Zend/Loader/Autoloader.php';
