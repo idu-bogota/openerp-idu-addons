@@ -20,18 +20,6 @@ function development {
     mkdir $ADDONS_PATH/externals/
     cd $ADDONS_PATH/externals/
 
-    #zend framework
-    #svn co http://framework.zend.com/svn/framework/standard/tags/release-1.12.0/library/ zend
-    ZF_RELEASE='ZendFramework-1.12.0'
-    wget "http://packages.zendframework.com/releases/$ZF_RELEASE/$ZF_RELEASE-minimal.tar.gz"
-    tar zxvf "$ZF_RELEASE-minimal.tar.gz"
-    mv "$ZF_RELEASE-minimal" zend
-    rm "$ZF_RELEASE-minimal.tar.gz"
-
-    #no como submodulo porque el eclipse empaquetado en ubuntu 12.04 no los maneja apropiadamente
-    #php testmore - usado para probar el cliente php de openerp
-    git clone https://github.com/shiflett/testmore.git testmore-php
-
     echo "ALTER USER openerp WITH PASSWORD 'openerp'" >> /tmp/openerp.sql
     sudo su postgres -c "psql -f /tmp/openerp.sql";
     rm /tmp/openerp.sql
