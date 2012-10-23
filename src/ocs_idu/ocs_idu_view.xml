@@ -1,6 +1,42 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
+<menuitem name="Construction Issue" id ="menu_construction_ocs_settings" parent = "ocs.menu_ocs" sequence = "3"/>
+<menuitem name="Construction Issue Settings" id ="menu_construction_ocs_settings" parent = "ocs.menu_ocs" sequence = "5"/>
+	<record model="ir.ui.view" id="view_ocs_contract_form">
+        <field name="name">ocs.contract.form</field>
+        <field name="model">ocs.contract</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Contract">
+                <field name="contract_id" select="1"/>
+                 <field name="contractor" select="1"/>
+                <field name="start_date" select="0"/>
+                <field name="end_date" select="0"/>               
+            </form>
+        </field>
+ 	</record>
+    
+    <record model="ir.ui.view" id="view_ocs_contract_tree">
+        <field name="name">ocs.contract.tree</field>
+        <field name="model">ocs.contract</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Contract">
+                <field name="contract_id"/>                
+                <field name="contractor"/>
+            </tree>
+        </field>
+    </record>
+    
+<record model="ir.actions.act_window" id="action_ocs_contract">
+        <field name="name">contract</field>
+        <field name="res_model">ocs.contract</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+<menuitem name="Contract" id="menu_ocs_contract" action="action_ocs_contract" parent ="menu_construction_ocs_settings" sequence="2"/>
+
 
 
 </data>
