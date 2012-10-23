@@ -10,6 +10,7 @@
       'ocs.claim_classification.csv',
       'crm.case.categ.csv',
       'crm.case.channel.csv',
+      'ocs.claim_classification.csv',
   ],
   'update_xml': [],
   'installable': True,
