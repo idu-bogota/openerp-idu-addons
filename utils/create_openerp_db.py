@@ -4,6 +4,7 @@ import urllib2
 import simplejson as json
 import pprint
 import commands
+import os
 from subprocess import call
 
 def main():
@@ -17,7 +18,8 @@ def main():
     parser.add_option("-i", "--init_module", dest="init_module", help="Init module")
     parser.add_option("-s", "--super_admin_pwd", dest="super_admin_pwd", help="Super Admin Password", default="admin")
     parser.add_option("-H", "--host", dest="host", help="OpenERP server host", default="http://localhost:8069")
-    parser.add_option("-c", "--config_file", dest="config_file", help="OpenERP config file", default="/etc/openerp/openerp-server.conf")
+    parser.add_option("-c", "--config_file", dest="config_file", help="OpenERP config file - absolute path", default="/etc/openerp/openerp-server.conf")
+    parser.add_option("-b", "--data_dir", dest="data_dir", help="Folder that includes SQL files to be loaded via psql", default="/opt/addons-idu/data_idu/sql/")
 
     (options, args) = parser.parse_args()
     #pprint.pprint(options);
@@ -33,6 +35,10 @@ def main():
 
     if created and options.init_module:
         init_module(options)
+
+    if created and options.data_dir:
+        load_data_dir_files(options)
+
 
 def create_openerp_database(options):
     data = {
@@ -76,6 +82,15 @@ def init_module(options):
     call(cmd_str, shell=True)
     print "Restarting OpenERP";
     call('sudo /etc/init.d/openerp restart', shell=True)
+
+def load_data_dir_files(options):
+    print 'Loading *.sql files from: ' + options.data_dir;
+    for r,d,f in os.walk(options.data_dir):
+        for files in f:
+            if files.endswith(".sql"):
+                filename = os.path.join(r,files)
+                print '* ' + filename
+                call('sudo su postgres -c "psql -f ' + filename +' ' + options.db_name + '"', shell=True)
 
 if __name__ == '__main__':
     main()
