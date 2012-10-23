@@ -9,6 +9,7 @@
   'init_xml': [
       'ocs.claim_classification.csv',
       'crm.case.categ.csv',
+      'crm.case.channel.csv',
   ],
   'update_xml': [],
   'installable': True,
