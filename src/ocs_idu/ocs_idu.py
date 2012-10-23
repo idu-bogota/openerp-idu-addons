@@ -24,13 +24,19 @@
 
 from osv import fields,osv
 
+class ocs_crea_point():
+    """
+    IDU High Specific Requeriment for Office of Citizen Service  with Outsource partner    
+    """
+
+
 class ocs_contract(osv.osv):
     _name="ocs.contract"
     _columns = {
         'contract_id': fields.char('Contract Number',size=20,help="Contract Number or Serial", required=True),
         'start_date': fields.datetime('Start Date',help="When contract start", required=True),
         'end_date': fields.datetime('End Date',help="When contract ends"),
-        'contractor': fields.char('Contractor',size=30,required=True),
+        'partner_id': fields.many2one('res.partner','Contractor',size=30,required=True),
     }
 ocs_contract()
 
