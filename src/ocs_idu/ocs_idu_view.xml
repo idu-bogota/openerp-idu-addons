@@ -3,7 +3,13 @@
 <data>
 <menuitem name="Construction Issue" id ="menu_construction_ocs_settings" parent = "ocs.menu_ocs" sequence = "3"/>
 <menuitem name="Construction Issue Settings" id ="menu_construction_ocs_settings" parent = "ocs.menu_ocs" sequence = "5"/>
-	<record model="ir.ui.view" id="view_ocs_contract_form">
+<!-- 
+======================================================================
+Contract_Contratos....
+
+======================================================================
+-->
+<record model="ir.ui.view" id="view_ocs_contract_form">
         <field name="name">ocs.contract.form</field>
         <field name="model">ocs.contract</field>
         <field name="type">form</field>
@@ -36,6 +42,12 @@
 </record>
 <menuitem name="Contract" id="menu_ocs_contract" action="action_ocs_contract" parent ="menu_construction_ocs_settings" sequence="2"/>
 
+<!-- 
+==============================================================================================================
+Tract_Tramo
+
+==============================================================================================================
+ -->
 <record model="ir.ui.view" id="view_ocs_tract_form">
         <field name="name">ocs.tract.form</field>
         <field name="model">ocs.tract</field>
@@ -68,10 +80,50 @@
 </record>
 <menuitem name="Tracts" id="menu_ocs_tract" action="action_ocs_tract" parent ="menu_construction_ocs_settings" sequence="3"/>
 
+<!-- 
+==================================================================
+Crea Point  Puntos Crea
+==================================================================
+ -->
+
+<record model="ir.ui.view" id="view_ocs_crea_point_form">
+        <field name="name">ocs.crea_point.form</field>
+        <field name="model">ocs.crea_point</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="CREA Point">
+            	<field name="name" select="1"/>              
+                <field name="creation_date" select="0"/>                
+                <field name="close_date" select="0"/>
+                <field name="schedule" select="0"/>
+                <field name="tract_id"/>                     
+            </form>
+        </field>
+</record>
+    
+<record model="ir.ui.view" id="view_ocs_crea_point_tree">
+        <field name="name">ocs.crea_point.tree</field>
+        <field name="model">ocs.crea_point</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Crea Point">
+                <field name="creation_date"/>
+                <field name="name"/>
+            </tree>
+        </field>
+</record>
 
 
 
+<record model="ir.actions.act_window" id="action_ocs_crea_point">
+        <field name="name">Tracts</field>
+        <field name="res_model">ocs.crea_point</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
 
+
+<menuitem name="Crea Point" id="menu_ocs_crea_point" action="action_ocs_crea_point" parent ="menu_construction_ocs_settings" sequence="3"/>
 
 
 

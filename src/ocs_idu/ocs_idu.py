@@ -23,11 +23,17 @@
 # This module is not general, is for IDU (Instituto de Desarrollo Urbano) customization
 
 from osv import fields,osv
+from base_geoengine import geo_model
 
-class ocs_crea_point():
+class ocs_crea_point(geo_model.GeoModel):
     """
     IDU High Specific Requeriment for Office of Citizen Service  with Outsource partner    
     """
+    _name="ocs.crea_point"
+    _inherit="ocs.citizen_service_point"
+    _columns = {
+        'tract_id':fields.many2one('ocs.tract','Tract Id')
+    }
 
 
 class ocs_contract(osv.osv):
@@ -47,9 +53,11 @@ class ocs_tract(osv.osv):
     _columns = {
         'road_id': fields.char('Road ID',size = 16,help="Road Identification Number",required=True),
         'name': fields.char('Description',size=20,required=True),
-        'contract_id': fields.many2one('ocs.contract','Contractor',required=True),
+        'contract_id': fields.many2one('ocs.contract','Contract',required=True),
     }
 ocs_tract()
+
+
 
      
     
