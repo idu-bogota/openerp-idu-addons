@@ -33,6 +33,18 @@ class ocs_contract(osv.osv):
         'contractor': fields.char('Contractor',size=30,required=True),
     }
 ocs_contract()
+
+class ocs_tract(osv.osv):
+    """ This class is only for IDU (Instituto Desarrollo Urbano Colombia), who need take control about claims 
+    in building projects, from outsourcing  """
+    _name = 'ocs.tract'
+    _columns = {
+        'road_id': fields.char('Road ID',size = 16,help="Road Identification Number",required=True),
+        'name': fields.char('Description',size=20,required=True),
+        'contract_id': fields.many2one('ocs.contract','Contractor',required=True),
+    }
+ocs_tract()
+
      
     
     

@@ -37,6 +37,43 @@
     </record>
 <menuitem name="Contract" id="menu_ocs_contract" action="action_ocs_contract" parent ="menu_construction_ocs_settings" sequence="2"/>
 
+<record model="ir.ui.view" id="view_ocs_tract_form">
+        <field name="name">ocs.tract.form</field>
+        <field name="model">ocs.tract</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="ocs.tract">
+                <field name="road_id" select="1"/>
+                <field name="name" select="1"/>
+                <field name="contract_id" select="0"/>
+            </form>
+        </field>
+ </record>
+    
+ <record model="ir.ui.view" id="view_ocs_tract_tree">
+        <field name="name">ocs.tract.tree</field>
+        <field name="model">ocs.tract</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="ocs.tract">
+                <field name="road_id"/>
+                <field name="name"/>
+                <field name="contract_id"/>
+            </tree>
+        </field>
+</record>
+    
+<record model="ir.actions.act_window" id="action_ocs_tract">
+        <field name="name">Tracts</field>
+        <field name="res_model">ocs.tract</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+
+
+<menuitem name="Tracts" id="menu_ocs_tract" action="action_ocs_tract" parent ="menu_construction_ocs_settings" sequence="3"/>
+
+
 
 
 </data>
