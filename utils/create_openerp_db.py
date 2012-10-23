@@ -27,7 +27,7 @@ def main():
         parser.error('db_name not given')
     if not options.db_password:
         parser.error('db_password not given')
-    pass
+
     created = create_openerp_database(options)
 
     if created and options.activate_postgis:
