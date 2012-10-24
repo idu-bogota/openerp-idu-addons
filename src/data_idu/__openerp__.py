@@ -7,10 +7,10 @@
   'website': 'http://www.idu.gov.co',
   'depends': ['base'],
   'init_xml': [
-      'ocs.claim_classification.csv',
       'crm.case.categ.csv',
       'crm.case.channel.csv',
-      'ocs.claim_classification.csv',
+      'ocs.citizen_service_point.csv',
+      'ocs.claim_classification.csv'
   ],
   'update_xml': [],
   'installable': True,
