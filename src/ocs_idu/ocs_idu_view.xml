@@ -108,7 +108,8 @@ Crea Point  Puntos Crea
         <field name="arch" type="xml">
             <tree string="Crea Point">
                 <field name="creation_date"/>
-                <field name="name"/>
+                <field name="close_date"/>
+                <field name="full_name"/>
             </tree>
         </field>
 </record>

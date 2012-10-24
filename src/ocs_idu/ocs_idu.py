@@ -25,15 +25,26 @@
 from osv import fields,osv
 from base_geoengine import geo_model
 
+
+
 class ocs_crea_point(geo_model.GeoModel):
     """
     IDU High Specific Requeriment for Office of Citizen Service  with Outsource partner    
     """
+    def _get_full_name(self,cr,uid,ids,fieldname,arg,context=None):
+        """Get Full Name of Contract """
+        res = {}
+        for crea_point in self.browse(cr, uid, ids, context = context):
+                res[crea_point.id] = "{0} / {1} ".format(crea_point.tract_id.full_name, crea_point.name)                         
+        return  res
+    
     _name="ocs.crea_point"
     _inherit="ocs.citizen_service_point"
     _columns = {
-        'tract_id':fields.many2one('ocs.tract','Tract Id')
+        'tract_id':fields.many2one('ocs.tract','Tract Id'),
+        'full_name':fields.function(_get_full_name,type='char',string='Full Name',method=True),        
     }
+    _rec_name = 'contract_id'
 
 class ocs_contract(osv.osv):
     _name="ocs.contract"
@@ -55,7 +66,7 @@ class ocs_tract(osv.osv):
         """Get Full Name of Contract """
         res = {}
         for tract in self.browse(cr, uid, ids, context = context):
-                res[tract.id] = "{0}/{1} ".format(tract.contract_id.contract_id, tract.name)                         
+                res[tract.id] = "{0} / {1} ".format(tract.contract_id.contract_id, tract.name)                         
         return  res 
     
     _name = 'ocs.tract'
