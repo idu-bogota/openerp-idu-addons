@@ -25,6 +25,19 @@
 from osv import fields,osv
 from base_geoengine import geo_model
 
+class ocs_claim_construction(geo_model.GeoModel):
+    _name="ocs.claim.construction"
+    _inherit="crm.claim"
+    _columns = {
+        'csp_id':fields.many2one('ocs.crea_point','CSP',domain="[('close_date','=',False)]",
+                                 help='Citizen Service Point',required = True,
+                                 readonly = False, states = {'done':[('readonly',True)]}),
+        'state':fields.selection([('draft', 'New'),('open', 'In Progress'),('cancel', 'Cancelled'),
+                                  ('done', 'Closed'),('pending', 'Pending'),('review','Review')],
+                                 'State',help='Introduce a new state between open and done, in this step,\
+                                  other people makes a review and approve the response given to citizen')
+        
+    }
 
 
 class ocs_crea_point(geo_model.GeoModel):
@@ -45,6 +58,8 @@ class ocs_crea_point(geo_model.GeoModel):
         'full_name':fields.function(_get_full_name,type='char',string='Full Name',method=True),        
     }
     _rec_name = 'contract_id'
+ocs_crea_point()
+
 
 class ocs_contract(osv.osv):
     _name="ocs.contract"
