@@ -1,6 +1,6 @@
-id,section_id/id,name,object_id/id
-crm_claim.categ_claim5,,Queja,crm_claim.model_crm_claim
-crm_claim.categ_claim6,,Reclamo,crm_claim.model_crm_claim
-crm_claim.categ_claim7,,Solicitud,crm_claim.model_crm_claim
-crm_claim.categ_claim8,,Sugerencia,crm_claim.model_crm_claim
-crm_claim.categ_claim9,,Denuncia,crm_claim.model_crm_claim
+id,active,section_id/id,name,object_id/id
+crm_claim.categ_claim4,True,,Reclamo,crm_claim.model_crm_claim
+crm_claim.categ_claim5,True,,Solicitud,crm_claim.model_crm_claim
+crm_claim.categ_claim6,True,,Sugerencia,crm_claim.model_crm_claim
+crm_claim.categ_claim7,True,,Denuncia,crm_claim.model_crm_claim
+crm_claim.categ_claim8,True,,Queja,crm_claim.model_crm_claim
