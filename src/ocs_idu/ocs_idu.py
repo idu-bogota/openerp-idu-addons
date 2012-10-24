@@ -25,8 +25,8 @@
 from osv import fields,osv
 from base_geoengine import geo_model
 
-class ocs_claim_construction(geo_model.GeoModel):
-    _name="ocs.claim.construction"
+class ocs_construction_claim(geo_model.GeoModel):
+    _name="ocs.construction_claim"
     _inherit="crm.claim"
     _columns = {
         'csp_id':fields.many2one('ocs.crea_point','CSP',domain="[('close_date','=',False)]",
@@ -35,10 +35,9 @@ class ocs_claim_construction(geo_model.GeoModel):
         'state':fields.selection([('draft', 'New'),('open', 'In Progress'),('cancel', 'Cancelled'),
                                   ('done', 'Closed'),('pending', 'Pending'),('review','Review')],
                                  'State',help='Introduce a new state between open and done, in this step,\
-                                  other people makes a review and approve the response given to citizen')
-        
+                                  other people makes a review and approve the response given to citizen')        
     }
-
+ocs_construction_claim()
 
 class ocs_crea_point(geo_model.GeoModel):
     """
