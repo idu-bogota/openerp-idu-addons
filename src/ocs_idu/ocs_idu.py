@@ -44,17 +44,27 @@ class ocs_contract(osv.osv):
         'end_date': fields.datetime('End Date',help="When contract ends"),
         'partner_id': fields.many2one('res.partner','Contractor',size=30,required=True),
     }
+    _rec_name = 'contract_id'
 ocs_contract()
 
 class ocs_tract(osv.osv):
     """ This class is only for IDU (Instituto Desarrollo Urbano Colombia), who need take control about claims 
-    in building projects, from outsourcing  """
+    in building projects, from outsourcing  """    
+    def _get_full_name(self,cr,uid,ids,fieldname,arg,context=None):
+        """Get Full Name of Contract """
+        res = {}
+        for tract in self.browse(cr, uid, ids, context = context):
+                res[tract.id] = "{0}/{1} ".format(tract.contract_id.contract_id, tract.name)                         
+        return  res 
+    
     _name = 'ocs.tract'
     _columns = {
+        'full_name':fields.function(_get_full_name,type='char',string='Full Name',method=True),
         'road_id': fields.char('Road ID',size = 16,help="Road Identification Number",required=True),
         'name': fields.char('Description',size=20,required=True),
         'contract_id': fields.many2one('ocs.contract','Contract',required=True),
     }
+    _rec_name = 'full_name'
 ocs_tract()
 
 

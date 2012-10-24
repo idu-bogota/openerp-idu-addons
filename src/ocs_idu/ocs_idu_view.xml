@@ -65,9 +65,9 @@ Tract_Tramo
         <field name="model">ocs.tract</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="ocs.tract">
+            <tree string="Tract List">
                 <field name="road_id"/>
-                <field name="name"/>
+                <field name="full_name"/>
                 <field name="contract_id"/>
             </tree>
         </field>
