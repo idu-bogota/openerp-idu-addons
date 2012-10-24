@@ -35,7 +35,6 @@ class ocs_crea_point(geo_model.GeoModel):
         'tract_id':fields.many2one('ocs.tract','Tract Id')
     }
 
-
 class ocs_contract(osv.osv):
     _name="ocs.contract"
     _columns = {
@@ -46,6 +45,8 @@ class ocs_contract(osv.osv):
     }
     _rec_name = 'contract_id'
 ocs_contract()
+
+
 
 class ocs_tract(osv.osv):
     """ This class is only for IDU (Instituto Desarrollo Urbano Colombia), who need take control about claims 
