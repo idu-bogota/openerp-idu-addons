@@ -162,16 +162,7 @@ Construction Claim
         </record>
 
 
-
-
-
-
-
-
-
-
-
-
+<!-- Formulario reevaluado -->
 
 
         <record model="ir.ui.view" id="ocs_construction_claim_form_view">
