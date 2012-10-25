@@ -29,7 +29,7 @@ class ocs_construction_claim(geo_model.GeoModel):
     _name="ocs.construction_claim"
     _inherit="crm.claim"
     _columns = {
-        'csp_id':fields.many2one('ocs.crea_point','CSP',domain="[('close_date','=',False)]",
+        'csp_id':fields.many2one('ocs.crea_point','Crea Point',domain="[('close_date','=',False)]",
                                  help='Citizen Service Point',required = True,
                                  readonly = False, states = {'done':[('readonly',True)]}),
         'state':fields.selection([('draft', 'New'),('open', 'In Progress'),('cancel', 'Cancelled'),
