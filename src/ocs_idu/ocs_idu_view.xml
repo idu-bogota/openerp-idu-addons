@@ -290,20 +290,9 @@ Construction Claim
   </record>
 
 
-
-
-
-
-
-
-
-
-
-
-
 <record model="ir.actions.act_window" id="action_ocs_construction_claim">
         <field name="name">Tracts</field>
-        <field name="res_model">ocs.crea_point</field>
+        <field name="res_model">ocs.construction_claim</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
 </record>
