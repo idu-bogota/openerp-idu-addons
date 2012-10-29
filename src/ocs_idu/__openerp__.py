@@ -29,7 +29,10 @@
         "depends" : ['ocs'],
         "init_xml" : ['ocs_idu_view.xml'],        
         "demo_xml" : [],
-        "update_xml" : ['ocs_idu_view.xml'                
+        "update_xml" : [
+                        'security/ocs_idu_security.xml',  
+                        'security/ir.model.access.csv',
+                        'ocs_idu_view.xml',                                                              
                         ],
         "installable": True
 }
