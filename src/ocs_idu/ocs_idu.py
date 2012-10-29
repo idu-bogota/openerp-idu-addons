@@ -28,10 +28,7 @@ from base_geoengine import geo_model
 class ocs_construction_claim(geo_model.GeoModel):
     _name="ocs.construction_claim"
     _inherit="crm.claim"
-    _columns = {
-        'csp_id':fields.many2one('ocs.crea_point','Crea Point',domain="[('close_date','=',False)]",
-                                 help='Citizen Service Point',required = True,
-                                 readonly = False, states = {'done':[('readonly',True)]}),
+    _columns = {        
         'state':fields.selection([('draft', 'New'),('open', 'In Progress'),('cancel', 'Cancelled'),
                                   ('done', 'Closed'),('pending', 'Pending'),('review','Review')],
                                  'State',help='Introduce a new state between open and done, in this step,\
@@ -39,25 +36,48 @@ class ocs_construction_claim(geo_model.GeoModel):
     }
 ocs_construction_claim()
 
-class ocs_crea_point(geo_model.GeoModel):
+class ocs_citizen_service_point(geo_model.GeoModel):
     """
     IDU High Specific Requeriment for Office of Citizen Service  with Outsource partner    
     """
+    
+    def _CheckIsOutSourced (self,cr,uid,context):        
+        """
+        Verifiy Context to Set default value
+        """        
+        if context.has_key("is_outsourced"):        
+            if context["is_outsourced"]:
+                return True
+            else :
+                return False        
+        return False 
+    
     def _get_full_name(self,cr,uid,ids,fieldname,arg,context=None):
         """Get Full Name of Contract """
         res = {}
-        for crea_point in self.browse(cr, uid, ids, context = context):
-                res[crea_point.id] = "{0} / {1} ".format(crea_point.tract_id.full_name, crea_point.name)                         
+        for csp in self.browse(cr, uid, ids, context = context):
+            if csp.is_outsourced:
+                res[csp.id] = "{0} / {1} ".format(csp.tract_id.full_name, csp.name)
+            else :
+                res[csp.id] = "{0}".format(csp.name)
+                                         
         return  res
     
-    _name="ocs.crea_point"
+    _name="ocs.citizen_service_point"
     _inherit="ocs.citizen_service_point"
     _columns = {
+        'is_outsourced':fields.boolean('is Outsourced',help='When is set, this is an outsourced citizen service point'),
         'tract_id':fields.many2one('ocs.tract','Tract Id'),
-        'full_name':fields.function(_get_full_name,type='char',string='Full Name',method=True),        
+        'full_name':fields.function(_get_full_name,type='char',string='Full Name',method=True),
+        'users_id':fields.many2many('res.users','ocs_citizen_service_point_users','user_id','csp_id','Users'),        
     }
+    _defaults={
+        'is_outsourced':  _CheckIsOutSourced,            
+    }
+   
+    
     _rec_name = 'contract_id'
-ocs_crea_point()
+ocs_citizen_service_point()
 
 
 class ocs_contract(osv.osv):

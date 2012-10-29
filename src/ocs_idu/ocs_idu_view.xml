@@ -87,30 +87,27 @@ Crea Point  Puntos Crea
  -->
 
 <record model="ir.ui.view" id="view_ocs_crea_point_form">
-        <field name="name">ocs.crea_point.form</field>
-        <field name="model">ocs.crea_point</field>
+        <field name="name">ocs.citizen_service_point.form.inherit</field>
+        <field name="model">ocs.citizen_service_point</field>
         <field name="type">form</field>
+        <field name="inherit_id" ref="ocs.view_ocs_citizen_service_point_form"/>
         <field name="arch" type="xml">
-            <form string="CREA Point">
-            	<field name="name" select="1"/>              
-                <field name="creation_date" select="0"/>                
-                <field name="close_date" select="0"/>
-                <field name="schedule" select="0"/>
-                <field name="tract_id"/>                     
-            </form>
+            <field name="schedule" position="after">
+            	<field name="full_name" select="0"/>
+            	<field name="users_id" colspan="4" nolabel="1"/>            
+            </field>  
         </field>
 </record>
     
 <record model="ir.ui.view" id="view_ocs_crea_point_tree">
-        <field name="name">ocs.crea_point.tree</field>
-        <field name="model">ocs.crea_point</field>
+        <field name="name">ocs.citizen_service_point.tree_inherit</field>
+        <field name="model">ocs.citizen_service_point</field>
         <field name="type">tree</field>
+        <field name="inherit_id" ref="ocs.view_ocs_citizen_service_point_tree"/>
         <field name="arch" type="xml">
-            <tree string="Crea Point">
-                <field name="creation_date"/>
-                <field name="close_date"/>
-                <field name="full_name"/>
-            </tree>
+                <field name="name" position="replace"> 
+                	<field name="full_name"/>                	
+            	</field>
         </field>
 </record>
 
@@ -118,9 +115,10 @@ Crea Point  Puntos Crea
 
 <record model="ir.actions.act_window" id="action_ocs_crea_point">
         <field name="name">Tracts</field>
-        <field name="res_model">ocs.crea_point</field>
+        <field name="res_model">ocs.citizen_service_point</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="context">{"is_outsourced":True}</field>
 </record>
 
 
