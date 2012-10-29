@@ -25,16 +25,16 @@
 from osv import fields,osv
 from base_geoengine import geo_model
 
-class ocs_construction_claim(geo_model.GeoModel):
+class crm_claim(geo_model.GeoModel):
     _name="crm.claim"
     _inherit="crm.claim"
     _columns = {        
         'state':fields.selection([('draft', 'New'),('open', 'In Progress'),('cancel', 'Cancelled'),
-                                  ('done', 'Closed'),('pending', 'Pending'),('review','Review')],
+                                  ('review','Review'),('done', 'Closed'),('pending', 'Pending')],
                                  'State',help='Introduce a new state between open and done, in this step,\
                                   other people makes a review and approve the response given to citizen')        
     }
-ocs_construction_claim()
+crm_claim()
 
 
 
@@ -76,9 +76,7 @@ class ocs_citizen_service_point(geo_model.GeoModel):
     _defaults={
         'is_outsourced':  _CheckIsOutSourced,            
     }
-   
-    
-    _rec_name = 'contract_id'
+    _rec_name = 'full_name'
 ocs_citizen_service_point()
 
 
