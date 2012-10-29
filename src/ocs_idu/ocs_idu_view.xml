@@ -163,7 +163,7 @@ Construction Claim
 <!-- Formulario reevaluado -->
 
 
-        <record model="ir.ui.view" id="ocs_construction_claim_form_view">
+<record model="ir.ui.view" id="ocs_construction_claim_form_view">
             <field name="name">Contruction - Claims Form</field>
             <field name="model">ocs.construction_claim</field>
             <field name="type">form</field>
