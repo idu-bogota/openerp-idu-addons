@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="group_ocs_outsourced_user" model="res.groups">
+    		<field name="name">OCS Outsourced User</field>
+		</record>
+		
+		<record id="group_ocs_outsourced_manager" model="res.groups">
+    		<field name="name">OCS Outsourced Manager</field>
+		</record>	
+	</data>
+</openerp>
