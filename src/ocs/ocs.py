@@ -153,6 +153,7 @@ class ocs_claim_classification(osv.osv):
     _name="ocs.claim_classification"
     _columns={
       'id':fields.integer('ID',readonly=True),
+      'is_portal_visible':fields.boolean('Is Portal Visible',help="If this field is set, when claim portal can retrieve this classification."),
       'code':fields.char('Code',size=6),
       'name':fields.char('Name',size=128),
       'enabled':fields.boolean('Enabled',help='If item is valid now'),
