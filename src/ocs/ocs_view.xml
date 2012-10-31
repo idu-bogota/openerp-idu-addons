@@ -401,12 +401,13 @@ SubDistrict
         <field name="model">ocs.claim_classification</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Claim Classification">
+            <form string="Claim Classification">            	
                 <field name="id" select="0"/>
                 <field name="code" select="0"/>
                 <field name="name" select="1"/>                                
                 <field name="parent_id" select ="1" />
-                <field name="enabled" select="0"/>                           
+                <field name="enabled" select="0"/>
+                <field name="is_portal_visible" select ="1"/>                           
             </form>
         </field>
 </record>
@@ -420,7 +421,8 @@ SubDistrict
                 <field name="code"/>
                 <field name="name"/>    
                 <field name="parent_id"/>
-                 <field name="enabled"/>                                 
+                <field name="enabled"/>
+                <field name="is_portal_visible"/>                                 
             </tree>
         </field>
 </record>
