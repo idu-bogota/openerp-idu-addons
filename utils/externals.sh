@@ -68,4 +68,4 @@ cd $ADDONS_PATH
 sudo bzr branch  http://bazaar.launchpad.net/~c2c/c2c-geoengine-addons/trunk/ c2c-geoengine-addons
 
 #Descomprimir archivos de cartografia de bogota
-bunzip2 -k "$ADDONS_PATH/addons-idu/data_idu/sql/*.bz2"
+bunzip2 -k "$ADDONS_PATH/addons-idu/src/data_idu/sql/*.bz2"
