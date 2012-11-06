@@ -25,7 +25,11 @@
 from osv import fields,osv
 from base_geoengine import geo_model
 
-class crm_claim(geo_model.GeoModel):
+class crm_claim(osv.osv):
+    """
+    Inherit from ocs and ocs crm_claim
+    
+    """    
     _name="crm.claim"
     _inherit="crm.claim"
     _columns = {        
