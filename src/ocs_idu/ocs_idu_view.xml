@@ -220,9 +220,7 @@ Construction Claim
                                     name="%(crm.action_crm_add_note)d"
                                     context="{'model': 'crm.lead' }"
                                     icon="terp-document-new" type="action" />
-                                <button string="Send New Email"
-                                    name="%(mail.action_email_compose_message_wizard)d"
-                                    icon="terp-mail-message-new" type="action"/>
+                              	<!--<button string="Send New Email"  name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/> -->
                             </page>                            
                         </notebook>                        
                     </group>
