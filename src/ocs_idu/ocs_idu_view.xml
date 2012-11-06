@@ -182,55 +182,24 @@ Construction Claim
                                 </group>
                                 <group colspan="2" col="2">
                                     <separator colspan="2" string="Responsibilities"/>
-                                    <field name="user_fault"/>
-                                    <field name="categ_id" widget="selection"
-                                        domain="[('object_id.model', '=', 'crm.claim')]" />
-                                    <field name="ref"/>
+                                    <field name="channel" select ="0" widget="selection"/>
+                                    <field name="categ_id"  widget="selection" domain="[('object_id.model', '=', 'crm.claim')]"/>
+                                    <field name="classification_id"/>
+                                    <field name="sub_classification_id"/>
                                 </group>
                                 <separator colspan="4" string="Claim/Action Description"/>
-                                <field name="description" colspan="4" nolabel="1"/>
-                                <separator colspan="4" string=""/>
-                                <group col="8" colspan="4">
-                                    
-                                    <button name="case_cancel" string="Cancel"
-                                        states="draft,open,pending" type="object"
-                                        icon="gtk-cancel" />
-                                    <button name="case_pending" string="Pending"
-                                        states="draft,open" type="object"
-                                        icon="gtk-media-pause" />
-                                    <button name="case_open" string="Open"
-                                        states="draft,pending" type="object"
-                                        icon="gtk-go-forward" />
-                                    <button name="case_close" string="Done"
-                                        states="open,pending" type="object"
-                                        icon="gtk-jump-to" />
-                                    <button name="case_reset"
-                                        string="Reset to Draft" states="done,cancel"
-                                        type="object" icon="gtk-convert" />
+                                <group colspan="4" col="4">
+                                	<field name="claim_address"/>
+                                <newline/>
+                                	<field name="neighborhood_id"/>
+                                	<field name="district_id"/>
                                 </group>
+                                <field name="description" colspan="4" nolabel="1"/>                                
                             </page>
                             <page string="Follow Up">
-                                <group colspan="2" col="2">
-                                    <separator colspan="2" string="Actions"/>
-                                    <field name="date_action_next"/>
-                                    <field name="action_next"/>
-                                </group>
-                                <group colspan="2" col="2">
-                                    <separator colspan="2" string="Dates"/>
-                                    <field name="create_date"/>
-                                    <field name="date_closed"/>
-                                    <field name="write_date"/>
-                                </group>
-
-                                <group colspan="2" col="2">
-                                    <separator colspan="2" string="Root Causes"/>
-                                    <field name="cause" colspan="2" nolabel="1"/>
-                                </group>
-                                <group colspan="2" col="2">
-                                    <separator colspan="2" string="Resolution Actions"/>
-                                    <field name="type_action"/>
-                                    <field name="resolution" colspan="2" nolabel="1"/>
-                                </group>
+                                <separator string="Solution" colspan="4" />
+			           	 			<field name="date_closed"/> 
+           	 						<field  name="resolution" colspan="4" nolabel="1" />
                             </page>
                             <page string="Communication &amp; History" groups="base.group_extended">
                                 <group colspan="4">
@@ -254,8 +223,17 @@ Construction Claim
                                 <button string="Send New Email"
                                     name="%(mail.action_email_compose_message_wizard)d"
                                     icon="terp-mail-message-new" type="action"/>
-                            </page>
-                        </notebook>
+                            </page>                            
+                        </notebook>                        
+                    </group>
+                    
+                    <separator colspan="4" string=""/>
+                    <group col="8" colspan="4">
+                    	<button name="cas_cancel" string="Cancel" type="workflow" icon="gtk-cancel" states="draft"/> <!-- states= "Estados en los cuales el boton es visible" -->
+                    	<button name="cas_pending" string="Pending" type="workflow" icon="gtk-media-pause" states="open" />
+       					<button name="cas_open" string="Open" type="workflow" icon="gtk-go-forward" states="draft,pending" />
+       					<button name="cas_reset" string="Reset to in Progress" type="workflow" icon="gtk-convert" states="done"/>
+       					<button name="cas_close" string="Done" type="workflow" icon="gtk-jump-to" states="open" />
                     </group>
                 </form>
             </field>
