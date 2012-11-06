@@ -230,8 +230,9 @@ Construction Claim
                     	<button name="cas_cancel" string="Cancel" type="workflow" icon="gtk-cancel" states="draft"/> <!-- states= "Estados en los cuales el boton es visible" -->
                     	<button name="cas_pending" string="Pending" type="workflow" icon="gtk-media-pause" states="open" />
        					<button name="cas_open" string="Open" type="workflow" icon="gtk-go-forward" states="draft,pending" />
-       					<button name="cas_reset" string="Reset to in Progress" type="workflow" icon="gtk-convert" states="done"/>
-       					<button name="cas_close" string="Done" type="workflow" icon="gtk-jump-to" states="open" />
+       					<button name="cas_review" string="Review" type="workflow" icon="gtk-go-forward" states="open" />       					
+       					<button name="cas_reset" string="Reset to in Progress" type="workflow" icon="gtk-convert" states="done,review"/>
+       					<button name="cas_close" string="Done" type="workflow" icon="gtk-jump-to" states="review" />
                     </group>
                 </form>
             </field>

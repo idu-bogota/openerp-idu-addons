@@ -36,8 +36,21 @@ class crm_claim(osv.osv):
         'state':fields.selection([('draft', 'New'),('open', 'In Progress'),('cancel', 'Cancelled'),
                                   ('review','Review'),('done', 'Closed'),('pending', 'Pending')],
                                  'State',help='Introduce a new state between open and done, in this step,\
-                                  other people makes a review and approve the response given to citizen')        
+                                  other people makes a review and approve the response given to citizen')              
+     
     }
+    
+    def case_review(self, cr, uid, ids, *args):
+        """Review the Case
+        :param ids: List of case Ids
+        """
+        cases = self.browse(cr, uid, ids)
+        cases[0].state # to fill the browse record cache
+        self.write(cr, uid, ids, {'state': 'review', 'active': True})
+        # We use the cache of cases to keep the old case state
+        self._action(cr, uid, cases, 'review')
+        return True
+    
 crm_claim()
 
 
