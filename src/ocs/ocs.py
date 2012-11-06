@@ -257,36 +257,36 @@ class crm_claim(geo_model.GeoModel):
    
    _columns={
         #'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
-        'description': fields.text('Description',required=True,readonly=False,states={'done':[('readonly',True)]}),
-        'priority': fields.selection([('h','High'),('n','Normal'),('l','Low')], 'Priority', required=True, readonly=False,states={'done':[('readonly',True)]}),
-        'external_id':fields.char('External ID',size=128,help='External Claim System Identificator',readonly=False,states={'done':[('readonly',True)]}),
-        'external_dms_id': fields.char('External DMS ID',size=20,help='External Document Management System Identificator',readonly=False,states={'done':[('readonly',True)]}),
-        'csp_id':fields.many2one('ocs.citizen_service_point','CSP',domain="[('close_date','=',False)]",help='Citizen Service Point',required=True,readonly=False,states={'done':[('readonly',True)]}),
-        'channel':fields.many2one('crm.case.channel','Case Channel',help='Case Channel',required=True,readonly=False,states={'done':[('readonly',True)]}),
+        'description': fields.text('Description',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+        'priority': fields.selection([('h','High'),('n','Normal'),('l','Low')], 'Priority', required=True, readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+        'external_id':fields.char('External ID',size=128,help='External Claim System Identificator',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+        'external_dms_id': fields.char('External DMS ID',size=20,help='External Document Management System Identificator',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+        'csp_id':fields.many2one('ocs.citizen_service_point','CSP',domain="[('close_date','=',False)]",help='Citizen Service Point',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+        'channel':fields.many2one('crm.case.channel','Case Channel',help='Case Channel',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.claim')],\
                             ('active','=',True)",
-                            required=True,readonly=False,states={'done':[('readonly',True)]}),
+                            required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
               
-        'claim_address':fields.char('Claim Address',size=256,help='Place of Claim',readonly=False,states={'done':[('readonly',True)]}),
-        'district_id':fields.many2one('ocs.district','District',readonly=False,states={'done':[('readonly',True)]}),        
-        'neighborhood_id':fields.many2one('ocs.neighborhood','Neighborhood',readonly=False,states={'done':[('readonly',True)]}),
+        'claim_address':fields.char('Claim Address',size=256,help='Place of Claim',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+        'district_id':fields.many2one('ocs.district','District',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),        
+        'neighborhood_id':fields.many2one('ocs.neighborhood','Neighborhood',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'geo_point':fields.geo_point('Location',srid=4668,readonly=True),
         'classification_id':fields.many2one('ocs.claim_classification','Classification', \
-                                               domain="[('parent_id','=',False),('enabled','=',True)]", required=True,readonly=False,states={'done':[('readonly',True)]}),
-        'sub_classification_id':fields.many2one('ocs.claim_classification','Sub Classification',domain="[('parent_id','=',classification_id),('enabled','=',True)]", required=True,readonly=False,states={'done':[('readonly',True)]}),        
+                                               domain="[('parent_id','=',False),('enabled','=',True)]", required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+        'sub_classification_id':fields.many2one('ocs.claim_classification','Sub Classification',domain="[('parent_id','=',classification_id),('enabled','=',True)]", required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),        
         'name':fields.function(_get_full_name,type='char',string='Full Name',method=True),
         #Se repiten campos del modelo original para poder controlarlos en los estados
-        'partner_id': fields.many2one('res.partner', 'Partner',readonly=False,states={'done':[('readonly',True)]}),
+        'partner_id': fields.many2one('res.partner', 'Partner',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                 # domain="[('partner_id','=',partner_id)]"
-                                 readonly=False,states={'done':[('readonly',True)]}),        
-        'email_from': fields.char('Email', size=128, help="These people will receive email.",readonly=False,states={'done':[('readonly',True)]}),
-        'partner_phone': fields.char('Phone', size=32,readonly=False,states={'done':[('readonly',True)]}),        
-        'resolution': fields.text('Resolution',readonly=False,states={'done':[('readonly',True)]}),
-        'date_deadline': fields.date('Deadline',readonly=False,states={'done':[('readonly',True)]}),
-        'user_id': fields.many2one('res.users', 'Responsible',readonly=False,states={'done':[('readonly',True)]}),
+                                 readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),        
+        'email_from': fields.char('Email', size=128, help="These people will receive email.",readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+        'partner_phone': fields.char('Phone', size=32,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),        
+        'resolution': fields.text('Resolution',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+        'date_deadline': fields.date('Deadline',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+        'user_id': fields.many2one('res.users', 'Responsible',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
     }   
    _order='create_date desc'
    _rec_name = 'classification'
