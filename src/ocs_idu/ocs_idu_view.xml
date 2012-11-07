@@ -1,245 +1,269 @@
 <?xml version="1.0"?>
 <openerp>
-<data>
-<menuitem name="Construction Issue" id ="menu_ocs_construction_issues" parent = "ocs.menu_ocs" sequence = "3"/>
-<menuitem name="Construction Issue Settings" id ="menu_construction_ocs_settings" parent = "ocs.menu_ocs" sequence = "5"/>
-<!-- 
-======================================================================
-Contract_Contratos....
+	<data>
+		<menuitem name="Construction Issue" id="menu_ocs_construction_issues"
+			parent="ocs.menu_ocs" sequence="3" />
+		<menuitem name="Construction Issue Settings" id="menu_construction_ocs_settings"
+			parent="ocs.menu_ocs" sequence="5" />
+		<!-- ====================================================================== 
+			Contract_Contratos.... ====================================================================== -->
+		<record model="ir.ui.view" id="view_ocs_contract_form">
+			<field name="name">ocs.contract.form</field>
+			<field name="model">ocs.contract</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Contract">
+					<field name="contract_id" select="1" />
+					<field name="partner_id" select="1" />
+					<field name="start_date" select="0" />
+					<field name="end_date" select="0" />
+				</form>
+			</field>
+		</record>
 
-======================================================================
--->
-<record model="ir.ui.view" id="view_ocs_contract_form">
-        <field name="name">ocs.contract.form</field>
-        <field name="model">ocs.contract</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Contract">
-              	<field name="contract_id" select="1"/>
-                <field name="partner_id" select="1"/>
-                <field name="start_date" select="0"/>
-                <field name="end_date" select="0"/>               
-            </form>
-        </field>
- 	</record>
-    
-    <record model="ir.ui.view" id="view_ocs_contract_tree">
-        <field name="name">ocs.contract.tree</field>
-        <field name="model">ocs.contract</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Contract">
-                <field name="contract_id"/>                
-                <field name="partner_id"/>
-            </tree>
-        </field>
-    </record>    
-<record model="ir.actions.act_window" id="action_ocs_contract">
-        <field name="name">contract</field>
-        <field name="res_model">ocs.contract</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-</record>
-<menuitem name="Contract" id="menu_ocs_contract" action="action_ocs_contract" parent ="menu_construction_ocs_settings" sequence="2"/>
+		<record model="ir.ui.view" id="view_ocs_contract_tree">
+			<field name="name">ocs.contract.tree</field>
+			<field name="model">ocs.contract</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Contract">
+					<field name="contract_id" />
+					<field name="partner_id" />
+				</tree>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="action_ocs_contract">
+			<field name="name">contract</field>
+			<field name="res_model">ocs.contract</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem name="Contract" id="menu_ocs_contract" action="action_ocs_contract"
+			parent="menu_construction_ocs_settings" sequence="2" />
 
-<!-- 
-==============================================================================================================
-Tract_Tramo
+		<!-- ============================================================================================================== 
+			Tract_Tramo ============================================================================================================== -->
+		<record model="ir.ui.view" id="view_ocs_tract_form">
+			<field name="name">ocs.tract.form</field>
+			<field name="model">ocs.tract</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="ocs.tract">
+					<field name="road_id" select="1" />
+					<field name="name" select="1" />
+					<field name="contract_id" select="0" />
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_ocs_tract_tree">
+			<field name="name">ocs.tract.tree</field>
+			<field name="model">ocs.tract</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Tract List">
+					<field name="road_id" />
+					<field name="full_name" />
+					<field name="contract_id" />
+				</tree>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="action_ocs_tract">
+			<field name="name">Tracts</field>
+			<field name="res_model">ocs.tract</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem name="Tracts" id="menu_ocs_tract" action="action_ocs_tract"
+			parent="menu_construction_ocs_settings" sequence="3" />
 
-==============================================================================================================
- -->
-<record model="ir.ui.view" id="view_ocs_tract_form">
-        <field name="name">ocs.tract.form</field>
-        <field name="model">ocs.tract</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="ocs.tract">
-                <field name="road_id" select="1"/>
-                <field name="name" select="1"/>
-                <field name="contract_id" select="0"/>
-            </form>
-        </field>
- </record>    
- <record model="ir.ui.view" id="view_ocs_tract_tree">
-        <field name="name">ocs.tract.tree</field>
-        <field name="model">ocs.tract</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Tract List">
-                <field name="road_id"/>
-                <field name="full_name"/>
-                <field name="contract_id"/>
-            </tree>
-        </field>
-</record>    
-<record model="ir.actions.act_window" id="action_ocs_tract">
-        <field name="name">Tracts</field>
-        <field name="res_model">ocs.tract</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-</record>
-<menuitem name="Tracts" id="menu_ocs_tract" action="action_ocs_tract" parent ="menu_construction_ocs_settings" sequence="3"/>
+		<!-- ================================================================== 
+			Crea Point Puntos Crea ================================================================== -->
 
-<!-- 
-==================================================================
-Crea Point  Puntos Crea
-==================================================================
- -->
+		<record model="ir.ui.view" id="view_ocs_crea_point_form">
+			<field name="name">ocs.citizen_service_point.form.inherit</field>
+			<field name="model">ocs.citizen_service_point</field>
+			<field name="priority" eval="10" />
+			<field name="type">form</field>
+			<field name="inherit_id" ref="ocs.view_ocs_citizen_service_point_form" />			
+			<field name="arch" type="xml">
+				<field name="schedule" position="after">
+					<field name="full_name" select="0" />
+					<field name="users_id" colspan="4" nolabel="1" />
+				</field>
+			</field>
+		</record>
 
-<record model="ir.ui.view" id="view_ocs_crea_point_form">
-        <field name="name">ocs.citizen_service_point.form.inherit</field>
-        <field name="model">ocs.citizen_service_point</field>
-        <field name="type">form</field>
-        <field name="inherit_id" ref="ocs.view_ocs_citizen_service_point_form"/>
-        <field name="arch" type="xml">
-            <field name="schedule" position="after">
-            	<field name="tract_id" select="0"/>   
-            	<field name="full_name" select="0"/>
-            	<field name="users_id" colspan="4" nolabel="1"/>
-            </field>  
-        </field>
-</record>
-    
-<record model="ir.ui.view" id="view_ocs_crea_point_tree">
-        <field name="name">ocs.citizen_service_point.tree_inherit</field>
-        <field name="model">ocs.citizen_service_point</field>
-        <field name="type">tree</field>
-        <field name="inherit_id" ref="ocs.view_ocs_citizen_service_point_tree"/>
-        <field name="arch" type="xml">
-                <field name="name" position="replace"> 
-                	<field name="full_name"/>                	
-            	</field>
-        </field>
-</record>
-
-
-
-<record model="ir.actions.act_window" id="action_ocs_crea_point">
-        <field name="name">Tracts</field>
-        <field name="res_model">ocs.citizen_service_point</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="context">{"is_outsourced":True}</field>
-</record>
+		<record model="ir.ui.view" id="view_ocs_crea_point_form_outsourced">
+			<field name="name">ocs.citizen_service_point.form.outsourced</field>
+			<field name="model">ocs.citizen_service_point</field>
+			<field name="type">form</field>			
+			<field name="arch" type="xml">
+				<form string="Outsourced Citizen Service Point">
+						<field name="name"/>
+						<field name="creation_date"/>
+						<field name="close_date"/>
+						<field name="schedule"/>
+						<field name="tract_id" required="True"/>
+						<field name="full_name" select="0" />
+						<field name="users_id" colspan="4" nolabel="1" />					
+				</form>
+			</field>
+		</record>
+		
+		
 
 
-<menuitem name="Crea Point" id="menu_ocs_crea_point" action="action_ocs_crea_point" parent ="menu_construction_ocs_settings" sequence="3"/>
+		<record model="ir.ui.view" id="view_ocs_crea_point_tree">
+			<field name="name">ocs.citizen_service_point.tree_inherit</field>
+			<field name="model">ocs.citizen_service_point</field>
+			<field name="type">tree</field>
+			<field name="inherit_id" ref="ocs.view_ocs_citizen_service_point_tree" />
+			<field name="arch" type="xml">
+				<field name="name" position="replace">
+					<field name="full_name" />
+				</field>
+			</field>
+		</record>
+		
+		
+		<record model="ir.actions.act_window" id="ocs.action_ocs_citizen_service_point">
+        	<field name="name">Citizen Service Points</field>
+        	<field name="res_model">ocs.citizen_service_point</field>
+        	<field name="view_type">form</field>
+        	<field name="domain">[('is_outsourced','=',False)]</field>
+        	<field name="view_mode">tree,form</field>
+		</record> 		
+		
+		<record model="ir.actions.act_window" id="action_ocs_crea_point">
+			<field name="name">Tracts</field>
+			<field name="res_model">ocs.citizen_service_point</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('is_outsourced','=',True)]</field>
+			<field name="context">{'is_outsourced':True,'form_view_ref':'ocs_idu.view_ocs_crea_point_form_outsourced'}</field> <!-- Ayuda a determinar si el predio es o no outsourced -->			
+		</record>
 
-<!-- 
-=================================================================================================
-Construction Claim 
+		<menuitem name="Outsourced Citizen Service Point" id="menu_ocs_crea_point" action="action_ocs_crea_point"
+			parent="menu_construction_ocs_settings" sequence="3" />
 
-=================================================================================================
- -->
-
-
-
-<record model="ir.ui.view" id="view_ocs_claim_form_inherit">
-            <field name="name">Contruction - Claims Form</field>
-            <field name="model">crm.claim</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="ocs.view_ocs_claim_form_inherit"/> 
-            <field name="arch" type="xml">
-            	<field name="state" position="replace">
-            		<field name="state" select="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>            	
-            	</field>            	                
-            </field>
-</record>
-
-
-
-<record model="ir.ui.view" id="ocs_idu_crm_case_claims_form_view">
-            <field name="name">Contruction Claims Form</field>
-            <field name="model">crm.claim</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Claims">
-                	<field name="state" select="1" widget="statusbar" statusbar_visible="draft,review,open,done" statusbar_colors='{"pending":"blue"}' colspan="4"/>
-                    <group>
-                        <field name="name" />
-                        <field name="create_date"/>
-                    </group>
-                    <group colspan="4" col="6">
-                        <field name="user_id"/>
-                        <field name="csp_id" widget="selection" />
-                        <field name="id"/>                        
-                        <newline />
-                        <field name="priority"/>
-                        <field name="date_deadline"/>                        
-                    </group>                    
-                    
-                    <group colspan="4" col="4">
-                        <notebook>
-                            <page string="Claim Description">
-                                <group colspan="2" col="2">
-                                    <separator colspan="2" string="Claim Reporter"/>
-                                    <field name="partner_id" string="Partner"
-                                        on_change="onchange_partner_id(partner_id)" />
-                                    <field name="partner_address_id" string="Contact"
-                                        on_change="onchange_partner_address_id(partner_address_id, email_from)" />
-                                    <field name="partner_phone"/>
-                                    <field name="email_from" widget="email"/>
-                                </group>
-                                <group colspan="2" col="2">
-                                    <separator colspan="2" string="Responsibilities"/>
-                                    <field name="channel" select ="0" widget="selection"/>
-                                    <field name="categ_id"  widget="selection" domain="[('object_id.model', '=', 'crm.claim')]"/>
-                                    <field name="classification_id"/>
-                                    <field name="sub_classification_id"/>
-                                </group>
-                                <separator colspan="4" string="Claim/Action Description"/>
-                                <group colspan="4" col="4">
-                                	<field name="claim_address"/>
-                                <newline/>
-                                	<field name="neighborhood_id"/>
-                                	<field name="district_id"/>
-                                </group>
-                                <field name="description" colspan="4" nolabel="1"/>                                
-                            </page>
-                            <page string="Follow Up">
-                                <separator string="Solution" colspan="4" />
-			           	 			<field name="date_closed"/> 
-           	 						<field  name="resolution" colspan="4" nolabel="1" />
-                            </page>
-                            <page string="Communication &amp; History" groups="base.group_extended">
-                                <group colspan="4">
-                                    <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
-                                </group>
-                                <field name="message_ids" colspan="4" nolabel="1" mode="tree" readonly="1">
-                                    <tree string="History">
-                                        <field name="display_text" string="History Information"/>
-                                        <field name="email_from" invisible="1"/>
-                                        <button
-                                            string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
-                                            name="%(mail.action_email_compose_message_wizard)d"
-                                            context="{'mail.compose.message.mode':'reply'}"
-                                            icon="terp-mail-replied" type="action" />
-                                    </tree>
-                                </field>
-                                <button string="Add Internal Note"
-                                    name="%(crm.action_crm_add_note)d"
-                                    context="{'model': 'crm.lead' }"
-                                    icon="terp-document-new" type="action" />
-                              	<!--<button string="Send New Email"  name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/> -->
-                            </page>                            
-                        </notebook>                        
-                    </group>
-                    
-                    <separator colspan="4" string=""/>
-                    <group col="8" colspan="4">
-                    	<button name="cas_cancel" string="Cancel" type="workflow" icon="gtk-cancel" states="draft"/> <!-- states= "Estados en los cuales el boton es visible" -->
-                    	<button name="cas_pending" string="Pending" type="workflow" icon="gtk-media-pause" states="open" />
-       					<button name="cas_open" string="Open" type="workflow" icon="gtk-go-forward" states="draft,pending" />
-       					<button name="cas_review" string="Review" type="workflow" icon="gtk-go-forward" states="open" />       					
-       					<button name="cas_reset" string="Reset to in Progress" type="workflow" icon="gtk-convert" states="done,review"/>
-       					<button name="cas_close" string="Done" type="workflow" icon="gtk-jump-to" states="review" />
-                    </group>
-                </form>
-            </field>
-        </record>
+		<!-- ================================================================================================= 
+			Construction Claim ================================================================================================= -->
 
 
 
+		<record model="ir.ui.view" id="view_ocs_claim_form_inherit">
+			<field name="name">Contruction - Claims Form</field>
+			<field name="model">crm.claim</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="ocs.view_ocs_claim_form_inherit" />
+			<field name="arch" type="xml">
+				<field name="state" position="replace">
+					<field name="state" select="1" widget="statusbar"
+						statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}' />
+				</field>
+			</field>
+		</record>
+
+
+
+		<record model="ir.ui.view" id="ocs_idu_crm_case_claims_form_view">
+			<field name="name">Contruction Claims Form</field>
+			<field name="model">crm.claim</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Claims">
+					<field name="state" select="1" widget="statusbar"
+						statusbar_visible="draft,review,open,done" statusbar_colors='{"pending":"blue"}'
+						colspan="4" />
+					<group>
+						<field name="name" />
+						<field name="create_date" />
+					</group>
+					<group colspan="4" col="6">
+						<field name="user_id" />
+						<field name="csp_id" widget="selection" />
+						<field name="id" />
+						<newline />
+						<field name="priority" />
+						<field name="date_deadline" />
+					</group>
+
+					<group colspan="4" col="4">
+						<notebook>
+							<page string="Claim Description">
+								<group colspan="2" col="2">
+									<separator colspan="2" string="Claim Reporter" />
+									<field name="partner_id" string="Partner"
+										on_change="onchange_partner_id(partner_id)" />
+									<field name="partner_address_id" string="Contact"
+										on_change="onchange_partner_address_id(partner_address_id, email_from)" />
+									<field name="partner_phone" />
+									<field name="email_from" widget="email" />
+								</group>
+								<group colspan="2" col="2">
+									<separator colspan="2" string="Responsibilities" />
+									<field name="channel" select="0" widget="selection" />
+									<field name="categ_id" widget="selection"
+										domain="[('object_id.model', '=', 'crm.claim')]" />
+									<field name="classification_id" />
+									<field name="sub_classification_id" />
+								</group>
+								<separator colspan="4" string="Claim/Action Description" />
+								<group colspan="4" col="4">
+									<field name="claim_address" />
+									<newline />
+									<field name="neighborhood_id" />
+									<field name="district_id" />
+								</group>
+								<field name="description" colspan="4" nolabel="1" />
+							</page>
+							<page string="Follow Up">
+								<separator string="Solution" colspan="4" />
+								<field name="date_closed" />
+								<field name="resolution" colspan="4" nolabel="1" />
+							</page>
+							<page string="Communication &amp; History" groups="base.group_extended">
+								<group colspan="4">
+									<field colspan="4" name="email_cc" string="Global CC"
+										widget="char" />
+								</group>
+								<field name="message_ids" colspan="4" nolabel="1" mode="tree"
+									readonly="1">
+									<tree string="History">
+										<field name="display_text" string="History Information" />
+										<field name="email_from" invisible="1" />
+										<button string="Reply"
+											attrs="{'invisible': [('email_from', '=', False)]}" name="%(mail.action_email_compose_message_wizard)d"
+											context="{'mail.compose.message.mode':'reply'}" icon="terp-mail-replied"
+											type="action" />
+									</tree>
+								</field>
+								<button string="Add Internal Note" name="%(crm.action_crm_add_note)d"
+									context="{'model': 'crm.lead' }" icon="terp-document-new" type="action" />
+								<!--<button string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" 
+									icon="terp-mail-message-new" type="action"/> -->
+							</page>
+						</notebook>
+					</group>
+
+					<separator colspan="4" string="" />
+					<group col="8" colspan="4">
+						<button name="cas_cancel" string="Cancel" type="workflow"
+							icon="gtk-cancel" states="draft" /> <!-- states= "Estados en los cuales el boton es visible" -->
+						<button name="cas_pending" string="Pending" type="workflow"
+							icon="gtk-media-pause" states="open" />
+						<button name="cas_open" string="Open" type="workflow" icon="gtk-go-forward"
+							states="draft,pending" />
+						<button name="cas_review" string="Review" type="workflow"
+							icon="gtk-go-forward" states="open" />
+						<button name="cas_reset" string="Reset to in Progress"
+							type="workflow" icon="gtk-convert" states="done,review" />
+						<button name="cas_close" string="Done" type="workflow"
+							icon="gtk-jump-to" states="review" />
+					</group>
+				</form>
+			</field>
+		</record>
 
 
 
@@ -249,18 +273,24 @@ Construction Claim
 
 
 
-<record model="ir.actions.act_window" id="action_ocs_construction_claim">
-        <field name="name">Tracts</field>
-        <field name="res_model">crm.claim</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>    
-        <field name="context">{'form_view_ref' : 'ocs_idu.ocs_idu_crm_case_claims_form_view'}</field>
-</record>
-
-<menuitem name="Contructions Claims" id=" menu_ocs_construction_claim" action="action_ocs_construction_claim" parent ="menu_ocs_construction_issues" sequence="3"/>
 
 
 
+		<record model="ir.actions.act_window" id="action_ocs_construction_claim">
+			<field name="name">Tracts</field>
+			<field name="res_model">crm.claim</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="context">{'form_view_ref' :
+				'ocs_idu.ocs_idu_crm_case_claims_form_view'}</field>
+		</record>
 
-</data>
+		<menuitem name="Contructions Claims" id=" menu_ocs_construction_claim"
+			action="action_ocs_construction_claim" parent="menu_ocs_construction_issues"
+			sequence="3" />
+
+
+
+
+	</data>
 </openerp>
