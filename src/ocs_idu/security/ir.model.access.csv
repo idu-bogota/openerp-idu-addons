@@ -31,3 +31,7 @@ access_ocs_manager_crm_claim_report,crm.claim.manager.crm.claim.report,crm_claim
 access_ocs_manager_crm_case_section,crm.manager.crm.case.section,crm.model_crm_case_section,ocs_idu.group_ocs_outsourced_manager,1,0,0,0
 access_ocs_user_crm_case_categ,crm.user.crm.case.categ,crm.model_crm_case_categ,ocs_idu.group_ocs_outsourced_user,1,0,0,0
 access_ocs_manager_crm_case_categ,crm.manager.crm.case.categ,crm.model_crm_case_categ,ocs_idu.group_ocs_outsourced_manager,1,1,1,0
+access_ocs_idu_user_contract,ocs_idu.user.contract,ocs_idu.model_ocs_contract,ocs_idu.group_ocs_outsourced_user,1,0,0,0
+access_ocs_idu_user_tract,ocs_idu.user.tract,ocs_idu.model_ocs_tract,ocs_idu.group_ocs_outsourced_user,1,0,0,0
+access_ocs_idu_manager_contract,ocs_idu.manager.contract,ocs_idu.model_ocs_contract,ocs_idu.group_ocs_outsourced_manager,1,1,1,0
+access_ocs_idu_manager_tract,ocs_idu.manager.tract,ocs_idu.model_ocs_tract,ocs_idu.group_ocs_outsourced_manager,1,1,1,0

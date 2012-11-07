@@ -43,6 +43,14 @@
             <field name="signal">cas_close</field>
             <field name="group_id" ref="group_ocs_outsourced_manager"/>
   	</record>
+  	
+  	<record id="ocs_tr_in_done_to_in_progress" model="workflow.transition">
+            <field name="act_from" ref="ocs.act_ocs_claim_done"/>
+            <field name="act_to" ref="ocs.act_ocs_claim_in_progress"/>
+            <field name="condition">True</field>
+            <field name="signal">cas_reset</field>
+            <field name="group_id" ref="group_ocs_outsourced_manager"/>
+  	</record>
     
     
     </data>
