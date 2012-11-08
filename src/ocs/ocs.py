@@ -145,6 +145,7 @@ class ocs_citizen_service_point(geo_model.GeoModel):
         'close_date': fields.datetime('End Date',help='When citizen Atention Point is closed'),
         'schedule': fields.char('Schedule',size=60,help='For example L-V 8:30 am -12:50 pm'),       
         'geo_point':fields.geo_point('Location',srid=4668,readonly=True),
+        'users_id':fields.many2many('res.users','ocs_citizen_service_point_users','user_id','csp_id','Users'),
     }
 ocs_citizen_service_point()
 

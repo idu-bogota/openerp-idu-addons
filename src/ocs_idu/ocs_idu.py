@@ -95,8 +95,7 @@ class ocs_citizen_service_point(geo_model.GeoModel):
     _columns = {
         'is_outsourced':fields.boolean('is Outsourced',help='When is set, this is an outsourced citizen service point'),
         'tract_id':fields.many2one('ocs.tract','Tract Id'),
-        'full_name':fields.function(_get_full_name,type='char',string='Full Name',method=True),
-        'users_id':fields.many2many('res.users','ocs_citizen_service_point_users','user_id','csp_id','Users'),        
+        'full_name':fields.function(_get_full_name,type='char',string='Full Name',method=True),                
     }
     _defaults={
         'is_outsourced':  _check_is_outsourced,            
