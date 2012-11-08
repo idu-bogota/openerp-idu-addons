@@ -6,7 +6,11 @@
 <menuitem name="Settings" id ="menu_ocs_settings" parent="menu_ocs" sequence = "3"/>
 <menuitem name="Reporting" id="menu_ocs_reporting" parent ="menu_ocs" sequence = "2"/>
 
-<!--crm case channel  -->
+<!--
+==================================================================================
+CRM CASE CHANNEL
+================================================================================== 
+ -->
 
 <record model="ir.ui.view" id="view_ocs_crm_case_channel_form_inherit">
         <field name="name">crm.case.categ.form.inherit</field>
@@ -41,8 +45,8 @@
         <field name="context" eval="{'object_id': ref('model_crm_claim')}"/>
         <field name="help">Create claim categories to better manage and classify your claims. Some example of claims can be: preventive action, corrective action.</field>
 </record>
-<menuitem name="Case Categories" id="menu_ocs_case_categories" action="action_ocs_crm_case_categories" parent="menu_ocs_settings"/>
 
+<menuitem name="Case Categories" id="menu_ocs_case_categories" action="action_ocs_crm_case_categories" parent="menu_ocs_settings"/>
 <!-- Reporting Claims  -->
 
  <record id="action_ocs_report_claim_report" model="ir.actions.act_window">
@@ -55,7 +59,6 @@
  </record> 
  <menuitem name="Claim report" id="menu_ocs_report_claim_report" action="action_ocs_report_claim_report" parent="menu_ocs_reporting"/>
         
-
 <!-- Point of citizen Service -->
 <record model="ir.ui.view" id="view_ocs_citizen_service_point_form">
         <field name="name">ocs.citizen_service_point.form</field>
@@ -89,7 +92,8 @@
         <field name="res_model">ocs.citizen_service_point</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-</record> 
+</record>
+ 
 <menuitem name="Citizen Service Point" id="menu_ocs_citizen_service_point" action="action_ocs_citizen_service_point" parent ="menu_ocs_settings" sequence="2" />
 
 <!-- Res.Partner -->
@@ -412,7 +416,12 @@
 </record>
 <menuitem name="Classification" id="menu_ocs_claim_classification" action="action_ocs_claim_classification" parent ="menu_ocs_settings" sequence = "2"/>
 
-<!-- Claims -->
+<!-- 
+========================================================================================
+Claims 
+========================================================================================
+-->
+
 <record model="ir.ui.view" id="view_ocs_claim_form_inherit">
         <field name="name">crm.claim.form.inherit</field>
         <field name="model">crm.claim</field>	
@@ -476,7 +485,7 @@
             		<field name="district_id" select ="0" />            		
            </separator>
                        
-            
+        
            <page string="Follow Up" position="replace">
            	 <page string="Follow Up" >
            	 	<separator string="Solution" colspan="4" />
@@ -487,7 +496,7 @@
            		states="draft"/> <!-- states= "Estados en los cuales el boton es visible" -->
        				<button name="cas_pending" string="Pending" type="workflow" icon="gtk-media-pause" states="open" />
        				<button name="cas_open" string="Open" type="workflow" icon="gtk-go-forward" states="draft,pending" />
-       				<button name="cas_reset" string="Reset to in Progress" type="workflow" icon="gtk-convert" states="done"/>
+       				<button name="cas_reset" string="Reset to in Progress" type="workflow" icon="gtk-convert" states="done" groups="ocs.group_ocs_manager"/>
        				<button name="cas_close" string="Done" type="workflow" icon="gtk-jump-to" states="open" />
        			</group>     
            	 </page> 
@@ -511,7 +520,7 @@
            </button>
            
            <button name="case_reset" position ="replace">  
-           		<button name="cas_reset" string="Reset to in Progress" type="workflow" icon="gtk-convert" states="done"/>
+           		<button name="cas_reset" string="Reset to in Progress" type="workflow" icon="gtk-convert" states="done" groups="ocs.group_ocs_manager"/>
            </button>
          
            
@@ -519,7 +528,6 @@
            <button string="Send New Email" position="replace" ></button> 		
         </field>
 </record> 
-
 
 <record model="ir.ui.view" id="view_ocs_claim_tree_inherit">
         <field name="name">crm.claim.tree.inherit</field>

@@ -28,7 +28,7 @@ from crm_claim import crm_claim
 import re
 
 class Res_Partner(osv.osv):
-    """Add Partner Identificator for Colomb        ia """
+    """Add Partner Identificator for Colombia """
     _name="res.partner"
     _inherit="res.partner"
     _columns={
