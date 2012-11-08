@@ -83,7 +83,8 @@
 			parent="menu_construction_ocs_settings" sequence="3" />
 
 		<!-- ================================================================== 
-			Crea Point Puntos Crea ================================================================== -->
+			Crea Point Puntos Crea 
+			================================================================== -->
 
 		<record model="ir.ui.view" id="view_ocs_crea_point_form">
 			<field name="name">ocs.citizen_service_point.form.inherit</field>
@@ -140,7 +141,7 @@
 		</record> 		
 		
 		<record model="ir.actions.act_window" id="action_ocs_crea_point">
-			<field name="name">Tracts</field>
+			<field name="name">Citizen Service Points</field>
 			<field name="res_model">ocs.citizen_service_point</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>

@@ -59,7 +59,11 @@ CRM CASE CHANNEL
  </record> 
  <menuitem name="Claim report" id="menu_ocs_report_claim_report" action="action_ocs_report_claim_report" parent="menu_ocs_reporting"/>
         
-<!-- Point of citizen Service -->
+<!-- 
+;==============================================================
+	Citizen Service Point  
+;==============================================================
+-->
 <record model="ir.ui.view" id="view_ocs_citizen_service_point_form">
         <field name="name">ocs.citizen_service_point.form</field>
         <field name="model">ocs.citizen_service_point</field>
@@ -96,7 +100,11 @@ CRM CASE CHANNEL
  
 <menuitem name="Citizen Service Point" id="menu_ocs_citizen_service_point" action="action_ocs_citizen_service_point" parent ="menu_ocs_settings" sequence="2" />
 
-<!-- Res.Partner -->
+<!-- 
+;=====================================================================================
+	RES.PARTNER 
+;=====================================================================================
+-->
 
 <!-- Vista para agregarle el nit a partner (Vista General)-->
 <record model="ir.ui.view" id="view_ocs_res_partner_inherit">
