@@ -16,7 +16,9 @@
 			<field name="arch" type="xml">
 				<form string="Contract">
 					<field name="contract_id" select="1" />
-					<field name="partner_id" select="1" />
+					<field name="partner_id" select="1"
+					context="{'form_view_ref' : 'ocs.view_ocs_res_partner_form_small','tree_view_ref':'ocs.view_res_partner_tree_ocs_small','search_view_ref':'ocs.view_res_partner_search_ocs'}"
+					 />
 					<field name="start_date" select="0" />
 					<field name="end_date" select="0" />
 				</form>

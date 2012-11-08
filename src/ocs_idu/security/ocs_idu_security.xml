@@ -12,7 +12,47 @@
 		<record model="ir.ui.menu" id="ocs.menu_ocs">
         		<field eval="[(4, ref('group_ocs_outsourced_user')),(4, ref('group_ocs_outsourced_manager'))]" name="groups_id"/>
     	</record>
-    	    	
+    	
+    	<record model="ir.ui.menu" id="ocs_idu.menu_ocs_construction_issues">
+        		<field eval="[(4, ref('group_ocs_outsourced_user')),(4, ref('group_ocs_outsourced_manager'))]" name="groups_id"/>
+    	</record>
+    	
+    	<record model="ir.ui.menu" id="ocs_idu.menu_construction_ocs_settings">
+        		<field eval="[(4, ref('group_ocs_outsourced_manager'))]" name="groups_id"/>
+    	</record>
+    	
+    	
+    	<!-- 
+    	FETUCCINI:
+    	Copy Paste de las reglas Basicas, lastimosamente no se como hacer herencia adecuada
+    	Para que esto quede bien hecho!!    	
+    	 -->
+    	
+    	<record id="ocs_idu_rule_user_claims" model="ir.rule">
+        	<field name="name">User Claims</field>
+        	<field name="model_id" ref="crm_claim.model_crm_claim"/>        	
+        	<field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
+        	<field name="groups" eval="[(4, ref('group_ocs_outsourced_user'))]"/>
+    	</record>
+    	
+    	<record id="ocs_idu_rule_user_claims_res_users" model="ir.rule">
+        	<field name="name">User Claims</field>
+        	<field name="model_id" ref="base.model_res_users"/>
+        	<field name="domain_force">[('id','=',user.id)]</field>
+        	<!-- <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field> -->
+        	<field name="groups" eval="[(4, ref('group_ocs_outsourced_user'))]"/>
+    	</record>
+    	
+    	
+    	 <record id="ocs_idu_rule_manager_claims" model="ir.rule">
+        	<field name="name">Manager Claims</field>
+        	<field name="model_id" ref="model_crm_claim"/>
+        	<field name="domain_force">[(1,'=',1)]</field>
+        	<field name="groups" eval="[(4, ref('group_ocs_outsourced_manager'))]"/>
+    	</record>
+    	  
+    	<!-- Estas regla difiere de la otra -->
+    	
     	<record id="ocs_rule_citizen_service_office_users" model="ir.rule">
         	<field name="name">Citizen Service Point to Users</field>
         	<field name="model_id" ref="ocs.model_ocs_citizen_service_point"/>        	
