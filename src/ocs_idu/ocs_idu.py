@@ -29,15 +29,23 @@ class crm_claim(osv.osv):
     """
     Inherit from ocs and ocs crm_claim
     
-    """    
+    """
+    def _check_is_outsourced(self,cr,uid,ids,fieldname,arg,context=None):
+        """Get Full Name of Contract """
+        res = {}
+        for claim in self.browse(cr, uid, ids, context = context):
+            res[claim.id] = claim.csp_id.is_outsourced                                         
+        return  res
+    
+        
     _name="crm.claim"
     _inherit="crm.claim"
     _columns = {        
         'state':fields.selection([('draft', 'New'),('open', 'In Progress'),('cancel', 'Cancelled'),
                                   ('review','Review'),('done', 'Closed'),('pending', 'Pending')],
                                  'State',help='Introduce a new state between open and done, in this step,\
-                                  other people makes a review and approve the response given to citizen')              
-     
+                                  other people makes a review and approve the response given to citizen'),
+        'is_outsourced':fields.function(_check_is_outsourced,type='boolean',string='Is Outsourced',method=True),
     }
     
     def case_review(self, cr, uid, ids, *args):
@@ -60,7 +68,7 @@ class ocs_citizen_service_point(geo_model.GeoModel):
     IDU High Specific Requeriment for Office of Citizen Service  with Outsource partner    
     """
     
-    def _CheckIsOutSourced (self,cr,uid,context):        
+    def _check_is_outsourced (self,cr,uid,context):        
         """
         Verifiy Context to Set default value
         """        
@@ -91,7 +99,7 @@ class ocs_citizen_service_point(geo_model.GeoModel):
         'users_id':fields.many2many('res.users','ocs_citizen_service_point_users','user_id','csp_id','Users'),        
     }
     _defaults={
-        'is_outsourced':  _CheckIsOutSourced,            
+        'is_outsourced':  _check_is_outsourced,            
     }
     _rec_name = 'full_name'
 ocs_citizen_service_point()

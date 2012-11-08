@@ -147,7 +147,10 @@
 			parent="menu_construction_ocs_settings" sequence="3" />
 
 		<!-- ================================================================================================= 
-			Construction Claim ================================================================================================= -->
+			Construction Claim 
+			
+			================================================================================================= 
+		-->
 
 
 
@@ -157,7 +160,7 @@
 			<field name="type">form</field>
 			<field name="inherit_id" ref="ocs.view_ocs_claim_form_inherit" />
 			<field name="arch" type="xml">
-				<field name="state" position="replace">
+				<field name="state" position="replace">					
 					<field name="state" select="1" widget="statusbar"
 						statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}' />
 				</field>
@@ -176,18 +179,17 @@
 						statusbar_visible="draft,review,open,done" statusbar_colors='{"pending":"blue"}'
 						colspan="4" />
 					<group>
-						<field name="name" />
+						<field name="name" />						
 						<field name="create_date" />
 					</group>
 					<group colspan="4" col="6">
 						<field name="user_id" />
-						<field name="csp_id" widget="selection" />
+						<field name="csp_id" widget="selection" domain="[('is_outsourced','=',True)]" />
 						<field name="id" />
 						<newline />
 						<field name="priority" />
 						<field name="date_deadline" />
 					</group>
-
 					<group colspan="4" col="4">
 						<notebook>
 							<page string="Claim Description">
@@ -270,19 +272,22 @@
 
 
 
-
-
-
-
+		<record model="ir.actions.act_window" id="ocs.action_ocs_crm_claim">
+        		<field name="name">Claims</field>
+       			<field name="res_model">crm.claim</field>
+        		<field name="view_type">form</field>
+        		<field name="domain">[('csp_id.is_outsourced','=',False)]</field>
+        		<field name="view_mode">tree,form,geoengine</field>
+		</record>
 
 
 		<record model="ir.actions.act_window" id="action_ocs_construction_claim">
-			<field name="name">Tracts</field>
+			<field name="name">Outsourced Claim</field>
 			<field name="res_model">crm.claim</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="context">{'form_view_ref' :
-				'ocs_idu.ocs_idu_crm_case_claims_form_view'}</field>
+			<field name="domain">[('csp_id.is_outsourced','=',True)]</field>
+			<field name="context">{'form_view_ref' :'ocs_idu.ocs_idu_crm_case_claims_form_view'}</field>
 		</record>
 
 		<menuitem name="Contructions Claims" id=" menu_ocs_construction_claim"
