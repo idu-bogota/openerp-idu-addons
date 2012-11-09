@@ -26,6 +26,7 @@
             <field name="act_from" ref="ocs.act_ocs_claim_in_progress"/>
             <field name="act_to" ref="act_ocs_claim_review"/>
             <field name="condition">test_response()</field>
+            <field name="group_id" ref="group_ocs_outsourced_user"/>
             <field name="signal">cas_review</field>
   	</record>
   	
@@ -33,6 +34,7 @@
             <field name="act_from" ref="act_ocs_claim_review"/>
             <field name="act_to" ref="ocs.act_ocs_claim_in_progress"/>
             <field name="condition">True</field>
+            <field name="group_id" ref="group_ocs_outsourced_manager"/>
             <field name="signal">cas_reset</field>
   	</record>
   	

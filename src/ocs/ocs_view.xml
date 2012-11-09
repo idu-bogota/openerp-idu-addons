@@ -292,7 +292,9 @@ CRM CASE CHANNEL
 <menuitem name="Citizens" id="menu_ocs_res_partner_address" action="action_ocs_res_partner_address" parent ="menu_ocs_issue"/>        
 
 
-<!-- Neighborhood -->
+<!--=======================================================================
+ Neighborhood 
+ ==========================================================================-->
  <record model="ir.ui.view" id="view_ocs_neighborhood_form">
         <field name="name">ocs.neighborhood.form</field>
         <field name="model">ocs.neighborhood</field>
@@ -323,7 +325,9 @@ CRM CASE CHANNEL
     </record>
 <menuitem name="Neighborhood" id="menu_ocs_neighborhood" action="action_ocs_neighborhood" parent ="menu_ocs_settings" sequence = "6"/>                
 
-<!-- District -->
+<!-- ==========================================================================================
+District
+===============================================================================================-->
 
 <record model="ir.ui.view" id="view_ocs_district_form">
         <field name="name">ocs.district.form</field>
@@ -356,7 +360,9 @@ CRM CASE CHANNEL
     </record>
 <menuitem name="Districts" id="menu_ocs_district" action="action_ocs_district" parent ="menu_ocs_settings" sequence = "7"/>
 
-<!-- SubDistrict  -->
+<!-- =============================================================================
+SubDistrict 
+================================================================================== -->
 <record model="ir.ui.view" id="view_ocs_sub_district_form">
         <field name="name">ocs.sub_district.form</field>
         <field name="model">ocs.sub_district</field>
@@ -387,8 +393,9 @@ CRM CASE CHANNEL
 </record>
 <menuitem name="Sub District" id="menu_ocs_sub_district" action="action_ocs_sub_district" parent ="menu_ocs_settings" sequence = "8"/>
 
-
-<!-- Classification -->
+<!--==================================================================================
+ Classification
+ ===================================================================================== -->
 <record model="ir.ui.view" id="view_ocs_claim_classification_form">
         <field name="name">ocs.claim_classification.form</field>
         <field name="model">ocs.claim_classification</field>
@@ -572,7 +579,9 @@ Claims
 <menuitem name="Claims" id="menu_ocs_crm_claim" action="action_ocs_crm_claim" parent ="menu_ocs_issue"/>
 
 
-<!--GeoEngineViews-->
+<!--=======================================================================================
+GeoEngineViews
+===========================================================================================-->
 
 <!-- OCS District -->
 
