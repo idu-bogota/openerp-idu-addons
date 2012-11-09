@@ -166,9 +166,8 @@
 			<field name="type">form</field>
 			<field name="inherit_id" ref="ocs.view_ocs_claim_form_inherit" />
 			<field name="arch" type="xml">
-				<field name="state" position="replace">					
-					<field name="state" select="1" widget="statusbar"
-						statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}' />
+				<field name="csp_id" position="replace">	
+						<field name="csp_id" widget="selection" domain="[('is_outsourced','=',False)]" />
 				</field>
 			</field>
 		</record>
@@ -256,17 +255,17 @@
 
 					<separator colspan="4" string="" />
 					<group col="8" colspan="4">
-						<button name="cas_cancel" string="Cancel" type="workflow"
+						<button name="cas_cancel" string="Cancel" type="workflow" groups="ocs_idu.group_ocs_outsourced_user"
 							icon="gtk-cancel" states="draft" /> <!-- states= "Estados en los cuales el boton es visible" -->
 						<button name="cas_pending" string="Pending" type="workflow"
-							icon="gtk-media-pause" states="open" />
-						<button name="cas_open" string="Open" type="workflow" icon="gtk-go-forward"
+							icon="gtk-media-pause" states="open" groups="ocs_idu.group_ocs_outsourced_user" />
+						<button name="cas_open" string="Open" type="workflow" icon="gtk-go-forward" groups="ocs_idu.group_ocs_outsourced_user"
 							states="draft,pending" />
-						<button name="cas_review" string="Review" type="workflow"
+						<button name="cas_review" string="Review" type="workflow" groups="ocs_idu.group_ocs_outsourced_user"
 							icon="gtk-go-forward" states="open" />
-						<button name="cas_reset" string="Reset to in Progress"
+						<button name="cas_reset" string="Reset to in Progress" groups="ocs_idu.group_ocs_outsourced_manager"
 							type="workflow" icon="gtk-convert" states="done,review" />
-						<button name="cas_close" string="Done" type="workflow"
+						<button name="cas_close" string="Done" type="workflow" groups="ocs_idu.group_ocs_outsourced_manager"
 							icon="gtk-jump-to" states="review" />
 					</group>
 				</form>
