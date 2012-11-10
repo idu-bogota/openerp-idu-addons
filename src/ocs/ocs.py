@@ -224,6 +224,8 @@ class crm_claim(geo_model.GeoModel):
        return isResponsed
    
    
+   
+   
    def _get_full_name(self,cr,uid,ids,fieldname,arg,context=None):
         """Get Full Name of Citizen """
         res = {}
@@ -257,6 +259,7 @@ class crm_claim(geo_model.GeoModel):
         return {'value': {'email_from': address.email, 'partner_phone': address.phone,'claim_address':address.street}}
    
    _columns={
+       
         #'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
         'description': fields.text('Description',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'priority': fields.selection([('h','High'),('n','Normal'),('l','Low')], 'Priority', required=True, readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
@@ -287,11 +290,14 @@ class crm_claim(geo_model.GeoModel):
         'partner_phone': fields.char('Phone', size=32,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),        
         'resolution': fields.text('Resolution',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'date_deadline': fields.date('Deadline',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'user_id': fields.many2one('res.users', 'Responsible',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+        'user_id': fields.many2one('res.users', 'Responsible',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]},domain="[('id','in',csp_id.)]"),
+        #'user_id': fields.related('csp_id', 'users_id', type="many2one",relation="ocs.citizen_service_point", string="Responsible", store=True),
     }   
+    
    _order='create_date desc'
    _rec_name = 'classification'
-   #time.strftime('%Y-%m-%d %H:%M:%S')
+   #time.strftime('%Y-%m-%d %H:%M:%S')  
+  
    _defaults = {
         'date_deadline': lambda *a:  (datetime.now()+timedelta(days=9)).__format__('%Y-%m-%d %H:%M:%S'),
         'priority': lambda *a: 'l'

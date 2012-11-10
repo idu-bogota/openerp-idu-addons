@@ -24,18 +24,38 @@
 
 from osv import fields,osv
 from base_geoengine import geo_model
+from crm import crm
+from tools.translate import _
 
-class crm_claim(osv.osv):
+class crm_claim(crm.crm_case,osv.osv):
     """
-    Inherit from ocs and ocs crm_claim
+    Inherit from ocs and ocs crm_claim    
+    """
     
-    """
     def _check_is_outsourced(self,cr,uid,ids,fieldname,arg,context=None):
-        """Get Full Name of Contract """
+        """
+        Check if the citizen service point is outsourced, with this 
+        validates when is csp outsourced
+        """
         res = {}
         for claim in self.browse(cr, uid, ids, context = context):
             res[claim.id] = claim.csp_id.is_outsourced                                         
         return  res
+    
+    
+    def case_review(self, cr, uid, ids, *args):
+        """Review the Case
+        :param ids: List of case Ids        
+        """        
+        cases = self.browse(cr, uid, ids)
+        self.message_append(cr, uid, cases, _('Review'))
+        for case in cases:
+            data = {'state': 'review', 'active': True }
+            if not case.user_id:
+                data['user_id'] = uid
+            self.write(cr, uid, case.id, data)
+        self._action(cr, uid, cases, 'review')
+        return True
     
         
     _name="crm.claim"
@@ -48,16 +68,7 @@ class crm_claim(osv.osv):
         'is_outsourced':fields.function(_check_is_outsourced,type='boolean',string='Is Outsourced',method=True),
     }
     
-    def case_review(self, cr, uid, ids, *args):
-        """Review the Case
-        :param ids: List of case Ids
-        """
-        cases = self.browse(cr, uid, ids)
-        cases[0].state # to fill the browse record cache
-        self.write(cr, uid, ids, {'state': 'review', 'active': True})
-        # We use the cache of cases to keep the old case state
-        self._action(cr, uid, cases, 'review')
-        return True
+   
     
 crm_claim()
 
@@ -86,9 +97,10 @@ class ocs_citizen_service_point(geo_model.GeoModel):
             if csp.is_outsourced:
                 res[csp.id] = "{0} / {1} ".format(csp.tract_id.full_name, csp.name)
             else :
-                res[csp.id] = "{0}".format(csp.name)
-                                         
+                res[csp.id] = "{0}".format(csp.name)                                         
         return  res
+    
+    
     
     _name="ocs.citizen_service_point"
     _inherit="ocs.citizen_service_point"
