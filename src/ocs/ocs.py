@@ -86,10 +86,6 @@ class ResPartnerAddress(geo_model.GeoModel):
             else:
                 is_valid_document = True                
         return is_valid_document 
-                    
-                   
-        
-        
     
     def _checkinputdata(self, cr, uid, ids, context = None):
         """
@@ -118,8 +114,7 @@ class ResPartnerAddress(geo_model.GeoModel):
         'district_id':fields.many2one('ocs.district','District'),        
         'neighborhood_id':fields.many2one('ocs.neighborhood','Neighborhood'),
         'full_name':fields.function(_get_full_name,type='char',string='Full Name',method=True),
-        'geo_point':fields.geo_point('Location',srid=4668,readonly=True),
-        #'issue_comment': fields.one2many('cso.issue_comment','issue_id','Comments',help="comment to issue"),
+        'geo_point':fields.geo_point('Location',srid=4668,readonly=True),        
         'claim_id':fields.one2many('crm.claim','id','Historic of Claims',help="Claims opened by User")         
     } 
     _rec_name = 'document_id'          
@@ -132,7 +127,6 @@ class ResPartnerAddress(geo_model.GeoModel):
      (_checkinputdata,'You must type at least one of these: email, phone, cell phone, facebook or twitter to create a contact',['document_id']),
      (_chekdocument,'When Document Type is CC, the document number must be numeric only!!!',['document_id']),
     ]
-     
 ResPartnerAddress()
 
 
@@ -145,9 +139,21 @@ class ocs_citizen_service_point(geo_model.GeoModel):
         'close_date': fields.datetime('End Date',help='When citizen Atention Point is closed'),
         'schedule': fields.char('Schedule',size=60,help='For example L-V 8:30 am -12:50 pm'),       
         'geo_point':fields.geo_point('Location',srid=4668,readonly=True),
-        'users_id':fields.many2many('res.users','ocs_citizen_service_point_users','user_id','csp_id','Users'),
+        'users_id':fields.many2many('res.users','ocs_citizen_service_point_users','csp_id','user_id','Users'),
     }
 ocs_citizen_service_point()
+
+
+class res_users(osv.osv):
+    """
+    Add many 2 many realtionship with Point of Citizen Service...
+    """
+    _name="res.users"
+    _inherit="res.users"
+    _columns = {
+        'csp_id':fields.many2many('ocs.citizen_service_point','ocs_citizen_service_point_users','user_id','csp_id','Citizen Service Point')
+    }
+
 
 class ocs_claim_classification(osv.osv):
     """This field contains internal classification for claims """
@@ -204,51 +210,52 @@ class crm_case_categ(osv.osv):
 
 
 class crm_claim(geo_model.GeoModel):
-   _name = "crm.claim"
-   _inherit = "crm.claim"   
+    _name = "crm.claim"
+    _inherit = "crm.claim"   
    
-   def test_response(self, cr, uid, ids, *args):
-       """
-       Check if Response Text is Empty      
-       """       
-       isResponsed = False
-       for claim in self.browse(cr,uid,ids,context=None):
-           response = claim.resolution
-           if response == False:
-               isResponsed = False
-               message = "Resolution text could not be Empty"
-           else:
-               isResponsed = True
-               message = "The claim: {0} -- has been closed".format(claim.name)
-       self.log(cr, uid, claim.id, message)
-       return isResponsed
-   
-   
+    def test_response(self, cr, uid, ids, *args):
+        """
+        Check if Response Text is Empty      
+        """       
+        isResponsed = False
+        for claim in self.browse(cr,uid,ids,context=None):
+            response = claim.resolution
+            if response == False:
+                isResponsed = False
+                message = "Resolution text could not be Empty"
+            else:
+                isResponsed = True
+                message = "The claim: {0} -- has been closed".format(claim.name)
+        self.log(cr, uid, claim.id, message)
+        return isResponsed
    
    
-   def _get_full_name(self,cr,uid,ids,fieldname,arg,context=None):
+   
+   
+    def _get_full_name(self,cr,uid,ids,fieldname,arg,context=None):        
         """Get Full Name of Citizen """
         res = {}
         for citizen in self.browse(cr, uid, ids, context = context):
-                res[citizen.id] = "{0}/{1} ".format(citizen.classification_id.name,citizen.sub_classification_id.name)                         
-        return  res   
-   def _get_channel(self, cr, uid, context=None):
-       obj = self.pool.get('ocs.input_channel')
-       ids = obj.search(cr, uid, [])
-       res = obj.read(cr, uid, ids, ['name', 'id'], context)
-       res = [(r['id'], r['name']) for r in res]
-       return res   
-   def _get_main_classification(self, cr, uid, context=None):
-       """This function get the main Categories
-      Select name,id from ocs_claim_classification where 
-      parent_id = null 
-      """
-       obj = self.pool.get('ocs.claim_classification_id')
-       ids = obj.search(cr, uid, [('parent_id','=',False)])
-       result = obj.read(cr, uid, ids, ['name','id'], context)
-       return [(r['id'], r['name']) for r in result]
+            res[citizen.id] = "{0}/{1} ".format(citizen.classification_id.name,citizen.sub_classification_id.name)                         
+        return  res
+       
+    def _get_channel(self, cr, uid, context=None):
+        obj = self.pool.get('ocs.input_channel')
+        ids = obj.search(cr, uid, [])
+        res = obj.read(cr, uid, ids, ['name', 'id'], context)
+        res = [(r['id'], r['name']) for r in res]
+        return res   
+    def _get_main_classification(self, cr, uid, context=None):
+        """This function get the main Categories
+       Select name,id from ocs_claim_classification where 
+       parent_id = null 
+       """
+        obj = self.pool.get('ocs.claim_classification_id')
+        ids = obj.search(cr, uid, [('parent_id','=',False)])
+        result = obj.read(cr, uid, ids, ['name','id'], context)
+        return [(r['id'], r['name']) for r in result]
    
-   def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
+    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         """This function returns value of partner email based on Partner Address
            :param part: Partner's id
            :param email: ignored
@@ -258,50 +265,48 @@ class crm_claim(geo_model.GeoModel):
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         return {'value': {'email_from': address.email, 'partner_phone': address.phone,'claim_address':address.street}}
    
-   _columns={
-       
+    _columns={       
         #'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
-        'description': fields.text('Description',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'priority': fields.selection([('h','High'),('n','Normal'),('l','Low')], 'Priority', required=True, readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'external_id':fields.char('External ID',size=128,help='External Claim System Identificator',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'external_dms_id': fields.char('External DMS ID',size=20,help='External Document Management System Identificator',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'csp_id':fields.many2one('ocs.citizen_service_point','CSP',domain="[('close_date','=',False)]",help='Citizen Service Point',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'channel':fields.many2one('crm.case.channel','Case Channel',help='Case Channel',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', \
-                            domain="[('section_id','=',section_id),\
-                            ('object_id.model', '=', 'crm.claim')],\
-                            ('active','=',True)",
-                            required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+         'description': fields.text('Description',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+         'priority': fields.selection([('h','High'),('n','Normal'),('l','Low')], 'Priority', required=True, readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+         'external_id':fields.char('External ID',size=128,help='External Claim System Identificator',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+         'external_dms_id': fields.char('External DMS ID',size=20,help='External Document Management System Identificator',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+         'csp_id':fields.many2one('ocs.citizen_service_point','CSP',domain="[('close_date','=',False)]",help='Citizen Service Point',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+         'channel':fields.many2one('crm.case.channel','Case Channel',help='Case Channel',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+         'categ_id': fields.many2one('crm.case.categ', 'Category', \
+                             domain="[('section_id','=',section_id),\
+                             ('object_id.model', '=', 'crm.claim')],\
+                             ('active','=',True)",
+                             required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
               
-        'claim_address':fields.char('Claim Address',size=256,help='Place of Claim',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'district_id':fields.many2one('ocs.district','District',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),        
-        'neighborhood_id':fields.many2one('ocs.neighborhood','Neighborhood',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'geo_point':fields.geo_point('Location',srid=4668,readonly=True),
-        'classification_id':fields.many2one('ocs.claim_classification','Classification', \
+         'claim_address':fields.char('Claim Address',size=256,help='Place of Claim',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+         'district_id':fields.many2one('ocs.district','District',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),        
+         'neighborhood_id':fields.many2one('ocs.neighborhood','Neighborhood',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+         'geo_point':fields.geo_point('Location',srid=4668,readonly=True),
+         'classification_id':fields.many2one('ocs.claim_classification','Classification', \
                                                domain="[('parent_id','=',False),('enabled','=',True)]", required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'sub_classification_id':fields.many2one('ocs.claim_classification','Sub Classification',domain="[('parent_id','=',classification_id),('enabled','=',True)]", required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),        
-        'name':fields.function(_get_full_name,type='char',string='Full Name',method=True),
-        #Se repiten campos del modelo original para poder controlarlos en los estados
-        'partner_id': fields.many2one('res.partner', 'Partner',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
+         'sub_classification_id':fields.many2one('ocs.claim_classification','Sub Classification',domain="[('parent_id','=',classification_id),('enabled','=',True)]", required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),        
+         'name':fields.function(_get_full_name,type='char',string='Full Name',method=True),
+         #Se repiten campos del modelo original para poder controlarlos en los estados
+         'partner_id': fields.many2one('res.partner', 'Partner',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                 # domain="[('partner_id','=',partner_id)]"
-                                 readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),        
-        'email_from': fields.char('Email', size=128, help="These people will receive email.",readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'partner_phone': fields.char('Phone', size=32,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),        
-        'resolution': fields.text('Resolution',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'date_deadline': fields.date('Deadline',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'user_id': fields.many2one('res.users', 'Responsible',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]},domain="[('id','in',csp_id.)]"),
-        #'user_id': fields.related('csp_id', 'users_id', type="many2one",relation="ocs.citizen_service_point", string="Responsible", store=True),
-    }   
+                                  readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),        
+         'email_from': fields.char('Email', size=128, help="These people will receive email.",readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+         'partner_phone': fields.char('Phone', size=32,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),        
+         'resolution': fields.text('Resolution',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+         'date_deadline': fields.date('Deadline',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+         'user_id': fields.many2one('res.users', 'Responsible',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]},domain="[('csp_id','=',csp_id)]"),        
+     }   
     
-   _order='create_date desc'
-   _rec_name = 'classification'
-   #time.strftime('%Y-%m-%d %H:%M:%S')  
-  
-   _defaults = {
-        'date_deadline': lambda *a:  (datetime.now()+timedelta(days=9)).__format__('%Y-%m-%d %H:%M:%S'),
-        'priority': lambda *a: 'l'
-        }
+    _order='create_date desc'
+    _rec_name = 'classification'
+    #time.strftime('%Y-%m-%d %H:%M:%S')
+   
+    _defaults = {
+         'date_deadline': lambda *a:  (datetime.now()+timedelta(days=9)).__format__('%Y-%m-%d %H:%M:%S'),
+         'priority': lambda *a: 'l'
+         }
 crm_claim()
 
 
