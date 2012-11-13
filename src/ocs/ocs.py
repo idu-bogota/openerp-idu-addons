@@ -57,8 +57,6 @@ class ResPartnerAddress(geo_model.GeoModel):
                 else:
                     res.append((r['id'], addr or '/'))
         return res
-    
-       
        
     def _get_full_name(self,cr,uid,ids,fieldname,arg,context=None):
         """Get Full Name of Citizen """
@@ -228,6 +226,19 @@ class crm_claim(geo_model.GeoModel):
                 message = "The claim: {0} -- has been closed".format(claim.name)
         self.log(cr, uid, claim.id, message)
         return isResponsed
+    
+    def _check_user_in_csp(self, cr, uid, ids, context = None):
+        """
+        Constraint:
+        If user is in Citizen Service Point allow create or update claim if not refuse         
+        """        
+        is_valid_data = False
+        
+        for claim in self.browse(cr,uid,ids,context=None):
+            for user_id in claim.csp_id.users_id:
+                if user_id==claim.user_id:
+                    is_valid_data = True
+        return is_valid_data
    
    
    
@@ -300,13 +311,14 @@ class crm_claim(geo_model.GeoModel):
      }   
     
     _order='create_date desc'
-    _rec_name = 'classification'
-    #time.strftime('%Y-%m-%d %H:%M:%S')
-   
+    _rec_name = 'classification' 
     _defaults = {
          'date_deadline': lambda *a:  (datetime.now()+timedelta(days=9)).__format__('%Y-%m-%d %H:%M:%S'),
          'priority': lambda *a: 'l'
          }
+    _constraints = [
+     (_check_user_in_csp,'User must registered in the Point of Citizen Service',['user_id']),
+    ]
 crm_claim()
 
 

@@ -70,7 +70,6 @@
         	<field name="groups" eval="[(4, ref('group_ocs_user'))]"/>
     	</record>
     	
-    	
     			
 	</data>
 </openerp>

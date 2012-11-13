@@ -116,9 +116,6 @@
 			</field>
 		</record>
 		
-		
-
-
 		<record model="ir.ui.view" id="view_ocs_crea_point_tree">
 			<field name="name">ocs.citizen_service_point.tree_inherit</field>
 			<field name="model">ocs.citizen_service_point</field>
@@ -138,7 +135,7 @@
         	<field name="view_type">form</field>
         	<field name="domain">[('is_outsourced','=',False)]</field>
         	<field name="view_mode">tree,form</field>
-		</record> 		
+		</record> 	
 		
 		<record model="ir.actions.act_window" id="action_ocs_crea_point">
 			<field name="name">Citizen Service Points</field>

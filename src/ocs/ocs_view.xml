@@ -74,7 +74,7 @@ CRM CASE CHANNEL
                 <field name="creation_date" select="0"/>                
                 <field name="close_date" select="0"/>
                 <field name="schedule" select="0"/>  
-                <field name="users_id" colspan="4" nolabel="1" />                   
+                <field name="users_id" colspan="4" nolabel="1"/>                   
             </form>
         </field>
 </record>    
@@ -95,7 +95,7 @@ CRM CASE CHANNEL
         <field name="name">Citizen Service Points</field>
         <field name="res_model">ocs.citizen_service_point</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form</field>         
 </record>
  
 <menuitem name="Citizen Service Point" id="menu_ocs_citizen_service_point" action="action_ocs_citizen_service_point" parent ="menu_ocs_settings" sequence="2" />
@@ -341,7 +341,7 @@ District
         </field>
 </record>
 
-<record model="ir.ui.view" id="view_ocs_district_tree">
+	<record model="ir.ui.view" id="view_ocs_district_tree">
         <field name="name">ocs.district.tree</field>
         <field name="model">ocs.district</field>
         <field name="type">tree</field>
@@ -410,6 +410,7 @@ SubDistrict
             </form>
         </field>
 </record>
+
 <record model="ir.ui.view" id="view_ocs_claim_classification_tree">
         <field name="name">ocs.claim_classification.tree</field>
         <field name="model">ocs.claim_classification</field>
@@ -536,8 +537,7 @@ Claims
            
            <button name="case_reset" position ="replace">  
            		<button name="cas_reset" string="Reset to in Progress" type="workflow" icon="gtk-convert" states="done" groups="ocs.group_ocs_manager"/>
-           </button>
-         
+           </button>        
            
            <!--Desactivación temporal del servicio de email-->
            <button string="Send New Email" position="replace" ></button> 		
