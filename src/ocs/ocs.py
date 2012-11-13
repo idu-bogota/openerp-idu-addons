@@ -231,7 +231,8 @@ class crm_claim(geo_model.GeoModel):
         """
         Constraint:
         If user is in Citizen Service Point allow create or update claim if not refuse         
-        """        
+        """      
+          
         is_valid_data = False
         
         for claim in self.browse(cr,uid,ids,context=None):
@@ -239,8 +240,6 @@ class crm_claim(geo_model.GeoModel):
                 if user_id==claim.user_id:
                     is_valid_data = True
         return is_valid_data
-   
-   
    
    
     def _get_full_name(self,cr,uid,ids,fieldname,arg,context=None):        
