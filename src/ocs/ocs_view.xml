@@ -571,15 +571,77 @@ Claims
         </field>
 </record> 
 
+
+ <record id="ocs_view_crm_case_claims_filter" model="ir.ui.view">
+            <field name="name">Office of Citizen Service - Claims Search</field>
+            <field name="model">crm.claim</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Claims">
+                    <filter icon="terp-check" string="New" name="current"
+                        domain="[('state','=','draft')]"
+                        help="New Claims" />
+                    <filter icon="terp-camera_test"
+                        string="In Progress"
+                        domain="[('state','=','open')]"
+                        help="In Progress Claims"
+                    />
+                    <filter icon="terp-gtk-media-pause"
+                        string="Pending"
+                        domain="[('state','=','pending')]"
+                        help="All pending Claims"
+                    />
+                    <filter icon="terp-check"
+                        string="Done"
+                        domain="[('state','=','done')]"
+                        help="All Claims"
+                    />
+                    
+                    <separator orientation="vertical"/>                    
+                    <field name="partner_address_id"/>
+                    <field name="user_id" widget="selection">
+                            <filter icon="terp-personal-"
+                                domain="[('user_id','=', False)]"
+                                help="Unassigned Claims" />
+                    </field>
+                    <newline/>
+                    <group expand="0" string="Group By...">                       
+                        <filter string="Responsible" icon="terp-personal"
+                            domain="[]" help="Responsible User"
+                            context="{'group_by':'user_id'}" />
+                        <separator orientation="vertical"/>                        
+                        <filter string="Type" icon="terp-stock_symbol-selection"
+                            domain="[]" context="{'group_by':'categ_id'}" />
+                        <filter string="State"
+                            icon="terp-stock_effects-object-colorize"
+                            domain="[]" context="{'group_by':'state'}" />
+                        <separator orientation="vertical"/>
+                        <filter string="Claim Date" icon="terp-go-month"
+                            domain="[]" help="Claim Date"
+                            context="{'group_by':'date'}" />
+                        <filter string="Deadline" icon="terp-go-month"
+                            domain="[]"
+                            context="{'group_by':'date_deadline'}" />
+                        <filter string="Closure" icon="terp-go-month"
+                            domain="[]" help="Date Closed"
+                            context="{'group_by':'date_closed'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+
 <record model="ir.actions.act_window" id="action_ocs_crm_claim">
         <field name="name">Claims</field>
         <field name="res_model">crm.claim</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,geoengine</field>
+        <field name="context">{'search_default_section_id': section_id, "search_default_current":1,"search_default_user_id":uid, "stage_type":'claim','search_view_ref':'ocs_view_crm_case_claims_filter'}</field>
 </record>
 
 <menuitem name="Claims" id="menu_ocs_crm_claim" action="action_ocs_crm_claim" parent ="menu_ocs_issue"/>
-••••••••••••••
+
 
 <!--=======================================================================================
 GeoEngineViews
@@ -619,8 +681,6 @@ GeoEngineViews
 </record>
 
 <!-- OCS Sub-District -->
-
-
 
 <record id="ir_ui_view_sub_district_basic_view" model="ir.ui.view">
             <field name="name">ocs.sub_district.geo_view</field>
