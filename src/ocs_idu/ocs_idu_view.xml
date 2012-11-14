@@ -187,7 +187,7 @@
 					<group colspan="4" col="6">
 						<field name="user_id" />
 						<field name="csp_id" widget="selection" domain="['|',('close_date','=',False),('close_date','>=','now()')]" />
-						<field name="id" />
+						<field name="id"/>
 						<newline />
 						<field name="priority" />
 						<field name="date_deadline" />
