@@ -458,7 +458,7 @@ Claims
         	</field>
         	
         	<field name="section_id" position="replace">
-        		<field name="csp_id" select ="0" widget="selection" domain="[('close_date','=',False)]"/>
+        		<field name="csp_id" select ="0" widget="selection" domain="['|',('close_date','=',False),('close_date','>=','now()')]"/>        	
         	</field>  
         	      
         	<field name="stage_id" position="replace">
@@ -579,7 +579,7 @@ Claims
 </record>
 
 <menuitem name="Claims" id="menu_ocs_crm_claim" action="action_ocs_crm_claim" parent ="menu_ocs_issue"/>
-
+••••••••••••••
 
 <!--=======================================================================================
 GeoEngineViews
