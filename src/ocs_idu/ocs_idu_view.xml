@@ -186,7 +186,7 @@
 					</group>
 					<group colspan="4" col="6">
 						<field name="user_id" />
-						<field name="csp_id" widget="selection" domain="[('is_outsourced','=',True)]" />
+						<field name="csp_id" widget="selection" domain="['|',('close_date','=',False),('close_date','>=','now()')]" />
 						<field name="id" />
 						<newline />
 						<field name="priority" />
