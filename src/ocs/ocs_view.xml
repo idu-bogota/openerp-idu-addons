@@ -578,9 +578,13 @@ Claims
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Claims">
-                    <filter icon="terp-check" string="New" name="current"
-                        domain="[('state','=','draft')]"
-                        help="New Claims" />
+                 	<filter icon="terp-check"
+                        string="Done"
+                        domain="[('state','=','done')]"
+                        help="All Claims"
+                    />
+                
+                    
                     <filter icon="terp-camera_test"
                         string="In Progress"
                         domain="[('state','=','open')]"
@@ -591,11 +595,10 @@ Claims
                         domain="[('state','=','pending')]"
                         help="All pending Claims"
                     />
-                    <filter icon="terp-check"
-                        string="Done"
-                        domain="[('state','=','done')]"
-                        help="All Claims"
-                    />
+                    <filter icon="gtk-new" string="New" name="current"
+                        domain="[('state','=','draft')]"
+                        help="New Claims" />
+                   
                     
                     <separator orientation="vertical"/>                    
                     <field name="partner_address_id"/>
