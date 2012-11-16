@@ -68,10 +68,9 @@ class ResPartnerAddress(geo_model.GeoModel):
                 res[citizen.id] = "{0},{1}".format(citizen.last_name, citizen.name)             
         return  res
     
-    def _chekdocument(self, cr, uid, ids, context = None):
+    def _checkdocument(self, cr, uid, ids, context = None):
         """
-         Regex Validation for document id !Is valid only for Colombia,
-         !!! Warning to become in Spagethi Code....!!!!    
+         Document Number Regex Validation    
         """        
         is_valid_document = False        
         for citizen in self.browse(cr, uid, ids,context=None):
@@ -87,7 +86,7 @@ class ResPartnerAddress(geo_model.GeoModel):
     
     def _checkinputdata(self, cr, uid, ids, context = None):
         """
-        This constraint allow evaluate at least one of these data.         
+        Should have filled at least one contact detail          
         """        
         is_valid_data = False
         for citizen in self.browse(cr,uid,ids,context=None):
@@ -106,7 +105,7 @@ class ResPartnerAddress(geo_model.GeoModel):
         'name':fields.char('First Name',size=128,required=True), 
         'gender':fields.selection([('m','Male'),('f','Female')],'Gender'),                     
         'document_number': fields.char('Document Number', size=64,selectable=True),
-        'document_type': fields.selection([('C','CC'),('T','T.I'),('P','Passport'),('E','CE')],'Document Type',help='Type of Identification Document for example: CC,TI.. etc'),        
+        'document_type': fields.selection([('C','CC'),('T','T.I'),('P','Passport'),('E','CE')],'Document Type',help='Identification Document Type. ie CC,TI.. etc'),        
         'twitter': fields.char('Twitter', size=64),
         'facebook':fields.char('Facebook:',size=240),        
         'district_id':fields.many2one('ocs.district','District'),        
@@ -123,18 +122,18 @@ class ResPartnerAddress(geo_model.GeoModel):
     ]   
     _constraints = [
      (_checkinputdata,'You must type at least one of these: email, phone, cell phone, facebook or twitter to create a contact',['document_number']),
-     (_chekdocument,'When Document Type is CC, the document number must be numeric only!!!',['document_number']),
+     (_checkdocument,'When Document Type is CC, the document number must be numeric only!!!',['document_number']),
     ]
 ResPartnerAddress()
 
 
 class ocs_citizen_service_point(geo_model.GeoModel):
-    """Point of Citizen Service"""
+    """Citizen Service Point"""
     _name = 'ocs.citizen_service_point'
     _columns = {     
-        'name': fields.char('Name',size=128,help='Description of Citizen Service Point point',required=True),   
-        'creation_date': fields.datetime('Creation Date',help='Date when Citizen Atention Point is installed',required=True),        
-        'close_date': fields.datetime('End Date',help='When citizen Atention Point is closed'),
+        'name': fields.char('Name',size=128,help='Description of Citizen Service Point',required=True),   
+        'creation_date': fields.datetime('Creation Date',help='Date when Citizen Service Point is installed',required=True),        
+        'close_date': fields.datetime('End Date',help='When Citizen Service Point is closed'),
         'schedule': fields.char('Schedule',size=60,help='For example L-V 8:30 am -12:50 pm'),       
         'geo_point':fields.geo_point('Location',srid=4668,readonly=True),
         'users_id':fields.many2many('res.users','ocs_citizen_service_point_users','csp_id','user_id','Users'),
@@ -144,7 +143,7 @@ ocs_citizen_service_point()
 
 class res_users(osv.osv):
     """
-    Add many 2 many realtionship with Point of Citizen Service...
+    Add many 2 many relationship with Citizen Service Point.
     """
     _name="res.users"
     _inherit="res.users"

@@ -41,8 +41,7 @@ class crm_claim(crm.crm_case,osv.osv):
         for claim in self.browse(cr, uid, ids, context = context):
             res[claim.id] = claim.csp_id.is_outsourced                                         
         return  res
-    
-    
+
     def case_review(self, cr, uid, ids, *args):
         """Review the Case
         :param ids: List of case Ids        
@@ -56,8 +55,7 @@ class crm_claim(crm.crm_case,osv.osv):
             self.write(cr, uid, case.id, data)
         self._action(cr, uid, cases, 'review')
         return True
-    
-        
+
     _name="crm.claim"
     _inherit="crm.claim"
     _columns = {        
@@ -68,15 +66,11 @@ class crm_claim(crm.crm_case,osv.osv):
         'is_outsourced':fields.function(_check_is_outsourced,type='boolean',string='Is Outsourced',method=True),
     }
     
-   
-    
 crm_claim()
-
-
 
 class ocs_citizen_service_point(geo_model.GeoModel):
     """
-    IDU High Specific Requeriment for Office of Citizen Service  with Outsource partner    
+    IDU High Specific Requeriment for Office of Citizen Service  with Outsourced partner    
     """
     
     def _check_is_outsourced (self,cr,uid,context):        
@@ -99,8 +93,6 @@ class ocs_citizen_service_point(geo_model.GeoModel):
             else :
                 res[csp.id] = "{0}".format(csp.name)                                         
         return  res
-    
-    
     
     _name="ocs.citizen_service_point"
     _inherit="ocs.citizen_service_point"
@@ -127,8 +119,6 @@ class ocs_contract(osv.osv):
     _rec_name = 'contract_id'
 ocs_contract()
 
-
-
 class ocs_tract(osv.osv):
     """ This class is only for IDU (Instituto Desarrollo Urbano Colombia), who need take control about claims 
     in building projects, from outsourcing  """    
@@ -147,14 +137,4 @@ class ocs_tract(osv.osv):
         'contract_id': fields.many2one('ocs.contract','Contract',required=True),
     }
     _rec_name = 'full_name'
-ocs_tract()
-
-
-
-     
-    
-    
-    
-    
-    
-    
+ocs_tract()    
