@@ -678,7 +678,7 @@ msgid "Partner Addresses"
 msgstr "Direcciones de empresa"
 
 #. module: ocs
-#: field:res.partner.address,document_id:0
+#: field:res.partner.address,document_number:0
 msgid "Document Number"
 msgstr "Número de documento"
 

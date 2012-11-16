@@ -44,13 +44,13 @@ class ResPartnerAddress(geo_model.GeoModel):
         if not len(ids):
             return []
         res = []
-        for r in self.read(cr, user, ids, ['name','last_name','document_id','zip','country_id', 'city','partner_id', 'street']):
+        for r in self.read(cr, user, ids, ['name','last_name','document_number','zip','country_id', 'city','partner_id', 'street']):
             if context.get('contact_display', 'contact')=='partner' and r['partner_id']:
                 res.append((r['id'], r['partner_id'][1]))
             else:
                 # make a comma-separated list with the following non-empty elements
-                #elems = [r['name'],r['last_name'],r['document_id'],r['country_id'] and r['country_id'][1], r['city'], r['street']]
-                elems = [r['name'],r['last_name'],r['document_id']]
+                #elems = [r['name'],r['last_name'],r['document_number'],r['country_id'] and r['country_id'][1], r['city'], r['street']]
+                elems = [r['name'],r['last_name'],r['document_number']]
                 addr = ', '.join(filter(bool, elems))
                 if (context.get('contact_display', 'contact')=='partner_address') and r['partner_id']:
                     res.append((r['id'], "%s: %s" % (r['partner_id'][1], addr or '/')))
@@ -76,8 +76,8 @@ class ResPartnerAddress(geo_model.GeoModel):
         is_valid_document = False        
         for citizen in self.browse(cr, uid, ids,context=None):
             if citizen.document_type == 'C' :                                    
-                if citizen.document_id != False:
-                    if re.match("^[0-9]+$", citizen.document_id) != None:
+                if citizen.document_number != False:
+                    if re.match("^[0-9]+$", citizen.document_number) != None:
                         is_valid_document = True
                     else:
                         is_valid_document = False #Empty document are permited....
@@ -105,7 +105,7 @@ class ResPartnerAddress(geo_model.GeoModel):
         'last_name':fields.char('Last Name:',size=128,required=True), 
         'name':fields.char('First Name',size=128,required=True), 
         'gender':fields.selection([('m','Male'),('f','Female')],'Gender'),                     
-        'document_id': fields.char('Document Number', size=64,selectable=True),
+        'document_number': fields.char('Document Number', size=64,selectable=True),
         'document_type': fields.selection([('C','CC'),('T','T.I'),('P','Passport'),('E','CE')],'Document Type',help='Type of Identification Document for example: CC,TI.. etc'),        
         'twitter': fields.char('Twitter', size=64),
         'facebook':fields.char('Facebook:',size=240),        
@@ -115,15 +115,15 @@ class ResPartnerAddress(geo_model.GeoModel):
         'geo_point':fields.geo_point('Location',srid=4668,readonly=True),        
         'claim_id':fields.one2many('crm.claim','id','Historic of Claims',help="Claims opened by User")         
     } 
-    _rec_name = 'document_id'          
+    _rec_name = 'document_number'          
     _order= "last_name asc"
     _sql_constraints = [
-        ('unique_cc_document_id','unique(document_type,document_id)','Combination document type, document id must be unique!!!'),
+        ('unique_cc_document_number','unique(document_type,document_number)','Combination document type, document id must be unique!!!'),
         ('unique_email','unique(email)','This email is already registered'),    
     ]   
     _constraints = [
-     (_checkinputdata,'You must type at least one of these: email, phone, cell phone, facebook or twitter to create a contact',['document_id']),
-     (_chekdocument,'When Document Type is CC, the document number must be numeric only!!!',['document_id']),
+     (_checkinputdata,'You must type at least one of these: email, phone, cell phone, facebook or twitter to create a contact',['document_number']),
+     (_chekdocument,'When Document Type is CC, the document number must be numeric only!!!',['document_number']),
     ]
 ResPartnerAddress()
 

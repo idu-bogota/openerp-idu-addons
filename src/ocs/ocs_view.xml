@@ -180,7 +180,7 @@ CRM CASE CHANNEL
 		  <newline />
 		  	 
 		     <field name="document_type" select="0"/>
-		     <field name="document_id" select="1"/>
+		     <field name="document_number" select="1"/>
 		</field>
 		<field name="email" position="replace">
 		   <field name="email" select="1"/>		  
@@ -202,7 +202,7 @@ CRM CASE CHANNEL
         <field name="inherit_id" ref="base.view_partner_address_tree"/>        	
         <field name="arch" type="xml">           
             <field name="name" position="replace"> 
-            	<field name="document_id" select ="1"/>
+            	<field name="document_number" select ="1"/>
 	            <field name="full_name" select ="1"/>
 	            <field name="street"/>
 	            <field name="district_id"/>
@@ -227,7 +227,7 @@ CRM CASE CHANNEL
                         <separator orientation="vertical"/>                        
                         <field name="name" />
                         <field name="last_name" />
-                        <field name="document_id"/>
+                        <field name="document_number"/>
                         <field name="email"/>
                     </group>
                  </search>
@@ -245,7 +245,7 @@ CRM CASE CHANNEL
             	<group colspan="4" col="4">
             	<separator string="Personal Information" colspan="4"/>         
             		<field name="document_type"/>            	
-            		<field name="document_id"/>            	
+            		<field name="document_number"/>            	
             		<field name="name"/>
 	            	<field name="last_name"/>
 	            	<field name="gender"/>
