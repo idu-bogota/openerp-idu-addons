@@ -158,7 +158,7 @@
 
 
 		<record model="ir.ui.view" id="view_ocs_claim_form_inherit">
-			<field name="name">Contruction - Claims Form</field>
+			<field name="name">Construction - Claims Form</field>
 			<field name="model">crm.claim</field>
 			<field name="type">form</field>
 			<field name="inherit_id" ref="ocs.view_ocs_claim_form_inherit" />
@@ -172,7 +172,7 @@
 
 
 		<record model="ir.ui.view" id="ocs_idu_crm_case_claims_form_view">
-			<field name="name">Contruction Claims Form</field>
+			<field name="name">Construction Claims Form</field>
 			<field name="model">crm.claim</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
@@ -269,11 +269,6 @@
 			</field>
 		</record>
 
-
-
-
-
-
 		<record model="ir.actions.act_window" id="ocs.action_ocs_crm_claim">
         		<field name="name">Claims</field>
        			<field name="res_model">crm.claim</field>
@@ -281,7 +276,6 @@
         		<field name="domain">[('csp_id.is_outsourced','=',False)]</field>
         		<field name="view_mode">tree,form,geoengine</field>
 		</record>
-
 
 		<record model="ir.actions.act_window" id="action_ocs_construction_claim">
 			<field name="name">Outsourced Claim</field>
@@ -292,12 +286,9 @@
 			<field name="context">{'form_view_ref' :'ocs_idu.ocs_idu_crm_case_claims_form_view'}</field>
 		</record>
 
-		<menuitem name="Contructions Claims" id=" menu_ocs_construction_claim"
+		<menuitem name="Construction Claims" id="menu_ocs_construction_claim"
 			action="action_ocs_construction_claim" parent="menu_ocs_construction_issues"
 			sequence="3" />
-
-
-
 
 	</data>
 </openerp>
