@@ -74,7 +74,7 @@
             <field name="act_from" ref="act_ocs_claim_in_progress"/>
             <field name="act_to" ref="act_ocs_claim_done"/>
             <field name="condition">test_response()</field>
-            <field name="signal">cas_close</field>
+            <field name="signal">cas_close</field>           
   </record>   
   
   
@@ -94,5 +94,5 @@
   </record>  
     
    
-    </data>
+  </data>
 </openerp>

@@ -1,0 +1,291 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* ocs_idu
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.1-20121005-233110\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-11-16 00:08+0000\n"
+"PO-Revision-Date: 2012-11-15 19:34-0500\n"
+"Last-Translator: Cinxgler Mariaca Minda <cinxgler@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+
+#. module: ocs_idu
+#: field:ocs.citizen_service_point,is_outsourced:0
+msgid "is Outsourced"
+msgstr "es contratista"
+
+#. module: ocs_idu
+#: help:ocs.citizen_service_point,is_outsourced:0
+msgid "When is set, this is an outsourced citizen service point"
+msgstr "Cuando esta activado, esto es un punto Crea"
+
+#. module: ocs_idu
+#: field:ocs.contract,end_date:0
+msgid "End Date"
+msgstr "Fecha final"
+
+#. module: ocs_idu
+#: model:ir.ui.menu,name:ocs_idu.menu_ocs_crea_point
+#: view:ocs.citizen_service_point:0
+msgid "Outsourced Citizen Service Point"
+msgstr "Punto Crea"
+
+#. module: ocs_idu
+#: model:res.groups,name:ocs_idu.group_ocs_outsourced_user
+msgid "OCS Outsourced User"
+msgstr "Usuario de Punto Crea"
+
+#. module: ocs_idu
+#: field:ocs.contract,partner_id:0
+msgid "Contractor"
+msgstr "Contratista"
+
+#. module: ocs_idu
+#: view:crm.claim:0
+msgid "Responsibilities"
+msgstr "Responsabilidades"
+
+#. module: ocs_idu
+#: view:crm.claim:0
+msgid "Reply"
+msgstr "Responder"
+
+#. module: ocs_idu
+#: view:crm.claim:0
+msgid "Reset to in Progress"
+msgstr "Regresar a estado 'en progreso'"
+
+#. module: ocs_idu
+#: model:ir.model,name:ocs_idu.model_ocs_contract
+msgid "ocs.contract"
+msgstr "Contrato"
+
+#. module: ocs_idu
+#: help:ocs.contract,end_date:0
+msgid "When contract ends"
+msgstr "Fecha de finalización del contrato"
+
+#. module: ocs_idu
+#: field:ocs.contract,contract_id:0
+msgid "Contract Number"
+msgstr "Número de contrato"
+
+#. module: ocs_idu
+#: view:crm.claim:0
+msgid "Claim/Action Description"
+msgstr "Descripción de la reclamación/acción"
+
+#. module: ocs_idu
+#: field:crm.claim,is_outsourced:0
+msgid "Is Outsourced"
+msgstr "es contratista"
+
+#. module: ocs_idu
+#: model:ir.ui.menu,name:ocs_idu.menu_ocs_construction_issues
+msgid "Construction Issue"
+msgstr "PQR de obras"
+
+#. module: ocs_idu
+#: field:ocs.tract,name:0
+msgid "Description"
+msgstr "Descripción"
+
+#. module: ocs_idu
+#: model:ir.ui.menu,name:ocs_idu.menu_construction_ocs_settings
+msgid "Construction Issue Settings"
+msgstr "Configuración PQR-Obras"
+
+#. module: ocs_idu
+#: view:crm.claim:0
+msgid "Global CC"
+msgstr "Con Copia Global"
+
+#. module: ocs_idu
+#: constraint:crm.claim:0
+msgid "User must registered in the Point of Citizen Service"
+msgstr "El usuario debe encontrarse registrado  en el punto de atención al ciudadano"
+
+#. module: ocs_idu
+#: model:ir.model,name:ocs_idu.model_ocs_tract
+#: view:ocs.tract:0
+msgid "ocs.tract"
+msgstr "Tramo"
+
+#. module: ocs_idu
+#: model:ir.actions.act_window,name:ocs_idu.action_ocs_construction_claim
+msgid "Outsourced Claim"
+msgstr "PQR Punto Crea"
+
+#. module: ocs_idu
+#: model:ir.actions.act_window,name:ocs_idu.action_ocs_crea_point
+msgid "Citizen Service Points"
+msgstr "Punto de atención al ciudadano"
+
+#. module: ocs_idu
+#: model:ir.model,name:ocs_idu.model_ocs_citizen_service_point
+msgid "ocs.citizen_service_point"
+msgstr "punto de atención al ciudadano"
+
+#. module: ocs_idu
+#: model:ir.ui.menu,name:ocs_idu.
+#: menu_ocs_construction_claim
+msgid "Contructions Claims"
+msgstr "PQR Punto Crea"
+
+#. module: ocs_idu
+#: field:ocs.contract,start_date:0
+msgid "Start Date"
+msgstr "Fecha de inicio"
+
+#. module: ocs_idu
+#: view:crm.claim:0
+msgid "History"
+msgstr "Historial"
+
+#. module: ocs_idu
+#: code:addons/ocs_idu/ocs_idu.py:51
+#: view:crm.claim:0
+#, python-format
+msgid "Review"
+msgstr "Revisión"
+
+#. module: ocs_idu
+#: view:crm.claim:0
+msgid "Follow Up"
+msgstr "Seguimiento"
+
+#. module: ocs_idu
+#: view:crm.claim:0
+msgid "Add Internal Note"
+msgstr "Añadir nota interna"
+
+#. module: ocs_idu
+#: view:crm.claim:0
+msgid "Communication & History"
+msgstr "Comunicación e Historial"
+
+#. module: ocs_idu
+#: field:ocs.tract,road_id:0
+msgid "Road ID"
+msgstr "CIV"
+
+#. module: ocs_idu
+#: view:crm.claim:0
+msgid "Claim Description"
+msgstr "Descripción reclamación"
+
+#. module: ocs_idu
+#: view:crm.claim:0
+msgid "Solution"
+msgstr "Solución"
+
+#. module: ocs_idu
+#: model:ir.ui.menu,name:ocs_idu.menu_ocs_contract
+#: view:ocs.contract:0
+#: field:ocs.tract,contract_id:0
+msgid "Contract"
+msgstr "Contrato"
+
+#. module: ocs_idu
+#: view:crm.claim:0
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: ocs_idu
+#: help:ocs.tract,road_id:0
+msgid "Road Identification Number"
+msgstr "Código de Identificación de la Via"
+
+#. module: ocs_idu
+#: view:crm.claim:0
+msgid "Claims"
+msgstr "Reclamaciones"
+
+#. module: ocs_idu
+#: field:ocs.citizen_service_point,full_name:0
+#: field:ocs.tract,full_name:0
+msgid "Full Name"
+msgstr "Nombre completo"
+
+#. module: ocs_idu
+#: help:ocs.contract,contract_id:0
+msgid "Contract Number or Serial"
+msgstr "Número de contrato"
+
+#. module: ocs_idu
+#: help:ocs.contract,start_date:0
+msgid "When contract start"
+msgstr "Cuando inicia el contrato"
+
+#. module: ocs_idu
+#: model:ir.model,name:ocs_idu.model_crm_claim
+msgid "Claim"
+msgstr "Reclamación"
+
+#. module: ocs_idu
+#: model:ir.actions.act_window,name:ocs_idu.action_ocs_tract
+#: model:ir.ui.menu,name:ocs_idu.menu_ocs_tract
+msgid "Tracts"
+msgstr "Tramos"
+
+#. module: ocs_idu
+#: field:ocs.citizen_service_point,tract_id:0
+msgid "Tract Id"
+msgstr "Tramo ID"
+
+#. module: ocs_idu
+#: model:res.groups,name:ocs_idu.group_ocs_outsourced_manager
+msgid "OCS Outsourced Manager"
+msgstr "Administrador PQR Obras"
+
+#. module: ocs_idu
+#: model:ir.actions.act_window,name:ocs_idu.action_ocs_contract
+msgid "contract"
+msgstr "contrato"
+
+#. module: ocs_idu
+#: view:ocs.tract:0
+msgid "Tract List"
+msgstr "Lista de tramos"
+
+#. module: ocs_idu
+#: view:crm.claim:0
+msgid "Pending"
+msgstr "Pendiente"
+
+#. module: ocs_idu
+#: view:crm.claim:0
+msgid "Done"
+msgstr "Realizada"
+
+#. module: ocs_idu
+#: view:crm.claim:0
+msgid "Claim Reporter"
+msgstr "Persona que ha reportado la reclamación"
+
+#. module: ocs_idu
+#: view:crm.claim:0
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: ocs_idu
+#: view:crm.claim:0
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: ocs_idu
+#: view:crm.claim:0
+msgid "History Information"
+msgstr "Histórico información"
+
+#. module: ocs_idu
+#: view:crm.claim:0
+msgid "Open"
+msgstr "Abrir"
+

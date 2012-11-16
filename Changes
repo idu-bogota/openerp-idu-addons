@@ -1,0 +1,7 @@
+2012111600
+* Module ocs_idu added
+* Fixes on es_CO translations
+* Field ocs.crm_claim.document_id renamed to document_name
+* create_database.py script can load sql data from a given folder
+* crm.claim is readonly when status is completed
+

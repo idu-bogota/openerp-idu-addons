@@ -6,7 +6,11 @@
 <menuitem name="Settings" id ="menu_ocs_settings" parent="menu_ocs" sequence = "3"/>
 <menuitem name="Reporting" id="menu_ocs_reporting" parent ="menu_ocs" sequence = "2"/>
 
-<!--crm case channel  -->
+<!--
+==================================================================================
+CRM CASE CHANNEL
+================================================================================== 
+ -->
 
 <record model="ir.ui.view" id="view_ocs_crm_case_channel_form_inherit">
         <field name="name">crm.case.categ.form.inherit</field>
@@ -28,12 +32,12 @@
 </record>
 <menuitem name="Case Channels" id="menu_ocs_settings_crm_case_channels" action="action_ocs_crm_case_channel" parent="menu_ocs_settings"/>
 
-<!-- Case Categories -->
+<!-- Case Categoocs.construction_claimries -->
 
 
 
 <record model="ir.actions.act_window" id="action_ocs_crm_case_categories">
-        <field name="name">Locality</field>
+        <field name="name">Case Categories</field>
         <field name="res_model">crm.case.categ</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
@@ -41,8 +45,8 @@
         <field name="context" eval="{'object_id': ref('model_crm_claim')}"/>
         <field name="help">Create claim categories to better manage and classify your claims. Some example of claims can be: preventive action, corrective action.</field>
 </record>
-<menuitem name="Case Categories" id="menu_ocs_case_categories" action="action_ocs_crm_case_categories" parent="menu_ocs_settings"/>
 
+<menuitem name="Case Categories" id="menu_ocs_case_categories" action="action_ocs_crm_case_categories" parent="menu_ocs_settings"/>
 <!-- Reporting Claims  -->
 
  <record id="action_ocs_report_claim_report" model="ir.actions.act_window">
@@ -55,8 +59,11 @@
  </record> 
  <menuitem name="Claim report" id="menu_ocs_report_claim_report" action="action_ocs_report_claim_report" parent="menu_ocs_reporting"/>
         
-
-<!-- Point of citizen Service -->
+<!-- 
+;==============================================================
+	Citizen Service Point  
+;==============================================================
+-->
 <record model="ir.ui.view" id="view_ocs_citizen_service_point_form">
         <field name="name">ocs.citizen_service_point.form</field>
         <field name="model">ocs.citizen_service_point</field>
@@ -66,10 +73,12 @@
             	<field name="name" select="1"/>              
                 <field name="creation_date" select="0"/>                
                 <field name="close_date" select="0"/>
-                <field name="schedule" select="0"/>                     
+                <field name="schedule" select="0"/>  
+                <field name="users_id" colspan="4" nolabel="1"/>                   
             </form>
         </field>
 </record>    
+
 <record model="ir.ui.view" id="view_ocs_citizen_service_point_tree">
         <field name="name">ocs.citizen_service_point.tree</field>
         <field name="model">ocs.citizen_service_point</field>
@@ -86,11 +95,16 @@
         <field name="name">Citizen Service Points</field>
         <field name="res_model">ocs.citizen_service_point</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-</record> 
+        <field name="view_mode">tree,form</field>         
+</record>
+ 
 <menuitem name="Citizen Service Point" id="menu_ocs_citizen_service_point" action="action_ocs_citizen_service_point" parent ="menu_ocs_settings" sequence="2" />
 
-<!-- Res.Partner -->
+<!-- 
+;=====================================================================================
+	RES.PARTNER 
+;=====================================================================================
+-->
 
 <!-- Vista para agregarle el nit a partner (Vista General)-->
 <record model="ir.ui.view" id="view_ocs_res_partner_inherit">
@@ -166,7 +180,7 @@
 		  <newline />
 		  	 
 		     <field name="document_type" select="0"/>
-		     <field name="document_id" select="1"/>
+		     <field name="document_number" select="1"/>
 		</field>
 		<field name="email" position="replace">
 		   <field name="email" select="1"/>		  
@@ -188,7 +202,7 @@
         <field name="inherit_id" ref="base.view_partner_address_tree"/>        	
         <field name="arch" type="xml">           
             <field name="name" position="replace"> 
-            	<field name="document_id" select ="1"/>
+            	<field name="document_number" select ="1"/>
 	            <field name="full_name" select ="1"/>
 	            <field name="street"/>
 	            <field name="district_id"/>
@@ -213,7 +227,7 @@
                         <separator orientation="vertical"/>                        
                         <field name="name" />
                         <field name="last_name" />
-                        <field name="document_id"/>
+                        <field name="document_number"/>
                         <field name="email"/>
                     </group>
                  </search>
@@ -231,7 +245,7 @@
             	<group colspan="4" col="4">
             	<separator string="Personal Information" colspan="4"/>         
             		<field name="document_type"/>            	
-            		<field name="document_id"/>            	
+            		<field name="document_number"/>            	
             		<field name="name"/>
 	            	<field name="last_name"/>
 	            	<field name="gender"/>
@@ -278,7 +292,9 @@
 <menuitem name="Citizens" id="menu_ocs_res_partner_address" action="action_ocs_res_partner_address" parent ="menu_ocs_issue"/>        
 
 
-<!-- Neighborhood -->
+<!--=======================================================================
+ Neighborhood 
+ ==========================================================================-->
  <record model="ir.ui.view" id="view_ocs_neighborhood_form">
         <field name="name">ocs.neighborhood.form</field>
         <field name="model">ocs.neighborhood</field>
@@ -309,7 +325,9 @@
     </record>
 <menuitem name="Neighborhood" id="menu_ocs_neighborhood" action="action_ocs_neighborhood" parent ="menu_ocs_settings" sequence = "6"/>                
 
-<!-- District -->
+<!-- ==========================================================================================
+District
+===============================================================================================-->
 
 <record model="ir.ui.view" id="view_ocs_district_form">
         <field name="name">ocs.district.form</field>
@@ -323,7 +341,7 @@
         </field>
 </record>
 
-<record model="ir.ui.view" id="view_ocs_district_tree">
+	<record model="ir.ui.view" id="view_ocs_district_tree">
         <field name="name">ocs.district.tree</field>
         <field name="model">ocs.district</field>
         <field name="type">tree</field>
@@ -342,7 +360,9 @@
     </record>
 <menuitem name="Districts" id="menu_ocs_district" action="action_ocs_district" parent ="menu_ocs_settings" sequence = "7"/>
 
-<!-- SubDistrict  -->
+<!-- =============================================================================
+SubDistrict 
+================================================================================== -->
 <record model="ir.ui.view" id="view_ocs_sub_district_form">
         <field name="name">ocs.sub_district.form</field>
         <field name="model">ocs.sub_district</field>
@@ -373,8 +393,9 @@
 </record>
 <menuitem name="Sub District" id="menu_ocs_sub_district" action="action_ocs_sub_district" parent ="menu_ocs_settings" sequence = "8"/>
 
-
-<!-- Classification -->
+<!--==================================================================================
+ Classification
+ ===================================================================================== -->
 <record model="ir.ui.view" id="view_ocs_claim_classification_form">
         <field name="name">ocs.claim_classification.form</field>
         <field name="model">ocs.claim_classification</field>
@@ -390,6 +411,7 @@
             </form>
         </field>
 </record>
+
 <record model="ir.ui.view" id="view_ocs_claim_classification_tree">
         <field name="name">ocs.claim_classification.tree</field>
         <field name="model">ocs.claim_classification</field>
@@ -412,7 +434,12 @@
 </record>
 <menuitem name="Classification" id="menu_ocs_claim_classification" action="action_ocs_claim_classification" parent ="menu_ocs_settings" sequence = "2"/>
 
-<!-- Claims -->
+<!-- 
+========================================================================================
+Claims 
+========================================================================================
+-->
+
 <record model="ir.ui.view" id="view_ocs_claim_form_inherit">
         <field name="name">crm.claim.form.inherit</field>
         <field name="model">crm.claim</field>	
@@ -431,7 +458,7 @@
         	</field>
         	
         	<field name="section_id" position="replace">
-        		<field name="csp_id" select ="0" widget="selection" domain="[('close_date','=',False)]"/>
+        		<field name="csp_id" select ="0" widget="selection" domain="['|',('close_date','=',False),('close_date','>=','now()')]"/>        	
         	</field>  
         	      
         	<field name="stage_id" position="replace">
@@ -476,7 +503,7 @@
             		<field name="district_id" select ="0" />            		
            </separator>
                        
-            
+        
            <page string="Follow Up" position="replace">
            	 <page string="Follow Up" >
            	 	<separator string="Solution" colspan="4" />
@@ -487,7 +514,7 @@
            		states="draft"/> <!-- states= "Estados en los cuales el boton es visible" -->
        				<button name="cas_pending" string="Pending" type="workflow" icon="gtk-media-pause" states="open" />
        				<button name="cas_open" string="Open" type="workflow" icon="gtk-go-forward" states="draft,pending" />
-       				<button name="cas_reset" string="Reset to in Progress" type="workflow" icon="gtk-convert" states="done"/>
+       				<button name="cas_reset" string="Reset to in Progress" type="workflow" icon="gtk-convert" states="done" groups="ocs.group_ocs_manager"/>
        				<button name="cas_close" string="Done" type="workflow" icon="gtk-jump-to" states="open" />
        			</group>     
            	 </page> 
@@ -511,15 +538,13 @@
            </button>
            
            <button name="case_reset" position ="replace">  
-           		<button name="cas_reset" string="Reset to in Progress" type="workflow" icon="gtk-convert" states="done"/>
-           </button>
-         
+           		<button name="cas_reset" string="Reset to in Progress" type="workflow" icon="gtk-convert" states="done" groups="ocs.group_ocs_manager"/>
+           </button>        
            
            <!--Desactivación temporal del servicio de email-->
            <button string="Send New Email" position="replace" ></button> 		
         </field>
 </record> 
-
 
 <record model="ir.ui.view" id="view_ocs_claim_tree_inherit">
         <field name="name">crm.claim.tree.inherit</field>
@@ -546,17 +571,84 @@
         </field>
 </record> 
 
+
+ <record id="ocs_view_crm_case_claims_filter" model="ir.ui.view">
+            <field name="name">Office of Citizen Service - Claims Search</field>
+            <field name="model">crm.claim</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Claims">
+                 	<filter icon="terp-check"
+                        string="Done"
+                        domain="[('state','=','done')]"
+                        help="All Claims"
+                    />
+                
+                    
+                    <filter icon="terp-camera_test"
+                        string="In Progress"
+                        domain="[('state','=','open')]"
+                        help="In Progress Claims"
+                    />
+                    <filter icon="terp-gtk-media-pause"
+                        string="Pending"
+                        domain="[('state','=','pending')]"
+                        help="All pending Claims"
+                    />
+                    <filter icon="gtk-new" string="New" name="current"
+                        domain="[('state','=','draft')]"
+                        help="New Claims" />
+                   
+                    
+                    <separator orientation="vertical"/>                    
+                    <field name="partner_address_id"/>
+                    <field name="user_id" widget="selection">
+                            <filter icon="terp-personal-"
+                                domain="[('user_id','=', False)]"
+                                help="Unassigned Claims" />
+                    </field>
+                    <newline/>
+                    <group expand="0" string="Group By...">                       
+                        <filter string="Responsible" icon="terp-personal"
+                            domain="[]" help="Responsible User"
+                            context="{'group_by':'user_id'}" />
+                        <separator orientation="vertical"/>                        
+                        <filter string="Type" icon="terp-stock_symbol-selection"
+                            domain="[]" context="{'group_by':'categ_id'}" />
+                        <filter string="State"
+                            icon="terp-stock_effects-object-colorize"
+                            domain="[]" context="{'group_by':'state'}" />
+                        <separator orientation="vertical"/>
+                        <filter string="Claim Date" icon="terp-go-month"
+                            domain="[]" help="Claim Date"
+                            context="{'group_by':'date'}" />
+                        <filter string="Deadline" icon="terp-go-month"
+                            domain="[]"
+                            context="{'group_by':'date_deadline'}" />
+                        <filter string="Closure" icon="terp-go-month"
+                            domain="[]" help="Date Closed"
+                            context="{'group_by':'date_closed'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+
 <record model="ir.actions.act_window" id="action_ocs_crm_claim">
         <field name="name">Claims</field>
         <field name="res_model">crm.claim</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,geoengine</field>
+        <field name="context">{'search_default_section_id': section_id, "search_default_current":1,"search_default_user_id":uid, "stage_type":'claim','search_view_ref':'ocs_view_crm_case_claims_filter'}</field>
 </record>
 
 <menuitem name="Claims" id="menu_ocs_crm_claim" action="action_ocs_crm_claim" parent ="menu_ocs_issue"/>
 
 
-<!--GeoEngineViews-->
+<!--=======================================================================================
+GeoEngineViews
+===========================================================================================-->
 
 <!-- OCS District -->
 
@@ -592,8 +684,6 @@
 </record>
 
 <!-- OCS Sub-District -->
-
-
 
 <record id="ir_ui_view_sub_district_basic_view" model="ir.ui.view">
             <field name="name">ocs.sub_district.geo_view</field>

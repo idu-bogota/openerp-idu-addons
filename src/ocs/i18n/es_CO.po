@@ -6,19 +6,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.1-20121005-233110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-14 19:53+0000\n"
-"PO-Revision-Date: 2012-10-14 19:53+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2012-11-16 00:39+0000\n"
+"PO-Revision-Date: 2012-11-15 19:51-0500\n"
+"Last-Translator: Cinxgler Mariaca Minda <cinxgler@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
+"Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: \n"
 
 #. module: ocs
 #: help:crm.claim,external_id:0
 msgid "External Claim System Identificator"
 msgstr "Radicado SDQS"
+
+#. module: ocs
+#: view:crm.claim:0
+msgid "Group By..."
+msgstr "Agrupar por..."
+
+#. module: ocs
+#: help:ocs.sub_district,name:0
+msgid "Sub-District name"
+msgstr "Nombre de la UPZ"
 
 #. module: ocs
 #: model:res.groups,name:ocs.group_ocs_user
@@ -46,6 +56,11 @@ msgid "Locality"
 msgstr "Localidad"
 
 #. module: ocs
+#: help:crm.case.categ,active:0
+msgid "Enable/Disable Case Category"
+msgstr "Enable/Disable Case Category"
+
+#. module: ocs
 #: model:ir.actions.act_window,name:ocs.action_ocs_citizen_service_point
 msgid "Citizen Service Points"
 msgstr "Punto de atención al ciudadano"
@@ -60,6 +75,12 @@ msgstr "Canal"
 #: field:crm.claim,external_dms_id:0
 msgid "External DMS ID"
 msgstr "Radicado Orfeo"
+
+#. module: ocs
+#: model:ir.actions.act_window,name:ocs.action_ocs_crm_case_categories
+#: model:ir.ui.menu,name:ocs.menu_ocs_case_categories
+msgid "Case Categories"
+msgstr "Case Categories"
 
 #. module: ocs
 #: model:geoengine.vector.layer,name:ocs.geoengine_vector_layer_sub_district_main_poligones
@@ -88,9 +109,14 @@ msgid "Identify a Cadastral Code"
 msgstr "Identifica código catastral"
 
 #. module: ocs
+#: constraint:crm.claim:0
+msgid "User must registered in the Point of Citizen Service"
+msgstr "El usuario debe encontrarse registrado  en el punto de atención al ciudadano"
+
+#. module: ocs
 #: view:crm.claim:0
-msgid "Reset to Draft"
-msgstr "Cambiar a borrador"
+msgid "Deadline"
+msgstr "Fecha límite"
 
 #. module: ocs
 #: selection:res.partner.address,gender:0
@@ -98,16 +124,20 @@ msgid "Female"
 msgstr "Femenino"
 
 #. module: ocs
+#: sql_constraint:res.partner.address:0
+msgid "This email is already registered"
+msgstr "This email is already registered"
+
+#. module: ocs
 #: model:ir.model,name:ocs.model_res_partner
 #: view:res.partner:0
-#: view:res.partner.address:0
 msgid "Partner"
 msgstr "Empresa"
 
 #. module: ocs
-#: selection:res.partner.address,document_type:0
-msgid "NIT"
-msgstr "NIT"
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "¡No puede tener dos usuarios con el mismo identificador de usuario!"
 
 #. module: ocs
 #: field:crm.claim,district_id:0
@@ -131,9 +161,24 @@ msgid "Passport"
 msgstr "Pasaporte"
 
 #. module: ocs
+#: view:crm.claim:0
+msgid "New"
+msgstr "Nueva"
+
+#. module: ocs
+#: view:crm.claim:0
+msgid "Type"
+msgstr "Tipo"
+
+#. module: ocs
 #: field:ocs.citizen_service_point,creation_date:0
 msgid "Creation Date"
 msgstr "Fecha de creación"
+
+#. module: ocs
+#: model:ir.ui.menu,name:ocs.menu_ocs_reporting
+msgid "Reporting"
+msgstr "Informes"
 
 #. module: ocs
 #: view:res.partner.address:0
@@ -146,9 +191,34 @@ msgid "District Name"
 msgstr "Nombre de la localidad"
 
 #. module: ocs
+#: model:ir.actions.act_window,help:ocs.action_ocs_report_claim_report
+msgid "Have a general overview of all claims processed in the system by sorting them with specific criteria."
+msgstr "Obtenga una visión global de todas las reclamaciones procesadas en el sistema ordenándolas con criterios específicos."
+
+#. module: ocs
+#: view:res.partner:0
+msgid "Search Partner"
+msgstr "Buscar empresa"
+
+#. module: ocs
 #: model:ir.actions.act_window,name:ocs.action_ocs_claim_classification
 msgid "Claim_Classification"
 msgstr "Clasificación"
+
+#. module: ocs
+#: view:crm.claim:0
+msgid "All pending Claims"
+msgstr "Todas las reclamaciones pendientes"
+
+#. module: ocs
+#: help:res.partner.address,claim_id:0
+msgid "Claims opened by User"
+msgstr "Claims opened by User"
+
+#. module: ocs
+#: field:ocs.claim_classification,is_portal_visible:0
+msgid "Is Portal Visible"
+msgstr "Visible en el portal público"
 
 #. module: ocs
 #: model:ir.ui.menu,name:ocs.menu_ocs_settings
@@ -169,6 +239,11 @@ msgstr "Apellido:"
 #: selection:res.partner.address,gender:0
 msgid "Male"
 msgstr "Masculino"
+
+#. module: ocs
+#: model:ir.actions.act_window,name:ocs.action_ocs_report_claim_report
+msgid "Claims Analysis"
+msgstr "Análisis de reclamaciones"
 
 #. module: ocs
 #: field:res.partner.address,full_name:0
@@ -206,14 +281,19 @@ msgid "ocs.sub_district"
 msgstr "UPZ"
 
 #. module: ocs
-#: model:ir.ui.menu,name:ocs.menu_ocs_issue
-msgid "Issues"
-msgstr "PQRs"
+#: view:res.partner.address:0
+msgid "Personal Information"
+msgstr "Información personal"
 
 #. module: ocs
-#: model:ir.model,name:ocs.model_res_partner_address
-msgid "Partner Addresses"
-msgstr "Direcciones de empresa"
+#: constraint:res.partner.address:0
+msgid "You must type at least one of these: email, phone, cell phone, facebook or twitter to create a contact"
+msgstr "Debe ingresar al menos uno de estos campos: email, teléfono, teléfono celular, Facebook o Twitter para poder crear un contacto"
+
+#. module: ocs
+#: view:crm.claim:0
+msgid "New Claims"
+msgstr "Reclamaciones nuevas"
 
 #. module: ocs
 #: help:ocs.citizen_service_point,name:0
@@ -221,11 +301,12 @@ msgid "Description of Citizen Service Point point"
 msgstr "Descripción del punto de atención al ciudadano"
 
 #. module: ocs
-#: help:ocs.sub_district,name:0
-msgid "Sub-District name"
-msgstr "Nombre de la UPZ"
+#: model:geoengine.raster.layer,name:ocs.geoengine_raster_layer_sub_district
+msgid "Sub District OSM"
+msgstr "UPZ"
 
 #. module: ocs
+#: view:res.partner:0
 #: view:res.partner.address:0
 msgid "Search Contact"
 msgstr "Buscar contacto"
@@ -251,6 +332,16 @@ msgid "External Document Management System Identificator"
 msgstr "Identificador en el sistema de gestión de documentos externo"
 
 #. module: ocs
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr "La compañía seleccionada no está en las compañías permitidas para este usuario"
+
+#. module: ocs
+#: model:ir.model,name:ocs.model_crm_case_categ
+msgid "Category of Case"
+msgstr "Categoría de caso"
+
+#. module: ocs
 #: view:crm.claim:0
 msgid "Pending"
 msgstr "Pendiente"
@@ -272,6 +363,16 @@ msgid "If item is valid now"
 msgstr "Si el elemento es valido"
 
 #. module: ocs
+#: view:crm.claim:0
+msgid "Closure"
+msgstr "Cierre"
+
+#. module: ocs
+#: constraint:res.partner.address:0
+msgid "When Document Type is CC, the document number must be numeric only!!!"
+msgstr "Cuando el documento es cédula, el número de documento debe contener solo números"
+
+#. module: ocs
 #: field:ocs.district,geo_polygon:0
 #: field:ocs.neighborhood,geo_polygon:0
 #: field:ocs.sub_district,geo_polygon:0
@@ -279,9 +380,9 @@ msgid "Geometry"
 msgstr "Geometría "
 
 #. module: ocs
-#: model:ir.model,name:ocs.model_ocs_claim_classification
-msgid "ocs.claim_classification"
-msgstr "Clasificación del PQR"
+#: view:crm.claim:0
+msgid "Claim Date"
+msgstr "Fecha de reclamación"
 
 #. module: ocs
 #: model:ir.actions.act_window,name:ocs.action_ocs_res_partner_address
@@ -307,9 +408,9 @@ msgid "Districts"
 msgstr "Localidad"
 
 #. module: ocs
-#: field:res.partner.address,document_id:0
-msgid "Document Number"
-msgstr "Número de documento"
+#: field:crm.case.categ,active:0
+msgid "Active"
+msgstr "Activa"
 
 #. module: ocs
 #: model:ir.model,name:ocs.model_ocs_neighborhood
@@ -323,6 +424,11 @@ msgstr "Barrio"
 #: model:ir.ui.menu,name:ocs.menu_ocs_crm_claim
 msgid "Claims"
 msgstr "PQRs"
+
+#. module: ocs
+#: view:crm.claim:0
+msgid "Date Closed"
+msgstr "Fecha cierre"
 
 #. module: ocs
 #: model:ir.model,name:ocs.model_crm_claim
@@ -352,6 +458,16 @@ msgstr "Código del territorio:"
 
 #. module: ocs
 #: view:crm.claim:0
+msgid "State"
+msgstr "Estado"
+
+#. module: ocs
+#: view:crm.claim:0
+msgid "Responsible User"
+msgstr "Usuario responsable"
+
+#. module: ocs
+#: view:crm.claim:0
 msgid "Done"
 msgstr "Realizada"
 
@@ -361,14 +477,19 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: ocs
+#: model:ir.model,name:ocs.model_res_users
+msgid "res.users"
+msgstr "res.usuarios"
+
+#. module: ocs
 #: view:crm.claim:0
 msgid "Open"
 msgstr "Abrir"
 
 #. module: ocs
-#: view:res.partner.address:0
-msgid "Personal Information"
-msgstr "Información personal"
+#: model:ir.ui.menu,name:ocs.menu_ocs_issue
+msgid "Issues"
+msgstr "PQRs"
 
 #. module: ocs
 #: field:crm.claim,geo_point:0
@@ -377,14 +498,36 @@ msgid "Location"
 msgstr "Ubicación"
 
 #. module: ocs
+#: view:crm.claim:0
+msgid "In Progress"
+msgstr "En progreso"
+
+#. module: ocs
+#: model:ir.actions.act_window,name:ocs.action_ocs_crm_case_channel
+#: model:ir.ui.menu,name:ocs.menu_ocs_settings_crm_case_channels
+msgid "Case Channels"
+msgstr "Canal"
+
+#. module: ocs
+#: view:crm.claim:0
+msgid "Responsible"
+msgstr "Responsable"
+
+#. module: ocs
 #: field:ocs.district,code:0
 msgid "District Code"
 msgstr "Código de la localidad"
 
 #. module: ocs
+#: view:crm.claim:0
+msgid "Unassigned Claims"
+msgstr "Reclamaciones no asignadas"
+
+#. module: ocs
 #: help:crm.claim,csp_id:0
 #: model:ir.ui.menu,name:ocs.menu_ocs_citizen_service_point
 #: view:ocs.citizen_service_point:0
+#: field:res.users,csp_id:0
 msgid "Citizen Service Point"
 msgstr "Punto de atención al ciudadano"
 
@@ -392,6 +535,11 @@ msgstr "Punto de atención al ciudadano"
 #: help:res.partner.address,document_type:0
 msgid "Type of Identification Document for example: CC,TI.. etc"
 msgstr "Tipo de documento de identificación (CC, TI, .., etc)"
+
+#. module: ocs
+#: view:crm.claim:0
+msgid "Reset to in Progress"
+msgstr "Regresar a estado 'en progreso'"
 
 #. module: ocs
 #: field:crm.claim,sub_classification_id:0
@@ -409,14 +557,19 @@ msgid "Claim/Action Description"
 msgstr "Descripción de la reclamación/acción"
 
 #. module: ocs
-#: model:geoengine.raster.layer,name:ocs.geoengine_raster_layer_sub_district
-msgid "Sub District OSM"
-msgstr "UPZ"
+#: view:crm.claim:0
+msgid "All Claims"
+msgstr "Todos los reclamos"
 
 #. module: ocs
-#: field:ocs.citizen_service_point,name:0
-msgid "Description"
-msgstr "Descripción"
+#: field:ocs.citizen_service_point,users_id:0
+msgid "Users"
+msgstr "Usuarios"
+
+#. module: ocs
+#: view:crm.claim:0
+msgid "Search Claims"
+msgstr "Buscar reclamaciones"
 
 #. module: ocs
 #: sql_constraint:res.partner.address:0
@@ -439,6 +592,11 @@ msgid "T.I"
 msgstr "Tarjeta de identidad"
 
 #. module: ocs
+#: model:ir.model,name:ocs.model_ocs_claim_classification
+msgid "ocs.claim_classification"
+msgstr "Clasificación de la PQR"
+
+#. module: ocs
 #: view:crm.claim:0
 msgid "Follow Up"
 msgstr "Seguimiento"
@@ -454,6 +612,7 @@ msgid "When citizen Atention Point is closed"
 msgstr "Cuando el punto de atención es cerrado"
 
 #. module: ocs
+#: field:ocs.citizen_service_point,name:0
 #: field:ocs.claim_classification,name:0
 msgid "Name"
 msgstr "Nombre"
@@ -474,9 +633,19 @@ msgid "Solution"
 msgstr "Solución"
 
 #. module: ocs
+#: model:ir.ui.menu,name:ocs.menu_ocs_report_claim_report
+msgid "Claim report"
+msgstr "Reporte de reclamos"
+
+#. module: ocs
 #: model:geoengine.raster.layer,name:ocs.geoengine_raster_layer_neighborhood
 msgid "Neighborhood OSM"
 msgstr "Barrio OSM"
+
+#. module: ocs
+#: help:ocs.claim_classification,is_portal_visible:0
+msgid "If this field is set, when claim portal can retrieve this classification."
+msgstr "Cuando este campo está activo, esta clasificación es pública en el portal"
 
 #. module: ocs
 #: help:res.partner,partner_identificator:0
@@ -504,14 +673,39 @@ msgid "District OSM"
 msgstr "Localidad OSM"
 
 #. module: ocs
+#: model:ir.model,name:ocs.model_res_partner_address
+msgid "Partner Addresses"
+msgstr "Direcciones de empresa"
+
+#. module: ocs
+#: field:res.partner.address,document_number:0
+msgid "Document Number"
+msgstr "Número de documento"
+
+#. module: ocs
 #: model:ir.model,name:ocs.model_ocs_citizen_service_point
 msgid "ocs.citizen_service_point"
-msgstr "punto de atención al ciudadano"
+msgstr "Punto de Atención al Ciudadano"
 
 #. module: ocs
 #: field:crm.claim,external_id:0
 msgid "External ID"
 msgstr "SDQS"
+
+#. module: ocs
+#: model:ir.actions.act_window,help:ocs.action_ocs_crm_case_categories
+msgid "Create claim categories to better manage and classify your claims. Some example of claims can be: preventive action, corrective action."
+msgstr "Cree categorías de reclamaciones para gestionar y clasificar mejor sus reclamaciones. Algunos ejemplos de reclamaciones son: acción preventiva, acción correctiva."
+
+#. module: ocs
+#: view:res.partner.address:0
+msgid "Claims Opened"
+msgstr "Reclamaciones abiertas"
+
+#. module: ocs
+#: view:crm.claim:0
+msgid "In Progress Claims"
+msgstr "Reclamaciones en proceso"
 
 #. module: ocs
 #: view:ocs.claim_classification:0
@@ -522,4 +716,9 @@ msgstr "Clasificación del PQR"
 #: field:res.partner.address,document_type:0
 msgid "Document Type"
 msgstr "Tipo de documento"
+
+#. module: ocs
+#: field:res.partner.address,claim_id:0
+msgid "Historic of Claims"
+msgstr "Histórico de reclamos"
 
