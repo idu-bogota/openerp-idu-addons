@@ -199,7 +199,7 @@
 							<page string="Claim Description">
 								<group colspan="2" col="2">
 									<separator colspan="2" string="Claim Reporter" />
-									<field name'search_default_section_id': section_id, "search_default_current":1,"search_default_user_id":uid, "stage_type":'claim',="partner_id" string="Partner"
+									<field name="partner_id" string="Partner"
 										on_change="onchange_partner_id(partner_id)" />
 									<field name="partner_address_id" string="Contact"
 										on_change="onchange_partner_address_id(partner_address_id, email_from)" />
@@ -270,6 +270,72 @@
 				</form>
 			</field>
 		</record>
+		
+		<!-- Search View -->
+		
+		<record id="ocs_idu_view_crm_case_claims_filter" model="ir.ui.view">
+            <field name="name">Office of Citizen Service - Claims Search</field>
+            <field name="model">crm.claim</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Claims">
+                 	 <filter icon="terp-camera_test"
+                        string="In Progress"
+                        domain="[('state','=','open')]"
+                        help="In Progress Claims"
+                    />
+                    <filter icon="terp-gtk-media-pause"
+                        string="Pending"
+                        domain="[('state','=','pending')]"
+                        help="All pending Claims"
+                    />
+                    
+                    <filter icon="terp-stock_zoom"
+                        string="Review"
+                        domain="[('state','=','review')]"
+                        help="All Claim pending to Review"
+                    />
+                    
+                    <filter icon="terp-check"
+                        string="Done"
+                        domain="[('state','=','done')]"
+                        help="All Claims"
+                    />
+             
+                    
+                    <separator orientation="vertical"/>                    
+                    <field name="partner_address_id"/>
+                    <field name="user_id" widget="selection">
+                            <filter icon="terp-personal-"
+                                domain="[('user_id','=', False)]"
+                                help="Unassigned Claims" />
+                    </field>
+                    <newline/>
+                    <group expand="0" string="Group By...">                       
+                        <filter string="Responsible" icon="terp-personal"
+                            domain="[]" help="Responsible User"
+                            context="{'group_by':'user_id'}" />
+                        <separator orientation="vertical"/>                        
+                        <filter string="Type" icon="terp-stock_symbol-selection"
+                            domain="[]" context="{'group_by':'categ_id'}" />
+                        <filter string="State"
+                            icon="terp-stock_effects-object-colorize"
+                            domain="[]" context="{'group_by':'state'}" />
+                        <separator orientation="vertical"/>
+                        <filter string="Claim Date" icon="terp-go-month"
+                            domain="[]" help="Claim Date"
+                            context="{'group_by':'date'}" />
+                        <filter string="Deadline" icon="terp-go-month"
+                            domain="[]"
+                            context="{'group_by':'date_deadline'}" />
+                        <filter string="Closure" icon="terp-go-month"
+                            domain="[]" help="Date Closed"
+                            context="{'group_by':'date_closed'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+		
 
 
 		<record model="ir.actions.act_window" id="ocs.action_ocs_crm_claim">
@@ -288,7 +354,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form,geoengine</field>
 			<field name="domain">[('csp_id.is_outsourced','=',True)]</field>
-			<field name="context">{'search_view_ref':'ocs.ocs_view_crm_case_claims_filter','form_view_ref' :'ocs_idu.ocs_idu_crm_case_claims_form_view'}</field>
+			<field name="context">{'search_view_ref':'ocs_idu.ocs_idu_view_crm_case_claims_filter','form_view_ref' :'ocs_idu.ocs_idu_crm_case_claims_form_view'}</field>
 		</record>
 
 		<menuitem name="Construction Claims" id="menu_ocs_construction_claim"
