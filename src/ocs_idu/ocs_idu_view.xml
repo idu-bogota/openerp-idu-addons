@@ -284,7 +284,7 @@
 			<field name="name">Outsourced Claim</field>
 			<field name="res_model">crm.claim</field>
 			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
+			<field name="view_mode">tree,form,geoengine</field>
 			<field name="domain">[('csp_id.is_outsourced','=',True)]</field>
 			<field name="context">{'search_default_section_id': section_id, "search_default_current":1,"search_default_user_id":uid, "stage_type":'claim','search_view_ref':'ocs.ocs_view_crm_case_claims_filter','form_view_ref' :'ocs_idu.ocs_idu_crm_case_claims_form_view'}</field>
 		</record>
