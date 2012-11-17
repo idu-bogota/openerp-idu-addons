@@ -27,6 +27,8 @@ from base_geoengine import geo_model
 from crm import crm
 from tools.translate import _
 
+AVAILABLE_STATES = crm.AVAILABLE_STATES + [('review','Review')]
+
 class crm_claim(crm.crm_case,osv.osv):
     """
     Inherit from ocs and ocs crm_claim    
@@ -59,8 +61,7 @@ class crm_claim(crm.crm_case,osv.osv):
     _name="crm.claim"
     _inherit="crm.claim"
     _columns = {        
-        'state':fields.selection([('draft', 'New'),('open', 'In Progress'),('cancel', 'Cancelled'),
-                                  ('review','Review'),('done', 'Closed'),('pending', 'Pending')],
+        'state':fields.selection(AVAILABLE_STATES,
                                  'State',help='Introduce a new state between open and done, in this step,\
                                   other people makes a review and approve the response given to citizen'),
         'is_outsourced':fields.function(_check_is_outsourced,type='boolean',string='Is Outsourced',method=True),
