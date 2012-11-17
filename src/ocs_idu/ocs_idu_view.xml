@@ -83,7 +83,7 @@
 			parent="menu_construction_ocs_settings" sequence="3" />
 
 		<!-- ================================================================== 
-			Crea Point Puntos Crea 
+			Outsourced Citizen Service Points....
 			================================================================== -->
 
 		<record model="ir.ui.view" id="view_ocs_crea_point_form">
@@ -199,7 +199,7 @@
 							<page string="Claim Description">
 								<group colspan="2" col="2">
 									<separator colspan="2" string="Claim Reporter" />
-									<field name="partner_id" string="Partner"
+									<field name'search_default_section_id': section_id, "search_default_current":1,"search_default_user_id":uid, "stage_type":'claim',="partner_id" string="Partner"
 										on_change="onchange_partner_id(partner_id)" />
 									<field name="partner_address_id" string="Contact"
 										on_change="onchange_partner_address_id(partner_address_id, email_from)" />
@@ -271,11 +271,13 @@
 			</field>
 		</record>
 
+
 		<record model="ir.actions.act_window" id="ocs.action_ocs_crm_claim">
         		<field name="name">Claims</field>
        			<field name="res_model">crm.claim</field>
         		<field name="view_type">form</field>
-        		<field name="context">{'search_default_section_id': section_id, "search_default_current":1,"search_default_user_id":uid, "stage_type":'claim','search_view_ref':'ocs.ocs_view_crm_case_claims_filter'}</field>
+        		<!-- <field name="context">{'search_default_section_id': section_id, "search_default_current":1,"search_default_user_id":uid, "stage_type":'claim','search_view_ref':'ocs.ocs_view_crm_case_claims_filter'}</field> -->
+        		<field name="context">{'search_view_ref':'ocs.ocs_view_crm_case_claims_filter'}</field>
         		<field name="domain">[('csp_id.is_outsourced','=',False)]</field>
         		<field name="view_mode">tree,form,geoengine</field>
 		</record>
@@ -286,7 +288,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form,geoengine</field>
 			<field name="domain">[('csp_id.is_outsourced','=',True)]</field>
-			<field name="context">{'search_default_section_id': section_id, "search_default_current":1,"search_default_user_id":uid, "stage_type":'claim','search_view_ref':'ocs.ocs_view_crm_case_claims_filter','form_view_ref' :'ocs_idu.ocs_idu_crm_case_claims_form_view'}</field>
+			<field name="context">{'search_view_ref':'ocs.ocs_view_crm_case_claims_filter','form_view_ref' :'ocs_idu.ocs_idu_crm_case_claims_form_view'}</field>
 		</record>
 
 		<menuitem name="Construction Claims" id="menu_ocs_construction_claim"
