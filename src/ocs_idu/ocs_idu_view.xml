@@ -176,6 +176,7 @@
 			<field name="name">Construction Claims Form</field>
 			<field name="model">crm.claim</field>
 			<field name="type">form</field>
+			<field name="priority" eval="30"/>
 			<field name="arch" type="xml">
 				<form string="Claims">
 					<field name="state" select="1" widget="statusbar"
