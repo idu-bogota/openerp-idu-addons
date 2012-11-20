@@ -290,7 +290,7 @@ class crm_claim(geo_model.GeoModel):
          'name':fields.function(_get_full_name,type='char',string='Full Name',method=True),
          #Se repiten campos del modelo original para poder controlarlos en los estados
          'partner_id': fields.many2one('res.partner', 'Partner',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
+         'partner_address_id': fields.many2one('res.partner.address', 'Contact', \
                                 # domain="[('partner_id','=',partner_id)]"
                                   readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),        
          'email_from': fields.char('Email', size=128, help="These people will receive email.",readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),

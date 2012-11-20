@@ -200,9 +200,11 @@
 								<group colspan="2" col="2">
 									<separator colspan="2" string="Claim Reporter" />
 									<field name="partner_id" string="Partner"
+										context="{'form_view_ref' : 'ocs.view_ocs_res_partner_form_small','tree_view_ref':'ocs.view_res_partner_tree_ocs_small','search_view_ref':'ocs.view_res_partner_search_ocs'}"
 										on_change="onchange_partner_id(partner_id)" />
 									<field name="partner_address_id" string="Contact"
-										on_change="onchange_partner_address_id(partner_address_id, email_from)" />
+										on_change="onchange_partner_address_id(partner_address_id, email_from)"
+										context="{'form_view_ref' : 'ocs.view_res_partner_address_form_small'}"/>										
 									<field name="partner_phone" />
 									<field name="email_from" widget="email" />
 								</group>
