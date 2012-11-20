@@ -431,6 +431,8 @@ Claims
 ========================================================================================
 -->
 
+<!-- Form View -->
+
 <record model="ir.ui.view" id="view_ocs_claim_form_inherit">
         <field name="name">crm.claim.form.inherit</field>
         <field name="model">crm.claim</field>	
@@ -537,6 +539,8 @@ Claims
         </field>
 </record> 
 
+<!-- Tree View -->
+
 <record model="ir.ui.view" id="view_ocs_claim_tree_inherit">
         <field name="name">crm.claim.tree.inherit</field>
         <field name="model">crm.claim</field>	
@@ -631,6 +635,24 @@ Claims
 
 <menuitem name="Claims" id="menu_ocs_crm_claim" action="action_ocs_crm_claim" parent ="menu_ocs_issue"/>
 
+<!--========================================================================================= 
+ADD Note:,
+Se quita combobox que modifica estados:
+Se quita el combobox, porque el workflow es bastante personalizado y crítico en 
+cada caso de uso para el manejo de las PQR
+============================================================================================-->
+
+<record model="ir.ui.view" id="view_ocs_add_note">
+        <field name="name">crm.add_note.inherit</field>
+        <field name="model">crm.add.note</field>	
+        <field name="type">form</field>
+		<field name="inherit_id" ref="crm.crm_add_new_note_view"/>
+        <field name="arch" type="xml">
+        	<field name="state" position ="replace">
+        	</field>
+        </field>
+ </record>
+
 
 <!--=======================================================================================
 GeoEngineViews
@@ -703,6 +725,8 @@ GeoEngineViews
 </record>
 
 <!-- Claim  -->
+
+
 
 
 <record id="ir_ui_view_ocs_crm_claim_basic_view" model="ir.ui.view">
