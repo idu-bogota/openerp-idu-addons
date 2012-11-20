@@ -243,9 +243,11 @@
 											context="{'mail.compose.message.mode':'reply'}" icon="terp-mail-replied"
 											type="action" />
 									</tree>
-								</field>
+								</field>								
 								<button string="Add Internal Note" name="%(crm.action_crm_add_note)d"
-									context="{'model': 'crm.lead' }" icon="terp-document-new" type="action" />
+									context="{'form_view_ref':'crm.crm_add_new_note_view','model': 'crm.lead' }" 
+									icon="terp-document-new" type="action" />
+								
 								<!--<button string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" 
 									icon="terp-mail-message-new" type="action"/> -->
 							</page>
