@@ -27,14 +27,6 @@ from crm import crm
 from crm_claim import crm_claim
 import re
 
-class Res_Partner(osv.osv):
-    """Add Partner Identificator for Colombia """
-    _name="res.partner"
-    _inherit="res.partner"
-    _columns={
-        'partner_identificator':fields.char('Company Identificator',size=64,help="Useful in Colombia to Store (NIT-Numero de Identificacion Tributaria)")
-     }
-
 class ResPartnerAddress(geo_model.GeoModel):
     """This class inherhits from res.partner.address"""
     def name_get(self, cr, user, ids, context=None):
