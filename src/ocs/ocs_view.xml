@@ -106,18 +106,7 @@ CRM CASE CHANNEL
 ;=====================================================================================
 -->
 
-<!-- Vista para agregarle el nit a partner (Vista General)-->
-<record model="ir.ui.view" id="view_ocs_res_partner_inherit">
-        <field name="name">res.partner.inherit_ocs</field>
-        <field name="model">res.partner</field>	
-        <field name="type">form</field>
-		<field name="inherit_id" ref="base.view_partner_form"/>
-        <field name="arch" type="xml">        	
-        	<field name="lang" position="before">
-        		<field name="partner_identificator" select ="1"/>        	         	
-        	</field>
-        </field>
-</record>
+
 <!-- Search View -->
 <record id="view_res_partner_search_ocs" model="ir.ui.view">
             <field name="name">res.partner.search_ocs</field>
@@ -128,7 +117,7 @@ CRM CASE CHANNEL
                     <group>                     
                         <separator orientation="vertical"/>                       
                         <field name="name" />
-                        <field name="partner_identificator"/>
+                        <field name="vat"/>
                     </group>
                  </search>
          </field>
@@ -142,7 +131,7 @@ CRM CASE CHANNEL
             <field name="arch" type="xml">
                 <tree string="Search Partner">
                         <field name="name" />
-                        <field name="partner_identificator"/>                  
+                        <field name="vat"/>                  
                 </tree>
          </field>
 </record>
@@ -156,13 +145,15 @@ CRM CASE CHANNEL
         	<form string="Partner">
         		<field name="name"/>
         		<field name="title" widget="selection"/>        	
-        		<field name="partner_identificator"/>
+        		<field name="vat"/>
         	</form>
         </field>
 </record>
 
 
-<!-- res.partner.address -->
+<!-- =================================================================
+res.partner.address 
+================================================-->
 
 <record model="ir.ui.view" id="view_res_partner_address_form_inherit">
         <field name="name">res.partner.address.form.inherit</field>
@@ -252,7 +243,7 @@ CRM CASE CHANNEL
 	            </group>	            
 	            <group colspan="4" col="4">
 	            	<separator string="Job Information" colspan="4"/>	             
-	             	<field name="partner_id" colspan="2" context="{'form_view_ref' : 'view_ocs_res_partner_form_small','tree_view_ref':'view_res_partner_tree_ocs_small','search_view_ref':'view_res_partner_search_ocs'}" />
+	             	<field name="partner_id" colspan="2" context="{'form_view_ref' : 'ocs.view_ocs_res_partner_form_small','tree_view_ref':'ocs.view_res_partner_tree_ocs_small','search_view_ref':'ocs.view_res_partner_search_ocs'}" />
 	             	<field name="function"/>
 	             	<field name="company_id" groups="base.group_multi_company" widget="selection" colspan="2"/>
 	             </group>	             
@@ -487,7 +478,7 @@ Claims
             </field>
             <field name="partner_id" position="replace">
             	<field name="partner_id" colspan="2" 
-            	context="{'form_view_ref' : 'view_ocs_res_partner_form_small','tree_view_ref':'view_res_partner_tree_ocs_small','search_view_ref':'view_res_partner_search_ocs'}"
+            	context="{'form_view_ref' : 'ocs.view_ocs_res_partner_form_small','tree_view_ref':'ocs.view_res_partner_tree_ocs_small','search_view_ref':'ocs.view_res_partner_search_ocs'}"
             	on_change="onchange_partner_id(partner_id)" />
             </field>
             <field name="partner_address_id" position ="replace">
