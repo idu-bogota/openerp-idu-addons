@@ -1,6 +1,6 @@
 {
   'name': 'Módulo para crear datos del IDU',
-  'version': 'openerp6.1-rev2012111901',
+  'version': 'openerp6.1-rev2012112100',
   'category': 'Generic Modules/Others',
   'description': "Módulo para cargar datos usados en el IDU",
   'author': 'STRT',
