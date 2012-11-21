@@ -157,7 +157,8 @@
 		-->
 
 
-
+		<!-- Form View Inherit -->
+		
 		<record model="ir.ui.view" id="view_ocs_claim_form_inherit">
 			<field name="name">Construction - Claims Form</field>
 			<field name="model">crm.claim</field>
@@ -170,8 +171,8 @@
 			</field>
 		</record>
 
-
-
+		<!-- Secod Form View -->
+	
 		<record model="ir.ui.view" id="ocs_idu_crm_case_claims_form_view">
 			<field name="name">Construction Claims Form</field>
 			<field name="model">crm.claim</field>
@@ -339,8 +340,40 @@
                 </search>
             </field>
         </record>
+		<!-- Second Tree View for Outsourced PQR -->
 		
-
+		<record model="ir.ui.view" id="ocs_idu_crm_case_claims_tree_view">
+            <field name="name">OCS - Outsourced Claims Tree</field>
+            <field name="model">crm.claim</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Claims" colors="blue:state=='pending' and not(date_deadline and (date_deadline &lt; current_date));gray:state in ('close', 'cancel');red:date_deadline and (date_deadline &lt; current_date);green:state=='review'">
+                    <field name="partner_address_id"/>
+                    <field name="user_id" />
+                    <field name="date"/>
+                    <field name="date_deadline" invisible ="1"/>
+                    <field name="date_closed"/>
+                    <field name="csp_id"/>
+                    <field name="categ_id" string="Type" select="1"/>                    
+                    <field name="state"/>                    
+    				<button name="cas_cancel" string="Cancel" type="workflow" groups="ocs_idu.group_ocs_outsourced_user"
+							icon="gtk-cancel" states="draft" /> <!-- states= "Estados en los cuales el boton es visible" -->
+					<button name="cas_pending" string="Pending" type="workflow"
+							icon="gtk-media-pause" states="open" groups="ocs_idu.group_ocs_outsourced_user" />
+					<button name="cas_open" string="Open" type="workflow" icon="gtk-go-forward" groups="ocs_idu.group_ocs_outsourced_user"
+							states="draft,pending" />
+					<button name="cas_review" string="Review" type="workflow" groups="ocs_idu.group_ocs_outsourced_user"
+							icon="gtk-go-forward" states="open" />
+					<button name="cas_reset" string="Reset to in Progress" groups="ocs_idu.group_ocs_outsourced_manager"
+							type="workflow" icon="gtk-convert" states="done,review" />
+					<button name="cas_close" string="Done" type="workflow" groups="ocs_idu.group_ocs_outsourced_manager"
+							icon="gtk-jump-to" states="review" />
+                </tree>
+            </field>
+        </record>
+		
+		<!-- Actions -->
+		<!-- Claim (Normal) -->
 
 		<record model="ir.actions.act_window" id="ocs.action_ocs_crm_claim">
         		<field name="name">Claims</field>
@@ -351,6 +384,8 @@
         		<field name="domain">[('csp_id.is_outsourced','=',False)]</field>
         		<field name="view_mode">tree,form,geoengine</field>
 		</record>
+		
+		<!-- Claim (Outsourced) -->
 
 		<record model="ir.actions.act_window" id="action_ocs_construction_claim">
 			<field name="name">Outsourced Claim</field>
@@ -358,7 +393,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form,geoengine</field>
 			<field name="domain">[('csp_id.is_outsourced','=',True)]</field>
-			<field name="context">{'search_view_ref':'ocs_idu.ocs_idu_view_crm_case_claims_filter','form_view_ref' :'ocs_idu.ocs_idu_crm_case_claims_form_view'}</field>
+			<field name="context">{'search_view_ref':'ocs_idu.ocs_idu_view_crm_case_claims_filter','form_view_ref' :'ocs_idu.ocs_idu_crm_case_claims_form_view','tree_view_ref':'ocs_idu.ocs_idu_crm_case_claims_tree_view'}</field>
 		</record>
 
 		<menuitem name="Construction Claims" id="menu_ocs_construction_claim"
