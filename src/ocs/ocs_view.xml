@@ -12,6 +12,7 @@ CRM CASE CHANNEL
 ================================================================================== 
  -->
 
+<!-- Form -->
 <record model="ir.ui.view" id="view_ocs_crm_case_channel_form_inherit">
         <field name="name">crm.case.categ.form.inherit</field>
         <field name="model">crm.case.categ</field>	
@@ -24,6 +25,7 @@ CRM CASE CHANNEL
         </field>
 </record>
 
+<!-- Action -->
 <record model="ir.actions.act_window" id="action_ocs_crm_case_channel">
         <field name="name">Case Channels</field>
         <field name="res_model">crm.case.channel</field>
@@ -52,7 +54,7 @@ Case Categories
 <!--==============================================================================================
  Reporting 
  =================================================================================================-->
-
+<!-- Action -->
  <record id="action_ocs_report_claim_report" model="ir.actions.act_window">
             <field name="name">Claims Analysis</field>
             <field name="res_model">crm.claim.report</field>
@@ -68,6 +70,7 @@ Case Categories
 	Citizen Service Point  
 ;==============================================================
 -->
+<!-- Form -->
 <record model="ir.ui.view" id="view_ocs_citizen_service_point_form">
         <field name="name">ocs.citizen_service_point.form</field>
         <field name="model">ocs.citizen_service_point</field>
@@ -82,7 +85,7 @@ Case Categories
             </form>
         </field>
 </record>    
-
+<!-- Tree -->
 <record model="ir.ui.view" id="view_ocs_citizen_service_point_tree">
         <field name="name">ocs.citizen_service_point.tree</field>
         <field name="model">ocs.citizen_service_point</field>
@@ -94,7 +97,7 @@ Case Categories
             </tree>
         </field>
 </record>
-
+<!-- Action -->
 <record model="ir.actions.act_window" id="action_ocs_citizen_service_point">
         <field name="name">Citizen Service Points</field>
         <field name="res_model">ocs.citizen_service_point</field>
@@ -158,7 +161,7 @@ Case Categories
 <!-- =================================================================
 res.partner.address 
 ;=====================================================================-->
-
+<!-- Form -->
 <record model="ir.ui.view" id="view_res_partner_address_form_inherit">
         <field name="name">res.partner.address.form.inherit</field>
         <field name="model">res.partner.address</field>	    
@@ -189,7 +192,7 @@ res.partner.address
         </field>
 </record> 
 
-
+<!-- Tree -->
 <record model="ir.ui.view" id="view_res_partner_address_tree_ocs">
         <field name="name">res.partner.address.tree.inherit_ocs</field>
         <field name="model">res.partner.address</field>
@@ -209,7 +212,9 @@ res.partner.address
 	        <field name="type" position="replace"></field>
         </field>
 </record>
- 			<!--Search view --> 
+
+<!--Search view -->
+ 
 <record id="view_res_partner_address_search_ocs" model="ir.ui.view">
             <field name="name">res.partner.address.select_ocs</field>
             <field name="model">res.partner.address</field>
@@ -227,7 +232,7 @@ res.partner.address
                     </group>
                  </search>
             </field>
-        </record> 
+</record> 
  <!-- Form view  -->
  
  <record model="ir.ui.view" id="view_res_partner_address_form_small">
@@ -273,7 +278,7 @@ res.partner.address
             </form>
         </field>
 </record>
-
+<!-- Action -->
 <record model="ir.actions.act_window" id="action_ocs_res_partner_address">
         <field name="name">Citizens</field>
         <field name="res_model">res.partner.address</field>
@@ -574,8 +579,13 @@ Claims
         		<field name="create_date" select="0" />
         	</field>
         	
+        	<field name="user_id" position="replace">
+        			<field name="csp_id" select ="0" widget="selection" domain="['|',('close_date','=',False),('close_date','>=','now()')]"/>
+        			<field name="user_id"/>
+        	</field>
+        	
         	<field name="section_id" position="replace">
-        		<field name="csp_id" select ="0" widget="selection" domain="['|',('close_date','=',False),('close_date','>=','now()')]"/>        	
+        	        	
         	</field>  
         	      
         	<field name="stage_id" position="replace">
@@ -749,7 +759,7 @@ Claims
 <!-- Geoengine -->
 
 <!-- Claim  -->
-
+ad
 <record id="ir_ui_view_ocs_crm_claim_basic_view" model="ir.ui.view">
             <field name="name">crm.claim.geo_view</field>
             <field name="arch"><![CDATA[ 

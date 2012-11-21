@@ -208,8 +208,8 @@
 						<field name="create_date" />
 					</group>
 					<group colspan="4" col="6">
-						<field name="user_id" />
 						<field name="csp_id" widget="selection" domain="[('is_outsourced','=',True),'|',('close_date','=',False),('close_date','>=','now()')]" />
+						<field name="user_id" />
 						<field name="id"/>
 						<newline />
 						<field name="priority" />

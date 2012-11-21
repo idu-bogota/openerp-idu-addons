@@ -97,7 +97,7 @@ class ResPartnerAddress(geo_model.GeoModel):
                 (citizen.twitter != False)|
                 (citizen.phone != False)|
                 (citizen.facebook != False)|
-                (citizen.mobile != False)):                    
+                (citizen.mobile != False)):                                    
                 is_valid_data = True                    
         return is_valid_data
     
@@ -229,7 +229,7 @@ class crm_claim(geo_model.GeoModel):
         return isResponsed
     
     def _check_user_in_csp(self, cr, uid, ids, context = None):
-        """
+        """             
         Constraint:
         If user is in Citizen Service Point allow create or update claim if not refuse         
         """
