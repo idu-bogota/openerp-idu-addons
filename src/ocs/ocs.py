@@ -88,6 +88,7 @@ class ResPartnerAddress(geo_model.GeoModel):
     
     def _checkinputdata(self, cr, uid, ids, context = None):
         """
+        Constraint: 
         Should have filled at least one contact detail          
         """        
         is_valid_data = False

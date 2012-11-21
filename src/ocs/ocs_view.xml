@@ -32,9 +32,10 @@ CRM CASE CHANNEL
 </record>
 <menuitem name="Case Channels" id="menu_ocs_settings_crm_case_channels" action="action_ocs_crm_case_channel" parent="menu_ocs_settings"/>
 
-<!-- Case Categoocs.construction_claimries -->
-
-
+<!--===============================================================================================
+Case Categories 
+===================================================================================================-->
+<!-- Action  -->
 
 <record model="ir.actions.act_window" id="action_ocs_crm_case_categories">
         <field name="name">Case Categories</field>
@@ -47,7 +48,10 @@ CRM CASE CHANNEL
 </record>
 
 <menuitem name="Case Categories" id="menu_ocs_case_categories" action="action_ocs_crm_case_categories" parent="menu_ocs_settings"/>
-<!-- Reporting Claims  -->
+
+<!--==============================================================================================
+ Reporting 
+ =================================================================================================-->
 
  <record id="action_ocs_report_claim_report" model="ir.actions.act_window">
             <field name="name">Claims Analysis</field>
