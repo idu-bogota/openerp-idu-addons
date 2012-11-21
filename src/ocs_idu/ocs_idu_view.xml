@@ -1,15 +1,19 @@
 <?xml version="1.0"?>
 <openerp>
-	<data>
-		<menuitem name="Construction Issue" id="menu_ocs_construction_issues"
+<data>
+
+<!-- Menús principales -->
+	
+<menuitem name="Construction Issue" id="menu_ocs_construction_issues"
 			parent="ocs.menu_ocs" sequence="3" />
-		<menuitem name="Construction Issue Settings" id="menu_construction_ocs_settings"
+<menuitem name="Construction Issue Settings" id="menu_construction_ocs_settings"
 			parent="ocs.menu_ocs" sequence="5" />
-		<!-- ====================================================================== 
-			Contract_Contratos..
-			
-			 ====================================================================== -->
-		<record model="ir.ui.view" id="view_ocs_contract_form">
+<!-- ====================================================================== 
+			Contract_Contratos..		
+ ;====================================================================== -->
+ <!-- Form -->
+ 
+<record model="ir.ui.view" id="view_ocs_contract_form">
 			<field name="name">ocs.contract.form</field>
 			<field name="model">ocs.contract</field>
 			<field name="type">form</field>
@@ -23,9 +27,9 @@
 					<field name="end_date" select="0" />
 				</form>
 			</field>
-		</record>
-
-		<record model="ir.ui.view" id="view_ocs_contract_tree">
+</record>
+<!-- Tree -->
+<record model="ir.ui.view" id="view_ocs_contract_tree">
 			<field name="name">ocs.contract.tree</field>
 			<field name="model">ocs.contract</field>
 			<field name="type">tree</field>
@@ -35,21 +39,26 @@
 					<field name="partner_id" />
 				</tree>
 			</field>
-		</record>
-		<record model="ir.actions.act_window" id="action_ocs_contract">
+</record>
+
+<!-- Action -->
+
+<record model="ir.actions.act_window" id="action_ocs_contract">
 			<field name="name">contract</field>
 			<field name="res_model">ocs.contract</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-		</record>
-		<menuitem name="Contract" id="menu_ocs_contract" action="action_ocs_contract"
+</record>
+
+<menuitem name="Contract" id="menu_ocs_contract" action="action_ocs_contract"
 			parent="menu_construction_ocs_settings" sequence="2" />
 
-		<!-- ============================================================================================================== 
+<!-- ============================================================================================================== 
 			Tract_Tramo 
-			
-			============================================================================================================== -->
-		<record model="ir.ui.view" id="view_ocs_tract_form">
+============================================================================================================== -->
+<!-- Form -->
+
+<record model="ir.ui.view" id="view_ocs_tract_form">
 			<field name="name">ocs.tract.form</field>
 			<field name="model">ocs.tract</field>
 			<field name="type">form</field>
@@ -60,8 +69,11 @@
 					<field name="contract_id" select="0" />
 				</form>
 			</field>
-		</record>
-		<record model="ir.ui.view" id="view_ocs_tract_tree">
+</record>
+
+<!-- Tree -->
+
+<record model="ir.ui.view" id="view_ocs_tract_tree">
 			<field name="name">ocs.tract.tree</field>
 			<field name="model">ocs.tract</field>
 			<field name="type">tree</field>
@@ -72,108 +84,116 @@
 					<field name="contract_id" />
 				</tree>
 			</field>
-		</record>
-		<record model="ir.actions.act_window" id="action_ocs_tract">
+</record>
+
+<!-- Action -->
+
+<record model="ir.actions.act_window" id="action_ocs_tract">
 			<field name="name">Tracts</field>
 			<field name="res_model">ocs.tract</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-		</record>
-		<menuitem name="Tracts" id="menu_ocs_tract" action="action_ocs_tract"
+</record>
+<menuitem name="Tracts" id="menu_ocs_tract" action="action_ocs_tract"
 			parent="menu_construction_ocs_settings" sequence="3" />
 
-		<!-- ================================================================== 
+<!-- ================================================================== 
 			Outsourced Citizen Service Points....
-			================================================================== -->
+;================================================================== -->
 
-		<record model="ir.ui.view" id="view_ocs_crea_point_form">
-			<field name="name">ocs.citizen_service_point.form.inherit</field>
-			<field name="model">ocs.citizen_service_point</field>
-			<field name="priority" eval="10" />
-			<field name="type">form</field>
-			<field name="inherit_id" ref="ocs.view_ocs_citizen_service_point_form" />			
-			<field name="arch" type="xml">
-				<field name="schedule" position="after">
-					<field name="full_name" select="0" />					
-				</field>
+<!-- Form Inherit-->
+<record model="ir.ui.view" id="view_ocs_crea_point_form">
+		<field name="name">ocs.citizen_service_point.form.inherit</field>
+		<field name="model">ocs.citizen_service_point</field>
+		<field name="priority" eval="10" />
+		<field name="type">form</field>
+		<field name="inherit_id" ref="ocs.view_ocs_citizen_service_point_form" />			
+		<field name="arch" type="xml">
+			<field name="schedule" position="after">
+				<field name="full_name" select="0" />					
 			</field>
-		</record>
+		</field>
+</record>
 
-		<record model="ir.ui.view" id="view_ocs_crea_point_form_outsourced">
-			<field name="name">ocs.citizen_service_point.form.outsourced</field>
-			<field name="model">ocs.citizen_service_point</field>
-			<field name="priority" eval="32" />
-			<field name="type">form</field>			
-			<field name="arch" type="xml">
-				<form string="Outsourced Citizen Service Point">
-						<field name="name"/>
-						<field name="creation_date"/>
-						<field name="close_date"/>
-						<field name="schedule"/>					
-	 					<field name="tract_id" required="True"/>
-						<field name="full_name" select="0" />
-						<field name="users_id" colspan="4" nolabel="1" />					
-				</form>
+<!-- Form Claim Outsourced -->
+<record model="ir.ui.view" id="view_ocs_crea_point_form_outsourced">
+		<field name="name">ocs.citizen_service_point.form.outsourced</field>
+		<field name="model">ocs.citizen_service_point</field>
+		<field name="priority" eval="32" />
+		<field name="type">form</field>			
+		<field name="arch" type="xml">
+			<form string="Outsourced Citizen Service Point">
+					<field name="name"/>
+					<field name="creation_date"/>
+					<field name="close_date"/>
+					<field name="schedule"/>					
+ 					<field name="tract_id" required="True"/>
+					<field name="full_name" select="0" />
+					<field name="users_id" colspan="4" nolabel="1" />					
+			</form>
+		</field>
+</record>
+
+<!-- Tree -->
+		
+<record model="ir.ui.view" id="view_ocs_crea_point_tree">
+		<field name="name">ocs.citizen_service_point.tree_inherit</field>
+		<field name="model">ocs.citizen_service_point</field>
+		<field name="type">tree</field>
+		<field name="inherit_id" ref="ocs.view_ocs_citizen_service_point_tree" />
+		<field name="arch" type="xml">
+			<field name="name" position="replace">
+				<field name="full_name" />
 			</field>
-		</record>
-		
-		<record model="ir.ui.view" id="view_ocs_crea_point_tree">
-			<field name="name">ocs.citizen_service_point.tree_inherit</field>
-			<field name="model">ocs.citizen_service_point</field>
-			<field name="type">tree</field>
-			<field name="inherit_id" ref="ocs.view_ocs_citizen_service_point_tree" />
-			<field name="arch" type="xml">
-				<field name="name" position="replace">
-					<field name="full_name" />
-				</field>
-			</field>
-		</record>
-		
-		
-		<record model="ir.actions.act_window" id="ocs.action_ocs_citizen_service_point">
-        	<field name="name">Citizen Service Points</field>
-        	<field name="res_model">ocs.citizen_service_point</field>
-        	<field name="view_type">form</field>
-        	<field name="domain">[('is_outsourced','=',False)]</field>
-        	<field name="view_mode">tree,form</field>
-		</record> 	
-		
-		<record model="ir.actions.act_window" id="action_ocs_crea_point">
-			<field name="name">Citizen Service Points</field>
-			<field name="res_model">ocs.citizen_service_point</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-			<field name="domain">[('is_outsourced','=',True)]</field>
-			<field name="context">{'is_outsourced':True,'form_view_ref':'ocs_idu.view_ocs_crea_point_form_outsourced'}</field> <!-- Ayuda a determinar si el predio es o no outsourced -->			
-		</record>
+		</field>
+</record>
 
-		<menuitem name="Outsourced Citizen Service Point" id="menu_ocs_crea_point" action="action_ocs_crea_point"
-			parent="menu_construction_ocs_settings" sequence="3" />
-
-		<!-- ================================================================================================= 
-			Construction Claim 
-			
-			================================================================================================= 
-		-->
-
-
-		<!-- Form View Inherit -->
+<!-- Action OCS Citizen Service Point  -->		
 		
-		<record model="ir.ui.view" id="view_ocs_claim_form_inherit">
-			<field name="name">Construction - Claims Form</field>
-			<field name="model">crm.claim</field>
-			<field name="type">form</field>
-			<field name="inherit_id" ref="ocs.view_ocs_claim_form_inherit" />
+<record model="ir.actions.act_window" id="ocs.action_ocs_citizen_service_point">
+       	<field name="name">Citizen Service Points</field>
+       	<field name="res_model">ocs.citizen_service_point</field>
+       	<field name="view_type">form</field>
+       	<field name="domain">[('is_outsourced','=',False)]</field>
+       	<field name="view_mode">tree,form</field>
+</record> 	
+
+<!-- Action OCS Citizen Service Point Outsourced -->		
+
+<record model="ir.actions.act_window" id="action_ocs_crea_point">
+		<field name="name">Citizen Service Points</field>
+		<field name="res_model">ocs.citizen_service_point</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('is_outsourced','=',True)]</field>
+		<field name="context">{'is_outsourced':True,'form_view_ref':'ocs_idu.view_ocs_crea_point_form_outsourced'}</field> <!-- Ayuda a determinar si el predio es o no outsourced -->			
+</record>
+
+<menuitem name="Outsourced Citizen Service Point" id="menu_ocs_crea_point" action="action_ocs_crea_point"
+		parent="menu_construction_ocs_settings" sequence="3" />
+
+<!-- ================================================================================================= 
+		Construction Claim
+;================================================================================================= 
+-->
+
+<!-- Form View Inherit -->
+		
+<record model="ir.ui.view" id="view_ocs_claim_form_inherit">
+	<field name="name">Construction - Claims Form</field>
+	<field name="model">crm.claim</field>
+	<field name="type">form</field>
+	<field name="inherit_id" ref="ocs.view_ocs_claim_form_inherit" />
 			<field name="arch" type="xml">
 				<field name="csp_id" position="replace">	
 						<field name="csp_id" widget="selection" domain="[('is_outsourced','=',False),'|',('close_date','=',False),('close_date','>=','now()')]" />
 				</field>
 			</field>
-		</record>
+</record>
 
-		<!-- Secod Form View -->
+<!-- Second Form View -->
 	
-		<record model="ir.ui.view" id="ocs_idu_crm_case_claims_form_view">
+<record model="ir.ui.view" id="ocs_idu_crm_case_claims_form_view">
 			<field name="name">Construction Claims Form</field>
 			<field name="model">crm.claim</field>
 			<field name="type">form</field>
@@ -274,11 +294,11 @@
 					</group>
 				</form>
 			</field>
-		</record>
+</record>
 		
-		<!-- Search View -->
+<!-- Search View -->
 		
-		<record id="ocs_idu_view_crm_case_claims_filter" model="ir.ui.view">
+<record id="ocs_idu_view_crm_case_claims_filter" model="ir.ui.view">
             <field name="name">Office of Citizen Service - Claims Search</field>
             <field name="model">crm.claim</field>
             <field name="type">search</field>
@@ -339,10 +359,10 @@
                     </group>
                 </search>
             </field>
-        </record>
-		<!-- Second Tree View for Outsourced PQR -->
+ </record>
+ <!-- Second Tree View for Outsourced PQR -->
 		
-		<record model="ir.ui.view" id="ocs_idu_crm_case_claims_tree_view">
+<record model="ir.ui.view" id="ocs_idu_crm_case_claims_tree_view">
             <field name="name">OCS - Outsourced Claims Tree</field>
             <field name="model">crm.claim</field>
             <field name="type">tree</field>
@@ -372,10 +392,10 @@
             </field>
         </record>
 		
-		<!-- Actions -->
-		<!-- Claim (Normal) -->
+<!-- Actions -->
+<!-- Claim (Normal) -->
 
-		<record model="ir.actions.act_window" id="ocs.action_ocs_crm_claim">
+<record model="ir.actions.act_window" id="ocs.action_ocs_crm_claim">
         		<field name="name">Claims</field>
        			<field name="res_model">crm.claim</field>
         		<field name="view_type">form</field>
@@ -383,22 +403,23 @@
         		<field name="context">{'search_view_ref':'ocs.ocs_view_crm_case_claims_filter'}</field>
         		<field name="domain">[('csp_id.is_outsourced','=',False)]</field>
         		<field name="view_mode">tree,form,geoengine</field>
-		</record>
+</record>
 		
-		<!-- Claim (Outsourced) -->
+<!-- Claim (Outsourced) -->
 
-		<record model="ir.actions.act_window" id="action_ocs_construction_claim">
+<record model="ir.actions.act_window" id="action_ocs_construction_claim">
 			<field name="name">Outsourced Claim</field>
 			<field name="res_model">crm.claim</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form,geoengine</field>
 			<field name="domain">[('csp_id.is_outsourced','=',True)]</field>
 			<field name="context">{'search_view_ref':'ocs_idu.ocs_idu_view_crm_case_claims_filter','form_view_ref' :'ocs_idu.ocs_idu_crm_case_claims_form_view','tree_view_ref':'ocs_idu.ocs_idu_crm_case_claims_tree_view'}</field>
-		</record>
+</record>
 
 		<menuitem name="Construction Claims" id="menu_ocs_construction_claim"
 			action="action_ocs_construction_claim" parent="menu_ocs_construction_issues"
 			sequence="3" />
+
 
 	</data>
 </openerp>
