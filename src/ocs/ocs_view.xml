@@ -157,7 +157,7 @@ Case Categories
 
 <!-- =================================================================
 res.partner.address 
-================================================-->
+;=====================================================================-->
 
 <record model="ir.ui.view" id="view_res_partner_address_form_inherit">
         <field name="name">res.partner.address.form.inherit</field>
@@ -290,6 +290,9 @@ res.partner.address
 <!--=======================================================================
  Neighborhood 
  ==========================================================================-->
+ 
+ <!--Form  -->
+ 
  <record model="ir.ui.view" id="view_ocs_neighborhood_form">
         <field name="name">ocs.neighborhood.form</field>
         <field name="model">ocs.neighborhood</field>
@@ -300,7 +303,9 @@ res.partner.address
                 <field name="name" select="1"/>
             </form>
         </field>
-    </record>    
+    </record>
+    
+ <!-- Tree -->    
     <record model="ir.ui.view" id="view_ocs_neighborhood">
         <field name="name">ocs.neighborhood.tree</field>
         <field name="model">ocs.neighborhood</field>
@@ -311,19 +316,55 @@ res.partner.address
                 <field name="name"/>
             </tree>
         </field>
-    </record>    
-    <record model="ir.actions.act_window" id="action_ocs_neighborhood">
+    </record>
+    
+ <!-- Geoengine View -->
+    
+<record id="ir_ui_view_neighborhood_basic_view" model="ir.ui.view">
+            <field name="name">ocs.neighborhood.geo_view</field>
+            <field name="arch"><![CDATA[ 
+                <form >
+                    <field name="code"/>
+                    <field name="name"/>                                        
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">ocs.neighborhood</field>
+</record>
+
+<record id="geoengine_raster_layer_neighborhood" model="geoengine.raster.layer">
+            <field name="raster_type">osm</field>
+            <field name="name">Neighborhood OSM</field>
+            <field name="view_id" ref="ir_ui_view_neighborhood_basic_view"/>
+            <field eval="0" name="overlay"/>
+</record>
+
+<record id="geoengine_vector_layer_neighborhood_main_poligones" model="geoengine.vector.layer">
+            <field name="geo_field_id" ref="ocs.field_ocs_sub_district_geo_polygon"/>
+            <!-- <field name="geo_field_id" ref="base_geoengine_demo.field_dummy_zip_the_geom"/> -->
+            <field name="name">Neighborhood</field>
+            <field name="view_id" ref="ir_ui_view_neighborhood_basic_view"/>
+            <field name="geo_repr">basic</field>
+            <field name="attribute_field_id" ref="field_ocs_neighborhood_name"/>
+            <field name="begin_color">#F7F80A</field>
+</record>
+    
+ <!-- Action --> 
+       
+<record model="ir.actions.act_window" id="action_ocs_neighborhood">
         <field name="name">Neighborhood</field>
         <field name="res_model">ocs.neighborhood</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,geoengine</field>
-    </record>
+</record>
+
 <menuitem name="Neighborhood" id="menu_ocs_neighborhood" action="action_ocs_neighborhood" parent ="menu_ocs_settings" sequence = "6"/>                
 
 <!-- ==========================================================================================
 District
 ===============================================================================================-->
 
+<!-- Form -->
 <record model="ir.ui.view" id="view_ocs_district_form">
         <field name="name">ocs.district.form</field>
         <field name="model">ocs.district</field>
@@ -335,7 +376,7 @@ District
             </form>
         </field>
 </record>
-
+<!-- Tree -->
 	<record model="ir.ui.view" id="view_ocs_district_tree">
         <field name="name">ocs.district.tree</field>
         <field name="model">ocs.district</field>
@@ -347,17 +388,56 @@ District
             </tree>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="action_ocs_district">
+    
+<!-- geoengine -->
+
+<record id="ir_ui_view_district_basic_view" model="ir.ui.view">
+            <field name="name">ocs.district.zip.geo_view</field>
+            <field name="arch"><![CDATA[ 
+                <form >
+                    <field name="code"/>
+                    <field name="name"/>                                        
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">ocs.district</field>
+</record>
+
+
+<record id="geoengine_raster_layer_district" model="geoengine.raster.layer">
+            <field name="raster_type">osm</field>
+            <field name="name">District OSM</field>
+            <field name="view_id" ref="ir_ui_view_district_basic_view"/>
+            <field eval="0" name="overlay"/>
+</record>
+
+
+<record id="geoengine_vector_layer_district_main_poligones" model="geoengine.vector.layer">
+            <field name="geo_field_id" ref="ocs.field_ocs_district_geo_polygon"/>
+            <!-- <field name="geo_field_id" ref="base_geoengine_demo.field_dummy_zip_the_geom"/> -->
+            <field name="name">Districts</field>
+            <field name="view_id" ref="ir_ui_view_district_basic_view"/>
+            <field name="geo_repr">basic</field>
+            <field name="attribute_field_id" ref="field_ocs_district_name"/>
+            <field name="begin_color">#FF680A</field>
+</record>
+    
+<!-- Action -->
+ 
+<record model="ir.actions.act_window" id="action_ocs_district">
         <field name="name">Locality</field>
         <field name="res_model">ocs.district</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,geoengine</field>
-    </record>
+</record>
+
 <menuitem name="Districts" id="menu_ocs_district" action="action_ocs_district" parent ="menu_ocs_settings" sequence = "7"/>
 
 <!-- =============================================================================
 SubDistrict 
 ================================================================================== -->
+
+<!-- Form -->
 <record model="ir.ui.view" id="view_ocs_sub_district_form">
         <field name="name">ocs.sub_district.form</field>
         <field name="model">ocs.sub_district</field>
@@ -369,6 +449,7 @@ SubDistrict
             </form>
         </field>
 </record>
+<!-- Tree -->
 <record model="ir.ui.view" id="view_ocs_sub_district_tree">
         <field name="name">ocs.sub_district.tree</field>
         <field name="model">ocs.sub_district</field>
@@ -380,6 +461,41 @@ SubDistrict
             </tree>
         </field>
 </record>    
+
+<!-- Geoengine -->
+<record id="ir_ui_view_sub_district_basic_view" model="ir.ui.view">
+            <field name="name">ocs.sub_district.geo_view</field>
+            <field name="arch"><![CDATA[ 
+                <form >
+                    <field name="code"/>
+                    <field name="name"/>                                        
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">ocs.sub_district</field>
+</record>
+
+
+<record id="geoengine_raster_layer_sub_district" model="geoengine.raster.layer">
+            <field name="raster_type">osm</field>
+            <field name="name">Sub District OSM</field>
+            <field name="view_id" ref="ir_ui_view_sub_district_basic_view"/>
+            <field eval="0" name="overlay"/>
+</record>
+
+
+<record id="geoengine_vector_layer_sub_district_main_poligones" model="geoengine.vector.layer">
+            <field name="geo_field_id" ref="ocs.field_ocs_sub_district_geo_polygon"/>
+            <!-- <field name="geo_field_id" ref="base_geoengine_demo.field_dummy_zip_the_geom"/> -->
+            <field name="name">Sub Districts</field>
+            <field name="view_id" ref="ir_ui_view_sub_district_basic_view"/>
+            <field name="geo_repr">basic</field>
+            <field name="attribute_field_id" ref="field_ocs_sub_district_name"/>
+            <field name="begin_color">#FFF80A</field>
+</record>
+
+<!-- Action -->
+
 <record model="ir.actions.act_window" id="action_ocs_sub_district">
         <field name="name">Sub District</field>
         <field name="res_model">ocs.sub_district</field>
@@ -570,6 +686,7 @@ Claims
         </field>
 </record> 
 
+<!-- Search View -->
 
  <record id="ocs_view_crm_case_claims_filter" model="ir.ui.view">
             <field name="name">Office of Citizen Service - Claims Search</field>
@@ -592,8 +709,7 @@ Claims
                         domain="[('state','=','done')]"
                         help="All Claims"
                     />
-             
-                    
+                                        
                     <separator orientation="vertical"/>                    
                     <field name="partner_address_id"/>
                     <field name="user_id" widget="selection">
@@ -626,9 +742,43 @@ Claims
                 </search>
             </field>
         </record>
+<!-- Geoengine -->
+
+<!-- Claim  -->
+
+<record id="ir_ui_view_ocs_crm_claim_basic_view" model="ir.ui.view">
+            <field name="name">crm.claim.geo_view</field>
+            <field name="arch"><![CDATA[ 
+                <form >
+                    <field name="classification_id"/>
+                    <field name="sub_classification_id"/>                                        
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">crm.claim</field>
+</record>
 
 
+<record id="geoengine_raster_layer_crm_claim" model="geoengine.raster.layer">
+            <field name="raster_type">osm</field>
+            <field name="name">CRM Claim OSM</field>
+            <field name="view_id" ref="ir_ui_view_ocs_crm_claim_basic_view"/>
+            <field eval="0" name="overlay"/>
+</record>
 
+<record id="geoengine_vector_layer_crm_claim_all_claims" model="geoengine.vector.layer">
+            <field name="geo_field_id" ref="ocs.field_crm_claim_geo_point"/>
+        <!-- 
+        <field name="geo_field_id" ref="base_geoengine_demo.field_dummy_zip_the_geom"/> 
+        <field name="attribute_field_id" ref="field_crm_claim_name"/>
+        -->
+            <field name="name">Claims</field>
+            <field name="view_id" ref="ir_ui_view_ocs_crm_claim_basic_view"/>
+            <field name="geo_repr">basic</field>            
+            <field name="begin_color">#0FF80A</field>
+</record>
+
+<!-- Action -->
 <record model="ir.actions.act_window" id="action_ocs_crm_claim">
         <field name="name">Claims</field>
         <field name="res_model">crm.claim</field>
@@ -657,152 +807,6 @@ cada caso de uso para el manejo de las PQR
         </field>
  </record>
 
-
-<!--=======================================================================================
-GeoEngineViews
-===========================================================================================-->
-
-<!-- OCS District -->
-
-<record id="ir_ui_view_district_basic_view" model="ir.ui.view">
-            <field name="name">ocs.district.zip.geo_view</field>
-            <field name="arch"><![CDATA[ 
-                <form >
-                    <field name="code"/>
-                    <field name="name"/>                                        
-                </form>]]></field>
-            <field eval="16" name="priority"/>
-            <field name="type">geoengine</field>
-            <field name="model">ocs.district</field>
-</record>
-
-
-<record id="geoengine_raster_layer_district" model="geoengine.raster.layer">
-            <field name="raster_type">osm</field>
-            <field name="name">District OSM</field>
-            <field name="view_id" ref="ir_ui_view_district_basic_view"/>
-            <field eval="0" name="overlay"/>
-</record>
-
-
-<record id="geoengine_vector_layer_district_main_poligones" model="geoengine.vector.layer">
-            <field name="geo_field_id" ref="ocs.field_ocs_district_geo_polygon"/>
-            <!-- <field name="geo_field_id" ref="base_geoengine_demo.field_dummy_zip_the_geom"/> -->
-            <field name="name">Districts</field>
-            <field name="view_id" ref="ir_ui_view_district_basic_view"/>
-            <field name="geo_repr">basic</field>
-            <field name="attribute_field_id" ref="field_ocs_district_name"/>
-            <field name="begin_color">#FF680A</field>
-</record>
-
-<!-- OCS Sub-District -->
-
-<record id="ir_ui_view_sub_district_basic_view" model="ir.ui.view">
-            <field name="name">ocs.sub_district.geo_view</field>
-            <field name="arch"><![CDATA[ 
-                <form >
-                    <field name="code"/>
-                    <field name="name"/>                                        
-                </form>]]></field>
-            <field eval="16" name="priority"/>
-            <field name="type">geoengine</field>
-            <field name="model">ocs.sub_district</field>
-</record>
-
-
-<record id="geoengine_raster_layer_sub_district" model="geoengine.raster.layer">
-            <field name="raster_type">osm</field>
-            <field name="name">Sub District OSM</field>
-            <field name="view_id" ref="ir_ui_view_sub_district_basic_view"/>
-            <field eval="0" name="overlay"/>
-</record>
-
-
-<record id="geoengine_vector_layer_sub_district_main_poligones" model="geoengine.vector.layer">
-            <field name="geo_field_id" ref="ocs.field_ocs_sub_district_geo_polygon"/>
-            <!-- <field name="geo_field_id" ref="base_geoengine_demo.field_dummy_zip_the_geom"/> -->
-            <field name="name">Sub Districts</field>
-            <field name="view_id" ref="ir_ui_view_sub_district_basic_view"/>
-            <field name="geo_repr">basic</field>
-            <field name="attribute_field_id" ref="field_ocs_sub_district_name"/>
-            <field name="begin_color">#FFF80A</field>
-</record>
-
-<!-- Claim  -->
-
-
-
-
-<record id="ir_ui_view_ocs_crm_claim_basic_view" model="ir.ui.view">
-            <field name="name">crm.claim.geo_view</field>
-            <field name="arch"><![CDATA[ 
-                <form >
-                    <field name="classification_id"/>
-                    <field name="sub_classification_id"/>                                        
-                </form>]]></field>
-            <field eval="16" name="priority"/>
-            <field name="type">geoengine</field>
-            <field name="model">crm.claim</field>
-</record>
-
-
-<record id="geoengine_raster_layer_crm_claim" model="geoengine.raster.layer">
-            <field name="raster_type">osm</field>
-            <field name="name">CRM Claim OSM</field>
-            <field name="view_id" ref="ir_ui_view_ocs_crm_claim_basic_view"/>
-            <field eval="0" name="overlay"/>
-</record>
-
-
-<record id="geoengine_vector_layer_crm_claim_all_claims" model="geoengine.vector.layer">
-            <field name="geo_field_id" ref="ocs.field_crm_claim_geo_point"/>
-        <!-- 
-        <field name="geo_field_id" ref="base_geoengine_demo.field_dummy_zip_the_geom"/> 
-        <field name="attribute_field_id" ref="field_crm_claim_name"/>
-        -->
-            <field name="name">Claims</field>
-            <field name="view_id" ref="ir_ui_view_ocs_crm_claim_basic_view"/>
-            <field name="geo_repr">basic</field>            
-            <field name="begin_color">#0FF80A</field>
-</record>
-
-
-<!--
-Geo Engine Neighborhood
--->
-
-
-
-<record id="ir_ui_view_neighborhood_basic_view" model="ir.ui.view">
-            <field name="name">ocs.neighborhood.geo_view</field>
-            <field name="arch"><![CDATA[ 
-                <form >
-                    <field name="code"/>
-                    <field name="name"/>                                        
-                </form>]]></field>
-            <field eval="16" name="priority"/>
-            <field name="type">geoengine</field>
-            <field name="model">ocs.neighborhood</field>
-</record>
-
-
-<record id="geoengine_raster_layer_neighborhood" model="geoengine.raster.layer">
-            <field name="raster_type">osm</field>
-            <field name="name">Neighborhood OSM</field>
-            <field name="view_id" ref="ir_ui_view_neighborhood_basic_view"/>
-            <field eval="0" name="overlay"/>
-</record>
-
-
-<record id="geoengine_vector_layer_neighborhood_main_poligones" model="geoengine.vector.layer">
-            <field name="geo_field_id" ref="ocs.field_ocs_sub_district_geo_polygon"/>
-            <!-- <field name="geo_field_id" ref="base_geoengine_demo.field_dummy_zip_the_geom"/> -->
-            <field name="name">Neighborhood</field>
-            <field name="view_id" ref="ir_ui_view_neighborhood_basic_view"/>
-            <field name="geo_repr">basic</field>
-            <field name="attribute_field_id" ref="field_ocs_neighborhood_name"/>
-            <field name="begin_color">#F7F80A</field>
-</record>
 
 
 </data>
