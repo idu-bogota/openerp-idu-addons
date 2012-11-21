@@ -303,10 +303,10 @@ res.partner.address
                 <field name="name" select="1"/>
             </form>
         </field>
-    </record>
+</record>
     
  <!-- Tree -->    
-    <record model="ir.ui.view" id="view_ocs_neighborhood">
+<record model="ir.ui.view" id="view_ocs_neighborhood">
         <field name="name">ocs.neighborhood.tree</field>
         <field name="model">ocs.neighborhood</field>
         <field name="type">tree</field>
@@ -316,7 +316,7 @@ res.partner.address
                 <field name="name"/>
             </tree>
         </field>
-    </record>
+</record>
     
  <!-- Geoengine View -->
     
@@ -377,7 +377,8 @@ District
         </field>
 </record>
 <!-- Tree -->
-	<record model="ir.ui.view" id="view_ocs_district_tree">
+
+<record model="ir.ui.view" id="view_ocs_district_tree">
         <field name="name">ocs.district.tree</field>
         <field name="model">ocs.district</field>
         <field name="type">tree</field>
@@ -387,7 +388,7 @@ District
                 <field name="name"/>                  
             </tree>
         </field>
-    </record>
+</record>
     
 <!-- geoengine -->
 
@@ -449,7 +450,9 @@ SubDistrict
             </form>
         </field>
 </record>
+
 <!-- Tree -->
+
 <record model="ir.ui.view" id="view_ocs_sub_district_tree">
         <field name="name">ocs.sub_district.tree</field>
         <field name="model">ocs.sub_district</field>
@@ -463,6 +466,7 @@ SubDistrict
 </record>    
 
 <!-- Geoengine -->
+
 <record id="ir_ui_view_sub_district_basic_view" model="ir.ui.view">
             <field name="name">ocs.sub_district.geo_view</field>
             <field name="arch"><![CDATA[ 
@@ -688,7 +692,7 @@ Claims
 
 <!-- Search View -->
 
- <record id="ocs_view_crm_case_claims_filter" model="ir.ui.view">
+<record id="ocs_view_crm_case_claims_filter" model="ir.ui.view">
             <field name="name">Office of Citizen Service - Claims Search</field>
             <field name="model">crm.claim</field>
             <field name="type">search</field>
@@ -741,7 +745,7 @@ Claims
                     </group>
                 </search>
             </field>
-        </record>
+</record>
 <!-- Geoengine -->
 
 <!-- Claim  -->
