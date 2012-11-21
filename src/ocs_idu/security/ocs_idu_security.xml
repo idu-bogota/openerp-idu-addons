@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
+		<!-- ========================================================================= 
+		Group Definition
+		 =============================================================================-->
 		<record id="group_ocs_outsourced_user" model="res.groups">
     		<field name="name">OCS Outsourced User</field>
 		</record>
@@ -8,7 +11,10 @@
 		<record id="group_ocs_outsourced_manager" model="res.groups">
     		<field name="name">OCS Outsourced Manager</field>
 		</record>	
-		
+		<!--===========================================================================  
+		 Menu Access
+		;===============================================================================-->
+				
 		<record model="ir.ui.menu" id="ocs.menu_ocs">
         		<field eval="[(4, ref('group_ocs_outsourced_user')),(4, ref('group_ocs_outsourced_manager'))]" name="groups_id"/>
     	</record>
@@ -28,6 +34,12 @@
     	Para que esto quede bien hecho!!    	
     	 -->
     	
+    	<!-- ========================================================================================== 
+    	Domain Security Constraint
+    	;==============================================================================================-->
+    	
+    	
+    	<!--  -->
     	<record id="ocs_idu_rule_user_claims" model="ir.rule">
         	<field name="name">User Claims</field>
         	<field name="model_id" ref="crm_claim.model_crm_claim"/>        	
@@ -42,15 +54,13 @@
         	<!-- <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field> -->
         	<field name="groups" eval="[(4, ref('group_ocs_outsourced_user'))]"/>
     	</record>
-    	
-    	
+    	    	
     	 <record id="ocs_idu_rule_manager_claims" model="ir.rule">
         	<field name="name">Manager Claims</field>
         	<field name="model_id" ref="model_crm_claim"/>
         	<field name="domain_force">[(1,'=',1)]</field>
         	<field name="groups" eval="[(4, ref('group_ocs_outsourced_manager'))]"/>
     	</record>
-    	  
     	<!-- Estas regla difiere de la otra -->
     	
     	<record id="ocs_rule_citizen_service_office_users" model="ir.rule">
