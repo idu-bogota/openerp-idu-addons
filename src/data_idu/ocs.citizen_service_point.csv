@@ -1,3 +1,4 @@
 "id","creation_date","name","tract_id/id","users_id/id","is_outsourced"
-"__export__.ocs_citizen_service_point_1","2012-01-01 00:00:00","IDU Calle 22 (Calle 22 # 6-27)","__export__.ocs_tract_1","base.user_admin","False"
-"__export__.ocs_citizen_service_point_2","2012-01-01 00:00:00","IDU Casita (Carrera 7 - Calle 22)","__export__.ocs_tract_1","base.user_admin","False"
+"__export__.ocs_citizen_service_point_1","2012-01-01 00:00:00","IDU Calle 22 (Calle 22 # 6-27)","","base.user_admin","False"
+"__export__.ocs_citizen_service_point_2","2012-01-01 00:00:00","IDU Casita (Carrera 7 - Calle 22)","","base.user_admin","False"
+"__export__.ocs_citizen_service_point_3","2012-01-01 00:00:00","Punto Crea Test","","base.user_admin","True"
