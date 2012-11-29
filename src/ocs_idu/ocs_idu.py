@@ -114,6 +114,9 @@ ocs_citizen_service_point()
 
 
 class ocs_contract(osv.osv):
+    """
+    Contract Information
+    """
     _name="ocs.contract"
     _columns = {
         'contract_id': fields.char('Contract Number',size=20,help="Contract Number or Serial", required=True),
