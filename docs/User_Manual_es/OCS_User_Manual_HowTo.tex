@@ -1,42 +1,22 @@
 %
 %		Este Modulo Explica como se registra la PQR
 %
-\section{Uso del Módulo OCS (Usuario)}
-
-\subsection{Ingreso al Sistema}
-%%%%%%%%%% Imagen del Login
-\begin{figure}[h]
- \centering
- \includegraphics[width=17cm,height=10cm]{./Imagenes/Login.png}
- % Login.png: 1289x610 pixel, 96dpi, 34.10x16.14 cm, bb=0 0 967 457
- \caption{Pantalla de Inicio}
- \label{fig:login}
-\end{figure}
-%%%%%%%%% Imagen de los modulos de la aplicación
-
-
-
-\begin{figure}[h]
- \centering
- \includegraphics[width=17cm,height=10cm]{./Imagenes/menumain.png}
- % Login.png: 1289x610 pixel, 96dpi, 34.10x16.14 cm, bb=0 0 967 457
- \caption{Menú Principal de la aplicación}
- \label{fig:menumain}
-\end{figure}
-
-\begin{itemize}
- \item Para ingresar al sistema utilice un navegador (ej: mozilla firefox, chrome), y en la barra de direcciones coloque la ruta del servidor: \underline{http://172.16.2.180:8069}. Aparecerá la pantalla
- de inicio que se ve en la figura \ref{fig:login}
- \item Ingrese los datos de su cuenta, login y password.
- \item Si los datos de la cuenta son correctos, la siguiente pantalla muestra el menú principal de la aplicación (figura \ref{fig:menumain}).
- \item Hacer clic en el menú Oficina de Atención al ciudadano $\Rightarrow$ PQR.
- \item Aparecerá la lista con las PQR que deben ser tramitadas por el usuario (figura \ref{fig:menulista}).
-\end{itemize}
-
-
+\section{Uso del Sistema de Gestión de PQRs}
 \subsection {Tramite de una PQR}
 
-\begin{figure}[h]
+\subsubsection{Estados de las PQR}
+
+Antes de registrar las PQR, es importante tener en cuenta que éstas se clasifican por estados, 
+el estado ayuda a conocer como va el trámite en el que se encuentra la PQR, de esta manera controlar su gestión.\\
+
+Al crear la PQR el estado que se asigna es \textbf{nuevo}, si la PQR ya se encuentra en trámite
+su estado será \textbf{en progreso}, si la PQR no se puede responder rápidamente, se puede pasar a un estado \textbf{pendiente} y si ya se le ha contestado al ciudadano, 
+el estado es \textbf{cerrado}, una vez se cierra la PQR ésta no se puede modificar, y su reapertura está reservada para la persona que coordina el 
+grupo de la oficina de atención al ciudadano.\\
+
+El listado de PQRs pemite hacer filtros por estados tal como lo muestra la figura \ref{fig:menulista}
+
+\begin{figure}[H]
  \centering
  \includegraphics[width=17cm,height=10cm]{./Imagenes/menulista.png}
  % Login.png: 1289x610 pixel, 96dpi, 34.10x16.14 cm, bb=0 0 967 457
@@ -44,24 +24,6 @@
  \label{fig:menulista}
 \end{figure}
 
-
-\begin{figure}
- \centering
- \includegraphics[width=17cm,height=10cm]{./Imagenes/formularioregistro.png}
- % Login.png: 1289x610 pixel, 96dpi, 34.10x16.14 cm, bb=0 0 967 457
- \caption{Registro inicial de la PQR}
- \label{fig:formularioregistro}
-\end{figure}
-
-\subsubsection{Estados de las PQR}
-
-Antes de registrar las PQR, es importante tener en cuenta que éstas se clasifican por estados, 
-el estado ayuda a conocer como va el trámite en el que se encuentra la PQR, de esta manera controlar su gestión.\\
-
-Si se trata de un borrador, la PQR se graba como \textbf{nuevo}, si la PQR ya se encuentra en trámite y la respuesta que se puede dar es casi inmediata
-su estado será en \textbf{progreso}, si la PQR no se puede responder rápidamente, debe pasar a un estado \textbf{pendiente}, y si ya se le ha contestado al ciudadano, 
-el estado es \textbf{cerrado}, una vez se cierra la PQR ésta no se puede modificar, y su reapertura está reservada para la persona que coordina el 
-grupo de usuarios.
 
 \subsubsection{Creación de una PQR}
 
@@ -71,9 +33,17 @@ Para realizar el registro de una PQR se deben seguir los siguientes pasos:
  \item Hacer clic en Oficina de Atención al Ciudadano $\Rightarrow$ PQR. 
  \item Hacer clic en el botón \textbf{Crear} que aparece en la grilla de la Lista, ver figura \ref{fig:menulista} 
  \item Aparecerá el formulario de la figura \ref{fig:formularioregistro}. Los datos que se deben ingresar son: El usuario que registra 
- la pqr (por defecto), el punto de atención donde se lleva a cabo dicha digitación (IDU, Cade), una prioridad, la fecha límite para tener la respuesta, el número
+ la PQR (el usuario actual es seleccionado por defecto), el punto de atención donde se lleva a cabo dicha digitación (IDU, Cade), una prioridad, la fecha límite para tener la respuesta, el número
  de radicación en Orfeo si se tiene y el número de radicado de SDQS (Sistema Distrital de Quejas y Soluciones) si se tiene \footnote{En la actualidad 
  se está desarrollando el módulo para llevar a cabo dicho proceso automáticamente}. 
+ \begin{figure}[H]
+ \centering
+ \includegraphics[width=17cm,height=10cm]{./Imagenes/formularioregistro.png}
+ % Login.png: 1289x610 pixel, 96dpi, 34.10x16.14 cm, bb=0 0 967 457
+ \caption{Formulario de registro de la PQR}
+ \label{fig:formularioregistro}
+\end{figure}
+
  \item En el campo para anotar los datos de la persona que hace la reclamación, se pueden presentar varios casos: 
  \begin{enumerate}
   \item La queja es anónima: en tal caso los campos donde se relacionan empresa y contacto van vacíos. 
@@ -85,7 +55,23 @@ Para realizar el registro de una PQR se deben seguir los siguientes pasos:
   En el campo contacto, se hace clic en el icono de la derecha y luego \textbf{Crear}. Aparecerá el formulario de la figura \ref{fig:formusuario}.
   En este formulario se ingresan los datos de la persona: Tipo de Documento, Numero de Documento, Primer Nombre, Segundo Nombre, la 
   empresa (Es la misma empresa que se acaba de ingresar), el cargo que desempeña en la empresa, y algún dato de contacto. Para que la 
-  persona se pueda registrar, debe entregar al menos un dato de contacto.  Luego se hace clic en guardar.    
+  persona se pueda registrar, debe entregar al menos un dato de contacto.  Luego se hace clic en guardar.
+  \begin{figure}[H]
+  \centering
+  \includegraphics[width=17cm,height=4cm]{./Imagenes/pantempresa.png}
+  % Login.png: 1289x610 pixel, 96dpi, 34.10x16.14 cm, bb=0 0 967 457
+  \caption{Ventana emergente que solicita datos de la empresa}
+  \label{fig:pantempresa}
+  \end{figure}
+
+  \begin{figure}[H]
+  \centering
+  \includegraphics[width=17cm,height=8cm]{./Imagenes/formusuario.png}
+  % Login.png: 1289x610 pixel, 96dpi, 34.10x16.14 cm, bb=0 0 967 457
+  \caption{Ventana emergente para llenar la información de los ciudadanos}
+  \label{fig:formusuario}
+  \end{figure}
+
   \item La queja es interpuesta por una persona natural: Se ingresan los datos de la persona, para ello se hace clic en el icono a la izquierda  
   del campo contacto $\Rightarrow$ \textbf{Crear} y luego diligenciar el formulario de la figura \ref{fig:formusuario}.
  \end{enumerate}
@@ -94,39 +80,19 @@ Para realizar el registro de una PQR se deben seguir los siguientes pasos:
  primero el criterio, si no ve el criterio dentro las primeras opciones, puede ir escribiendo el texto hasta que aparezca en el cuadro el valor deseado, o 
  si no, simplemente hacer clic en el botón a la derecha y luego en \textbf{Buscar}. Allí se desplega un cuadro donde se puede seleccionar
  el criterio o subcriterio de una manera más cómoda (Ver figura \ref{fig:buscarcriterios}).
+  \begin{figure}
+  \centering
+  \includegraphics[width=17cm,height=10cm]{./Imagenes/buscarcriterios.png}
+  % Login.png: 1289x610 pixel, 96dpi, 34.10x16.14 cm, bb=0 0 967 457
+  \caption{Ventana emergente para buscar criterios y subcriterios}
+  \label{fig:buscarcriterios}
+  \end{figure}
  
  
  \item Luego llenar los datos de contacto y los criterios, 
  se registra el sitio de la reclamación, la localidad y el barrio, junto con
  el texto de la reclamación y se hace clic en \textbf{Abrir}, en ese momento la reclamación pasa a estado \textbf{en progreso}.
 \end{itemize}
-
-\begin{figure}
- \centering
- \includegraphics[width=17cm,height=10cm]{./Imagenes/buscarcriterios.png}
- % Login.png: 1289x610 pixel, 96dpi, 34.10x16.14 cm, bb=0 0 967 457
- \caption{Ventana emergente para buscar criterios y subcriterios}
- \label{fig:buscarcriterios}
-\end{figure}
-
-
-
-\begin{figure}
- \centering
- \includegraphics[width=17cm,height=4cm]{./Imagenes/pantempresa.png}
- % Login.png: 1289x610 pixel, 96dpi, 34.10x16.14 cm, bb=0 0 967 457
- \caption{Ventana emergente que solicita datos de la empresa}
- \label{fig:pantempresa}
-\end{figure}
-
-
-\begin{figure}
- \centering
- \includegraphics[width=17cm,height=8cm]{./Imagenes/formusuario.png}
- % Login.png: 1289x610 pixel, 96dpi, 34.10x16.14 cm, bb=0 0 967 457
- \caption{Ventana emergente para llenar la información de los ciudadanos}
- \label{fig:formusuario}
-\end{figure}
 
 \begin{itemize}
  \item Si no se tiene la respuesta de la PQR a la mano, es importante pasarla a estado pendiente, para ello se hace clic en el botón \textbf{Pendiente} 
@@ -136,17 +102,17 @@ que se encuentra en la pestaña \textbf{Seguimiento}. Luego haga clic en el boto
 que se encuentra en la parte inferior del formulario (figura \ref{fig:formseguimiento}).
 \end{itemize}
 
-
-\subsubsection{Cierre de la reclamación}
-
-
-\begin{figure}
+\begin{figure}[H]
  \centering
  \includegraphics[width=17cm,height=10cm]{./Imagenes/formseguimiento.png}
  % Login.png: 1289x610 pixel, 96dpi, 34.10x16.14 cm, bb=0 0 967 457
  \caption{Formulario de la PQR con el campo para escribir el texto de solución}
  \label{fig:formseguimiento}
 \end{figure}
+
+
+\subsubsection{Cierre de la reclamación}
+
 
 Siga los siguientes pasos para dar respuesta a la PQR:
 
@@ -168,16 +134,7 @@ la interfaz web en modo extendido:
  izquierda del botón \textbf{CERRAR SESION}.
  \item Aparece un menú emergente de con las preferencias sobre el sistema (figura \ref{fig:configuracion}). En la opcion
   \textbf{Interfaz} seleccionar la opción \textbf{Extendida}. 
- \item Este cambio hace que en general la aplicación muestre más opciones que cuando esta en modo simplificado. Al hacer 
- clic en \textbf{Oficina de Atencion al Ciudadano} $\Rightarrow$ PQR $\Rightarrow$ Clic un caso cualquiera, se puede ver
- que en el formulario de la figura \ref{fig:formularioregistro} aparece la pestaña \textbf{Comunicación e Historial} 
- (figura \ref{fig:historico}). 
- \item Para agregar una nota se debe hacer clic en el botón \textbf{Añadir nota interna}, que aparece sobre la grilla.
- \item Se desplega la ventana ventana emergente de la figura \ref{fig:addnote}. Para añadir la nota se agrega el texto
- texto deseado y luego \textbf{Añadir}. 
-\end{itemize}
-
-\begin{figure}
+\begin{figure}[H]
  \centering
  \includegraphics[width=17cm,height=10cm]{./Imagenes/historico.png}
  % Login.png: 1289x610 pixel, 96dpi, 34.10x16.14 cm, bb=0 0 967 457
@@ -185,8 +142,16 @@ la interfaz web en modo extendido:
  \label{fig:historico}
 \end{figure}
 
+ \item Este cambio hace que en general la aplicación muestre más opciones que cuando esta en modo simplificado. Al hacer 
+ clic en \textbf{Oficina de Atención al Ciudadano} $\Rightarrow$ PQR $\Rightarrow$ Clic un caso cualquiera, se puede ver
+ que en el formulario de la figura \ref{fig:formularioregistro} aparece la pestaña \textbf{Comunicación e Historial} 
+ (figura \ref{fig:historico}). 
+ \item Para agregar una nota se debe hacer clic en el botón \textbf{Añadir nota interna}, que aparece sobre la grilla.
+ \item Se desplega la ventana ventana emergente de la figura \ref{fig:addnote}. Para añadir la nota se agrega el texto
+ texto deseado y luego \textbf{Añadir}. 
+\end{itemize}
 
-\begin{figure}
+\begin{figure}[H]
  \centering
  \includegraphics[width=17cm,height=6cm]{./Imagenes/addnote.png}
  % Login.png: 1289x610 pixel, 96dpi, 34.10x16.14 cm, bb=0 0 967 457
@@ -194,19 +159,10 @@ la interfaz web en modo extendido:
  \label{fig:addnote}
 \end{figure}
 
-
 \subsection{Uso de la Vista de PQR en modo Lista}
 
 Cuando se está en la vista de PQR en modo lista, se tienen algunas funcionalidades que ayudan a realizar un filtrado rápido de las mismas,
 así como funciones de agrupación. 
-
-\begin{figure}
- \centering
- \includegraphics[width=17cm,height=10cm]{./Imagenes/menulistagroup.png}
- % Login.png: 1289x610 pixel, 96dpi, 34.10x16.14 cm, bb=0 0 967 457
- \caption{Agrupando la lista de PQR}
- \label{fig:menulistagroup}
-\end{figure}
 
 Para agrupar las PQR hacer clic en el texto \textbf{Agrupar por}, de esta manera puede elegir los siguientes
 criterios de agrupación (ver figura \ref{fig:menulistagroup}).
@@ -218,4 +174,11 @@ criterios de agrupación (ver figura \ref{fig:menulistagroup}).
  \item Fecha Limite
  \item Fecha de Cierre
 \end{itemize}
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=17cm,height=10cm]{./Imagenes/menulistagroup.png}
+ % Login.png: 1289x610 pixel, 96dpi, 34.10x16.14 cm, bb=0 0 967 457
+ \caption{Agrupando la lista de PQR}
+ \label{fig:menulistagroup}
+\end{figure}
 
