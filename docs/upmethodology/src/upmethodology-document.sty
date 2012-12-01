@@ -78,6 +78,32 @@
   \gdef\upm@lang@document@copyright@trademarks{This document is published by the \theupmformattedpublisher. All right reserved. No part of this publication may be reproduced, stored in a retreival system, or transmitted, in any form or by any means, electronic, mechanical, photocopying, recording, or otherwise, without the prior written permission of the publishers.}
   \gdef\upm@lang@document@copyright@printedin{Printed in \theupmprintedin.}
 }
+\def\upm@document@lang@spanish{%
+  \gdef\upm@lang@@{\message{**** upmethodology-document is using Spanish language ****}}%
+  \gdef\upmcurrentlang{spanish}%
+  \gdef\upm@lang@project{Proyecto}%
+  \gdef\upm@lang@document{Documento}%
+  \gdef\upm@lang@docref{Referencia}%
+  \gdef\upm@lang@lastupdate{\'Ultima Actualizaci\'on}%
+  \gdef\upm@lang@lastupdate@short{Actualizado}%
+  \gdef\upm@lang@document@summary{Resumen del documento}%
+  \gdef\upm@lang@status{Estado}%
+  \gdef\upm@lang@document@authors{Autores}%
+  \gdef\upm@lang@document@informed{Informed People}%
+  \gdef\upm@lang@document@validators{Revisores}%
+  \gdef\upm@lang@document@names{Nombres}%
+  \gdef\upm@lang@document@comments{Comentarios}%
+  \gdef\upm@lang@document@emails{Correos Electr\'onicos}%
+  \gdef\upm@lang@document@initials{Iniciales}%
+  \gdef\upm@lang@document@abstract{Resumen}%
+  \gdef\upm@lang@document@keywords{Palabras Claves}%
+  \gdef\upm@lang@document@copyright@purpose{Este Documento describe el proyecto \theupmproject\ project\Ifnotempty{\theupmsubproject}{ y el subproyecto \theupmsubproject\ }.}%
+  \gdef\upm@lang@document@copyright@tex{\TeX\ is a trademark of the American Mathematical Society.}%
+  \gdef\upm@lang@document@copyright@upmethodology{\texttt{tex-upmethodology} is owned by St\'ephane Galland, \arakhneorg, France.}%
+  \gdef\upm@lang@document@copyright@madewith{This document was realised with \LaTeX\ and \texttt{tex-upmethodology}.}%
+  \gdef\upm@lang@document@copyright@trademarks{Este documento es publicado por \theupmformattedpublisher. Este trabajo se publica bajo la licencia Creative Commons Attribution 2.5 Colombia. Para ver una copia de esta licencia, visite http://creativecommons.org/licenses/by/2.5/co/.}
+  \gdef\upm@lang@document@copyright@printedin{Impreso en \theupmprintedin.}
+}
 \def\upm@document@lang@french{%
   \gdef\upm@lang@@{\message{**** upmethodology-document is using French language ****}}%
   \gdef\upmcurrentlang{french}%
@@ -108,6 +134,9 @@
 %----------------------------------------
 % OPTIONS
 %----------------------------------------
+\DeclareOption{spanish}{%
+  \upm@document@lang@spanish
+}
 \DeclareOption{french}{%
   \upm@document@lang@french
 }

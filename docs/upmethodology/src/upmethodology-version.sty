@@ -47,6 +47,17 @@
   \gdef\upm@lang@validated{Validated}
   \gdef\upm@lang@public{Public}
 }
+\def\upm@version@lang@spanish{
+  \gdef\upm@lang@@{\message{**** upmethodology-version is using Spanish language ****}}%
+  \gdef\upm@lang@date{Fecha}
+  \gdef\upm@lang@updates{Actualizaciones}
+  \gdef\upm@lang@version{Versi\'on}
+  \gdef\upm@lang@version@history{Hist\'orico de Versiones}
+  \gdef\upm@lang@restricted{Confidencial}
+  \gdef\upm@lang@validable{Validable}
+  \gdef\upm@lang@validated{Validado}
+  \gdef\upm@lang@public{P\'ublico}
+}
 \def\upm@version@lang@french{
   \gdef\upm@lang@@{\message{**** upmethodology-version is using French language ****}}%
   \gdef\upm@lang@date{Date}
@@ -62,6 +73,9 @@
 %----------------------------------------
 % OPTIONS
 %----------------------------------------
+\DeclareOption{spanish}{%
+  \upm@version@lang@spanish
+}
 \DeclareOption{french}{%
   \upm@version@lang@french
 }

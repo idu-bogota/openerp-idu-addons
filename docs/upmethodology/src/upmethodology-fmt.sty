@@ -93,6 +93,20 @@
   \gdef\upm@format@lang@professionalengineer{Ing.}%
   \gdef\upm@format@lang@incorporatedengineer{Ing.}%
 }
+\def\upm@format@lang@spanish{%
+  \gdef\upm@lang@@{\message{**** upmethodology-fmt is using Spanish language ****}}%
+  \global\renewcommand{\upm@format@lang@makedate}[3]{\two@digits{##1}\string/\two@digits{##2}\string/##3}%
+  \global\let\upm@format@lang@extractyear\upm@date@third%
+  \global\let\upm@format@lang@extractmonth\upm@date@second%
+  \global\let\upm@format@lang@extractday\upm@date@first%
+  \gdef\upm@format@lang@professor{Pr.}%
+  \gdef\upm@format@lang@doctor{Dr.}%
+  \gdef\upm@format@lang@phdoctor{Ph.D.}%
+  \gdef\upm@format@lang@scdoctor{Sc.D.}%
+  \gdef\upm@format@lang@mdoctor{M.D.}%
+  \gdef\upm@format@lang@professionalengineer{Ing.}%
+  \gdef\upm@format@lang@incorporatedengineer{Ing.}%
+}
 \global\providecommand{\upm@format@lang@makedate}[3]{}%
 
 %----------------------------------------
