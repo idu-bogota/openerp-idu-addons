@@ -13,3 +13,5 @@ src/data_idu/sql/*.sql
 *.bm
 *.toc
 *.dvi
+*.lof
+*.lot
