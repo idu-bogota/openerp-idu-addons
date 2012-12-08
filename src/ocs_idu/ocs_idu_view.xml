@@ -365,6 +365,7 @@
 <record model="ir.ui.view" id="ocs_idu_crm_case_claims_tree_view">
             <field name="name">OCS - Outsourced Claims Tree</field>
             <field name="model">crm.claim</field>
+            <field name="priority" eval="50" />
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Claims" colors="blue:state=='pending' and not(date_deadline and (date_deadline &lt; current_date));gray:state in ('close', 'cancel');red:date_deadline and (date_deadline &lt; current_date);green:state=='review'">
