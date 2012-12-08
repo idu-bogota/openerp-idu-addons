@@ -288,7 +288,7 @@ class crm_claim(geo_model.GeoModel):
          'external_dms_id': fields.char('External DMS ID',size=20,help='External Document Management System Identificator',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
          'csp_id':fields.many2one('ocs.citizen_service_point','CSP',help='Citizen Service Point',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
          'channel':fields.many2one('crm.case.channel','Case Channel',help='Case Channel',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-         'categ_id': fields.many2one('crm.case.categ', 'Category', \
+         'categ_id': fields.many2one('crm.case.categ', 'Requirement Type', \
                              domain="[('section_id','=',section_id),\
                              ('object_id.model', '=', 'crm.claim')],\
                              ('active','=',True)",

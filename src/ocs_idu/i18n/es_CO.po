@@ -49,7 +49,7 @@ msgstr "Contratista"
 #. module: ocs_idu
 #: view:crm.claim:0
 msgid "Responsibilities"
-msgstr "Responsabilidades"
+msgstr "Datos generales de la PQR"
 
 #. module: ocs_idu
 #: view:crm.claim:0
@@ -267,7 +267,7 @@ msgstr "Realizada"
 #. module: ocs_idu
 #: view:crm.claim:0
 msgid "Claim Reporter"
-msgstr "Persona que ha reportado la reclamación"
+msgstr "Datos generales del interesado"
 
 #. module: ocs_idu
 #: view:crm.claim:0
