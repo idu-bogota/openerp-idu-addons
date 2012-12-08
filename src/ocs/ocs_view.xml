@@ -568,7 +568,7 @@ Claims
         <field name="type">form</field>
 		<field name="inherit_id" ref="crm_claim.crm_case_claims_form_view"/>
         <field name="arch" type="xml">
-            <field name="state" position="replace" ></field>
+            <field name="state" position="replace" />
         	<field name ="name" position="before">
            		<group col="8" colspan="4">
                 	<field name="state" select="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>                                    
@@ -584,10 +584,7 @@ Claims
         			<field name="user_id"/>
         	</field>
         	
-        	<field name="section_id" position="replace">
-        	        	
-        	</field>  
-        	      
+        	<field name="section_id" position="replace" />        	      
         	<field name="stage_id" position="replace">
         		<field name="id" select ="1"/>
         	</field>

@@ -63,14 +63,16 @@ class crm_claim(crm.crm_case,osv.osv):
 
     _name="crm.claim"
     _inherit="crm.claim"
-    _columns = {        
+    _columns = {
+        'priority': fields.selection([('h','High'),('n','Normal'),('l','Low')], 'Priority', required=True, readonly=True),
+        'date_deadline': fields.date('Deadline',readonly=True),
         'state':fields.selection([('draft', 'New'),('open', 'In Progress'),('cancel', 'Cancelled'),
                                   ('review','Review'),('done', 'Closed'),('pending', 'Pending')],
                                  'State',help='Introduce a new state between open and done, in this step,\
                                   other people makes a review and approve the response given to citizen'),
         'is_outsourced':fields.function(_check_is_outsourced,type='boolean',string='Is Outsourced',method=True),
     }
-    
+
 crm_claim()
 
 class ocs_citizen_service_point(geo_model.GeoModel):
@@ -145,4 +147,4 @@ class ocs_tract(osv.osv):
         'contract_id': fields.many2one('ocs.contract','Contract',required=True),
     }
     _rec_name = 'full_name'
-ocs_tract()    
+ocs_tract()

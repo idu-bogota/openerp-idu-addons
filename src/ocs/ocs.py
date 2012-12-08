@@ -280,7 +280,7 @@ class crm_claim(geo_model.GeoModel):
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         return {'value': {'email_from': address.email, 'partner_phone': address.phone,'claim_address':address.street}}
    
-    _columns={       
+    _columns={
         #'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
          'description': fields.text('Description',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
          'priority': fields.selection([('h','High'),('n','Normal'),('l','Low')], 'Priority', required=True, readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
@@ -317,7 +317,7 @@ class crm_claim(geo_model.GeoModel):
     _order='create_date desc'
     _rec_name = 'classification' 
     _defaults = {
-         'date_deadline': lambda *a:  (datetime.now()+timedelta(days=9)).__format__('%Y-%m-%d %H:%M:%S'),
+         'date_deadline': lambda *a:  date_by_adding_business_days(datetime.now(), 15).__format__('%Y-%m-%d %H:%M:%S'),#Default +15 working days
          'priority': lambda *a: 'l'
          }
     _constraints = [
@@ -326,3 +326,13 @@ class crm_claim(geo_model.GeoModel):
 crm_claim()
 
 
+def date_by_adding_business_days(from_date, add_days):
+    business_days_to_add = add_days
+    current_date = from_date
+    while business_days_to_add > 0:
+        current_date += timedelta(days=1)
+        weekday = current_date.weekday()
+        if weekday >= 5: # sunday = 6
+            continue
+        business_days_to_add -= 1
+    return current_date
