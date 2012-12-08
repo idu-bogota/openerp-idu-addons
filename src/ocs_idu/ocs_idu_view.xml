@@ -372,7 +372,6 @@
                     <field name="user_id" />
                     <field name="date"/>
                     <field name="date_deadline" invisible ="1"/>
-                    <field name="date_closed"/>
                     <field name="csp_id"/>
                     <field name="categ_id" string="Type" select="1"/>                    
                     <field name="state"/>                    

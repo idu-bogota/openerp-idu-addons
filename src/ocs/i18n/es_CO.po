@@ -6,13 +6,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.1-20121005-233110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-16 00:39+0000\n"
-"PO-Revision-Date: 2012-11-15 19:51-0500\n"
-"Last-Translator: Cinxgler Mariaca Minda <cinxgler@gmail.com>\n"
+"POT-Creation-Date: 2012-12-08 13:56+0000\n"
+"PO-Revision-Date: 2012-12-08 13:56+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
 #. module: ocs
@@ -83,6 +83,11 @@ msgid "Case Categories"
 msgstr "Case Categories"
 
 #. module: ocs
+#: help:ocs.citizen_service_point,close_date:0
+msgid "When Citizen Service Point is closed"
+msgstr "When Citizen Service Point is closed"
+
+#. module: ocs
 #: model:geoengine.vector.layer,name:ocs.geoengine_vector_layer_sub_district_main_poligones
 msgid "Sub Districts"
 msgstr "UPZs"
@@ -135,11 +140,6 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: ocs
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "¡No puede tener dos usuarios con el mismo identificador de usuario!"
-
-#. module: ocs
 #: field:crm.claim,district_id:0
 #: field:res.partner.address,district_id:0
 msgid "District"
@@ -151,19 +151,15 @@ msgid "Send New Email"
 msgstr "Enviar nuevo email"
 
 #. module: ocs
-#: help:ocs.citizen_service_point,creation_date:0
-msgid "Date when Citizen Atention Point is installed"
-msgstr "Fecha de inicio del punto de atención al ciudadano "
+#: field:crm.claim,geo_point:0
+#: field:ocs.citizen_service_point,geo_point:0
+msgid "Location"
+msgstr "Ubicación"
 
 #. module: ocs
 #: selection:res.partner.address,document_type:0
 msgid "Passport"
 msgstr "Pasaporte"
-
-#. module: ocs
-#: view:crm.claim:0
-msgid "New"
-msgstr "Nueva"
 
 #. module: ocs
 #: view:crm.claim:0
@@ -265,9 +261,9 @@ msgid "Place of Claim"
 msgstr "Lugar del reclamo"
 
 #. module: ocs
-#: field:res.partner,partner_identificator:0
-msgid "Company Identificator"
-msgstr "NIT"
+#: field:ocs.sub_district,code:0
+msgid "Territory Code :"
+msgstr "Código del territorio:"
 
 #. module: ocs
 #: field:crm.claim,claim_address:0
@@ -281,6 +277,11 @@ msgid "ocs.sub_district"
 msgstr "UPZ"
 
 #. module: ocs
+#: view:crm.claim:0
+msgid "Contact"
+msgstr "Interesado"
+
+#. module: ocs
 #: view:res.partner.address:0
 msgid "Personal Information"
 msgstr "Información personal"
@@ -291,14 +292,9 @@ msgid "You must type at least one of these: email, phone, cell phone, facebook o
 msgstr "Debe ingresar al menos uno de estos campos: email, teléfono, teléfono celular, Facebook o Twitter para poder crear un contacto"
 
 #. module: ocs
-#: view:crm.claim:0
-msgid "New Claims"
-msgstr "Reclamaciones nuevas"
-
-#. module: ocs
-#: help:ocs.citizen_service_point,name:0
-msgid "Description of Citizen Service Point point"
-msgstr "Descripción del punto de atención al ciudadano"
+#: model:ir.model,name:ocs.model_res_partner_address
+msgid "Partner Addresses"
+msgstr "Direcciones de empresa"
 
 #. module: ocs
 #: model:geoengine.raster.layer,name:ocs.geoengine_raster_layer_sub_district
@@ -402,6 +398,11 @@ msgid "CE"
 msgstr "Cédula de extranjería"
 
 #. module: ocs
+#: help:ocs.citizen_service_point,creation_date:0
+msgid "Date when Citizen Service Point is installed"
+msgstr "Date when Citizen Service Point is installed"
+
+#. module: ocs
 #: model:geoengine.vector.layer,name:ocs.geoengine_vector_layer_district_main_poligones
 #: model:ir.ui.menu,name:ocs.menu_ocs_district
 msgid "Districts"
@@ -452,9 +453,9 @@ msgid "Twitter"
 msgstr "Twitter"
 
 #. module: ocs
-#: field:ocs.sub_district,code:0
-msgid "Territory Code :"
-msgstr "Código del territorio:"
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "¡No puede tener dos usuarios con el mismo identificador de usuario!"
 
 #. module: ocs
 #: view:crm.claim:0
@@ -492,12 +493,6 @@ msgid "Issues"
 msgstr "PQRs"
 
 #. module: ocs
-#: field:crm.claim,geo_point:0
-#: field:ocs.citizen_service_point,geo_point:0
-msgid "Location"
-msgstr "Ubicación"
-
-#. module: ocs
 #: view:crm.claim:0
 msgid "In Progress"
 msgstr "En progreso"
@@ -519,6 +514,11 @@ msgid "District Code"
 msgstr "Código de la localidad"
 
 #. module: ocs
+#: help:ocs.citizen_service_point,name:0
+msgid "Description of Citizen Service Point"
+msgstr "Description of Citizen Service Point"
+
+#. module: ocs
 #: view:crm.claim:0
 msgid "Unassigned Claims"
 msgstr "Reclamaciones no asignadas"
@@ -530,11 +530,6 @@ msgstr "Reclamaciones no asignadas"
 #: field:res.users,csp_id:0
 msgid "Citizen Service Point"
 msgstr "Punto de atención al ciudadano"
-
-#. module: ocs
-#: help:res.partner.address,document_type:0
-msgid "Type of Identification Document for example: CC,TI.. etc"
-msgstr "Tipo de documento de identificación (CC, TI, .., etc)"
 
 #. module: ocs
 #: view:crm.claim:0
@@ -607,11 +602,6 @@ msgid "End Date"
 msgstr "Fecha de finalización"
 
 #. module: ocs
-#: help:ocs.citizen_service_point,close_date:0
-msgid "When citizen Atention Point is closed"
-msgstr "Cuando el punto de atención es cerrado"
-
-#. module: ocs
 #: field:ocs.citizen_service_point,name:0
 #: field:ocs.claim_classification,name:0
 msgid "Name"
@@ -648,9 +638,9 @@ msgid "If this field is set, when claim portal can retrieve this classification.
 msgstr "Cuando este campo está activo, esta clasificación es pública en el portal"
 
 #. module: ocs
-#: help:res.partner,partner_identificator:0
-msgid "Useful in Colombia to Store (NIT-Numero de Identificacion Tributaria)"
-msgstr "NIT-Número de Identificación Tributaria"
+#: help:res.partner.address,document_type:0
+msgid "Identification Document Type. ie CC,TI.. etc"
+msgstr "Identification Document Type. ie CC,TI.. etc"
 
 #. module: ocs
 #: view:res.partner.address:0
@@ -671,11 +661,6 @@ msgstr "Dirección postal"
 #: model:geoengine.raster.layer,name:ocs.geoengine_raster_layer_district
 msgid "District OSM"
 msgstr "Localidad OSM"
-
-#. module: ocs
-#: model:ir.model,name:ocs.model_res_partner_address
-msgid "Partner Addresses"
-msgstr "Direcciones de empresa"
 
 #. module: ocs
 #: field:res.partner.address,document_number:0

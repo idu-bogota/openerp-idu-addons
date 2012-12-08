@@ -681,22 +681,31 @@ Claims
         <field name="type">tree</field>
 		<field name="inherit_id" ref="crm_claim.crm_case_claims_tree_view"/>
         <field name="arch" type="xml">
-        	<field name="name" position="replace"></field>        	
-        	<field name="partner_id" position="replace">
-        		<field name="partner_address_id" select ="0"/>         	
-        	</field>
-        	<field name="date_action_next" position="replace">
-        		<field name="external_dms_id"/>         	
-        	</field>
-        	<field name="action_next" position="replace">        	        	         	
-        	</field>        	
-        	<button name="case_open" position="replace">
-           		<button name="cas_open" string="Open" type="workflow" icon="gtk-go-forward" states="draft,pending" />
-            </button>                       
+			<field name="name" position="replace">
+				<field name="name"/>
+			</field>
+            <field name="partner_id" position="replace">
+            	<field name="channel"/>
+            </field>
+            <field name="user_id" />
+            <field name="date" position="replace">
+            	<field name="external_dms_id"/>
+            </field>
+            <field name="date_action_next" position="replace">
+            	<field name="partner_address_id" string="Contact"/>
+            </field>
+            <field name="action_next" position="replace">
+            	<field name="create_date"/>
+            </field>
+            <field name="categ_id"/>
+            <field name="stage_id" position="replace"/>
+            <field name="date_closed" position="replace"/>
+            <button name="case_open" position="replace">
+            	<button name="cas_open" string="Open" type="workflow" icon="gtk-go-forward" states="draft,pending" />
+            </button>
             <button name="case_close" position="replace">
             	<button name="cas_close" string="Done" type="workflow" icon="gtk-jump-to" states="open" />
             </button>
-        	
         </field>
 </record> 
 
@@ -721,7 +730,7 @@ Claims
                     <filter icon="terp-check"
                         string="Done"
                         domain="[('state','=','done')]"
-                        help="All Claims"
+                        help="All Done Claims"
                     />
                                         
                     <separator orientation="vertical"/>                    
