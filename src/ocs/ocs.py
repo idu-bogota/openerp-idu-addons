@@ -35,6 +35,11 @@ from crm import crm
 from crm_claim import crm_claim
 import re
 
+class crm_case_channel(osv.osv):
+    _name = "crm.case.channel"
+    _inherit="crm.case.channel"
+    _order = 'id'
+
 class ResPartnerAddress(geo_model.GeoModel):
     """This class inherhits from res.partner.address"""
     def name_get(self, cr, user, ids, context=None):
