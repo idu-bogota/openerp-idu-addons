@@ -177,30 +177,33 @@ ocs_claim_classification()
 class ocs_neighborhood(geo_model.GeoModel):
     """Contains geographic information about all towns in the city"""
     _name = 'ocs.neighborhood'
+    _order = 'name asc'
     _columns = {
         'code': fields.char('Neighborhood Code',size=30,help='Identify a Cadastral Code'),
         'name': fields.char('Neighborhood Name', size = 128),
-        'geo_polygon':fields.geo_multi_polygon('Geometry',srid=4668),
+        'geo_polygon':fields.geo_multi_polygon('Geometry'),
     }
 ocs_neighborhood()
 
 class ocs_district(geo_model.GeoModel):
     """ Contaihow to delete a field from parent class openerpns geografic information about localities"""
     _name = 'ocs.district'
+    _order = 'name asc'
     _columns = {
         'code': fields.char('District Code',size=30),
         'name': fields.char('District Name',size=20),
-        'geo_polygon':fields.geo_multi_polygon('Geometry',srid=4668),
+        'geo_polygon':fields.geo_multi_polygon('Geometry'),
     }
 ocs_district()
 
 class ocs_sub_district(geo_model.GeoModel):
     """ Contains geografic information about especific territories """
     _name = 'ocs.sub_district'
+    _order = 'name asc'
     _columns= {
         'name' : fields.char('Sub District Name :',size=150, help='Sub-District name'),
         'code' : fields.char('Territory Code :',size=150,help='Territory Code'),
-        'geo_polygon':fields.geo_multi_polygon('Geometry',srid=4668),
+        'geo_polygon':fields.geo_multi_polygon('Geometry'),
     }
 ocs_sub_district()
 
@@ -254,21 +257,21 @@ class crm_claim(geo_model.GeoModel):
             res[citizen.id] = "{0}/{1} ".format(citizen.classification_id.name,citizen.sub_classification_id.name)
         return  res
 
-    def _get_channel(self, cr, uid, context=None):
-        obj = self.pool.get('ocs.input_channel')
-        ids = obj.search(cr, uid, [])
-        res = obj.read(cr, uid, ids, ['name', 'id'], context)
-        res = [(r['id'], r['name']) for r in res]
-        return res
-    def _get_main_classification(self, cr, uid, context=None):
-        """This function get the main Categories
-      Select name,id from ocs_claim_classification where
-      parent_id = null
-      """
-        obj = self.pool.get('ocs.claim_classification_id')
-        ids = obj.search(cr, uid, [('parent_id','=',False)])
-        result = obj.read(cr, uid, ids, ['name','id'], context)
-        return [(r['id'], r['name']) for r in result]
+#    def _get_channel(self, cr, uid, context=None):
+#        obj = self.pool.get('ocs.input_channel')
+#        ids = obj.search(cr, uid, [])
+#        res = obj.read(cr, uid, ids, ['name', 'id'], context)
+#        res = [(r['id'], r['name']) for r in res]
+#        return res
+#    def _get_main_classification(self, cr, uid, context=None):
+#        """This function get the main Categories
+#      Select name,id from ocs_claim_classification where
+#      parent_id = null
+#      """
+#        obj = self.pool.get('ocs.claim_classification_id')
+#        ids = obj.search(cr, uid, [('parent_id','=',False)])
+#        result = obj.read(cr, uid, ids, ['name','id'], context)
+#        return [(r['id'], r['name']) for r in result]
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         """This function returns value of partner email based on Partner Address
@@ -279,6 +282,21 @@ class crm_claim(geo_model.GeoModel):
             return {'value': {'email_from': False}}
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         return {'value': {'email_from': address.email, 'partner_phone': address.phone,'claim_address':address.street}}
+
+    def onchange_district_id(self, cr, uid, ids, district_id):
+        v={}
+        d={}
+        if district_id:
+            #neighborhoods = self.pool.get('ocs.neighborhood').geo_search(cr, uid, geo_domain=[('geo_polygon', 'geo_intersect', 'ocs.district.geo_polygon')])
+            query = 'SELECT DISTINCT(n.id) FROM ocs_neighborhood AS n, ocs_district AS d ' \
+            "WHERE intersects(n.geo_polygon, d.geo_polygon) = TRUE AND d.id = {0};".format(district_id)
+            cr.execute(query)
+            n_ids = []
+            for n_id in cr.fetchall():
+                n_ids.append(n_id)
+            d['neighborhood_id'] = "[('id','in',{0})]".format(n_ids)
+            v['neighborhood_id'] = ''
+        return {'domain':d, 'value':v}
 
     _columns={
         #'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
@@ -297,7 +315,7 @@ class crm_claim(geo_model.GeoModel):
         'claim_address':fields.char('Claim Address',size=256,help='Place of Claim',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'district_id':fields.many2one('ocs.district','District',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'neighborhood_id':fields.many2one('ocs.neighborhood','Neighborhood',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'geo_point':fields.geo_point('Location',srid=4668,readonly=True),
+        'geo_point':fields.geo_point('Location',readonly=True),
         'classification_id':fields.many2one('ocs.claim_classification','Classification', \
                                               domain="[('parent_id','=',False),('enabled','=',True)]", required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'sub_classification_id':fields.many2one('ocs.claim_classification','Sub Classification',domain="[('parent_id','=',classification_id),('enabled','=',True)]", required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),

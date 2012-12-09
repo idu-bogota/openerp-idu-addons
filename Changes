@@ -1,6 +1,7 @@
 * Actualizado vista tipo lista de PQR de acuerdo a reunión con OTC
 * Listado de canales actualizado para ser desplegado en el orden de mas uso definido por la OTC
 * Campos Prioridad y Fecha Limite de solo lectura como definido por OTC
+* Desplegar barrios de la localidad seleccionada
 
 2012112100
 * Fixed bug on claim notes addition and activity logging
