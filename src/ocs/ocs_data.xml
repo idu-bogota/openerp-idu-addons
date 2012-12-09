@@ -15,10 +15,10 @@
         </record>
         <record model="crm.case.channel">
             <field name="name">SDQS</field>
-        </record>  
+        </record>
         <record model="crm.case.channel">
             <field name="name">chat</field>
-        </record>         
+        </record>
     </data>
 </openerp>
 

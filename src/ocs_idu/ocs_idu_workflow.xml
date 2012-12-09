@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    
-    <!-- 
+
+    <!--
     ===================================================================================
-    Acciones 
+    Acciones
     ===================================================================================
      -->
-    
+
     <record id="act_ocs_claim_review" model="workflow.activity">
-            <field name="wkf_id" ref="ocs.ocs_claim_workflow"/>            
+            <field name="wkf_id" ref="ocs.ocs_claim_workflow"/>
             <field name="name">review</field>
             <field name="kind">function</field>
             <field name="action">case_review()</field>
     </record>
-    
-    
-    <!-- 
+
+
+    <!--
     ===================================================================================
-    Transiciones 
+    Transiciones
     ===================================================================================
      -->
-    
+
     <record id="ocs_tr_in_progress_to_review" model="workflow.transition">
             <field name="act_from" ref="ocs.act_ocs_claim_in_progress"/>
             <field name="act_to" ref="act_ocs_claim_review"/>
@@ -29,7 +29,7 @@
             <field name="group_id" ref="group_ocs_outsourced_user"/>
             <field name="signal">cas_review</field>
   	</record>
-  	
+
   	<record id="ocs_tr_review_to_in_in_progress" model="workflow.transition">
             <field name="act_from" ref="act_ocs_claim_review"/>
             <field name="act_to" ref="ocs.act_ocs_claim_in_progress"/>
@@ -37,7 +37,7 @@
             <field name="group_id" ref="group_ocs_outsourced_manager"/>
             <field name="signal">cas_reset</field>
   	</record>
-  	
+
   	<record id="ocs_tr_review_to_done" model="workflow.transition">
             <field name="act_from" ref="act_ocs_claim_review"/>
             <field name="act_to" ref="ocs.act_ocs_claim_done"/>
@@ -45,7 +45,7 @@
             <field name="signal">cas_close</field>
             <field name="group_id" ref="group_ocs_outsourced_manager"/>
   	</record>
-  	
+
   	<record id="ocs_tr_in_done_to_in_progress" model="workflow.transition">
             <field name="act_from" ref="ocs.act_ocs_claim_done"/>
             <field name="act_to" ref="ocs.act_ocs_claim_in_progress"/>
@@ -53,7 +53,7 @@
             <field name="signal">cas_reset</field>
             <field name="group_id" ref="group_ocs_outsourced_manager"/>
   	</record>
-    
-    
+
+
     </data>
 </openerp>

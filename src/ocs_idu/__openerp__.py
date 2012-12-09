@@ -27,13 +27,13 @@
         "category" : "Social Management",
         "description": """For Public Organizations, useful to receive claims from Citizens""",
         "depends" : ['ocs'],
-        "init_xml" : ['ocs_idu_view.xml'],        
+        "init_xml" : ['ocs_idu_view.xml'],
         "demo_xml" : [],
         "update_xml" : [
-                        'security/ocs_idu_security.xml',  
+                        'security/ocs_idu_security.xml',
                         'security/ir.model.access.csv',
                         'ocs_idu_workflow.xml',
-                        'ocs_idu_view.xml'                                                              
+                        'ocs_idu_view.xml'
                         ],
         "installable": True
 }

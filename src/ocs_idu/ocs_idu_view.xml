@@ -3,16 +3,16 @@
 <data>
 
 <!-- Menús principales -->
-	
+
 <menuitem name="Construction Issue" id="menu_ocs_construction_issues"
 			parent="ocs.menu_ocs" sequence="3" />
 <menuitem name="Construction Issue Settings" id="menu_construction_ocs_settings"
 			parent="ocs.menu_ocs" sequence="5" />
-<!-- ====================================================================== 
-			Contract_Contratos..		
+<!-- ======================================================================
+			Contract_Contratos..
  ;====================================================================== -->
  <!-- Form -->
- 
+
 <record model="ir.ui.view" id="view_ocs_contract_form">
 			<field name="name">ocs.contract.form</field>
 			<field name="model">ocs.contract</field>
@@ -53,8 +53,8 @@
 <menuitem name="Contract" id="menu_ocs_contract" action="action_ocs_contract"
 			parent="menu_construction_ocs_settings" sequence="2" />
 
-<!-- ============================================================================================================== 
-			Tract_Tramo 
+<!-- ==============================================================================================================
+			Tract_Tramo
 ============================================================================================================== -->
 <!-- Form -->
 
@@ -97,7 +97,7 @@
 <menuitem name="Tracts" id="menu_ocs_tract" action="action_ocs_tract"
 			parent="menu_construction_ocs_settings" sequence="3" />
 
-<!-- ================================================================== 
+<!-- ==================================================================
 			Outsourced Citizen Service Points....
 ;================================================================== -->
 
@@ -107,10 +107,10 @@
 		<field name="model">ocs.citizen_service_point</field>
 		<field name="priority" eval="10" />
 		<field name="type">form</field>
-		<field name="inherit_id" ref="ocs.view_ocs_citizen_service_point_form" />			
+		<field name="inherit_id" ref="ocs.view_ocs_citizen_service_point_form" />
 		<field name="arch" type="xml">
 			<field name="schedule" position="after">
-				<field name="full_name" select="0" />					
+				<field name="full_name" select="0" />
 			</field>
 		</field>
 </record>
@@ -120,22 +120,22 @@
 		<field name="name">ocs.citizen_service_point.form.outsourced</field>
 		<field name="model">ocs.citizen_service_point</field>
 		<field name="priority" eval="32" />
-		<field name="type">form</field>			
+		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Outsourced Citizen Service Point">
 					<field name="name"/>
 					<field name="creation_date"/>
 					<field name="close_date"/>
-					<field name="schedule"/>					
+					<field name="schedule"/>
  					<field name="tract_id" required="True"/>
 					<field name="full_name" select="0" />
-					<field name="users_id" colspan="4" nolabel="1" />					
+					<field name="users_id" colspan="4" nolabel="1" />
 			</form>
 		</field>
 </record>
 
 <!-- Tree -->
-		
+
 <record model="ir.ui.view" id="view_ocs_crea_point_tree">
 		<field name="name">ocs.citizen_service_point.tree_inherit</field>
 		<field name="model">ocs.citizen_service_point</field>
@@ -148,17 +148,17 @@
 		</field>
 </record>
 
-<!-- Action OCS Citizen Service Point  -->		
-		
+<!-- Action OCS Citizen Service Point  -->
+
 <record model="ir.actions.act_window" id="ocs.action_ocs_citizen_service_point">
        	<field name="name">Citizen Service Points</field>
        	<field name="res_model">ocs.citizen_service_point</field>
        	<field name="view_type">form</field>
        	<field name="domain">[('is_outsourced','=',False)]</field>
        	<field name="view_mode">tree,form</field>
-</record> 	
+</record>
 
-<!-- Action OCS Citizen Service Point Outsourced -->		
+<!-- Action OCS Citizen Service Point Outsourced -->
 
 <record model="ir.actions.act_window" id="action_ocs_crea_point">
 		<field name="name">Citizen Service Points</field>
@@ -166,33 +166,33 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('is_outsourced','=',True)]</field>
-		<field name="context">{'is_outsourced':True,'form_view_ref':'ocs_idu.view_ocs_crea_point_form_outsourced'}</field> <!-- Ayuda a determinar si el predio es o no outsourced -->			
+		<field name="context">{'is_outsourced':True,'form_view_ref':'ocs_idu.view_ocs_crea_point_form_outsourced'}</field> <!-- Ayuda a determinar si el predio es o no outsourced -->
 </record>
 
 <menuitem name="Outsourced Citizen Service Point" id="menu_ocs_crea_point" action="action_ocs_crea_point"
 		parent="menu_construction_ocs_settings" sequence="3" />
 
-<!-- ================================================================================================= 
+<!-- =================================================================================================
 		Construction Claim
-;================================================================================================= 
+;=================================================================================================
 -->
 
 <!-- Form View Inherit -->
-		
+
 <record model="ir.ui.view" id="view_ocs_claim_form_inherit">
 	<field name="name">Construction - Claims Form</field>
 	<field name="model">crm.claim</field>
 	<field name="type">form</field>
 	<field name="inherit_id" ref="ocs.view_ocs_claim_form_inherit" />
 			<field name="arch" type="xml">
-				<field name="csp_id" position="replace">	
+				<field name="csp_id" position="replace">
 						<field name="csp_id" widget="selection" domain="[('is_outsourced','=',False),'|',('close_date','=',False),('close_date','>=','now()')]" />
 				</field>
 			</field>
 </record>
 
 <!-- Second Form View -->
-	
+
 <record model="ir.ui.view" id="ocs_idu_crm_case_claims_form_view">
 			<field name="name">Construction Claims Form</field>
 			<field name="model">crm.claim</field>
@@ -204,7 +204,7 @@
 						statusbar_visible="draft,review,open,done" statusbar_colors='{"pending":"blue"}'
 						colspan="4" />
 					<group>
-						<field name="name" />						
+						<field name="name" />
 						<field name="create_date" />
 					</group>
 					<group colspan="4" col="6">
@@ -225,7 +225,7 @@
 										on_change="onchange_partner_id(partner_id)" />
 									<field name="partner_address_id" string="Contact"
 										on_change="onchange_partner_address_id(partner_address_id, email_from)"
-										context="{'form_view_ref' : 'ocs.view_res_partner_address_form_small'}"/>										
+										context="{'form_view_ref' : 'ocs.view_res_partner_address_form_small'}"/>
 									<field name="partner_phone" />
 									<field name="email_from" widget="email" />
 								</group>
@@ -266,12 +266,12 @@
 											context="{'mail.compose.message.mode':'reply'}" icon="terp-mail-replied"
 											type="action" />
 									</tree>
-								</field>								
+								</field>
 								<button string="Add Internal Note" name="%(crm.action_crm_add_note)d"
-									context="{'form_view_ref':'crm.crm_add_new_note_view','model': 'crm.lead' }" 
+									context="{'form_view_ref':'crm.crm_add_new_note_view','model': 'crm.lead' }"
 									icon="terp-document-new" type="action" />
-								
-								<!--<button string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" 
+
+								<!--<button string="Send New Email" name="%(mail.action_email_compose_message_wizard)d"
 									icon="terp-mail-message-new" type="action"/> -->
 							</page>
 						</notebook>
@@ -295,9 +295,9 @@
 				</form>
 			</field>
 </record>
-		
+
 <!-- Search View -->
-		
+
 <record id="ocs_idu_view_crm_case_claims_filter" model="ir.ui.view">
             <field name="name">Office of Citizen Service - Claims Search</field>
             <field name="model">crm.claim</field>
@@ -314,21 +314,21 @@
                         domain="[('state','=','pending')]"
                         help="All pending Claims"
                     />
-                    
+
                     <filter icon="terp-stock_zoom"
                         string="Review"
                         domain="[('state','=','review')]"
                         help="All Claim pending to Review"
                     />
-                    
+
                     <filter icon="terp-check"
                         string="Done"
                         domain="[('state','=','done')]"
                         help="All Claims"
                     />
-             
-                    
-                    <separator orientation="vertical"/>                    
+
+
+                    <separator orientation="vertical"/>
                     <field name="partner_address_id"/>
                     <field name="user_id" widget="selection">
                             <filter icon="terp-personal-"
@@ -336,11 +336,11 @@
                                 help="Unassigned Claims" />
                     </field>
                     <newline/>
-                    <group expand="0" string="Group By...">                       
+                    <group expand="0" string="Group By...">
                         <filter string="Responsible" icon="terp-personal"
                             domain="[]" help="Responsible User"
                             context="{'group_by':'user_id'}" />
-                        <separator orientation="vertical"/>                        
+                        <separator orientation="vertical"/>
                         <filter string="Type" icon="terp-stock_symbol-selection"
                             domain="[]" context="{'group_by':'categ_id'}" />
                         <filter string="State"
@@ -361,7 +361,7 @@
             </field>
  </record>
  <!-- Second Tree View for Outsourced PQR -->
-		
+
 <record model="ir.ui.view" id="ocs_idu_crm_case_claims_tree_view">
             <field name="name">OCS - Outsourced Claims Tree</field>
             <field name="model">crm.claim</field>
@@ -374,8 +374,8 @@
                     <field name="date"/>
                     <field name="date_deadline" invisible ="1"/>
                     <field name="csp_id"/>
-                    <field name="categ_id" string="Type" select="1"/>                    
-                    <field name="state"/>                    
+                    <field name="categ_id" string="Type" select="1"/>
+                    <field name="state"/>
     				<button name="cas_cancel" string="Cancel" type="workflow" groups="ocs_idu.group_ocs_outsourced_user"
 							icon="gtk-cancel" states="draft" /> <!-- states= "Estados en los cuales el boton es visible" -->
 					<button name="cas_pending" string="Pending" type="workflow"
@@ -391,7 +391,7 @@
                 </tree>
             </field>
         </record>
-		
+
 <!-- Actions -->
 <!-- Claim (Normal) -->
 
@@ -404,7 +404,7 @@
         		<field name="domain">[('csp_id.is_outsourced','=',False)]</field>
         		<field name="view_mode">tree,form,geoengine</field>
 </record>
-		
+
 <!-- Claim (Outsourced) -->
 
 <record model="ir.actions.act_window" id="action_ocs_construction_claim">

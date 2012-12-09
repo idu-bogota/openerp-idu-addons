@@ -24,7 +24,7 @@
 # ANGEL MARIA FONSECA CORREA - CIO
 # ANDRES IGNACIO BAEZ ALBA - Engineer of Development
 # CINXGLER MARIACA MINDA - Engineer of Development - Architect
-# 
+#
 ###############################################################################
 
 from osv import fields,osv
@@ -34,23 +34,23 @@ from tools.translate import _
 
 class crm_claim(crm.crm_case,osv.osv):
     """
-    Inherit from ocs and ocs crm_claim    
+    Inherit from ocs and ocs crm_claim
     """
-    
+
     def _check_is_outsourced(self,cr,uid,ids,fieldname,arg,context=None):
         """
-        Check if the citizen service point is outsourced, with this 
+        Check if the citizen service point is outsourced, with this
         validates when is csp outsourced
         """
         res = {}
         for claim in self.browse(cr, uid, ids, context = context):
-            res[claim.id] = claim.csp_id.is_outsourced                                         
+            res[claim.id] = claim.csp_id.is_outsourced
         return  res
 
     def case_review(self, cr, uid, ids, *args):
         """Review the Case
-        :param ids: List of case Ids        
-        """        
+        :param ids: List of case Ids
+        """
         cases = self.browse(cr, uid, ids)
         self.message_append(cr, uid, cases, _('Review'))
         for case in cases:
@@ -77,20 +77,20 @@ crm_claim()
 
 class ocs_citizen_service_point(geo_model.GeoModel):
     """
-    IDU High Specific Requeriment for Office of Citizen Service  with Outsourced partner    
+    IDU High Specific Requeriment for Office of Citizen Service  with Outsourced partner
     """
-    
-    def _check_is_outsourced (self,cr,uid,context):        
+
+    def _check_is_outsourced (self,cr,uid,context):
         """
         Verifiy Context to Set default value
-        """        
-        if context.has_key("is_outsourced"):        
+        """
+        if context.has_key("is_outsourced"):
             if context["is_outsourced"]:
                 return True
             else :
-                return False        
-        return False 
-    
+                return False
+        return False
+
     def _get_full_name(self,cr,uid,ids,fieldname,arg,context=None):
         """Get Full Name of Contract """
         res = {}
@@ -98,18 +98,18 @@ class ocs_citizen_service_point(geo_model.GeoModel):
             if csp.is_outsourced:
                 res[csp.id] = "{0} / {1} ".format(csp.tract_id.full_name, csp.name)
             else :
-                res[csp.id] = "{0}".format(csp.name)                                         
+                res[csp.id] = "{0}".format(csp.name)
         return  res
-    
+
     _name="ocs.citizen_service_point"
     _inherit="ocs.citizen_service_point"
     _columns = {
         'is_outsourced':fields.boolean('is Outsourced',help='When is set, this is an outsourced citizen service point'),
         'tract_id':fields.many2one('ocs.tract','Tract Id'),
-        'full_name':fields.function(_get_full_name,type='char',string='Full Name',method=True),                
+        'full_name':fields.function(_get_full_name,type='char',string='Full Name',method=True),
     }
     _defaults={
-        'is_outsourced':  _check_is_outsourced,            
+        'is_outsourced':  _check_is_outsourced,
     }
     _rec_name = 'full_name'
 ocs_citizen_service_point()
@@ -130,15 +130,15 @@ class ocs_contract(osv.osv):
 ocs_contract()
 
 class ocs_tract(osv.osv):
-    """ This class is only for IDU (Instituto Desarrollo Urbano Colombia), who need take control about claims 
-    in building projects, from outsourcing  """    
+    """ This class is only for IDU (Instituto Desarrollo Urbano Colombia), who need take control about claims
+    in building projects, from outsourcing  """
     def _get_full_name(self,cr,uid,ids,fieldname,arg,context=None):
         """Get Full Name of Contract """
         res = {}
         for tract in self.browse(cr, uid, ids, context = context):
-                res[tract.id] = "{0} / {1} ".format(tract.contract_id.contract_id, tract.name)                         
-        return  res 
-    
+                res[tract.id] = "{0} / {1} ".format(tract.contract_id.contract_id, tract.name)
+        return  res
+
     _name = 'ocs.tract'
     _columns = {
         'full_name':fields.function(_get_full_name,type='char',string='Full Name',method=True),

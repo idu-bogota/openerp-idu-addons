@@ -711,3 +711,7 @@ msgstr "Tipo de documento"
 msgid "Historic of Claims"
 msgstr "Histórico de reclamos"
 
+#. module: ocs
+#: view:ocs.res.partner:0
+msgid "vat"
+msgstr "NIT"
