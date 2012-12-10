@@ -238,7 +238,7 @@
                             <field name="categ_id" widget="selection"
                                 domain="[('object_id.model', '=', 'crm.claim')]" />
                             <field name="classification_id" />
-                            <field name="sub_classification_id" />
+                            <field name="sub_classification_id" on_change="onchange_sub_classification_id(sub_classification_id)"/>
                         </group>
                         <separator colspan="4" string="Claim/Action Description" />
                         <group colspan="4" col="4">
