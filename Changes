@@ -3,6 +3,7 @@
 * Campos Prioridad y Fecha Limite de solo lectura como definido por OTC
 * Desplegar barrios de la localidad seleccionada
 * Adicionado número de contrato en PQR del IDU
+* Cambio de posición contacto/empresa y paso de dirección del contacto a PQR
 
 2012112100
 * Fixed bug on claim notes addition and activity logging

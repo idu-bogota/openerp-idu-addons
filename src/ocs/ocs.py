@@ -106,6 +106,18 @@ class ResPartnerAddress(geo_model.GeoModel):
                 is_valid_data = True
         return is_valid_data
 
+    def onchange_district_id(self, cr, uid, ids, district_id):
+        """Restricts the neighborhood list to the selected district_id
+        """
+        v={}
+        d={}
+        if district_id:
+            district = self.pool.get('ocs.district').browse(cr, uid, district_id)
+            n_ids = district.neighborhood_ids()
+            d['neighborhood_id'] = "[('id','in',{0})]".format(n_ids)
+            v['neighborhood_id'] = ''
+        return {'domain':d, 'value':v}
+
     _name = 'res.partner.address'
     _inherit='res.partner.address'
     _columns = {
@@ -194,6 +206,18 @@ class ocs_district(geo_model.GeoModel):
         'name': fields.char('District Name',size=20),
         'geo_polygon':fields.geo_multi_polygon('Geometry'),
     }
+    def neighborhood_ids(self, cr, uid, id, default=None, context=None):
+        """Return a list with neighborhoods from the district uses a postgis query
+        """
+        #neighborhoods = self.pool.get('ocs.neighborhood').geo_search(cr, uid, geo_domain=[('geo_polygon', 'geo_intersect', 'ocs.district.geo_polygon')])
+        query = 'SELECT DISTINCT(n.id) FROM ocs_neighborhood AS n, ocs_district AS d ' \
+            "WHERE intersects(n.geo_polygon, d.geo_polygon) = TRUE AND d.id = {0};".format(id[0])
+        cr.execute(query)
+        n_ids = []
+        for n_id in cr.fetchall():
+            n_ids.append(n_id[0])
+        return n_ids
+
 ocs_district()
 
 class ocs_sub_district(geo_model.GeoModel):
@@ -281,19 +305,20 @@ class crm_claim(geo_model.GeoModel):
         if not add:
             return {'value': {'email_from': False}}
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
-        return {'value': {'email_from': address.email, 'partner_phone': address.phone,'claim_address':address.street}}
+        return {'value': {'email_from': address.email, 'partner_phone': address.phone,
+                          'claim_address':address.street, 'partner_id': address.partner_id.id,
+                          'district_id': address.district_id.id, 'neighborhood_id': address.neighborhood_id.id
+                          }
+                }
 
     def onchange_district_id(self, cr, uid, ids, district_id):
+        """Restricts the neighborhood list to the selected district_id
+        """
         v={}
         d={}
         if district_id:
-            #neighborhoods = self.pool.get('ocs.neighborhood').geo_search(cr, uid, geo_domain=[('geo_polygon', 'geo_intersect', 'ocs.district.geo_polygon')])
-            query = 'SELECT DISTINCT(n.id) FROM ocs_neighborhood AS n, ocs_district AS d ' \
-            "WHERE intersects(n.geo_polygon, d.geo_polygon) = TRUE AND d.id = {0};".format(district_id)
-            cr.execute(query)
-            n_ids = []
-            for n_id in cr.fetchall():
-                n_ids.append(n_id)
+            district = self.pool.get('ocs.district').browse(cr, uid, district_id)
+            n_ids = district.neighborhood_ids()
             d['neighborhood_id'] = "[('id','in',{0})]".format(n_ids)
             v['neighborhood_id'] = ''
         return {'domain':d, 'value':v}
