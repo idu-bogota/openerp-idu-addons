@@ -73,7 +73,7 @@ class ResPartnerAddress(geo_model.GeoModel):
                 res[citizen.id] = "{0},{1}".format(citizen.last_name, citizen.name)
         return  res
 
-    def _checkdocument(self, cr, uid, ids, context = None):
+    def _check_document(self, cr, uid, ids, context = None):
         """
         Constraint:
 
@@ -91,7 +91,7 @@ class ResPartnerAddress(geo_model.GeoModel):
                 is_valid_document = True
         return is_valid_document
 
-    def _checkinputdata(self, cr, uid, ids, context = None):
+    def _check_contact_data(self, cr, uid, ids, context = None):
         """
         Constraint:
         Should have filled at least one contact detail
@@ -129,8 +129,8 @@ class ResPartnerAddress(geo_model.GeoModel):
         ('unique_email','unique(email)','This email is already registered'),
     ]
     _constraints = [
-    (_checkinputdata,'You must type at least one of these: email, phone, cell phone, facebook or twitter to create a contact',['document_number']),
-    (_checkdocument,'When Document Type is CC, the document number must be numeric only!!!',['document_number']),
+    (_check_contact_data,'You must type at least one of these: email, phone, cell phone, facebook or twitter to create a contact',['document_number']),
+    (_check_document,'When Document Type is CC, the document number must be numeric only!!!',['document_number']),
     ]
 ResPartnerAddress()
 
