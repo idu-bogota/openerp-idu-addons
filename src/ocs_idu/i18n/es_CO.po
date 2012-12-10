@@ -289,3 +289,17 @@ msgstr "Histórico información"
 msgid "Open"
 msgstr "Abrir"
 
+#. module: ocs_idu
+#: field:crm.claim,contract_reference
+msgid "Construction contract number year/number"
+msgstr "Número de Contrato año/número"
+
+#. module: ocs_idu
+#: field:crm.claim,contract_reference
+msgid "Contract Reference"
+msgstr "Número de contrato"
+
+#. module: ocs
+#: constraint:crm.claim:0
+msgid "Contract Reference format is year/number, ie. 2012/10"
+msgstr "El número de referencia debe seguir el formato año/número, ejemplo: 2012/10"

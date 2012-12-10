@@ -31,6 +31,7 @@ from osv import fields,osv
 from base_geoengine import geo_model
 from crm import crm
 from tools.translate import _
+import re
 
 class crm_claim(crm.crm_case,osv.osv):
     """
@@ -61,6 +62,20 @@ class crm_claim(crm.crm_case,osv.osv):
         self._action(cr, uid, cases, 'review')
         return True
 
+    def _check_contract_reference(self, cr, uid, ids, context = None):
+        """
+        Constraint:
+        follow format yyyy/ddd
+        """
+        is_valid = False
+        for claim in self.browse(cr, uid, ids,context):
+            if claim.contract_reference != False:
+                if re.match("^([0-9]{2}|[0-9]{4})\/[0-9]{2,3}$", claim.contract_reference) != None:
+                    is_valid = True
+            else:
+                is_valid = True
+        return is_valid
+
     _name="crm.claim"
     _inherit="crm.claim"
     _columns = {
@@ -71,7 +86,11 @@ class crm_claim(crm.crm_case,osv.osv):
                                  'State',help='Introduce a new state between open and done, in this step,\
                                   other people makes a review and approve the response given to citizen'),
         'is_outsourced':fields.function(_check_is_outsourced,type='boolean',string='Is Outsourced',method=True),
+        'contract_reference': fields.char('Contract Reference',size=8,help='Construction contract number year/number',states={'done':[('readonly',True)]}),
     }
+    _constraints = [
+        (_check_contract_reference,'Contract Reference format is year/number, ie. 2012/10',['contract_reference']),
+    ]
 
 crm_claim()
 

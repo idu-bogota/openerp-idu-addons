@@ -184,11 +184,14 @@
     <field name="model">crm.claim</field>
     <field name="type">form</field>
     <field name="inherit_id" ref="ocs.view_ocs_claim_form_inherit" />
-            <field name="arch" type="xml">
-                <field name="csp_id" position="replace">
-                        <field name="csp_id" widget="selection" domain="[('is_outsourced','=',False),'|',('close_date','=',False),('close_date','>=','now()')]" />
-                </field>
-            </field>
+    <field name="arch" type="xml">
+        <field name="csp_id" position="replace">
+                <field name="csp_id" widget="selection" domain="[('is_outsourced','=',False),'|',('close_date','=',False),('close_date','>=','now()')]" />
+        </field>
+        <field name="sub_classification_id" position="after">
+            <field name="contract_reference" select="0"/>
+        </field>
+    </field>
 </record>
 
 <!-- Second Form View -->
