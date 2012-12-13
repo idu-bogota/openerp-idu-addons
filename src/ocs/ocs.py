@@ -49,19 +49,33 @@ class ResPartnerAddress(geo_model.GeoModel):
         if not len(ids):
             return []
         res = []
-        for r in self.read(cr, user, ids, ['name','last_name','document_number','zip','country_id', 'city','partner_id', 'street']):
+        for r in self.read(cr, user, ids, ['name','last_name','email','twitter','document_number','zip','country_id', 'city','partner_id', 'street']):
             if context.get('contact_display', 'contact')=='partner' and r['partner_id']:
                 res.append((r['id'], r['partner_id'][1]))
             else:
                 # make a comma-separated list with the following non-empty elements
                 #elems = [r['name'],r['last_name'],r['document_number'],r['country_id'] and r['country_id'][1], r['city'], r['street']]
-                elems = [r['name'],r['last_name'],r['document_number']]
+                elems = [r['name'],r['last_name'],r['document_number'],r['email'],r['twitter']]
                 addr = ', '.join(filter(bool, elems))
                 if (context.get('contact_display', 'contact')=='partner_address') and r['partner_id']:
-                    res.append((r['id'], "%s: %s" % (r['partner_id'][1], addr or '/')))
+                    res.append((r['id'], "%s: %s" % (r['partner_id'][1], addr or '-no-data-')))
                 else:
-                    res.append((r['id'], addr or '/'))
+                    res.append((r['id'], addr or '-no-data-'))
         return res
+
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args=[]
+        if not context:
+            context={}
+        ids = False
+        if name:
+            ids = self.search(cr, user, ['|',('name', 'ilike', name),'|',('document_number', 'ilike', name),'|',('email', 'ilike', name),('twitter', 'ilike', name)] + args,
+                    limit=limit, context=context)
+        if not ids:
+            ids = self.search(cr, user, [('name', operator, name)] + args,
+                    limit=limit, context=context)
+        return self.name_get(cr, user, ids, context)
 
     def _get_full_name(self,cr,uid,ids,fieldname,arg,context=None):
         """Get Full Name of Citizen """
@@ -139,6 +153,8 @@ class ResPartnerAddress(geo_model.GeoModel):
     _sql_constraints = [
         ('unique_cc_document_number','unique(document_type,document_number)','Combination document type, document id must be unique!!!'),
         ('unique_email','unique(email)','This email is already registered'),
+        ('unique_twitter','unique(twitter)','This twitter account is already registered'),
+        ('unique_facebook','unique(facebook)','This facebook account is already registered'),
     ]
     _constraints = [
     (_check_contact_data,'You must type at least one of these: email, phone, cell phone, facebook or twitter to create a contact',['document_number']),
