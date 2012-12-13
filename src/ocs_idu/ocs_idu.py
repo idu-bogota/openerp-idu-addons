@@ -110,6 +110,28 @@ class crm_claim(crm.crm_case,osv.osv):
 
 crm_claim()
 
+class ResPartnerAddress(geo_model.GeoModel):
+    def _get_full_name(self,cr,uid,ids,fieldname,arg,context=None):
+        """Get Full Name of Citizen """
+        res = {}
+        for citizen in self.browse(cr, uid, ids, context = context):
+            if citizen.last_name == False and citizen.first_name == False:
+                res[citizen.id] = "-"
+            elif citizen.last_name == False:
+                res[citizen.id] = "{0}".format(citizen.name)
+            else:
+                res[citizen.id] = "{0},{1}".format(citizen.last_name, citizen.name)
+        return  res
+
+    _name = 'res.partner.address'
+    _inherit='res.partner.address'
+    _columns = {
+        'last_name':fields.char('Last Name:',size=128,required=False),
+        'name':fields.char('First Name',size=128,required=False),
+    }
+    _rec_name = 'document_number'
+ResPartnerAddress()
+
 class ocs_citizen_service_point(geo_model.GeoModel):
     """
     IDU High Specific Requeriment for Office of Citizen Service  with Outsourced partner

@@ -5,6 +5,7 @@
 * Adicionado número de contrato en PQR del IDU
 * Cambio de posición contacto/empresa y paso de dirección del contacto a PQR
 * Tipo de requerimiento es actualizado basado en subclasification de acuerdo a req de la OTC
+* Se pueden crear interesados res.partner.address sin nombre por solicitud de la OTC para usuarios anónimos
 
 2012112100
 * Fixed bug on claim notes addition and activity logging
