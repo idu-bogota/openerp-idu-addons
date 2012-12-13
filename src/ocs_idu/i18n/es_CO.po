@@ -301,5 +301,5 @@ msgstr "Número de contrato"
 
 #. module: ocs
 #: constraint:crm.claim:0
-msgid "Contract Reference format is year/number, ie. 2012/10"
-msgstr "El número de referencia debe seguir el formato año/número, ejemplo: 2012/10"
+msgid "Contract Reference format is number-year, ie. 10-2012"
+msgstr "El número de referencia debe seguir el formato número/año, ejemplo: 10-2012"

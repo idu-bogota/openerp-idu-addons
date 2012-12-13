@@ -2,7 +2,7 @@
 * Listado de canales actualizado para ser desplegado en el orden de mas uso definido por la OTC
 * Campos Prioridad y Fecha Limite de solo lectura como definido por OTC
 * Desplegar barrios de la localidad seleccionada
-* Adicionado número de contrato en PQR del IDU
+* Adicionado número de contrato en PQR del IDU. Formato (número-año)
 * Cambio de posición contacto/empresa y paso de dirección del contacto a PQR
 * Tipo de requerimiento es actualizado basado en subclasification de acuerdo a req de la OTC
 * Se pueden crear interesados res.partner.address sin nombre por solicitud de la OTC para usuarios anónimos
