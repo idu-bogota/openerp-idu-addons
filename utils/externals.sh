@@ -56,7 +56,7 @@ else
 fi
 
 ##Instalar geojson para geoengine
-cd tmp
+cd /tmp
 wget http://pypi.python.org/packages/source/g/geojson/geojson-1.0.tar.gz
 tar zxvf geojson-1.0.tar.gz
 cd geojson-1.0
