@@ -220,13 +220,16 @@ res.partner.address
             <field name="arch" type="xml">
                 <search string="Search Contact">
                     <group>
-                    <!--    <filter string="Document" name="customer" icon="terp-personal" domain="[('is_customer_add','=','1')]" />
-                        <filter string="Supplier" name="supplier"  icon="terp-personal" domain="[('is_supplier_add','=','1')]" /> -->
-                        <separator orientation="vertical"/>
+<!--                         <filter string="Document" name="customer" icon="terp-personal" domain="[('is_customer_add','=','1')]" /> -->
+<!--                         <filter string="Supplier" name="supplier"  icon="terp-personal" domain="[('is_supplier_add','=','1')]" /> -->
+<!--                         <separator orientation="vertical"/> -->
                         <field name="name" />
                         <field name="last_name" />
                         <field name="document_number"/>
+                        <field name="phone"/>
                         <field name="email"/>
+                        <field name="twitter"/>
+                        <field name="street"/>
                     </group>
                 </search>
             </field>

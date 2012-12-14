@@ -81,7 +81,9 @@ class ResPartnerAddress(geo_model.GeoModel):
         """Get Full Name of Citizen """
         res = {}
         for citizen in self.browse(cr, uid, ids, context = context):
-            if citizen.last_name == False:
+            if citizen.last_name == False and citizen.name == False:
+                res[citizen.id] = "-"
+            elif citizen.last_name == False:
                 res[citizen.id] = "{0}".format(citizen.name)
             else:
                 res[citizen.id] = "{0},{1}".format(citizen.last_name, citizen.name)
