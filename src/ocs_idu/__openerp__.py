@@ -33,7 +33,8 @@
                         'security/ocs_idu_security.xml',
                         'security/ir.model.access.csv',
                         'ocs_idu_workflow.xml',
-                        'ocs_idu_view.xml'
+                        'ocs_idu_view.xml',
+                        'ocs_idu_reports.xml',
                         ],
         "installable": True
 }

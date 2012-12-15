@@ -18,5 +18,4 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import ocs_idu
-import report
+import crm_claim

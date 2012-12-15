@@ -18,5 +18,15 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import ocs_idu
-import report
+from report import report_sxw
+import time
+
+class crm_claim(report_sxw.rml_parse):
+    def __init__(self, cr, uid, name, context=None):
+        super(crm_claim, self).__init__(cr, uid, name, context=context)
+        self.localcontext.update({
+            'time': time,
+        })
+
+
+report_sxw.report_sxw('report.ocs_idu.crm_claim', 'crm.claim', 'addons/ocs_idu/report/crm_claim.rml', parser=crm_claim, header=False)
