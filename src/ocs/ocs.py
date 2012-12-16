@@ -339,6 +339,26 @@ class crm_claim(geo_model.GeoModel):
             v['neighborhood_id'] = ''
         return {'domain':d, 'value':v}
 
+    def message_new(self, cr, uid, msg, custom_values=None, context=None):
+        """Automatically called when new email message arrives"""
+        res_id = super(crm_claim,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
+        subject = msg.get('subject')
+        body = msg.get('body_text')
+        msg_from = msg.get('from')
+        priority = msg.get('priority')
+        vals = {
+            'name': subject,
+            'email_from': msg_from,
+            'email_cc': msg.get('cc'),
+            'description': body,
+            'user_id': False,
+        }
+        if priority:
+            vals['priority'] = priority
+        vals.update(self.message_partner_by_email(cr, uid, msg.get('from', False)))
+        self.write(cr, uid, [res_id], vals, context=context)
+        return res_id
+
     _columns={
         #'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
         'description': fields.text('Description',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
