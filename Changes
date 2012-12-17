@@ -7,6 +7,7 @@
 * Tipo de requerimiento es actualizado basado en subclasification de acuerdo a req de la OTC
 * Se pueden crear interesados res.partner.address sin nombre por solicitud de la OTC para usuarios anónimos
 * Busqueda ajax de res.partner.address incluye twitter, email, nombre y número de documento
+* Activado el manejo de email en el módulo de PQRs
 
 2012112100
 * Fixed bug on claim notes addition and activity logging

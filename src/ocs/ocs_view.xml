@@ -650,8 +650,7 @@ Claims
           <xpath expr="//page[@groups='base.group_extended']" position="attributes">
                 <attribute name="groups"></attribute>
           </xpath>
-          <!--Desactivación temporal del servicio de email-->
-          <button string="Send New Email" position="replace" ></button>
+          <button string="Send New Email"></button>
         </field>
 </record>
 

@@ -341,23 +341,44 @@ class crm_claim(geo_model.GeoModel):
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """Automatically called when new email message arrives"""
-        res_id = super(crm_claim,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
         subject = msg.get('subject')
         body = msg.get('body_text')
         msg_from = msg.get('from')
-        priority = msg.get('priority')
+
         vals = {
-            'name': subject,
             'email_from': msg_from,
             'email_cc': msg.get('cc'),
-            'description': body,
-            'user_id': False,
         }
-        if priority:
-            vals['priority'] = priority
+        if custom_values == None:
+            custom_values = {}
+        custom_values['description'] = "{0}\n\n{1}".format(subject, body)
+        custom_values.update(self.message_default_values(cr, uid, msg))
+        #res_id = super(crm_claim,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
+        res_id = self.create(cr, uid, custom_values, context=context)
+        self.message_append_dict(cr, uid, [res_id], msg, context=context)
         vals.update(self.message_partner_by_email(cr, uid, msg.get('from', False)))
         self.write(cr, uid, [res_id], vals, context=context)
         return res_id
+
+    def message_default_values(self, cr, uid, msg, **args):
+        custom_values = {}
+        partner_address_id = self.pool.get('res.partner.address').search(cr, uid, [('email','=',msg.get('from'))], offset=0, limit=1)
+        if len(partner_address_id):
+            custom_values['partner_address_id'] = partner_address_id[0]
+
+        channel = self.pool.get('crm.case.channel').search(cr, uid, [('active','=',True),('name','=',msg.get('to'))], offset=0, limit=1)
+        if len(channel):
+            custom_values['channel'] = channel[0]
+        else:
+            custom_values['channel'] = self.pool.get('crm.case.channel').search(cr, uid, [('active','=',True)], offset=0, limit=1)[0]
+
+        custom_values['categ_id'] = self.pool.get('crm.case.categ').search(cr, uid, [('active','=',True)], offset=0, limit=1)[0]
+        custom_values['csp_id'] = self.pool.get('ocs.citizen_service_point').search(cr, uid, [], offset=0, limit=1)[0]
+        csp = self.pool.get('ocs.citizen_service_point').read(cr, uid, custom_values['csp_id'])
+        custom_values['user_id'] = csp['users_id'][0]
+        custom_values['classification_id'] = self.pool.get('ocs.claim_classification').search(cr, uid, [], offset=0, limit=1)[0]
+        custom_values['sub_classification_id'] = self.pool.get('ocs.claim_classification').search(cr, uid, [('parent_id','=',custom_values['classification_id'])], offset=0, limit=1)[0]
+        return custom_values
 
     _columns={
         #'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
