@@ -586,9 +586,8 @@ Claims
             <field name="stage_id" position="replace">
                 <field name="id" select ="1"/>
             </field>
-            <button name="stage_previous" position="replace">
-            </button>
-            <button name="stage_next" position="replace"></button>
+            <button name="stage_previous" />
+            <button name="stage_next" />
             <field name="date_deadline" position="after">
                 <group colspan="1" col="6">
                     <field name="external_dms_id" select ="0"/>
