@@ -599,8 +599,8 @@ Claims
             </field>
             <field name="ref" position="replace" />
             <field name="categ_id" position="after">
-                    <field name="classification_id" select ="0"/>
-                    <field name="sub_classification_id" select="0" on_change="onchange_sub_classification_id(sub_classification_id)"/>
+                    <field name="classification_id" select ="0" on_change="onchange_classification_id(classification_id)"/>
+                    <field name="sub_classification_id" select="0" />
             </field>
             <field name="partner_id" position="replace"></field>
             <field name="partner_address_id" position ="replace"></field>

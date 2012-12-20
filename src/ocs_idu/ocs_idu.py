@@ -76,20 +76,20 @@ class crm_claim(crm.crm_case,osv.osv):
                 is_valid = True
         return is_valid
 
-    def onchange_sub_classification_id(self, cr, uid, ids, sub_classification_id):
-        """Changes based on sub_classification_id
+    def onchange_classification_id(self, cr, uid, ids, classification_id):
+        """Changes based on classification_id
         """
-        v={}
-        if sub_classification_id:
+        v={'sub_classification_id': ''}
+        if classification_id:
             sub_classification = self.pool.get('ocs.claim_classification').name_search(cr, uid, name='Queja contra servidores públicos IDU', args=None, operator='=', context=None, limit=1)
-            if (sub_classification_id == sub_classification[0][0]): #sub_classification[0][0] = sub_classification[0].id
+            if (classification_id == sub_classification[0][0]):
                 category = self.pool.get('crm.case.categ').name_search(cr, uid, name='Queja', args=None, operator='=', context=None)
-                v['categ_id'] = category[0][0] #category[0][0] = category[0].id
+                v['categ_id'] = category[0][0]
             else:
-                sub_classification = self.pool.get('ocs.claim_classification').name_search(cr, uid, name='Denuncias sobre actuación IDU', args=None, operator='=', context=None, limit=1)
-                if (sub_classification_id == sub_classification[0][0]): #sub_classification[0][0] = sub_classification[0].id
+                classification = self.pool.get('ocs.claim_classification').name_search(cr, uid, name='Denuncias sobre actuación IDU', args=None, operator='=', context=None, limit=1)
+                if (classification_id == classification[0][0]):
                     category = self.pool.get('crm.case.categ').name_search(cr, uid, name='Denuncia', args=None, operator='=', context=None)
-                    v['categ_id'] = category[0][0] #category[0][0] = category[0].id
+                    v['categ_id'] = category[0][0]
         return {'value':v}
 
     _name="crm.claim"
