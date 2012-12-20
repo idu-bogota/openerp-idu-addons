@@ -6,3 +6,12 @@ phpWebServiceClient/config.inc.php
 .settings/
 openerp-server.conf
 src/data_idu/sql/*.sql
+*.aux
+*.log
+*.out
+*.tex.backup
+*.bm
+*.toc
+*.dvi
+*.lof
+*.lot

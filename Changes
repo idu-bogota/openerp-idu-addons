@@ -1,3 +1,19 @@
+2012121900
+* Actualizado vista tipo lista de PQR de acuerdo a reunión con OTC
+* Listado de canales actualizado para ser desplegado en el orden de mas uso definido por la OTC
+* Campos Prioridad y Fecha Limite de solo lectura como definido por OTC
+* Desplegar barrios de la localidad seleccionada
+* Adicionado número de contrato en PQR del IDU. Formato (número-año)
+* Cambio de posición contacto/empresa y paso de dirección del contacto a PQR
+* Tipo de requerimiento es actualizado basado en subclasification de acuerdo a req de la OTC
+* Se pueden crear interesados res.partner.address sin nombre por solicitud de la OTC para usuarios anónimos
+* Busqueda ajax de res.partner.address incluye twitter, email, nombre y número de documento
+* Activado el manejo de email en el módulo de PQRs
+
+2012112100
+* Fixed bug on claim notes addition and activity logging
+* Improvements on interface usability
+
 2012111901
 * Fixed wrong commit
 

@@ -49,7 +49,7 @@ msgstr "Contratista"
 #. module: ocs_idu
 #: view:crm.claim:0
 msgid "Responsibilities"
-msgstr "Responsabilidades"
+msgstr "Datos generales de la PQR"
 
 #. module: ocs_idu
 #: view:crm.claim:0
@@ -267,7 +267,7 @@ msgstr "Realizada"
 #. module: ocs_idu
 #: view:crm.claim:0
 msgid "Claim Reporter"
-msgstr "Persona que ha reportado la reclamación"
+msgstr "Datos generales del interesado"
 
 #. module: ocs_idu
 #: view:crm.claim:0
@@ -289,3 +289,17 @@ msgstr "Histórico información"
 msgid "Open"
 msgstr "Abrir"
 
+#. module: ocs_idu
+#: field:crm.claim,contract_reference
+msgid "Construction contract number year/number"
+msgstr "Número de Contrato año/número"
+
+#. module: ocs_idu
+#: field:crm.claim,contract_reference
+msgid "Contract Reference"
+msgstr "Número de contrato"
+
+#. module: ocs
+#: constraint:crm.claim:0
+msgid "Contract Reference format is number-year, ie. 10-2012"
+msgstr "El número de referencia debe seguir el formato número/año, ejemplo: 10-2012"

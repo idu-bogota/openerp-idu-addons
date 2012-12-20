@@ -1,6 +1,6 @@
 {
   'name': 'Módulo para crear datos del IDU',
-  'version': 'openerp6.1-rev2012111901',
+  'version': 'openerp6.1-rev2012121900',
   'category': 'Generic Modules/Others',
   'description': "Módulo para cargar datos usados en el IDU",
   'author': 'STRT',
@@ -12,7 +12,7 @@
       'ocs.contract.csv',
       'ocs.tract.csv',
       'ocs.citizen_service_point.csv',
-      'ocs.claim_classification.csv',      
+      'ocs.claim_classification.csv',
   ],
   'update_xml': [],
   'installable': True,

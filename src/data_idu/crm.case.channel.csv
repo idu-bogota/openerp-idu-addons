@@ -1,13 +1,18 @@
-"id","active","name"
-"__export__.crm_case_channel_16","True","Actividad lúdica"
-"__export__.crm_case_channel_15","True","Actividad pedagógica"
-"__export__.crm_case_channel_9","True","atnciudadano@idu.gov.co"
-"__export__.crm_case_channel_13","True","Chat"
-"__export__.crm_case_channel_10","True","defensordelciudadano@idu.gov.co"
-"__export__.crm_case_channel_7","True","Escrito"
-"__export__.crm_case_channel_11","True","Facebook"
-"__export__.crm_case_channel_14","True","Feria"
-"__export__.crm_case_channel_5","True","Presencial"
-"__export__.crm_case_channel_8","True","SDQS"
-"__export__.crm_case_channel_6","True","Telefónico"
-"__export__.crm_case_channel_12","True","Twitter"
+id,active,name
+__export__.crm_case_channel_1,True,Telefónico
+__export__.crm_case_channel_2,True,Presencial
+__export__.crm_case_channel_3,True,SDQS
+__export__.crm_case_channel_4,True,atnciudadano@idu.gov.co
+__export__.crm_case_channel_5,True,Twitter
+__export__.crm_case_channel_6,True,Facebook
+__export__.crm_case_channel_7,True,Buzón escrito
+__export__.crm_case_channel_8,True,Buzón telefónico
+__export__.crm_case_channel_9,True,Escrito
+__export__.crm_case_channel_10,True,defensordelciudadano@idu.gov.co
+__export__.crm_case_channel_11,True,E-mail idu
+__export__.crm_case_channel_12,True,Chat
+__export__.crm_case_channel_13,True,Evento
+__export__.crm_case_channel_14,True,Feria
+__export__.crm_case_channel_15,True,Actividad pedagógica
+__export__.crm_case_channel_16,True,Actividad lúdica
+__export__.crm_case_channel_17,True,Página reporte de daños

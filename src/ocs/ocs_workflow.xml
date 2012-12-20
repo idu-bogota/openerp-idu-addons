@@ -6,78 +6,78 @@
             <field name="osv">crm.claim</field>
             <field name="on_create">True</field>
     </record>
-    <!-- Actividades  -->    
-   		
-   	
-   	<record id="act_ocs_claim_draft" model="workflow.activity">
+    <!-- Actividades  -->
+
+
+    <record id="act_ocs_claim_draft" model="workflow.activity">
             <field name="wkf_id" ref="ocs_claim_workflow"/>
             <field name="flow_start">True</field>
             <field name="name">draft</field>
     </record>
-    
+
     <record id="act_ocs_claim_in_progress" model="workflow.activity">
             <field name="wkf_id" ref="ocs_claim_workflow"/>
-            <field name="name">in_progress</field>            
+            <field name="name">in_progress</field>
             <field name="kind">function</field>
             <field name="action">case_open()</field>
     </record>
-    
+
     <record id="act_ocs_claim_pending" model="workflow.activity">
             <field name="wkf_id" ref="ocs_claim_workflow"/>
-            <field name="name">pending</field>            
+            <field name="name">pending</field>
             <field name="kind">function</field>
-            <field name="action">case_pending()</field>            
+            <field name="action">case_pending()</field>
     </record>
-    
-      
-   <record id="act_ocs_claim_done" model="workflow.activity">
-         <field name="wkf_id" ref="ocs_claim_workflow"/>
-         <field name="name">done</field>    
-         <field name="kind">function</field>
-         <field name="action">case_close()</field>          
-   </record>
-   
-   	<record id="act_ocs_claim_cancel" model="workflow.activity">
+
+
+  <record id="act_ocs_claim_done" model="workflow.activity">
+        <field name="wkf_id" ref="ocs_claim_workflow"/>
+        <field name="name">done</field>
+        <field name="kind">function</field>
+        <field name="action">case_close()</field>
+  </record>
+
+    <record id="act_ocs_claim_cancel" model="workflow.activity">
             <field name="wkf_id" ref="ocs_claim_workflow"/>
-            <field name="name">cancel</field>            
+            <field name="name">cancel</field>
             <field name="kind">function</field>
-            <field name="action">case_cancel()</field>            
+            <field name="action">case_cancel()</field>
     </record>
-   
-   
-   
+
+
+
     <!-- Transiciones  -->
-    
+
   <record id="ocs_tr_draft_to_in_progress" model="workflow.transition">
             <field name="act_from" ref="act_ocs_claim_draft"/>
             <field name="act_to" ref="act_ocs_claim_in_progress"/>
             <field name="condition">True</field>
             <field name="signal">cas_open</field>
   </record>
-  
-   <record id="ocs_tr_in_progress_to_pending" model="workflow.transition">
+
+  <record id="ocs_tr_in_progress_to_pending" model="workflow.transition">
             <field name="act_from" ref="act_ocs_claim_in_progress"/>
             <field name="act_to" ref="act_ocs_claim_pending"/>
             <field name="condition">True</field>
-             <field name="signal">cas_pending</field>
-  </record>  
-    
+            <field name="signal">cas_pending</field>
+  </record>
+
   <record id="ocs_tr_in_pending_to_in_progress" model="workflow.transition">
             <field name="act_from" ref="act_ocs_claim_pending"/>
             <field name="act_to" ref="act_ocs_claim_in_progress"/>
             <field name="condition">True</field>
             <field name="signal">cas_open</field>
-  </record>   
-    
-  
+  </record>
+
+
   <record id="ocs_tr_in_progress_to_done" model="workflow.transition">
             <field name="act_from" ref="act_ocs_claim_in_progress"/>
             <field name="act_to" ref="act_ocs_claim_done"/>
             <field name="condition">test_response()</field>
-            <field name="signal">cas_close</field>           
-  </record>   
-  
-  
+            <field name="signal">cas_close</field>
+  </record>
+
+
   <record id="ocs_tr_in_done_to_in_progress" model="workflow.transition">
             <field name="act_from" ref="act_ocs_claim_done"/>
             <field name="act_to" ref="act_ocs_claim_in_progress"/>
@@ -85,14 +85,14 @@
             <field name="signal">cas_reset</field>
             <field name="group_id" ref="group_ocs_manager"/>
   </record>
-  
+
   <record id="ocs_tr_in_draft_to_cancel" model="workflow.transition">
             <field name="act_from" ref="act_ocs_claim_draft"/>
             <field name="act_to" ref="act_ocs_claim_cancel"/>
             <field name="condition">True</field>
-            <field name="signal">cas_cancel</field>       
-  </record>  
-    
-   
+            <field name="signal">cas_cancel</field>
+  </record>
+
+
   </data>
 </openerp>
