@@ -613,7 +613,7 @@ Claims
           <page string="Follow Up" position="replace">
             <page string="Follow Up" >
                  <separator col="8" colspan="4" string="Stage" />
-                 <field name="stage_id" domain="[('section_ids','=',section_id)]"/>
+                 <field name="stage_id" domain="[('section_ids','=',section_id)]" readonly="1" widget="url"/><!--Nasty, how can i set a simple input text field? -->
                  <button name="stage_previous" string="Previous stage" type="object" icon="gtk-go-back" />
                  <button name="stage_next" string="Next stage" type="object" icon="gtk-go-forward" />
                  <separator string="Solution" colspan="4" />
