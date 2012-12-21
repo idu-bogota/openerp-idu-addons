@@ -570,42 +570,35 @@ Claims
         <field name="inherit_id" ref="crm_claim.crm_case_claims_form_view"/>
         <field name="arch" type="xml">
             <field name="state" position="replace" />
-            <field name ="name" position="before">
-                <group col="8" colspan="4">
-                    <field name="state" select="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
-                </group>
-            </field>
-            <field name="date" position="replace">
-                <field name="create_date" select="0" />
-            </field>
-            <field name="user_id" position="replace">
-                    <field name="csp_id" select ="0" widget="selection" domain="['|',('close_date','=',False),('close_date','>=','now()')]"/>
-                    <field name="user_id"/>
-            </field>
-            <field name="section_id" position="replace" />
-            <field name="stage_id" position="replace">
-                <field name="id" select ="1"/>
-            </field>
-            <button name="stage_previous" />
-            <button name="stage_next" />
-            <field name="date_deadline" position="after">
-                <group colspan="1" col="6">
-                    <field name="external_dms_id" select ="0"/>
-                    <field name="external_id" select ="0"/>
-                </group>
+            <field name="section_id" position="replace"/>
+            <field name="user_id" position="replace"/>
+            <field name="date" position="replace" />
+            <field name="ref" position="replace" />
+            <field name="partner_id" position="replace"/>
+            <field name="partner_address_id" position="replace"/>
+            <field name="stage_id" position="replace"/>
+            <button name="stage_previous" position="replace"/>
+            <button name="stage_next" position="replace"/>
+            <field name ="name" position="replace">
+	            <group col="8" colspan="4">
+	                <field name="state" select="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+	            </group>
+	            <group col="8" colspan="4">
+	                <field name="user_id" />
+	                <field name="csp_id" select ="0" widget="selection" domain="['|',('close_date','=',False),('close_date','>=','now()')]"/>
+	                <field name="id" select="1" />
+	                <field name="create_date" select="0" />
+	            </group>
             </field>
             <field name="user_fault" position="replace" >
                 <field name="channel" select ="0" widget="selection"/>
             </field>
-            <field name="ref" position="replace" />
             <field name="categ_id" position="after">
                     <field name="classification_id" select ="0" on_change="onchange_classification_id(classification_id)"/>
                     <field name="sub_classification_id" select="0" />
             </field>
-            <field name="partner_id" position="replace"></field>
-            <field name="partner_address_id" position ="replace"></field>
             <field name="partner_phone" position="before">
-                <field name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)"
+                <field name="partner_address_id" default_focus="1" on_change="onchange_partner_address_id(partner_address_id, email_from)"
                 context="{'form_view_ref' : 'ocs.view_res_partner_address_form_small'}"/>
                 <field name="partner_id" colspan="2"
                 context="{'form_view_ref' : 'ocs.view_ocs_res_partner_form_small','tree_view_ref':'ocs.view_res_partner_tree_ocs_small','search_view_ref':'ocs.view_res_partner_search_ocs'}" />
@@ -616,20 +609,27 @@ Claims
                     <group colspan="6" col="6" />
                     <field name="district_id" select ="0" on_change="onchange_district_id(district_id)"/>
                     <field name="neighborhood_id" select ="0" />
-          </separator>
+            </separator>
           <page string="Follow Up" position="replace">
             <page string="Follow Up" >
-                <separator string="Solution" colspan="4" />
-                    <field name="date_closed"/>
-                    <field  name="resolution" colspan="4" nolabel="1" />
-                    <group col="8" colspan="4">
-                    <button name="cas_cancel" string="Cancel" type="workflow" icon="gtk-cancel"
-                states="draft"/> <!-- states= "Estados en los cuales el boton es visible" -->
-                    <button name="cas_pending" string="Pending" type="workflow" icon="gtk-media-pause" states="open" />
-                    <button name="cas_open" string="Open" type="workflow" icon="gtk-go-forward" states="draft,pending" />
-                    <button name="cas_reset" string="Reset to in Progress" type="workflow" icon="gtk-convert" states="done" groups="ocs.group_ocs_manager"/>
-                    <button name="cas_close" string="Done" type="workflow" icon="gtk-jump-to" states="open" />
-                </group>
+                 <separator col="8" colspan="4" string="Stage" />
+                 <field name="stage_id" domain="[('section_ids','=',section_id)]"/>
+                 <button name="stage_previous" string="Previous stage" type="object" icon="gtk-go-back" />
+                 <button name="stage_next" string="Next stage" type="object" icon="gtk-go-forward" />
+                 <separator string="Solution" colspan="4" />
+                 <field name="date_closed"/>
+                 <field  name="resolution" colspan="4" nolabel="1" />
+                 <group col="8" colspan="4">
+	                 <button name="cas_cancel" string="Cancel" type="workflow" icon="gtk-cancel" states="draft"/> <!-- states= "Estados en los cuales el boton es visible" -->
+	                 <button name="cas_pending" string="Pending" type="workflow" icon="gtk-media-pause" states="open" />
+	                 <button name="cas_open" string="Open" type="workflow" icon="gtk-go-forward" states="draft,pending" />
+	                 <button name="cas_reset" string="Reset to in Progress" type="workflow" icon="gtk-convert" states="done" groups="ocs.group_ocs_manager"/>
+	                 <button name="cas_close" string="Done" type="workflow" icon="gtk-jump-to" states="open" />
+                 </group>
+            </page>
+            <page string="External claim systems">
+                <field name="external_dms_id" select ="0"/>
+                <field name="external_id" select ="0"/>
             </page>
           </page>
           <!-- Redireccionamiento de los botones para que le peguen al workflow -->
