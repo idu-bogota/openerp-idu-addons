@@ -1,6 +1,7 @@
 * Actualizado reporte de impresión de la PQR
 * Corregido bug que no seleccionaba automaticamente el tipo de requerimiento basado en el criterio
 * Cambio en la interfaz de PQR para hacerla menos cargada de campos
+* Si usuario tiene un Citizen Service Point seleccionarlo por defecto
 
 2012121900
 * Actualizado vista tipo lista de PQR de acuerdo a reunión con OTC
