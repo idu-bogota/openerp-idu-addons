@@ -278,6 +278,14 @@ class crm_claim(geo_model.GeoModel):
         self.log(cr, uid, claim.id, message)
         return isResponsed
 
+    def set_default_csp_id(self, cr, uid, context = None):
+        """
+        If user has one citizen service point assigned then select it by default
+        """
+        csp_id = self.pool.get('ocs.citizen_service_point').search(cr, uid, [], offset=0, limit=2);
+        if len(csp_id) == 1:
+            return csp_id[0]
+
     def _check_user_in_csp(self, cr, uid, ids, context = None):
         """
         Constraint:
@@ -420,7 +428,8 @@ class crm_claim(geo_model.GeoModel):
     _rec_name = 'classification'
     _defaults = {
         'date_deadline': lambda *a:  date_by_adding_business_days(datetime.now(), 15).__format__('%Y-%m-%d %H:%M:%S'),#Default +15 working days
-        'priority': lambda *a: 'l'
+        'priority': lambda *a: 'l',
+        'csp_id': set_default_csp_id,
         }
     _constraints = [
     (_check_user_in_csp,'User must registered in the Point of Citizen Service',['user_id']),
