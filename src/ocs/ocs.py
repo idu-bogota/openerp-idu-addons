@@ -159,8 +159,8 @@ class ResPartnerAddress(geo_model.GeoModel):
         ('unique_facebook','unique(facebook)','This facebook account is already registered'),
     ]
     _constraints = [
-    (_check_contact_data,'You must type at least one of these: email, phone, cell phone, facebook or twitter to create a contact',['document_number']),
-    (_check_document,'When Document Type is CC, the document number must be numeric only!!!',['document_number']),
+        (_check_contact_data,'You must type at least one of these: email, phone, cell phone, facebook or twitter to create a contact',['document_number']),
+        (_check_document,'When Document Type is CC, the document number must be numeric only!!!',['document_number']),
     ]
 ResPartnerAddress()
 
