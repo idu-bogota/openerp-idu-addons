@@ -1,3 +1,5 @@
+* Adicionada validación de direcciones siguiendo esquema del IDU
+
 2012122600
 * Actualizado reporte de impresión de la PQR
 * Corregido bug que no seleccionaba automaticamente el tipo de requerimiento basado en el criterio

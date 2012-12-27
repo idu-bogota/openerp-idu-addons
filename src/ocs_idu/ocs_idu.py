@@ -76,6 +76,21 @@ class crm_claim(crm.crm_case,osv.osv):
                 is_valid = True
         return is_valid
 
+    def _check_claim_address(self, cr, uid, ids, context = None):
+        """
+        Constraint:
+        Check an address like this is valid
+        Cr 102 BIS 10 A BIS Z 30 Int 3 Loc 4
+        """
+        is_valid = False
+        for claim in self.browse(cr, uid, ids,context):
+            if claim.claim_address != False:
+                if is_bogota_address_valid(claim.claim_address):
+                    is_valid = True
+            else:
+                is_valid = True
+        return is_valid
+
     def onchange_classification_id(self, cr, uid, ids, classification_id):
         """Changes based on classification_id
         """
@@ -106,18 +121,38 @@ class crm_claim(crm.crm_case,osv.osv):
     }
     _constraints = [
         (_check_contract_reference,'Contract Reference format is year/number, ie. 2012/10',['contract_reference']),
+        (_check_claim_address,'Claim Address should follow IDU conventions ie. Cr 102 BIS 10 A BIS Z 30 Int 3 Loc 4',['claim_address']),
     ]
 
 crm_claim()
 
 class ResPartnerAddress(geo_model.GeoModel):
+    def _check_address(self, cr, uid, ids, context = None):
+        """
+        Constraint:
+        Check an address like this is valid
+        Cr 102 BIS 10 A BIS Z 30 Int 3 Loc 4
+        """
+        is_valid = False
+        for contact in self.browse(cr, uid, ids, context):
+            if contact.street != False:
+                if is_bogota_address_valid(contact.street):
+                    is_valid = True
+            else:
+                is_valid = True
+        return is_valid
+
     _name = 'res.partner.address'
     _inherit='res.partner.address'
     _columns = {
         'last_name':fields.char('Last Name:',size=128,required=False),
         'name':fields.char('First Name',size=128,required=False),
     }
+    _constraints = [
+        (_check_address,'Claim Address should follow IDU conventions ie. Cr 102 BIS 10 A BIS Z 30 Int 3 Loc 4',['street']),
+    ]
     _rec_name = 'document_number'
+
 ResPartnerAddress()
 
 class ocs_citizen_service_point(geo_model.GeoModel):
@@ -193,3 +228,54 @@ class ocs_tract(osv.osv):
     }
     _rec_name = 'full_name'
 ocs_tract()
+
+def is_bogota_address_valid(address):
+    """ This function checks if the parameter fits Bogotá D.C. address schema.
+        'Cr 102 10 30',
+        'Cr 102 10 30 Int 2 Ap 1023',
+        'Cr 102 10 30 Int 2',
+        'Cr 102 10 30 Ap 1123',
+        'Cr 102 A 10 A 30',
+        'Cr 102 A 10 A 30 Int 3 Ap 12',
+        'Cr 102 A 10 A BIS 30',
+        'Cr 102 A 10 A BIS Z 30',
+        'Cr 102 BIS 10 30',
+        'Cr 102 BIS 10 30 Ap 12',
+        'Cr 102 BIS 10 A 30',
+        'Cr 102 BIS 10 BIS 30',
+        'Cr 102 BIS 10 BIS Z 30',
+        'Cr 102 BIS 10 A BIS 30',
+        'Cr 102 BIS 10 A BIS Z 30',
+        'Cr 102 BIS 10 A BIS Z 30 Int 3 Loc 4',
+        'Cr 102 BIS A 10 30',
+        'Cr 102 BIS A 10 30 E',
+        'Cr 102 BIS A 10 A 30',
+        'Cr 102 BIS A 10 A BIS 30',
+        'Cr 102 BIS A 10 A BIS A 30',
+        'Cr 102 BIS A 10 A BIS A 30 Loc 5',
+        'Cr 102 BIS A 10 BIS Z 30',
+        'Cr 102 A BIS 10 30',
+        'Cr 102 A BIS 10 A 30',
+        'Cr 102 A BIS 10 A BIS 30',
+        'Cr 102 A BIS 10 A BIS A 30',
+        'Cr 102 A BIS 10 BIS Z 30',
+        'Cr 102 A BIS Z 10 30',
+        'Cr 102 A BIS Z 10 30 SE',
+        'Cr 102 A BIS Z 10 A 30',
+        'Cr 102 A BIS Z 10 A BIS 30',
+        'Cr 102 A BIS Z 10 A BIS A 30',
+        'Cr 102 A BIS Z 10 BIS Z 30',
+        'Cr 102 A BIS Z 10 BIS Z 30 N',
+    """
+    st_type = '(Cl|Ac|Dg|Cr|Av|Tv|Ca|Ct|Ps)'
+    st_number = '[0-9]+'
+    st_suffix = '(\s[A-Z])?((\sBIS)|(\sBIS\s[A-Z]))?'
+    st_horizontal = '(\s(Ap|Of|Con|Pen|Loc|Dep|Gar|Gs)\s[0-9]+)?'
+    st_interior = '(\s(Int\s[0-9]+))?'
+    st_sector = '(\s(N|E|S|O|NE|SE|SO|NO))?'
+    regex = "^{0}\s{1}{2}\s{1}{2}\s{1}{3}{4}{5}$".format(st_type, st_number, st_suffix, st_interior, st_horizontal, st_sector);
+    #print regex
+    if re.match(regex, address) != None:
+        return True
+    else:
+        return False
