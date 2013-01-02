@@ -65,7 +65,7 @@ class crm_claim(crm.crm_case,osv.osv):
     def _check_contract_reference(self, cr, uid, ids, context = None):
         """
         Constraint:
-        follow format yyyy/ddd
+        follow format ddd-yyyy
         """
         is_valid = False
         for claim in self.browse(cr, uid, ids,context):
@@ -117,10 +117,14 @@ class crm_claim(crm.crm_case,osv.osv):
                                  'State',help='Introduce a new state between open and done, in this step,\
                                   other people makes a review and approve the response given to citizen'),
         'is_outsourced':fields.function(_check_is_outsourced,type='boolean',string='Is Outsourced',method=True),
-        'contract_reference': fields.char('Contract Reference',size=9,help='Construction contract number year/number',states={'done':[('readonly',True)]}),
+        'contract_reference': fields.char('Contract Reference',size=9,help='Construction contract number number-year',states={'done':[('readonly',True)]}),
+        'damage_type_by_citizen': fields.selection([('bache', 'Bache'),('hueco', 'Hueco'),('hundimiento', 'Hundimiento')], 'Via Damage Type',help='Damage type provided by the citizen'),
+        'damage_width_by_citizen':  fields.char('Via damage width',size=10,help='Damage width provided by the citizen',states={'done':[('readonly',True)]}),
+        'damage_length_by_citizen': fields.char('Via damage length',size=10,help='Damage length provided by the citizen',states={'done':[('readonly',True)]}),
+        'damage_deep_by_citizen': fields.char('Via damage deep',size=10,help='Damage size provided by the citizen',states={'done':[('readonly',True)]}),
     }
     _constraints = [
-        (_check_contract_reference,'Contract Reference format is year/number, ie. 2012/10',['contract_reference']),
+        (_check_contract_reference,'Contract Reference format is number-year, ie. 123-2012',['contract_reference']),
         (_check_claim_address,'Claim Address should follow IDU conventions ie. Cr 102 BIS 10 A BIS Z 30 Int 3 Loc 4',['claim_address']),
     ]
 
