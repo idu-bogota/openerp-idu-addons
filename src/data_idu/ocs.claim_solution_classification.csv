@@ -1,0 +1,7 @@
+id,code,enabled,name,parent_id/id
+__export__.ocs_claim_solution_classification_1,1,True,Redireccionado,
+__export__.ocs_claim_solution_classification_2,1.1,True,Redireccionado Internamente,__export__.ocs_claim_solution_classification_1
+__export__.ocs_claim_solution_classification_3,1.2,True,Redireccionado Externamente,__export__.ocs_claim_solution_classification_1
+__export__.ocs_claim_solution_classification_4,2,True,Respuesta inmediata,
+__export__.ocs_claim_solution_classification_5,2.1,True,Solicitud válida,__export__.ocs_claim_solution_classification_4
+__export__.ocs_claim_solution_classification_6,2.2,True,Solicitud no válida,__export__.ocs_claim_solution_classification_4

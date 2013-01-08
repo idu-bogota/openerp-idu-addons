@@ -13,6 +13,7 @@
       'ocs.tract.csv',
       'ocs.citizen_service_point.csv',
       'ocs.claim_classification.csv',
+      'ocs.claim_solution_classification.csv',
   ],
   'update_xml': [],
   'installable': True,
