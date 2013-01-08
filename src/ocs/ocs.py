@@ -430,6 +430,7 @@ class crm_claim(geo_model.GeoModel):
         'user_id': fields.many2one('res.users', 'Responsible',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]},domain="[('csp_id','=',csp_id)]"),
         'solution_classification_id':fields.many2one('ocs.claim_solution_classification','Solution Classification', \
                                               domain="[('parent_id','!=',False),('enabled','=',True)]",required=False,readonly=False,states={'cancel':[('readonly',True)],'done':[('readonly',True)]}),
+        'partner_forwarded_id': fields.many2one('res.partner', 'Partner Forwarded',readonly=False,states={'cancel':[('readonly',True)],'done':[('readonly',True)]}),
     }
 
     _order='create_date desc'

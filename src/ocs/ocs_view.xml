@@ -658,6 +658,7 @@ Claims
                  <separator string="Solution" colspan="4" />
                  <field name="solution_classification_id"/>
                  <field name="date_closed"/>
+                 <field name="partner_forwarded_id"/>
                  <field  name="resolution" colspan="4" nolabel="1" />
                  <group col="8" colspan="4">
 	                 <button name="cas_cancel" string="Cancel" type="workflow" icon="gtk-cancel" states="draft"/> <!-- states= "Estados en los cuales el boton es visible" -->
