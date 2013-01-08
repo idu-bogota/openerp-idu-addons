@@ -212,7 +212,7 @@ class ocs_claim_solution_classification(osv.osv):
       'code':fields.char('Code',size=6),
       'name':fields.char('Name',size=128),
       'enabled':fields.boolean('Enabled',help='If item is valid now'),
-      'parent_id':fields.many2one('ocs.claim_classification','Parent')
+      'parent_id':fields.many2one('ocs.claim_solution_classification','Parent')
     }
     constraints = [
         (osv.osv._check_recursion,'Error ! You cannot create recursive Claim Solution Classification',['parent_id'])
@@ -429,7 +429,7 @@ class crm_claim(geo_model.GeoModel):
         'date_deadline': fields.date('Deadline',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'user_id': fields.many2one('res.users', 'Responsible',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]},domain="[('csp_id','=',csp_id)]"),
         'solution_classification_id':fields.many2one('ocs.claim_solution_classification','Solution Classification', \
-                                              domain="[('enabled','=',True)]",required=False,readonly=False,states={'cancel':[('readonly',True)],'done':[('readonly',True)]}),
+                                              domain="[('parent_id','!=',False),('enabled','=',True)]",required=False,readonly=False,states={'cancel':[('readonly',True)],'done':[('readonly',True)]}),
     }
 
     _order='create_date desc'
