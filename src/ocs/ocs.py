@@ -307,22 +307,6 @@ class crm_claim(geo_model.GeoModel):
             res[citizen.id] = "{0}/{1} ".format(citizen.classification_id.name,citizen.sub_classification_id.name)
         return  res
 
-#    def _get_channel(self, cr, uid, context=None):
-#        obj = self.pool.get('ocs.input_channel')
-#        ids = obj.search(cr, uid, [])
-#        res = obj.read(cr, uid, ids, ['name', 'id'], context)
-#        res = [(r['id'], r['name']) for r in res]
-#        return res
-#    def _get_main_classification(self, cr, uid, context=None):
-#        """This function get the main Categories
-#      Select name,id from ocs_claim_classification where
-#      parent_id = null
-#      """
-#        obj = self.pool.get('ocs.claim_classification_id')
-#        ids = obj.search(cr, uid, [('parent_id','=',False)])
-#        result = obj.read(cr, uid, ids, ['name','id'], context)
-#        return [(r['id'], r['name']) for r in result]
-
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         """This function returns value of partner email based on Partner Address
           :param part: Partner's id
