@@ -204,6 +204,21 @@ class ocs_claim_classification(osv.osv):
     ]
 ocs_claim_classification()
 
+class ocs_claim_solution_classification(osv.osv):
+    """This field contains internal classification for claim's solution """
+    _name="ocs.claim_solution_classification"
+    _columns={
+      'id':fields.integer('ID',readonly=True),
+      'code':fields.char('Code',size=6),
+      'name':fields.char('Name',size=128),
+      'enabled':fields.boolean('Enabled',help='If item is valid now'),
+      'parent_id':fields.many2one('ocs.claim_classification','Parent')
+    }
+    constraints = [
+        (osv.osv._check_recursion,'Error ! You cannot create recursive Claim Solution Classification',['parent_id'])
+    ]
+ocs_claim_solution_classification()
+
 class ocs_neighborhood(geo_model.GeoModel):
     """Contains geographic information about all towns in the city"""
     _name = 'ocs.neighborhood'
@@ -269,10 +284,17 @@ class crm_claim(geo_model.GeoModel):
         isResponsed = False
         for claim in self.browse(cr,uid,ids,context=None):
             response = claim.resolution
+            response_classification = claim.solution_classification_id
+            message = ''
             if response == False:
                 isResponsed = False
-                message = "Resolution text could not be Empty"
-            else:
+                message = "Resolution text can not be empty."
+
+            if response_classification.id == False:
+                isResponsed = False
+                message += " Solution Classification cannot be empty."
+
+            if not message:
                 isResponsed = True
                 message = "The claim: {0} -- has been closed".format(claim.name)
         self.log(cr, uid, claim.id, message)
@@ -406,6 +428,8 @@ class crm_claim(geo_model.GeoModel):
         'resolution': fields.text('Resolution',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'date_deadline': fields.date('Deadline',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'user_id': fields.many2one('res.users', 'Responsible',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]},domain="[('csp_id','=',csp_id)]"),
+        'solution_classification_id':fields.many2one('ocs.claim_solution_classification','Solution Classification', \
+                                              domain="[('enabled','=',True)]",required=False,readonly=False,states={'cancel':[('readonly',True)],'done':[('readonly',True)]}),
     }
 
     _order='create_date desc'
