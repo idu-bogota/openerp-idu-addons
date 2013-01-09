@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+<!--
+========================================================================================
+Claims
+========================================================================================
+-->
+
+            <!-- Form View -->
+            <record model="ir.ui.view" id="view_ocs_orfeo_claim_form_inherit">
+                <field name="name">crm.claim.form.inherit</field>
+                <field name="model">crm.claim</field>
+                <field name="type">form</field>
+                <field name="inherit_id" ref="crm_claim.crm_case_claims_form_view"/>
+                <field name="arch" type="xml">
+                    <page string="Follow Up" position="after">
+                        <page string="Orfeo">
+                            <field name="orfeo_id" select ="0"/>
+                        </page>
+                    </page>
+                </field>
+            </record>
+    </data>
+</openerp>

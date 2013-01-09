@@ -400,8 +400,6 @@ class crm_claim(geo_model.GeoModel):
         #'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
         'description': fields.text('Description',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'priority': fields.selection([('h','High'),('n','Normal'),('l','Low')], 'Priority', required=True, readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'external_id':fields.char('External ID',size=128,help='External Claim System Identificator',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'external_dms_id': fields.char('External DMS ID',size=20,help='External Document Management System Identificator',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'csp_id':fields.many2one('ocs.citizen_service_point','CSP',help='Citizen Service Point',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'channel':fields.many2one('crm.case.channel','Case Channel',help='Case Channel',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'categ_id': fields.many2one('crm.case.categ', 'Requirement Type', \

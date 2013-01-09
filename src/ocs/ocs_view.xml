@@ -668,10 +668,6 @@ Claims
 	                 <button name="cas_close" string="Done" type="workflow" icon="gtk-jump-to" states="open" />
                  </group>
             </page>
-            <page string="External claim systems">
-                <field name="external_dms_id" select ="0"/>
-                <field name="external_id" select ="0"/>
-            </page>
           </page>
           <!-- Redireccionamiento de los botones para que le peguen al workflow -->
           <button name="case_cancel" position="replace" >
