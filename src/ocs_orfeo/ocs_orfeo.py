@@ -35,7 +35,18 @@ class crm_claim(osv.osv):
     _name = "crm.claim"
     _inherit = "crm.claim"
 
-    _columns={
+    _columns = {
         'orfeo_id': fields.char('Orfeo Number',size=20,help='Número de Radicado en el sistema Orfeo',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
     }
 crm_claim()
+
+class ocs_orfeo_dependencia(osv.osv):
+    _name = "ocs_orfeo.dependencia"
+
+    _columns = {
+      'id':fields.integer('ID',readonly=True),
+      'code':fields.char('Code',size=6),
+      'name':fields.char('Name',size=128),
+    }
+
+ocs_orfeo_dependencia()
