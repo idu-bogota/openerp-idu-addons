@@ -48,35 +48,57 @@ class ocs_orfeo_wizard_radicar(osv.osv_memory):
         return res
 
     def radicar(self, cr, uid, ids, context=None):
+        wsdl_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'orfeo.ws.url', default='', context=context)
+        client = Client(wsdl_url)
+
         current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        claim = self.pool.get('crm.claim').browse(cr, uid, context['active_id'], context=None);
-        url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'orfeo.ws.url', default='', context=context)
-        destino =  claim.partner_address_id
-        client = Client(url)
-        usuarioLogin = current_user.login
+        claim_ids = context and context.get('active_ids', False)
+        claim_table = self.pool.get('crm.claim')
+
+        form_object_id = ids and ids[0] or False
+        form_object = self.browse(cr, uid, form_object_id, context=context)
+        dependenciaDestino = form_object.dependencia_id.code
+
+        usuarioLogin = 'ccmariac1' #current_user.login
         tipoRadicacion = 2 #Radicados de entrada
         tipoTercero = 1 #ciudadano 1 y empresas 2
-        destinoRemiteNombre = destino.name
-        apellidos = destino.last_name.split(' ')
-        destinoRemiteApellido1 = apellidos[0]
-        destinoRemiteApellido2 = apellidos[1]
-        destinoRemiteDireccion = destino.street
-        destinoRemiteTelefono = destino.phone
-        destinoRemiteEmail = destino.email
-        destinoRemiteDocumento = destino.document_number
         municipio = 1 # Bogotá
         departamento = 11 # Distrito Capital
         pais = 170 # Colomba
         continente = 1 # América
-        asunto = claim.description
 
-        data_id = ids and ids[0] or False
-        data = self.browse(cr, uid, data_id, context=context)
-        dependenciaDestino = data.dependencia_id.code
+        for claim in claim_table.browse(cr, uid, claim_ids, context=context):
+            if claim.orfeo_id:
+                raise osv.except_osv('Error!', 'La PQR ya tiene un número de rádicado')
+            destinoRemiteNombre = 'no'
+            destinoRemiteApellido1 = 'reporta'
+            destinoRemiteApellido2 = ''
+            destinoRemiteDireccion = 'no reporta'
+            destinoRemiteTelefono = ''
+            destinoRemiteEmail = ''
+            destinoRemiteDocumento = ''
+            destino =  claim.partner_address_id
+            if destino:
+                if destino.name:
+                    destinoRemiteNombre = destino.name
+                    apellidos = destino.last_name.split(' ')
+                    destinoRemiteApellido1 = apellidos[0]
+                    destinoRemiteApellido2 = apellidos[1]
+                destinoRemiteDireccion = destino.street
+                destinoRemiteTelefono = destino.phone
+                destinoRemiteEmail = destino.email
+                destinoRemiteDocumento = destino.document_number
 
-        orfeo_radicar = getattr(client.service, 'OrfeoWs.radicar')
-        result = orfeo_radicar(usuarioLogin, tipoRadicacion, tipoTercero, destinoRemiteNombre, destinoRemiteApellido1, destinoRemiteApellido2, destinoRemiteDireccion, destinoRemiteTelefono, destinoRemiteEmail, destinoRemiteDocumento, municipio, departamento, pais, continente, dependenciaDestino, asunto)
-        self.pool.get('crm.claim').write(cr, uid, context['active_id'], {'orfeo_id': result['RADICADO']}, context=None)
+            asunto = claim.description
+            orfeo_radicar = getattr(client.service, 'OrfeoWs.radicar')
+            result = orfeo_radicar(usuarioLogin, tipoRadicacion, tipoTercero, destinoRemiteNombre, destinoRemiteApellido1, destinoRemiteApellido2,
+                                   destinoRemiteDireccion, destinoRemiteTelefono, destinoRemiteEmail, destinoRemiteDocumento, municipio, departamento,
+                                   pais, continente, dependenciaDestino, asunto)
+            if result['ESTADO_TRANSACCION'] == '1':
+                claim_table.write(cr, uid, claim.id, {'orfeo_id': result['RADICADO']}, context=context)
+            else:
+                raise osv.except_osv('Error!', result['OBSERVACION_TRANSACCION'])
+
         return {'type': 'ir.actions.act_window_close'}
 
 

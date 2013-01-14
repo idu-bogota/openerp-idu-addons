@@ -16,8 +16,11 @@ Claims
                 <field name="arch" type="xml">
                     <page string="Follow Up" position="after">
                         <page string="Orfeo">
-                            <field name="orfeo_id" select ="0"/>
-                            <button name="%(ocs_orfeo.action_ocs_orfeo_wizard_radicar)d" string="Radicar" type="action" icon="gtk-ok"/>
+                            <field name="orfeo_id" select ="0" readonly="1" />
+                            <button name="%(ocs_orfeo.action_ocs_orfeo_wizard_radicar)d" string="Radicar"
+                                type="action" icon="gtk-ok"
+                                attrs="{'invisible': [('orfeo_id','!=',False)]}"
+                            />
                         </page>
                     </page>
                 </field>
