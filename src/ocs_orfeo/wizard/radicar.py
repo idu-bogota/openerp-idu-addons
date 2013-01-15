@@ -82,8 +82,11 @@ class ocs_orfeo_wizard_radicar(osv.osv_memory):
                 if destino.name:
                     destinoRemiteNombre = destino.name
                     apellidos = destino.last_name.split(' ')
-                    destinoRemiteApellido1 = apellidos[0]
-                    destinoRemiteApellido2 = apellidos[1]
+                    try:
+                        destinoRemiteApellido1 = apellidos[0]
+                        destinoRemiteApellido2 = apellidos[1]
+                    except IndexError:
+                        pass
                 destinoRemiteDireccion = destino.street
                 destinoRemiteTelefono = destino.phone
                 destinoRemiteEmail = destino.email
