@@ -29,7 +29,9 @@
         "depends" : ['base',
                      'ocs',
                     ],
-        "init_xml" : [],
+        "init_xml" : [
+                       'security/ir.model.access.csv',
+                     ],
         "demo_xml" : [],
         "update_xml" : [
                         'wizard/radicar_view.xml',
