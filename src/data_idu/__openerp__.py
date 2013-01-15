@@ -16,6 +16,6 @@
       'ocs.claim_solution_classification.csv',
   ],
   'update_xml': [],
-  'installable': True,
+  'installable': False,
   'active': False,
 }
