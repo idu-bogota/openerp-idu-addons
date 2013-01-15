@@ -14,6 +14,7 @@
       'ocs.citizen_service_point.csv',
       'ocs.claim_classification.csv',
       'ocs.claim_solution_classification.csv',
+      'res.partner',
   ],
   'update_xml': [],
   'installable': False,
