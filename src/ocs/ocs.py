@@ -141,7 +141,7 @@ class ResPartnerAddress(geo_model.GeoModel):
         'name':fields.char('First Name',size=128,required=True),
         'gender':fields.selection([('m','Male'),('f','Female')],'Gender'),
         'document_number': fields.char('Document Number', size=64,selectable=True),
-        'document_type': fields.selection([('C','CC'),('T','T.I'),('P','Passport'),('E','CE')],'Document Type',help='Identification Document Type. ie CC,TI.. etc'),
+        'document_type': fields.selection([('CC','Cédula de ciudadanía'),('TI','Tarjeta de Identidad'),('Pasaporte','Pasaporte'),('CE','Cedula Extranjería')],'Document Type',help='Tipo de documento de identificación'),
         'twitter': fields.char('Twitter', size=64),
         'facebook':fields.char('Facebook:',size=240),
         'district_id':fields.many2one('ocs.district','District'),
