@@ -151,6 +151,7 @@ class ResPartnerAddress(geo_model.GeoModel):
     _columns = {
         'last_name':fields.char('Last Name:',size=128,required=False),
         'name':fields.char('First Name',size=128,required=False),
+        'document_type': fields.selection([('CC','Cédula de ciudadanía'),('TI','Tarjeta de Identidad'),('Pasaporte','Pasaporte'),('CE','Cedula Extranjería')],'Document Type',help='Tipo de documento de identificación'),
     }
     _constraints = [
         (_check_address,'Claim Address should follow IDU conventions ie. KR 102 BIS 10 A BIS Z 30 INT 3 LOC 4',['street']),
