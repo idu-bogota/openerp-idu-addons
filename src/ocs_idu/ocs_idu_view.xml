@@ -195,7 +195,7 @@
             <field name="contract_reference" select="0"/>
         </field>
         <page string="Follow Up" position="after">
-            <page string="Via Damage Spec" >
+            <page string="Reporte malla vial" >
                 <field name="damage_type_by_citizen" />
                 <field name="damage_width_by_citizen" />
                 <field name="damage_length_by_citizen" />
