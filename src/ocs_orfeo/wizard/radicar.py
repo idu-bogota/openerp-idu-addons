@@ -59,16 +59,15 @@ class ocs_orfeo_wizard_radicar(osv.osv_memory):
         form_object = self.browse(cr, uid, form_object_id, context=context)
         dependenciaDestino = form_object.dependencia_id.code
 
-        usuarioLogin = current_user.login
+        usuarioLogin = 'ccmariac1'#current_user.login
         tipoRadicacion = 2 #Radicados de entrada
-        tipoTercero = 1 #ciudadano 1 y empresas 2
         municipio = 1 # Bogotá
         departamento = 11 # Distrito Capital
         pais = 170 # Colomba
         continente = 1 # América
 
         for claim in claim_table.browse(cr, uid, claim_ids, context=context):
-            if claim.orfeo_id:
+            if claim.orfeo_id != u'0' and claim.orfeo_id != False:
                 raise osv.except_osv('Error!', 'La PQR ya tiene un número de rádicado')
             destinoRemiteNombre = 'no'
             destinoRemiteApellido1 = 'reporta'
@@ -77,7 +76,9 @@ class ocs_orfeo_wizard_radicar(osv.osv_memory):
             destinoRemiteTelefono = ''
             destinoRemiteEmail = ''
             destinoRemiteDocumento = ''
-            destino =  claim.partner_address_id
+            tipoTercero = 1#ciudadano 1 y empresas 2
+            empresa = claim.partner_id
+            destino = claim.partner_address_id
             if destino:
                 if destino.name:
                     destinoRemiteNombre = destino.name
@@ -92,6 +93,14 @@ class ocs_orfeo_wizard_radicar(osv.osv_memory):
                 destinoRemiteEmail = destino.email
                 destinoRemiteDocumento = destino.document_number
 
+            if empresa:
+                tipoTercero = 2
+                destinoRemiteNombre = empresa.name
+                if destino:
+                    destinoRemiteApellido1 = destino.name + '' + destino.last_name
+                else:
+                    destinoRemiteApellido1 = 'no reporta'
+
             asunto = claim.description
             orfeo_radicar = getattr(client.service, 'OrfeoWs.radicar')
             result = orfeo_radicar(usuarioLogin, tipoRadicacion, tipoTercero, destinoRemiteNombre, destinoRemiteApellido1, destinoRemiteApellido2,
@@ -100,7 +109,7 @@ class ocs_orfeo_wizard_radicar(osv.osv_memory):
             if result['ESTADO_TRANSACCION'] == '1':
                 claim_table.write(cr, uid, claim.id, {'orfeo_id': result['RADICADO']}, context=context)
             else:
-                raise osv.except_osv('Error!', result['OBSERVACION_TRANSACCION'])
+                raise osv.except_osv('Error retornado por el sistema ORFEO', result['OBSERVACION_TRANSACCION'])
 
         return {'type': 'ir.actions.act_window_close'}
 
