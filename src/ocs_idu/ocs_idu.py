@@ -153,7 +153,7 @@ class ResPartnerAddress(geo_model.GeoModel):
         'name':fields.char('First Name',size=128,required=False),
     }
     _constraints = [
-        (_check_address,'Claim Address should follow IDU conventions ie. Cr 102 BIS 10 A BIS Z 30 Int 3 Loc 4',['street']),
+        (_check_address,'Claim Address should follow IDU conventions ie. KR 102 BIS 10 A BIS Z 30 INT 3 LOC 4',['street']),
     ]
     _rec_name = 'document_number'
 
@@ -235,46 +235,46 @@ ocs_tract()
 
 def is_bogota_address_valid(address):
     """ This function checks if the parameter fits Bogotá D.C. address schema.
-        'Cr 102 10 30',
-        'Cr 102 10 30 Int 2 Ap 1023',
-        'Cr 102 10 30 Int 2',
-        'Cr 102 10 30 Ap 1123',
-        'Cr 102 A 10 A 30',
-        'Cr 102 A 10 A 30 Int 3 Ap 12',
-        'Cr 102 A 10 A BIS 30',
-        'Cr 102 A 10 A BIS Z 30',
-        'Cr 102 BIS 10 30',
-        'Cr 102 BIS 10 30 Ap 12',
-        'Cr 102 BIS 10 A 30',
-        'Cr 102 BIS 10 BIS 30',
-        'Cr 102 BIS 10 BIS Z 30',
-        'Cr 102 BIS 10 A BIS 30',
-        'Cr 102 BIS 10 A BIS Z 30',
-        'Cr 102 BIS 10 A BIS Z 30 Int 3 Loc 4',
-        'Cr 102 BIS A 10 30',
-        'Cr 102 BIS A 10 30 E',
-        'Cr 102 BIS A 10 A 30',
-        'Cr 102 BIS A 10 A BIS 30',
-        'Cr 102 BIS A 10 A BIS A 30',
-        'Cr 102 BIS A 10 A BIS A 30 Loc 5',
-        'Cr 102 BIS A 10 BIS Z 30',
-        'Cr 102 A BIS 10 30',
-        'Cr 102 A BIS 10 A 30',
-        'Cr 102 A BIS 10 A BIS 30',
-        'Cr 102 A BIS 10 A BIS A 30',
-        'Cr 102 A BIS 10 BIS Z 30',
-        'Cr 102 A BIS Z 10 30',
-        'Cr 102 A BIS Z 10 30 SE',
-        'Cr 102 A BIS Z 10 A 30',
-        'Cr 102 A BIS Z 10 A BIS 30',
-        'Cr 102 A BIS Z 10 A BIS A 30',
-        'Cr 102 A BIS Z 10 BIS Z 30',
-        'Cr 102 A BIS Z 10 BIS Z 30 N',
+        'KR 102 10 30',
+        'KR 102 10 30 Int 2 Ap 1023',
+        'KR 102 10 30 Int 2',
+        'KR 102 10 30 Ap 1123',
+        'KR 102 A 10 A 30',
+        'KR 102 A 10 A 30 Int 3 Ap 12',
+        'KR 102 A 10 A BIS 30',
+        'KR 102 A 10 A BIS Z 30',
+        'KR 102 BIS 10 30',
+        'KR 102 BIS 10 30 Ap 12',
+        'KR 102 BIS 10 A 30',
+        'KR 102 BIS 10 BIS 30',
+        'KR 102 BIS 10 BIS Z 30',
+        'KR 102 BIS 10 A BIS 30',
+        'KR 102 BIS 10 A BIS Z 30',
+        'KR 102 BIS 10 A BIS Z 30 Int 3 Loc 4',
+        'KR 102 BIS A 10 30',
+        'KR 102 BIS A 10 30 E',
+        'KR 102 BIS A 10 A 30',
+        'KR 102 BIS A 10 A BIS 30',
+        'KR 102 BIS A 10 A BIS A 30',
+        'KR 102 BIS A 10 A BIS A 30 Loc 5',
+        'KR 102 BIS A 10 BIS Z 30',
+        'KR 102 A BIS 10 30',
+        'KR 102 A BIS 10 A 30',
+        'KR 102 A BIS 10 A BIS 30',
+        'KR 102 A BIS 10 A BIS A 30',
+        'KR 102 A BIS 10 BIS Z 30',
+        'KR 102 A BIS Z 10 30',
+        'KR 102 A BIS Z 10 30 SE',
+        'KR 102 A BIS Z 10 A 30',
+        'KR 102 A BIS Z 10 A BIS 30',
+        'KR 102 A BIS Z 10 A BIS A 30',
+        'KR 102 A BIS Z 10 BIS Z 30',
+        'KR 102 A BIS Z 10 BIS Z 30 N',
     """
-    st_type = '(Cl|Ac|Dg|Cr|Av|Tv|Ca|Ct|Ps)'
+    st_type = '(CL|AC|DG|KR|AV|TV|CA|CT|PS)'
     st_number = '[0-9]+'
     st_suffix = '(\s[A-Z])?((\sBIS)|(\sBIS\s[A-Z]))?'
-    st_horizontal = '(\s(Ap|Of|Con|Pen|Loc|Dep|Gar|Gs)\s[0-9]+)?'
+    st_horizontal = '(\s(AP|OF|CON|PEN|LOC|DEP|GAR|GS)\s[0-9]+)?'
     st_interior = '(\s(Int\s[0-9]+))?'
     st_sector = '(\s(N|E|S|O|NE|SE|SO|NO))?'
     regex = "^{0}\s{1}{2}\s{1}{2}\s{1}{3}{4}{5}$".format(st_type, st_number, st_suffix, st_interior, st_horizontal, st_sector);
