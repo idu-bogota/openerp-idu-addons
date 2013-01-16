@@ -1,8 +1,10 @@
+2013011600
 * Adicionada validación de direcciones siguiendo esquema del IDU
 * Adicionados campos para que ciudadanos puedan dar mayores detalles del daño reportado en la via
 * Adicionado campo para clasificar las respuestas dadas en las PQR
 * Adicionado campo para relacionar la empresa/dependencia a la cual se le reenvia la solucitud
 * Creados modulos para integración con Orfeo y SDQS
+* Integración con sistema Orfeo funcional sin ingreso de tipificación
 
 2012122600
 * Actualizado reporte de impresión de la PQR
