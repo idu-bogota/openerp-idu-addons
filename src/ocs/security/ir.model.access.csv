@@ -7,6 +7,7 @@ access_ocs_user_res_partner_address,base.user.res_partner_address,base.model_res
 access_ocs_user_res_partner,base.user.res_partner,base.model_res_partner,ocs.group_ocs_user,1,1,1,0
 access_ocs_user_crm_claim,crm_claim.user.crm_claim,crm_claim.model_crm_claim,ocs.group_ocs_user,1,1,1,0
 access_ocs_user_claim_classification,ocs.user.claim_classification,ocs.model_ocs_claim_classification,ocs.group_ocs_user,1,0,0,0
+access_ocs_user_claim_solution_classification,ocs.user.claim_solution_classification,ocs.model_ocs_claim_solution_classification,ocs.group_ocs_user,1,0,0,0
 access_ocs_user_crm_add_note,ocs.user.crm.add.note,crm.model_crm_add_note,ocs.group_ocs_user,1,0,1,0
 access_ocs_user_crm_case_channel,crm.user.crm.case.channel,crm.model_crm_case_channel,ocs.group_ocs_user,1,0,1,0
 access_ocs_user_crm_case_stage,crm.user.crm.case.stage,crm.model_crm_case_stage,ocs.group_ocs_user,1,0,0,0
@@ -20,6 +21,7 @@ access_ocs_manager_res_partner_address,base.manager.res_partner_address,base.mod
 access_ocs_manager_res_partner,base.manager.res_partner,base.model_res_partner,ocs.group_ocs_manager,1,1,1,1
 access_ocs_manager_crm_claim,crm_claim.manager.crm_claim,crm_claim.model_crm_claim,ocs.group_ocs_manager,1,1,1,1
 access_ocs_manager_claim_classification,ocs.manager.claim_classification,ocs.model_ocs_claim_classification,ocs.group_ocs_manager,1,1,1,1
+access_ocs_manager_claim_solution_classification,ocs.manager.claim_solution_classification,ocs.model_ocs_claim_solution_classification,ocs.group_ocs_manager,1,1,1,1
 access_ocs_manager_crm_add_note,ocs.manager.crm.add.note,crm.model_crm_add_note,ocs.group_ocs_manager,1,1,1,1
 access_ocs_manager_crm_case_channel,crm.manager.crm.case.channel,crm.model_crm_case_channel,ocs.group_ocs_manager,1,1,1,0
 access_ocs_manager_crm_case_stage,crm.manager.crm.case.stage,crm.model_crm_case_stage,ocs.group_ocs_manager,1,1,1,0

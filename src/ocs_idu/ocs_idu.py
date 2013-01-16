@@ -65,12 +65,27 @@ class crm_claim(crm.crm_case,osv.osv):
     def _check_contract_reference(self, cr, uid, ids, context = None):
         """
         Constraint:
-        follow format yyyy/ddd
+        follow format ddd-yyyy
         """
         is_valid = False
         for claim in self.browse(cr, uid, ids,context):
             if claim.contract_reference != False:
                 if re.match("^[0-9]{1,4}-([0-9]{4})$", claim.contract_reference) != None:
+                    is_valid = True
+            else:
+                is_valid = True
+        return is_valid
+
+    def _check_claim_address(self, cr, uid, ids, context = None):
+        """
+        Constraint:
+        Check an address like this is valid
+        Cr 102 BIS 10 A BIS Z 30 Int 3 Loc 4
+        """
+        is_valid = False
+        for claim in self.browse(cr, uid, ids,context):
+            if claim.claim_address != False:
+                if is_bogota_address_valid(claim.claim_address):
                     is_valid = True
             else:
                 is_valid = True
@@ -102,22 +117,47 @@ class crm_claim(crm.crm_case,osv.osv):
                                  'State',help='Introduce a new state between open and done, in this step,\
                                   other people makes a review and approve the response given to citizen'),
         'is_outsourced':fields.function(_check_is_outsourced,type='boolean',string='Is Outsourced',method=True),
-        'contract_reference': fields.char('Contract Reference',size=9,help='Construction contract number year/number',states={'done':[('readonly',True)]}),
+        'contract_reference': fields.char('Contract Reference',size=9,help='Construction contract number number-year',states={'done':[('readonly',True)]}),
+        'damage_type_by_citizen': fields.selection([('fisura', 'Fisura'),('hueco', 'Hueco'),('hundimiento', 'Hundimiento')], 'Via Damage Type',help='Damage type provided by the citizen'),
+        'damage_width_by_citizen':  fields.char('Via damage width',size=10,help='Damage width provided by the citizen',states={'done':[('readonly',True)]}),
+        'damage_length_by_citizen': fields.char('Via damage length',size=10,help='Damage length provided by the citizen',states={'done':[('readonly',True)]}),
+        'damage_deep_by_citizen': fields.char('Via damage deep',size=10,help='Damage size provided by the citizen',states={'done':[('readonly',True)]}),
     }
     _constraints = [
-        (_check_contract_reference,'Contract Reference format is year/number, ie. 2012/10',['contract_reference']),
+        (_check_contract_reference,'Contract Reference format is number-year, ie. 123-2012',['contract_reference']),
+        (_check_claim_address,'Claim Address should follow IDU conventions ie. Cr 102 BIS 10 A BIS Z 30 Int 3 Loc 4',['claim_address']),
     ]
 
 crm_claim()
 
 class ResPartnerAddress(geo_model.GeoModel):
+    def _check_address(self, cr, uid, ids, context = None):
+        """
+        Constraint:
+        Check an address like this is valid
+        Cr 102 BIS 10 A BIS Z 30 Int 3 Loc 4
+        """
+        is_valid = False
+        for contact in self.browse(cr, uid, ids, context):
+            if contact.street != False:
+                if is_bogota_address_valid(contact.street):
+                    is_valid = True
+            else:
+                is_valid = True
+        return is_valid
+
     _name = 'res.partner.address'
     _inherit='res.partner.address'
     _columns = {
         'last_name':fields.char('Last Name:',size=128,required=False),
         'name':fields.char('First Name',size=128,required=False),
+        'document_type': fields.selection([('CC','Cédula de ciudadanía'),('TI','Tarjeta de Identidad'),('Pasaporte','Pasaporte'),('CE','Cedula Extranjería')],'Document Type',help='Tipo de documento de identificación'),
     }
+    _constraints = [
+        (_check_address,'Claim Address should follow IDU conventions ie. KR 102 BIS 10 A BIS Z 30 INT 3 LOC 4',['street']),
+    ]
     _rec_name = 'document_number'
+
 ResPartnerAddress()
 
 class ocs_citizen_service_point(geo_model.GeoModel):
@@ -193,3 +233,54 @@ class ocs_tract(osv.osv):
     }
     _rec_name = 'full_name'
 ocs_tract()
+
+def is_bogota_address_valid(address):
+    """ This function checks if the parameter fits Bogotá D.C. address schema.
+        'KR 102 10 30',
+        'KR 102 10 30 Int 2 Ap 1023',
+        'KR 102 10 30 Int 2',
+        'KR 102 10 30 Ap 1123',
+        'KR 102 A 10 A 30',
+        'KR 102 A 10 A 30 Int 3 Ap 12',
+        'KR 102 A 10 A BIS 30',
+        'KR 102 A 10 A BIS Z 30',
+        'KR 102 BIS 10 30',
+        'KR 102 BIS 10 30 Ap 12',
+        'KR 102 BIS 10 A 30',
+        'KR 102 BIS 10 BIS 30',
+        'KR 102 BIS 10 BIS Z 30',
+        'KR 102 BIS 10 A BIS 30',
+        'KR 102 BIS 10 A BIS Z 30',
+        'KR 102 BIS 10 A BIS Z 30 Int 3 Loc 4',
+        'KR 102 BIS A 10 30',
+        'KR 102 BIS A 10 30 E',
+        'KR 102 BIS A 10 A 30',
+        'KR 102 BIS A 10 A BIS 30',
+        'KR 102 BIS A 10 A BIS A 30',
+        'KR 102 BIS A 10 A BIS A 30 Loc 5',
+        'KR 102 BIS A 10 BIS Z 30',
+        'KR 102 A BIS 10 30',
+        'KR 102 A BIS 10 A 30',
+        'KR 102 A BIS 10 A BIS 30',
+        'KR 102 A BIS 10 A BIS A 30',
+        'KR 102 A BIS 10 BIS Z 30',
+        'KR 102 A BIS Z 10 30',
+        'KR 102 A BIS Z 10 30 SE',
+        'KR 102 A BIS Z 10 A 30',
+        'KR 102 A BIS Z 10 A BIS 30',
+        'KR 102 A BIS Z 10 A BIS A 30',
+        'KR 102 A BIS Z 10 BIS Z 30',
+        'KR 102 A BIS Z 10 BIS Z 30 N',
+    """
+    st_type = '(CL|AC|DG|KR|AV|TV|CA|CT|PS)'
+    st_number = '[0-9]+'
+    st_suffix = '(\s[A-Z])?((\sBIS)|(\sBIS\s[A-Z]))?'
+    st_horizontal = '(\s(AP|OF|CON|PEN|LOC|DEP|GAR|GS)\s[0-9]+)?'
+    st_interior = '(\s(Int\s[0-9]+))?'
+    st_sector = '(\s(N|E|S|O|NE|SE|SO|NO))?'
+    regex = "^{0}\s{1}{2}\s{1}{2}\s{1}{3}{4}{5}$".format(st_type, st_number, st_suffix, st_interior, st_horizontal, st_sector);
+    #print regex
+    if re.match(regex, address) != None:
+        return True
+    else:
+        return False

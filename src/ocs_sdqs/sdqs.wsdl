@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.alcasdqs.bogota.gov.co/sdqs/sdqsws/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="sdqsws" targetNamespace="http://www.alcasdqs.bogota.gov.co/sdqs/sdqsws/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.alcasdqs.bogota.gov.co/sdqs/sdqsws/">
+      <xsd:element name="registrarRequerimiento">
+        <xsd:complexType>
+          <xsd:sequence maxOccurs="1" minOccurs="1">
+            <xsd:element name="numeroRadicado" type="xsd:string" />
+            <xsd:element name="numeroFolios" type="xsd:string"></xsd:element>
+            <xsd:element name="asunto" type="xsd:string"></xsd:element>
+            <xsd:element name="numeroDocumento" type="xsd:string"></xsd:element>
+            <xsd:element name="nombres" type="xsd:string"></xsd:element>
+            <xsd:element name="apellidos" type="xsd:string"></xsd:element>
+            <xsd:element name="email" type="xsd:string"></xsd:element>
+            <xsd:element name="telefonoCasa" type="xsd:string"></xsd:element>
+            <xsd:element name="telefonoOficina" type="xsd:string"></xsd:element>
+            <xsd:element name="telefonoCelular" type="xsd:string"></xsd:element>
+            <xsd:element name="direccion" type="xsd:string"></xsd:element>
+            <xsd:element name="codigoCiudad" type="xsd:string"></xsd:element>
+            <xsd:element name="codigoDepto" type="xsd:string"></xsd:element>
+            <xsd:element name="codigoPais" type="xsd:string"></xsd:element>
+            <xsd:element name="codigoTipoRequerimiento"
+                type="xsd:string">
+            </xsd:element>
+            <xsd:element name="codigoSector" type="xsd:string" maxOccurs="unbounded" minOccurs="1"></xsd:element>
+            <xsd:element name="codigoEntidad" type="xsd:string" maxOccurs="unbounded" minOccurs="1"></xsd:element>
+            <xsd:element name="codigoSubTema" type="xsd:string" maxOccurs="unbounded" minOccurs="1"></xsd:element>
+            <xsd:element name="observaciones" type="xsd:string"></xsd:element>
+            <xsd:element name="codigoPrioridad" type="xsd:string"></xsd:element>
+            <xsd:element name="documento" type="xsd:hexBinary" maxOccurs="unbounded" minOccurs="1"></xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="registrarRequerimientoResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="codigoError" type="xsd:string" />
+            <xsd:element name="codigoRequerimiento"
+                type="xsd:string">
+            </xsd:element>
+            <xsd:element name="fechaCreacion" type="xsd:string"></xsd:element>
+            <xsd:element name="numeroRadicado" type="xsd:string"></xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="cerrarRequerimiento">
+        <xsd:complexType>
+            <xsd:sequence>
+
+                <xsd:element name="numeroRadicado"
+                    type="xsd:string">
+                </xsd:element>
+                <xsd:element name="codigoRequerimiento"
+                    type="xsd:string">
+                </xsd:element>
+                <xsd:element name="fechaSolucion" type="xsd:string"></xsd:element>
+                <xsd:element name="descripcion" type="xsd:string"></xsd:element>
+                <xsd:element name="tipo" type="xsd:string"></xsd:element>
+                <xsd:element name="numeroDocumento"
+                    type="xsd:string">
+                </xsd:element>
+                <xsd:element name="documento" type="xsd:hexBinary" maxOccurs="unbounded" minOccurs="1"></xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="cerrarRequerimientoResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+
+                <xsd:element name="codigoError" type="xsd:string"></xsd:element>
+                <xsd:element name="codigoRequerimiento"
+                    type="xsd:string">
+                </xsd:element>
+                <xsd:element name="numeroRadicado" type="xsd:string"></xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="consultarEstadoRequerimiento">
+        <xsd:complexType>
+            <xsd:sequence>
+
+                <xsd:element name="codigoRequerimiento" type="xsd:string"></xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="consultarEstadoRequerimientoResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+
+                <xsd:element name="codigoError" type="xsd:string"></xsd:element>
+                <xsd:element name="codigoEstado" type="xsd:string"></xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="consultarHojaRutaRequerimiento">
+        <xsd:complexType>
+            <xsd:sequence>
+
+                <xsd:element name="codigoRequermiento" type="xsd:string"></xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="consultarHojaRutaRequerimientoResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+
+                <xsd:element name="codigoError" type="xsd:string"></xsd:element>
+                <xsd:element name="codigoRequerimiento"
+                    type="xsd:string">
+                </xsd:element>
+                <xsd:element name="codigoEstado" type="xsd:string"
+                    maxOccurs="unbounded" minOccurs="1">
+                </xsd:element>
+                <xsd:element name="descripcion" type="xsd:string"
+                    maxOccurs="unbounded" minOccurs="1">
+                </xsd:element>
+                <xsd:element name="codigoEntidad" type="xsd:string" maxOccurs="unbounded" minOccurs="1"></xsd:element>
+                <xsd:element name="fechaAsignacion"
+                    type="xsd:string" maxOccurs="unbounded" minOccurs="1">
+                </xsd:element>
+                <xsd:element name="fechaFinalizacion"
+                    type="xsd:string" maxOccurs="unbounded" minOccurs="1">
+                </xsd:element>
+                <xsd:element name="servidorPublico" type="xsd:string" maxOccurs="unbounded" minOccurs="1"></xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="registrarRequerimientoRequest">
+    <wsdl:part element="tns:registrarRequerimiento" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="registrarRequerimientoResponse">
+    <wsdl:part element="tns:registrarRequerimientoResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="cerrarRequerimientoRequest">
+    <wsdl:part name="parameters" element="tns:cerrarRequerimiento"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="cerrarRequerimientoResponse">
+    <wsdl:part name="parameters" element="tns:cerrarRequerimientoResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="consultarEstadoRequerimientoRequest">
+    <wsdl:part name="parameters" element="tns:consultarEstadoRequerimiento"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="consultarEstadoRequerimientoResponse">
+    <wsdl:part name="parameters" element="tns:consultarEstadoRequerimientoResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="consultarHojaRutaRequerimientoRequest">
+    <wsdl:part name="parameters" element="tns:consultarHojaRutaRequerimiento"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="consultarHojaRutaRequerimientoResponse">
+    <wsdl:part name="parameters" element="tns:consultarHojaRutaRequerimientoResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="registrarRequerimientoPortType">
+    <wsdl:operation name="registrarRequerimiento">
+      <wsdl:input message="tns:registrarRequerimientoRequest"/>
+      <wsdl:output message="tns:registrarRequerimientoResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="cerrarRequerimientoPortType">
+    <wsdl:operation name="cerrarRequerimiento">
+        <wsdl:input message="tns:cerrarRequerimientoRequest"></wsdl:input>
+        <wsdl:output message="tns:cerrarRequerimientoResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="consultarEstadoRequerimientoPortType">
+    <wsdl:operation name="consultarEstadoRequerimiento">
+        <wsdl:input message="tns:consultarEstadoRequerimientoRequest"></wsdl:input>
+        <wsdl:output message="tns:consultarEstadoRequerimientoResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="consultarHojaRutaRequerimientoPortType">
+    <wsdl:operation name="consultarHojaRutaRequerimiento">
+        <wsdl:input message="tns:consultarHojaRutaRequerimientoRequest"></wsdl:input>
+        <wsdl:output message="tns:consultarHojaRutaRequerimientoResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="sdqswsSOAP" type="">
+    <soap:binding style="document"
+        transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="registrarRequerimiento">
+        <soap:operation
+            soapAction="http://www.alcasdqs.bogota.gov.co/sdqs/sdqsws/registrarRequerimiento" />
+        <wsdl:input>
+            <soap:body use="literal" />
+        </wsdl:input>
+        <wsdl:output>
+            <soap:body use="literal" />
+        </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="sdqsws">
+    <wsdl:port binding="tns:sdqswsSOAP" name="sdqswsSOAP">
+      <soap:address location="http://www.alcasdqs.bogota.gov.co/sdqs/sdqsws/"/>
+    </wsdl:port>
+  </wsdl:service>
+
+</wsdl:definitions>

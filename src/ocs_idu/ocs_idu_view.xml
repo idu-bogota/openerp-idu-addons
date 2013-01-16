@@ -185,12 +185,23 @@
     <field name="type">form</field>
     <field name="inherit_id" ref="ocs.view_ocs_claim_form_inherit" />
     <field name="arch" type="xml">
+          <xpath expr="//field[@name='partner_forwarded_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('classification_id','!=',16)]}</attribute><!--Trámites a cargo de otras entidades remitidos a IDU -->
+          </xpath>
         <field name="csp_id" position="replace">
                 <field name="csp_id" widget="selection" domain="[('is_outsourced','=',False),'|',('close_date','=',False),('close_date','>=','now()')]" />
         </field>
         <field name="sub_classification_id" position="after">
             <field name="contract_reference" select="0"/>
         </field>
+        <page string="Follow Up" position="after">
+            <page string="Via Damage Spec" >
+                <field name="damage_type_by_citizen" />
+                <field name="damage_width_by_citizen" />
+                <field name="damage_length_by_citizen" />
+                <field name="damage_deep_by_citizen" />
+            </page>
+        </page>
     </field>
 </record>
 

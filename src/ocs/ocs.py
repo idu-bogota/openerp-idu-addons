@@ -141,7 +141,7 @@ class ResPartnerAddress(geo_model.GeoModel):
         'name':fields.char('First Name',size=128,required=True),
         'gender':fields.selection([('m','Male'),('f','Female')],'Gender'),
         'document_number': fields.char('Document Number', size=64,selectable=True),
-        'document_type': fields.selection([('C','CC'),('T','T.I'),('P','Passport'),('E','CE')],'Document Type',help='Identification Document Type. ie CC,TI.. etc'),
+        'document_type': fields.selection([('NI','National ID'),('passport','Passport')],'Document Type',help='Document Type'),
         'twitter': fields.char('Twitter', size=64),
         'facebook':fields.char('Facebook:',size=240),
         'district_id':fields.many2one('ocs.district','District'),
@@ -159,8 +159,8 @@ class ResPartnerAddress(geo_model.GeoModel):
         ('unique_facebook','unique(facebook)','This facebook account is already registered'),
     ]
     _constraints = [
-    (_check_contact_data,'You must type at least one of these: email, phone, cell phone, facebook or twitter to create a contact',['document_number']),
-    (_check_document,'When Document Type is CC, the document number must be numeric only!!!',['document_number']),
+        (_check_contact_data,'You must type at least one of these: email, phone, cell phone, facebook or twitter to create a contact',['document_number']),
+        (_check_document,'When Document Type is CC, the document number must be numeric only!!!',['document_number']),
     ]
 ResPartnerAddress()
 
@@ -203,6 +203,21 @@ class ocs_claim_classification(osv.osv):
         (osv.osv._check_recursion,'Error ! You cannot create recursive Claim Classification Category',['parent_id'])
     ]
 ocs_claim_classification()
+
+class ocs_claim_solution_classification(osv.osv):
+    """This field contains internal classification for claim's solution """
+    _name="ocs.claim_solution_classification"
+    _columns={
+      'id':fields.integer('ID',readonly=True),
+      'code':fields.char('Code',size=6),
+      'name':fields.char('Name',size=128),
+      'enabled':fields.boolean('Enabled',help='If item is valid now'),
+      'parent_id':fields.many2one('ocs.claim_solution_classification','Parent')
+    }
+    constraints = [
+        (osv.osv._check_recursion,'Error ! You cannot create recursive Claim Solution Classification',['parent_id'])
+    ]
+ocs_claim_solution_classification()
 
 class ocs_neighborhood(geo_model.GeoModel):
     """Contains geographic information about all towns in the city"""
@@ -269,10 +284,17 @@ class crm_claim(geo_model.GeoModel):
         isResponsed = False
         for claim in self.browse(cr,uid,ids,context=None):
             response = claim.resolution
+            response_classification = claim.solution_classification_id
+            message = ''
             if response == False:
                 isResponsed = False
-                message = "Resolution text could not be Empty"
-            else:
+                message = "Resolution text can not be empty."
+
+            if response_classification.id == False:
+                isResponsed = False
+                message += " Solution Classification cannot be empty."
+
+            if not message:
                 isResponsed = True
                 message = "The claim: {0} -- has been closed".format(claim.name)
         self.log(cr, uid, claim.id, message)
@@ -306,22 +328,6 @@ class crm_claim(geo_model.GeoModel):
         for citizen in self.browse(cr, uid, ids, context = context):
             res[citizen.id] = "{0}/{1} ".format(citizen.classification_id.name,citizen.sub_classification_id.name)
         return  res
-
-#    def _get_channel(self, cr, uid, context=None):
-#        obj = self.pool.get('ocs.input_channel')
-#        ids = obj.search(cr, uid, [])
-#        res = obj.read(cr, uid, ids, ['name', 'id'], context)
-#        res = [(r['id'], r['name']) for r in res]
-#        return res
-#    def _get_main_classification(self, cr, uid, context=None):
-#        """This function get the main Categories
-#      Select name,id from ocs_claim_classification where
-#      parent_id = null
-#      """
-#        obj = self.pool.get('ocs.claim_classification_id')
-#        ids = obj.search(cr, uid, [('parent_id','=',False)])
-#        result = obj.read(cr, uid, ids, ['name','id'], context)
-#        return [(r['id'], r['name']) for r in result]
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         """This function returns value of partner email based on Partner Address
@@ -394,8 +400,6 @@ class crm_claim(geo_model.GeoModel):
         #'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
         'description': fields.text('Description',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'priority': fields.selection([('h','High'),('n','Normal'),('l','Low')], 'Priority', required=True, readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'external_id':fields.char('External ID',size=128,help='External Claim System Identificator',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'external_dms_id': fields.char('External DMS ID',size=20,help='External Document Management System Identificator',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'csp_id':fields.many2one('ocs.citizen_service_point','CSP',help='Citizen Service Point',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'channel':fields.many2one('crm.case.channel','Case Channel',help='Case Channel',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'categ_id': fields.many2one('crm.case.categ', 'Requirement Type', \
@@ -422,6 +426,9 @@ class crm_claim(geo_model.GeoModel):
         'resolution': fields.text('Resolution',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'date_deadline': fields.date('Deadline',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'user_id': fields.many2one('res.users', 'Responsible',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]},domain="[('csp_id','=',csp_id)]"),
+        'solution_classification_id':fields.many2one('ocs.claim_solution_classification','Solution Classification', \
+                                              domain="[('parent_id','!=',False),('enabled','=',True)]",required=False,readonly=False,states={'cancel':[('readonly',True)],'done':[('readonly',True)]}),
+        'partner_forwarded_id': fields.many2one('res.partner', 'Partner Forwarded',domain="[('supplier','=',True)]",readonly=False,states={'cancel':[('readonly',True)],'done':[('readonly',True)]}),
     }
 
     _order='create_date desc'
