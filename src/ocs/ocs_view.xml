@@ -138,7 +138,7 @@ Reporting
             <field name="arch" type="xml">
                 <tree string="Search Partner">
                         <field name="name" />
-                        <field name="vat"/>
+                        <field name="vat" string="NIT"/>
                 </tree>
         </field>
 </record>
@@ -653,8 +653,8 @@ Claims
             <page string="Follow Up" >
                  <separator col="8" colspan="4" string="Stage" />
                  <field name="stage_id" domain="[('section_ids','=',section_id)]" readonly="1" widget="url"/><!--Nasty, how can i set a simple input text field? -->
-                 <button name="stage_previous" string="Previous stage" type="object" icon="gtk-go-back" />
-                 <button name="stage_next" string="Next stage" type="object" icon="gtk-go-forward" />
+                 <button name="stage_previous" string="Etapa anterior" type="object" icon="gtk-go-back" />
+                 <button name="stage_next" string="Etapa siguiente" type="object" icon="gtk-go-forward" />
                  <separator string="Solution" colspan="4" />
                  <field name="solution_classification_id"/>
                  <field name="date_closed"/>
