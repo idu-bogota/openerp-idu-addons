@@ -151,6 +151,7 @@
     <paraStyle name="Table Contents" fontName="Helvetica" fontSize="10.0" leading="13"/>
     <paraStyle name="Table Heading" fontName="Helvetica-Bold" fontSize="10.0" leading="13" alignment="CENTER"/>
     <paraStyle name="Header" fontName="Helvetica" fontSize="10.0" leading="13"/>
+    <paraStyle name="Footer" fontName="Helvetica" fontSize="10.0" leading="13"/>
     <images>
       <image name="10000000000003AE000002BA303BCDF4.png">iVBORw0KGgoAAAANSUhEUgAAA64AAAK6CAMAAAAO6PF5AAAAAXNSR0IArs4c6QAAAwBQTFRFAAAA
 AAAzAABmAACZAADMAAD/ADMAADMzADNmADOZADPMADP/AGYAAGYzAGZmAGaZAGbMAGb/AJkAAJkz
@@ -886,12 +887,12 @@ dItLvwvV/AcauvYRcwNUwmEF3fgfwV4GtDtZaekAAAAASUVORK5CYII=
       <tr>
         <td>
           <para style="P3">CÓDIGO</para>
-          <para style="P4">FO-AC-029</para>
+          <para style="P4">FO-AC-XXX</para>
         </td>
         <td>
           <para style="P3">FORMATO</para>
-          <para style="P4">RECEPCIÓN DE REQUERIMIENTOS </para>
-          <para style="P4">ATENCIÓN AL CIUDADANO</para>
+          <para style="P4">REQUERIMIENTOS </para>
+          <para style="P4">ATENCIÓN AL CIUDADANO IDU</para>
         </td>
         <td>
           <para style="P5">
@@ -918,12 +919,13 @@ dItLvwvV/AcauvYRcwNUwmEF3fgfwV4GtDtZaekAAAAASUVORK5CYII=
           <para style="P2">INSTITUTO DE DESARROLLO URBANO</para>
           <para style="P2">www.idu.gov.co</para>
           <para style="P2">correo electrónico: atnciudadano@idu.gov.co</para>
-          <para style="P2">Calle 22 No.6-27 Tel.: 3386660-3387555-3412214 -Fax 4443037</para>
+          <para style="P2">Calle 22 No.6-27 </para>
+          <para style="P2">Tel.: 3386660-3387555-3412214 -Fax 4443037</para>
         </td>
         <td>
           <para style="P7">Requerimiento IDU No: [[ o.id ]]</para>
-          <para style="P7">[[ o.external_id and 'Radicado SDQS No:' ]] [[ o.external_id ]]</para>
-          <para style="P7">[[ o.external_dms_id and 'Radicado Orfeo No:' ]] [[ o.external_dms_id ]]</para>
+          <para style="P7">[[ o.sdqs_id and 'Radicado SDQS No:' ]] [[ o.sdqs_id ]]</para>
+          <para style="P7">[[ o.orfeo_id and 'Radicado Orfeo No:' ]] [[ o.orfeo_id ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -933,7 +935,7 @@ dItLvwvV/AcauvYRcwNUwmEF3fgfwV4GtDtZaekAAAAASUVORK5CYII=
     <blockTable colWidths="125.0,125.0,125.0,125.0" style="Table2">
       <tr>
         <td>
-          <para style="P1">Fecha de Radicado:</para>
+          <para style="P1">Fecha de Radicado (A-M-D):</para>
         </td>
         <td>
           <para style="P6">[[ o.create_date ]]</para>
@@ -980,7 +982,7 @@ dItLvwvV/AcauvYRcwNUwmEF3fgfwV4GtDtZaekAAAAASUVORK5CYII=
       </tr>
       <tr>
         <td>
-          <para style="P1">Dirección del requerimiento:</para>
+          <para style="P1">Dirección del reclamo:</para>
         </td>
         <td>
           <para style="P6">[[ o.claim_address ]]</para>
@@ -989,7 +991,7 @@ dItLvwvV/AcauvYRcwNUwmEF3fgfwV4GtDtZaekAAAAASUVORK5CYII=
           <para style="P1">Barrio/ Localidad:</para>
         </td>
         <td>
-          <para style="P6">[[ o.district_id.name ]] - [[ o.neighborhood_id.name ]]</para>
+          <para style="P6">[[ o.neighborhood_id.name ]] - [[ o.district_id.name ]]</para>
         </td>
       </tr>
       <tr>
