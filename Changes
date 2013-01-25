@@ -1,3 +1,5 @@
+* Todas las PQRs se asignan a un equipo de ventas, para permitir configuracion global de PQRs por equipos
+
 2013011600
 * Adicionada validación de direcciones siguiendo esquema del IDU
 * Adicionados campos para que ciudadanos puedan dar mayores detalles del daño reportado en la via

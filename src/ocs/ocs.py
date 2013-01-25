@@ -437,6 +437,7 @@ class crm_claim(geo_model.GeoModel):
         'date_deadline': lambda *a:  date_by_adding_business_days(datetime.now(), 15).__format__('%Y-%m-%d %H:%M:%S'),#Default +15 working days
         'priority': lambda *a: 'l',
         'csp_id': set_default_csp_id,
+        'section_id': lambda *a: 1, #All belong to the default sales team
         }
     _constraints = [
     (_check_user_in_csp,'User must registered in the Point of Citizen Service',['user_id']),
