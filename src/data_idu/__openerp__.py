@@ -5,7 +5,7 @@
   'description': "Módulo para cargar datos usados en el IDU",
   'author': 'STRT',
   'website': 'http://www.idu.gov.co',
-  'depends': ['base','ocs','ocs_idu'],
+  'depends': ['base'],
   'init_xml': [
       'crm.case.categ.csv',
       'crm.case.channel.csv',
@@ -18,6 +18,5 @@
       'ocs_orfeo.dependencia.csv',
   ],
   'update_xml': [],
-  'installable': False,
-  'active': False,
+  'installable': True,
 }
