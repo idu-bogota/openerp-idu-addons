@@ -319,7 +319,7 @@ class crm_claim(geo_model.GeoModel):
             return {'value': {'email_from': False}}
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         return {'value': {'email_from': address.email, 'partner_phone': address.phone,
-                          'claim_address':address.street, 'partner_id': address.partner_id.id,
+                          'partner_id': address.partner_id.id,
                           'district_id': address.district_id.id, 'neighborhood_id': address.neighborhood_id.id
                           }
                 }
