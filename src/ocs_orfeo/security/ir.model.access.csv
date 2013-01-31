@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ocs_user_orfeo_dependencia,ocs_orfeo.dependencia,ocs_orfeo.model_ocs_orfeo_dependencia,ocs.group_ocs_user,1,0,0,0
+access_ocs_manager_orfeo_dependencia,ocs_orfeo.dependencia,ocs_orfeo.model_ocs_orfeo_dependencia,ocs.group_ocs_manager,1,1,1,0

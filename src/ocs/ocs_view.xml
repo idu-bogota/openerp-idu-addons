@@ -138,7 +138,7 @@ Reporting
             <field name="arch" type="xml">
                 <tree string="Search Partner">
                         <field name="name" />
-                        <field name="vat"/>
+                        <field name="vat" string="NIT"/>
                 </tree>
         </field>
 </record>
@@ -555,6 +555,45 @@ Classification
 </record>
 <menuitem name="Classification" id="menu_ocs_claim_classification" action="action_ocs_claim_classification" parent ="menu_ocs_settings" sequence = "2"/>
 
+<!--==================================================================================
+Solution Classification
+===================================================================================== -->
+<record model="ir.ui.view" id="view_ocs_claim_solution_classification_form">
+        <field name="name">ocs.claim_solution_classification.form</field>
+        <field name="model">ocs.claim_solution_classification</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Claim Solution Classification">
+                <field name="id" select="0"/>
+                <field name="code" select="0"/>
+                <field name="name" select="1"/>
+                <field name="parent_id" select ="1" />
+                <field name="enabled" select="0"/>
+            </form>
+        </field>
+</record>
+
+<record model="ir.ui.view" id="view_ocs_claim_solution_classification_tree">
+        <field name="name">ocs.claim_solution_classification.tree</field>
+        <field name="model">ocs.claim_solution_classification</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Claim Solution Classification">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="parent_id"/>
+                <field name="enabled"/>
+            </tree>
+        </field>
+</record>
+<record model="ir.actions.act_window" id="action_ocs_claim_solution_classification">
+        <field name="name">Claim_Classification</field>
+        <field name="res_model">ocs.claim_solution_classification</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+<menuitem name="Solution Classification" id="menu_ocs_claim_solution_classification" action="action_ocs_claim_solution_classification" parent ="menu_ocs_settings" sequence = "2"/>
+
 <!--
 ========================================================================================
 Claims
@@ -614,10 +653,12 @@ Claims
             <page string="Follow Up" >
                  <separator col="8" colspan="4" string="Stage" />
                  <field name="stage_id" domain="[('section_ids','=',section_id)]" readonly="1" widget="url"/><!--Nasty, how can i set a simple input text field? -->
-                 <button name="stage_previous" string="Previous stage" type="object" icon="gtk-go-back" />
-                 <button name="stage_next" string="Next stage" type="object" icon="gtk-go-forward" />
+                 <button name="stage_previous" string="Etapa anterior" type="object" icon="gtk-go-back" />
+                 <button name="stage_next" string="Etapa siguiente" type="object" icon="gtk-go-forward" />
                  <separator string="Solution" colspan="4" />
+                 <field name="solution_classification_id"/>
                  <field name="date_closed"/>
+                 <field name="partner_forwarded_id"/>
                  <field  name="resolution" colspan="4" nolabel="1" />
                  <group col="8" colspan="4">
 	                 <button name="cas_cancel" string="Cancel" type="workflow" icon="gtk-cancel" states="draft"/> <!-- states= "Estados en los cuales el boton es visible" -->
@@ -626,10 +667,6 @@ Claims
 	                 <button name="cas_reset" string="Reset to in Progress" type="workflow" icon="gtk-convert" states="done" groups="ocs.group_ocs_manager"/>
 	                 <button name="cas_close" string="Done" type="workflow" icon="gtk-jump-to" states="open" />
                  </group>
-            </page>
-            <page string="External claim systems">
-                <field name="external_dms_id" select ="0"/>
-                <field name="external_id" select ="0"/>
             </page>
           </page>
           <!-- Redireccionamiento de los botones para que le peguen al workflow -->

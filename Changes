@@ -1,3 +1,16 @@
+2013013100
+* Al seleccionar un ciudadano, la dirección del ciudadano no se convierte en dirección del reclamo
+* Validación de número de cédula con una extensión de mínimo 6 digitos
+* Todas las PQRs se asignan a un equipo de ventas, para permitir configuracion global de PQRs por equipos
+
+2013011600
+* Adicionada validación de direcciones siguiendo esquema del IDU
+* Adicionados campos para que ciudadanos puedan dar mayores detalles del daño reportado en la via
+* Adicionado campo para clasificar las respuestas dadas en las PQR
+* Adicionado campo para relacionar la empresa/dependencia a la cual se le reenvia la solucitud
+* Creados modulos para integración con Orfeo y SDQS
+* Integración con sistema Orfeo funcional sin ingreso de tipificación
+
 2012122600
 * Actualizado reporte de impresión de la PQR
 * Corregido bug que no seleccionaba automaticamente el tipo de requerimiento basado en el criterio

@@ -1,0 +1,4 @@
+id,code,enabled,name,parent_id/id
+__export__.ocs_claim_solution_classification_1,1,True,Redireccionado,
+__export__.ocs_claim_solution_classification_2,1.1,True,Redireccionado Internamente,__export__.ocs_claim_solution_classification_1
+__export__.ocs_claim_solution_classification_3,1.2,True,Redireccionado Externamente,__export__.ocs_claim_solution_classification_1

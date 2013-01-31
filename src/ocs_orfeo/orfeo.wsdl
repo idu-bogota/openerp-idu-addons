@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<definitions xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://127.0.0.1/server/webServices/orfeoIduWebservices.php" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://127.0.0.1/server/webServices/orfeoIduWebservices.php">
+<types>
+<xsd:schema targetNamespace="http://127.0.0.1/server/webServices/orfeoIduWebservices.php">
+ <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+ <xsd:import namespace="http://schemas.xmlsoap.org/wsdl/"/>
+</xsd:schema>
+</types>
+<message name="OrfeoWs.pruebaRequest">
+  <part name="prueba" type="xsd:string"/></message>
+<message name="OrfeoWs.pruebaResponse">
+  <part name="resultado" type="xsd:string"/></message>
+<message name="OrfeoWs.existeRadicadoRequest">
+  <part name="radicado" type="xsd:string"/></message>
+<message name="OrfeoWs.existeRadicadoResponse">
+  <part name="return" type="xsd:boolean"/></message>
+<message name="OrfeoWs.radicarRequest">
+  <part name="usuarioLogin" type="xsd:string"/>
+  <part name="tipoRadicacion" type="xsd:decimal"/>
+  <part name="tipoTercero" type="xsd:decimal"/>
+  <part name="destinoRemiteNombre" type="xsd:string"/>
+  <part name="destinoRemiteApellido1" type="xsd:string"/>
+  <part name="destinoRemiteApellido2" type="xsd:string"/>
+  <part name="destinoRemiteDireccion" type="xsd:string"/>
+  <part name="destinoRemiteTelefono" type="xsd:string"/>
+  <part name="destinoRemiteEmail" type="xsd:string"/>
+  <part name="destinoRemiteDocumento" type="xsd:string"/>
+  <part name="municipio" type="xsd:decimal"/>
+  <part name="departamento" type="xsd:decimal"/>
+  <part name="pais" type="xsd:decimal"/>
+  <part name="continente" type="xsd:decimal"/>
+  <part name="dependenciaDestino" type="xsd:string"/>
+  <part name="asunto" type="xsd:string"/></message>
+<message name="OrfeoWs.radicarResponse">
+  <part name="ESTADO_TRANSACCION" type="xsd:string"/>
+  <part name="OBSERVACION_TRANSACCION" type="xsd:string"/>
+  <part name="RADICADO" type="xsd:string"/></message>
+<portType name="orfeoIduWebservicesPortType">
+  <operation name="OrfeoWs.prueba">
+    <input message="tns:OrfeoWs.pruebaRequest"/>
+    <output message="tns:OrfeoWs.pruebaResponse"/>
+  </operation>
+  <operation name="OrfeoWs.existeRadicado">
+    <input message="tns:OrfeoWs.existeRadicadoRequest"/>
+    <output message="tns:OrfeoWs.existeRadicadoResponse"/>
+  </operation>
+  <operation name="OrfeoWs.radicar">
+    <input message="tns:OrfeoWs.radicarRequest"/>
+    <output message="tns:OrfeoWs.radicarResponse"/>
+  </operation>
+</portType>
+<binding name="orfeoIduWebservicesBinding" type="tns:orfeoIduWebservicesPortType">
+  <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+  <operation name="OrfeoWs.prueba">
+    <soap:operation soapAction="http://gesdocpru/desarrollo/webServices/orfeoIduWebServices.php/OrfeoWs.prueba" style="rpc"/>
+    <input><soap:body use="encoded" namespace="http://127.0.0.1/server/webServices/orfeoIduWebservices.php" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+    <output><soap:body use="encoded" namespace="http://127.0.0.1/server/webServices/orfeoIduWebservices.php" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+  </operation>
+  <operation name="OrfeoWs.existeRadicado">
+    <soap:operation soapAction="http://gesdocpru/desarrollo/webServices/orfeoIduWebServices.php/OrfeoWs.existeRadicado" style="rpc"/>
+    <input><soap:body use="encoded" namespace="http://127.0.0.1/server/webServices/orfeoIduWebservices.php" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+    <output><soap:body use="encoded" namespace="http://127.0.0.1/server/webServices/orfeoIduWebservices.php" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+  </operation>
+  <operation name="OrfeoWs.radicar">
+    <soap:operation soapAction="http://gesdocpru/desarrollo/webServices/orfeoIduWebServices.php/OrfeoWs.radicar" style="rpc"/>
+    <input><soap:body use="encoded" namespace="http://127.0.0.1/server/webServices/orfeoIduWebservices.php" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+    <output><soap:body use="encoded" namespace="http://127.0.0.1/server/webServices/orfeoIduWebservices.php" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+  </operation>
+</binding>
+<service name="orfeoIduWebservices">
+  <port name="orfeoIduWebservicesPort" binding="tns:orfeoIduWebservicesBinding">
+    <soap:address location="http://gesdocpru/desarrollo/webServices/orfeoIduWebServices.php"/>
+  </port>
+</service>
+</definitions>
