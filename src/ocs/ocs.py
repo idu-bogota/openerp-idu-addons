@@ -89,24 +89,6 @@ class ResPartnerAddress(geo_model.GeoModel):
                 res[citizen.id] = "{0},{1}".format(citizen.last_name, citizen.name)
         return  res
 
-    def _check_document(self, cr, uid, ids, context = None):
-        """
-        Constraint:
-
-        Document Number Regex Validation
-        """
-        is_valid_document = False
-        for citizen in self.browse(cr, uid, ids,context=None):
-            if citizen.document_type == 'C' :
-                if citizen.document_number != False:
-                    if re.match("^[0-9]+$", citizen.document_number) != None:
-                        is_valid_document = True
-                    else:
-                        is_valid_document = False #Empty document are permited....
-            else:
-                is_valid_document = True
-        return is_valid_document
-
     def _check_contact_data(self, cr, uid, ids, context = None):
         """
         Constraint:
@@ -160,7 +142,6 @@ class ResPartnerAddress(geo_model.GeoModel):
     ]
     _constraints = [
         (_check_contact_data,'You must type at least one of these: email, phone, cell phone, facebook or twitter to create a contact',['document_number']),
-        (_check_document,'When Document Type is CC, the document number must be numeric only!!!',['document_number']),
     ]
 ResPartnerAddress()
 
