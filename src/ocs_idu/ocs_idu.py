@@ -146,6 +146,25 @@ class ResPartnerAddress(geo_model.GeoModel):
                 is_valid = True
         return is_valid
 
+    def _check_document(self, cr, uid, ids, context = None):
+        """
+        Constraint:
+
+        Document Number Regex Validation
+        """
+        is_valid_document = False
+        for citizen in self.browse(cr, uid, ids,context=None):
+            if citizen.document_type == 'CC' :
+                if citizen.document_number != False:
+                    if re.match("^[0-9]{6,15}$", citizen.document_number) != None:
+                        is_valid_document = True
+                    else:
+                        is_valid_document = False #Empty document are permited....
+            else:
+                is_valid_document = True
+        return is_valid_document
+
+
     _name = 'res.partner.address'
     _inherit='res.partner.address'
     _columns = {
@@ -155,6 +174,7 @@ class ResPartnerAddress(geo_model.GeoModel):
     }
     _constraints = [
         (_check_address,'Claim Address should follow IDU conventions ie. KR 102 BIS 10 A BIS Z 30 INT 3 LOC 4',['street']),
+        (_check_document,'When Document Type is CC, the document number must be numeric only!!!',['document_number']),
     ]
     _rec_name = 'document_number'
 
