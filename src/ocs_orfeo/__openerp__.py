@@ -20,7 +20,7 @@
 ##############################################################################
 {
         "name" : "Office of Citizen Service - Orfeo Integration",
-        "version" : "openerp6.1-rev2013010101",
+        "version" : "openerp6.1-rev2013010102",
         "author" : "Angel María Fonseca, Andres Ignacio Baez Alba and Cinxgler Mariaca Minda",
         "website" : "www.idu.gov.co",
         "category" : "Social Management",
