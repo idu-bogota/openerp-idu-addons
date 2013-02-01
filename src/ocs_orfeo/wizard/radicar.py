@@ -59,7 +59,7 @@ class ocs_orfeo_wizard_radicar(osv.osv_memory):
         form_object = self.browse(cr, uid, form_object_id, context=context)
         dependenciaDestino = form_object.dependencia_id.code
 
-        usuarioLogin = 'ccmariac1'#current_user.login
+        usuarioLogin = current_user.login
         tipoRadicacion = 2 #Radicados de entrada
         municipio = 1 # Bogotá
         departamento = 11 # Distrito Capital
