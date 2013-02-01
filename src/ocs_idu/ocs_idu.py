@@ -292,7 +292,7 @@ def is_bogota_address_valid(address):
         'KR 102 A BIS Z 10 BIS Z 30',
         'KR 102 A BIS Z 10 BIS Z 30 N',
     """
-    st_type = '(CL|AC|DG|KR|AV|TV|CA|CT|PS)'
+    st_type = '(CL|AC|DG|KR|AK|TV|CA|CT|PS)'
     st_number = '[0-9]+'
     st_suffix = '(\s[A-Z])?((\sBIS)|(\sBIS\s[A-Z]))?'
     st_horizontal = '(\s(AP|OF|CON|PEN|LOC|DEP|GAR|GS)\s[0-9]+)?'
