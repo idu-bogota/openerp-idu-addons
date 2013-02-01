@@ -1,3 +1,5 @@
+* Fix: Validador de direcciones debe aceptar INT en lugar de Int
+
 2013013100
 * Al seleccionar un ciudadano, la dirección del ciudadano no se convierte en dirección del reclamo
 * Validación de número de cédula con una extensión de mínimo 6 digitos

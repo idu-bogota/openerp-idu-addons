@@ -296,7 +296,7 @@ def is_bogota_address_valid(address):
     st_number = '[0-9]+'
     st_suffix = '(\s[A-Z])?((\sBIS)|(\sBIS\s[A-Z]))?'
     st_horizontal = '(\s(AP|OF|CON|PEN|LOC|DEP|GAR|GS)\s[0-9]+)?'
-    st_interior = '(\s(Int\s[0-9]+))?'
+    st_interior = '(\s(INT\s[0-9]+))?'
     st_sector = '(\s(N|E|S|O|NE|SE|SO|NO))?'
     regex = "^{0}\s{1}{2}\s{1}{2}\s{1}{3}{4}{5}$".format(st_type, st_number, st_suffix, st_interior, st_horizontal, st_sector);
     #print regex
