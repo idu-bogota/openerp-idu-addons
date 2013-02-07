@@ -114,6 +114,20 @@ class crm_claim(crm.crm_case,osv.osv):
 
         return {'value':v}
 
+    def onchange_district_id(self, cr, uid, ids, district_id):
+        """Restricts the neighborhood list to the selected district_id
+        """
+        result = super(crm_claim, self).onchange_district_id(cr, uid, ids, district_id)
+        d = result['domain']
+        v = result['value']
+        if district_id:
+            district = self.pool.get('ocs.district').browse(cr, uid, district_id)
+            if(district.name == 'FUERA DE BOGOTÁ'):
+                classification = self.pool.get('ocs.claim_classification').name_search(cr, uid, name='Trámites a cargo de otras entidades remitidos a IDU', args=None, operator='=', context=None, limit=1)
+                v['classification_id'] = classification[0][0]
+
+        return {'domain':d, 'value':v}
+
     _name="crm.claim"
     _inherit="crm.claim"
     _columns = {
