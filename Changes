@@ -1,3 +1,4 @@
+* Fix: Validar dirección de ResPartnerAddress como data válido de contacto
 * Fix: Corregido bug que envia False como email de contacto al radicar en Orfeo
 
 2013020103
