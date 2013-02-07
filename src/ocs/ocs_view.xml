@@ -672,7 +672,7 @@ Claims
           <!-- Redireccionamiento de los botones para que le peguen al workflow -->
           <button name="case_cancel" position="replace" >
                 <button name="cas_cancel" string="Cancel" type="workflow" icon="gtk-cancel"
-                states="draft"/> <!-- states= "Estados en los cuales el boton es visible" -->
+                states="draft" groups="ocs.group_ocs_manager"/> <!-- states= "Estados en los cuales el boton es visible" -->
           </button>
           <button name="case_pending" position="replace">
                 <button name="cas_pending" string="Pending" type="workflow" icon="gtk-media-pause" states="open" />

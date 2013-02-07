@@ -1,3 +1,4 @@
+* Change: Solo Usuario administrador de OTC puede cancelar una PQR
 * Improvement: Al seleccionar localidad Fuera de Bogotá, se selecciona la clasificación automáticamente
 * Improvement: Seleccionar solution_classification_id basado en la clasificación
 * Fix: Validar dirección de ResPartnerAddress como data válido de contacto
