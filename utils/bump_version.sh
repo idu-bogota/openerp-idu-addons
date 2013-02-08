@@ -16,13 +16,47 @@ case $# in
     * ) exit_usage;;
 esac
 
+function parse_git_dirty {
+  [[ $(git status 2> /dev/null | tail -n1) != "nothing to commit (working directory clean)" ]] && echo "Changes pending to commit"
+}
+
+if parse_git_dirty; then
+    echo "Please commit or stage them before make a new release"
+    exit 1
+fi
+
 version="openerp$oe_version-rev$release_number"
 
-for I in $(ls src/*/__openerp__.py); do
-    echo "Bumping $version into $I"
-    sed -i "s/openerp[0-9].[0-9]-rev[0-9]\{10\}/$version/g" $I
-done
+echo "New release $version"
 
-echo "Bumping $version into Changes"
-sed -i "1s/.*/$version\n&/" Changes
+if $(grep -q "$version" Changes); then
+    echo "Release already exist"
+    exit 1
+else
+    branch="release_$version"
+    echo "Creating a new release branch for $version"
+    git checkout -b $branch
 
+    for I in $(ls src/*/__openerp__.py); do
+        echo "Bumping $version into $I"
+        sed -i "s/openerp[0-9].[0-9]-rev[0-9]\{10\}/$version/g" $I
+    done
+
+    echo "Bumping $version into Changes"
+    sed -i "1s/.*/$version\n&/" Changes
+
+    git commit -a -m "Release $version"
+
+    read -p "Press any key to merge on master or CTRL+C to stop " ans
+
+    echo "Merging in master"
+    git checkout master
+    git merge --no-ff $branch
+    git tag -a $version -m "New release $version"
+    git push
+    git push --tags
+    echo "Merging in dev"
+    git checkout dev
+    git merge --no-ff $branch
+    git push
+fi
