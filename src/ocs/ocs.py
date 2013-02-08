@@ -58,9 +58,9 @@ class ResPartnerAddress(geo_model.GeoModel):
                 elems = [r['name'],r['last_name'],r['document_number'],r['email'],r['twitter']]
                 addr = ', '.join(filter(bool, elems))
                 if (context.get('contact_display', 'contact')=='partner_address') and r['partner_id']:
-                    res.append((r['id'], "%s: %s" % (r['partner_id'][1], addr or '-no-data-')))
+                    res.append((r['id'], "%s: %s" % (r['partner_id'][1], addr or '-no-address-')))
                 else:
-                    res.append((r['id'], addr or '-no-data-'))
+                    res.append((r['id'], addr or '-no-address-'))
         return res
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
@@ -100,6 +100,7 @@ class ResPartnerAddress(geo_model.GeoModel):
                 (citizen.twitter != False)|
                 (citizen.phone != False)|
                 (citizen.facebook != False)|
+                (citizen.street != False)|
                 (citizen.mobile != False)):
                 is_valid_data = True
         return is_valid_data

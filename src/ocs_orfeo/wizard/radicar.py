@@ -88,11 +88,14 @@ class ocs_orfeo_wizard_radicar(osv.osv_memory):
                         destinoRemiteApellido2 = apellidos[1]
                     except IndexError:
                         pass
-                destinoRemiteDireccion = destino.street
-                destinoRemiteTelefono = destino.phone
-                destinoRemiteEmail = destino.email
-                destinoRemiteDocumento = destino.document_number
-
+                if(destino.street):
+                    destinoRemiteDireccion = destino.street
+                if(destino.phone):
+                    destinoRemiteTelefono = destino.phone
+                if(destino.email):
+                    destinoRemiteEmail = destino.email
+                if(destino.document_number):
+                    destinoRemiteDocumento = destino.document_number
             if empresa:
                 tipoTercero = 2
                 destinoRemiteNombre = empresa.name

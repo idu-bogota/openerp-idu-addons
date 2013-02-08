@@ -94,18 +94,39 @@ class crm_claim(crm.crm_case,osv.osv):
     def onchange_classification_id(self, cr, uid, ids, classification_id):
         """Changes based on classification_id
         """
-        v={'sub_classification_id': ''}
+        solution = self.pool.get('ocs.claim_solution_classification').name_search(cr, uid, name='Redireccionado Internamente', args=None, operator='=', context=None)
+        v={ 'sub_classification_id': '', 'solution_classification_id': solution[0][0] }
         if classification_id:
             sub_classification = self.pool.get('ocs.claim_classification').name_search(cr, uid, name='Queja contra servidores públicos IDU', args=None, operator='=', context=None, limit=1)
-            if (classification_id == sub_classification[0][0]):
+            if (len(sub_classification) and classification_id == sub_classification[0][0]):
                 category = self.pool.get('crm.case.categ').name_search(cr, uid, name='Queja', args=None, operator='=', context=None)
                 v['categ_id'] = category[0][0]
             else:
                 classification = self.pool.get('ocs.claim_classification').name_search(cr, uid, name='Denuncias sobre actuación IDU', args=None, operator='=', context=None, limit=1)
-                if (classification_id == classification[0][0]):
+                if (len(classification) and classification_id == classification[0][0]):
                     category = self.pool.get('crm.case.categ').name_search(cr, uid, name='Denuncia', args=None, operator='=', context=None)
                     v['categ_id'] = category[0][0]
+                else:
+                    classification = self.pool.get('ocs.claim_classification').name_search(cr, uid, name='Trámites a cargo de otras entidades remitidos a IDU', args=None, operator='=', context=None, limit=1)
+                    if (len(classification) and classification_id == classification[0][0]):
+                        solution = self.pool.get('ocs.claim_solution_classification').name_search(cr, uid, name='Redireccionado Externamente', args=None, operator='=', context=None)
+                        v['solution_classification_id'] = solution[0][0]
+
         return {'value':v}
+
+    def onchange_district_id(self, cr, uid, ids, district_id):
+        """Restricts the neighborhood list to the selected district_id
+        """
+        result = super(crm_claim, self).onchange_district_id(cr, uid, ids, district_id)
+        d = result['domain']
+        v = result['value']
+        if district_id:
+            district = self.pool.get('ocs.district').browse(cr, uid, district_id)
+            if(district.name == 'FUERA DE BOGOTÁ'):
+                classification = self.pool.get('ocs.claim_classification').name_search(cr, uid, name='Trámites a cargo de otras entidades remitidos a IDU', args=None, operator='=', context=None, limit=1)
+                v['classification_id'] = classification[0][0]
+
+        return {'domain':d, 'value':v}
 
     _name="crm.claim"
     _inherit="crm.claim"
