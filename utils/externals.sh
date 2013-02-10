@@ -2,7 +2,8 @@
 #call: script.sh production
 
 PRODUCTION_MODE=0
-ADDONS_PATH="/opt" #for production ,override in no production mode
+ADDONS_PATH="/opt/addons-idu" #for production ,override in no production mode
+EXTERNALS_PATH="/opt"
 
 if [ "$1" = "production" ]
 then
@@ -16,30 +17,31 @@ fi
 
 ########## FUNCTIONS #################
 function development {
-    ADDONS_PATH="$HOME/git/openerp-idu-addons"
-    mkdir $ADDONS_PATH/externals/
-    cd $ADDONS_PATH/externals/
+    ADDONS_PATH="$HOME/git/openerp-idu-addons/src"
+    EXTERNALS_PATH="$HOME/git/openerp-idu-addons/externals"
+    CONFIG_FILE="$HOME/git/openerp-idu-addons/openerp-server.conf"
+    mkdir $EXTERNALS_PATH
+    cd $EXTERNALS_PATH
 
     echo "ALTER USER openerp WITH PASSWORD 'openerp'" >> /tmp/openerp.sql
     sudo su postgres -c "psql -f /tmp/openerp.sql";
     rm /tmp/openerp.sql
 
     #crear el archivo de openerp para desarrollo
-    CONFIG_FILE=$ADDONS_PATH/openerp-server.conf
     echo "creando archivo de configuración de openerp-server en $CONFIG_FILE ..."
     echo "[options]" > $CONFIG_FILE
     echo "db_host = False" >> $CONFIG_FILE
     echo "db_port = False" >> $CONFIG_FILE
     echo "db_user = openerp" >> $CONFIG_FILE
     echo "db_password = False" >> $CONFIG_FILE
-    echo "addons_path = /usr/share/pyshared/openerp/addons/,$ADDONS_PATH/src,$ADDONS_PATH/externals/c2c-geoengine-addons" >> $CONFIG_FILE
+    echo "addons_path = /usr/share/pyshared/openerp/addons/,$ADDONS_PATH,$EXTERNALS_PATH/c2c-geoengine-addons" >> $CONFIG_FILE
 }
 
 function production {
     #crear el archivo de openerp para desarrollo
     CONFIG_FILE=/etc/openerp/openerp-server.conf
     echo "Actualizando archivo de configuración de openerp-server en $CONFIG_FILE ..."
-    echo "addons_path = /usr/share/pyshared/openerp/addons/,$ADDONS_PATH/addons-idu,$ADDONS_PATH/c2c-geoengine-addons" >> $CONFIG_FILE
+    echo "addons_path = /usr/share/pyshared/openerp/addons/,$ADDONS_PATH,$EXTERNALS_PATH/c2c-geoengine-addons" >> $CONFIG_FILE
     echo "; xmlrpc_interface = 127.0.0.1" >> $CONFIG_FILE
     echo "; netrpc_interface = 127.0.0.1" >> $CONFIG_FILE
     echo "db_list = False" >> $CONFIG_FILE
@@ -64,8 +66,8 @@ sudo python setup.py install
 rm geojson-1.0.tar.gz geojson-1.0 -rf
 
 #Instalar c2c-geoengine - usado por ocs
-cd $ADDONS_PATH
-sudo bzr branch  http://bazaar.launchpad.net/~c2c/c2c-geoengine-addons/trunk/ c2c-geoengine-addons
+cd $EXTERNALS_PATH
+bzr branch http://bazaar.launchpad.net/~geospatial-addons-core-editors/geospatial-addons/6.1 c2c-geoengine-addons
 
 #Descomprimir archivos de cartografia de bogota
-bunzip2 -k "$ADDONS_PATH/addons-idu/data_idu/sql/*.bz2"
+bunzip2 -k "$ADDONS_PATH/data_idu/sql/*.bz2"
