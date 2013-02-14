@@ -1,4 +1,5 @@
 * Update: Actualizado formato de impresión de la PQR
+* Update: Cambiar el orden de los cambios nombre y documento
 
 openerp6.1-rev2013020800
 * Fix: Incluir letras para identificar torre, interior en direcciones
