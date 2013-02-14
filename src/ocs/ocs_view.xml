@@ -245,11 +245,11 @@ res.partner.address
             <form string="Citizens">
                 <group colspan="4" col="4">
                 <separator string="Personal Information" colspan="4"/>
-                    <field name="document_type"/>
-                    <field name="document_number"/>
                     <field name="name"/>
                     <field name="last_name"/>
                     <field name="gender"/>
+                    <field name="document_type"/>
+                    <field name="document_number"/>
                 </group>
                 <group colspan="4" col="4">
                     <separator string="Job Information" colspan="4"/>
