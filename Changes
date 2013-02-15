@@ -1,3 +1,6 @@
+openerp6.1-rev2013021400
+* Fix: Remover espacios en blanco al inicio y final para los datos del ciudadano
+
 openerp6.1-rev2013021300
 * Update: Actualizado formato de impresión de la PQR
 * Update: Cambiar el orden de los cambios nombre y documento
