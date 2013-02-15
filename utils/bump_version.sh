@@ -25,47 +25,54 @@ if parse_git_dirty; then
     exit 1
 fi
 
+echo "[INFO] Pulling on master and dev"
+git checkout master
+git pull
+git checkout dev
+git pull
+
 version="openerp$oe_version-rev$release_number"
 
-echo "New release $version"
+echo "[INFO] New release $version"
 
 if $(grep -q "$version" Changes); then
     echo "Release already exist"
     exit 1
 else
     branch="release_$version"
-    echo "Creating a new release branch for $version"
+    read -p ">>> Press any key to create release branch or CTRL+C to stop " ans
+    echo "[INFO] Creating a new release branch for $version"
     git checkout -b $branch
 
     for I in $(ls src/*/__openerp__.py); do
-        echo "Bumping $version into $I"
+        echo "[INFO] Bumping $version into $I"
         sed -i "s/openerp[0-9].[0-9]-rev[0-9]\{10\}/$version/g" $I
     done
 
-    echo "Bumping $version into Changes"
+    echo "[INFO] Bumping $version into Changes"
     sed -i "1s/.*/$version\n&/" Changes
 
     git commit -a -m "Release $version"
 
     read -p ">>> Press any key to merge on master or CTRL+C to stop " ans
 
-    echo "Merging in master"
+    echo "[INFO] Merging in master"
     git checkout master
     git merge --no-ff $branch
 
     read -p ">>> Press any key to tag and push or CTRL+C to stop " ans
-
+    echo "[INFO] Creating new tag and pushing"
     git tag -a $version -m "New release $version"
     git push
     git push --tags
 
     read -p ">>> Press any key to merge in dev or CTRL+C to stop " ans
 
-    echo "Merging in dev"
+    echo "[INFO] Merging in dev"
     git checkout dev
     git merge --no-ff $branch
 
-    read -p ">>> Press any key to merge in dev or CTRL+C to stop " ans
-
+    read -p ">>> Press any key to push dev or CTRL+C to stop " ans
+    echo "[INFO] Pushing dev"
     git push
 fi
