@@ -47,16 +47,25 @@ else
 
     git commit -a -m "Release $version"
 
-    read -p "Press any key to merge on master or CTRL+C to stop " ans
+    read -p ">>> Press any key to merge on master or CTRL+C to stop " ans
 
     echo "Merging in master"
     git checkout master
     git merge --no-ff $branch
+
+    read -p ">>> Press any key to tag and push or CTRL+C to stop " ans
+
     git tag -a $version -m "New release $version"
     git push
     git push --tags
+
+    read -p ">>> Press any key to merge in dev or CTRL+C to stop " ans
+
     echo "Merging in dev"
     git checkout dev
     git merge --no-ff $branch
+
+    read -p ">>> Press any key to merge in dev or CTRL+C to stop " ans
+
     git push
 fi
