@@ -117,6 +117,20 @@ class ResPartnerAddress(geo_model.GeoModel):
             v['neighborhood_id'] = ''
         return {'domain':d, 'value':v}
 
+    def create(self, cr, uid, vals, context=None):
+        vals = self.trim_vals(vals)
+        return super(ResPartnerAddress, self).create(cr, uid, vals, context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        vals = self.trim_vals(vals)
+        return super(ResPartnerAddress, self).write(cr, uid, ids, vals, context=context)
+
+    def trim_vals(self, vals):
+        for key, value in vals.items():
+            if type(value) == str:
+                vals[key] = value.strip()
+        return vals
+
     _name = 'res.partner.address'
     _inherit='res.partner.address'
     _columns = {
