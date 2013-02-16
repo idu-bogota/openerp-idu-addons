@@ -35,6 +35,7 @@
                         'ocs_idu_workflow.xml',
                         'ocs_idu_view.xml',
                         'ocs_idu_reports.xml',
+                        'report/ocs_report.xml',
                         ],
         "installable": True
 }
