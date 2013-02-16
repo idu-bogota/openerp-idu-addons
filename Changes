@@ -1,3 +1,5 @@
+* Update: HAcer genero obligatorio cuando se conoce el nombre del ciudadano
+
 openerp6.1-rev2013021500
 * Fix: Remover espacios en blanco al inicio y final para los datos del ciudadano
 

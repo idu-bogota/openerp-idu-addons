@@ -185,6 +185,19 @@ class ResPartnerAddress(geo_model.GeoModel):
                 is_valid_document = True
         return is_valid_document
 
+    def _check_gender(self, cr, uid, ids, context = None):
+        """
+        Constraint:
+        Should have filled gender if name is filled in
+        """
+        is_valid_data = False
+        for citizen in self.browse(cr,uid,ids,context=None):
+            if ((citizen.name != False) and (citizen.gender != False) or
+                (citizen.name == False) and (citizen.gender == False) or
+                citizen.gender != False
+            ):
+                is_valid_data = True
+        return is_valid_data
 
     _name = 'res.partner.address'
     _inherit='res.partner.address'
@@ -196,6 +209,7 @@ class ResPartnerAddress(geo_model.GeoModel):
     _constraints = [
         (_check_address,'Claim Address should follow IDU conventions ie. KR 102 BIS 10 A BIS Z 30 INT 3 LOC 4',['street']),
         (_check_document,'When Document Type is CC, the document number must be numeric only!!!',['document_number']),
+        (_check_gender,'Please select gender',['gender']),
     ]
     _rec_name = 'document_number'
 

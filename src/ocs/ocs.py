@@ -96,11 +96,11 @@ class ResPartnerAddress(geo_model.GeoModel):
         """
         is_valid_data = False
         for citizen in self.browse(cr,uid,ids,context=None):
-            if ((citizen.email != False)|
-                (citizen.twitter != False)|
-                (citizen.phone != False)|
-                (citizen.facebook != False)|
-                (citizen.street != False)|
+            if ((citizen.email != False) or
+                (citizen.twitter != False) or
+                (citizen.phone != False) or
+                (citizen.facebook != False) or
+                (citizen.street != False) or
                 (citizen.mobile != False)):
                 is_valid_data = True
         return is_valid_data
