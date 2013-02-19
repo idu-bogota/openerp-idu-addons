@@ -96,12 +96,45 @@ class ResPartnerAddress(geo_model.GeoModel):
         """
         is_valid_data = False
         for citizen in self.browse(cr,uid,ids,context=None):
-            if ((citizen.email != False)|
-                (citizen.twitter != False)|
-                (citizen.phone != False)|
-                (citizen.facebook != False)|
-                (citizen.street != False)|
+            if ((citizen.email != False) or
+                (citizen.twitter != False) or
+                (citizen.phone != False) or
+                (citizen.facebook != False) or
+                (citizen.street != False) or
                 (citizen.mobile != False)):
+                is_valid_data = True
+        return is_valid_data
+
+    def _check_twitter(self, cr, uid, ids, context = None):
+        """
+        Constraint:
+        regex /[a-zA-Z0-9_]{1,15}/
+        """
+        is_valid_data = False
+        for citizen in self.browse(cr,uid,ids,context=None):
+            if (citizen.twitter == False) or (re.match("^[a-zA-Z0-9_]{1,15}$", citizen.twitter) != None):
+                is_valid_data = True
+        return is_valid_data
+
+    def _check_facebook(self, cr, uid, ids, context = None):
+        """
+        Constraint:
+        regex /[a-zA-Z0-9\.]{5,50}/
+        """
+        is_valid_data = False
+        for citizen in self.browse(cr,uid,ids,context=None):
+            if (citizen.facebook == False) or (re.match("^[a-zA-Z0-9\.]{5,50}$", citizen.facebook) != None):
+                is_valid_data = True
+        return is_valid_data
+
+    def _check_email(self, cr, uid, ids, context = None):
+        """
+        Constraint:
+        simple checking with regex /^[^@]+@[^@]+\.[^@]+$/
+        """
+        is_valid_data = False
+        for citizen in self.browse(cr,uid,ids,context=None):
+            if (citizen.email == False) or (re.match("^[^@]+@[^@]+\.[^@]+$", citizen.email) != None):
                 is_valid_data = True
         return is_valid_data
 
@@ -156,7 +189,10 @@ class ResPartnerAddress(geo_model.GeoModel):
         ('unique_facebook','unique(facebook)','This facebook account is already registered'),
     ]
     _constraints = [
-        (_check_contact_data,'You must type at least one of these: email, phone, cell phone, facebook or twitter to create a contact',['document_number']),
+        (_check_contact_data,'You must type at least one of these: email, phone, cell phone, facebook or twitter to create a contact',['street']),
+        (_check_twitter,'twitter account is max 15 long and contains just letters, numbers and "_"',['twitter']),
+        (_check_facebook,'facebook account is min 5 max 50 long and contains just letters, numbers and "."',['facebook']),
+        (_check_email,'email is not valid',['email']),
     ]
 ResPartnerAddress()
 
