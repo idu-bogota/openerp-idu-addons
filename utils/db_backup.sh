@@ -23,5 +23,5 @@ date=$(date +%Y%m%d)
 logfile="$folder/$dbname$date.sql"
 
 #TODO: Add rotation
-pg_dump $dbname --column-inserts -f $logfile
+pg_dump $dbname -f $logfile
 scp $logfile $scp_path

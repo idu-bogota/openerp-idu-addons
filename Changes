@@ -1,3 +1,4 @@
+* Fix: Script de backup utiliza COPY en lugar de INSERTS, es mucho más rápido
 * Update: Adicionados validatores para email, twitter, facebook
 * New: Opción de descargar PQRs en un CSV para un rango de fechas seleccionado
 * Update: Hacer genero obligatorio cuando se conoce el nombre del ciudadano
