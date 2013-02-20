@@ -409,7 +409,7 @@ class idu_geocode(osv.osv):
         if (addr is False):
             return None
         else :
-            url = "http://gi03cc01/ArcGIS/rest/services/GeocodeIDU/GeocodeServer/findAddressCandidates?"+addr+"&Zone=1100100&outFields=&outSR="+srid+"&f=json"
+            url = url+addr+"&Zone=1100100&outFields=&outSR="+srid+"&f=json"
             try:
                 xml = urllib.urlopen(url).read()
             except Exception, e:
