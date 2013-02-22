@@ -1,3 +1,5 @@
+* Fix: Vista de impresión del PQR corregido reclamo pos requerimiento
+
 openerp6.1-rev2013021900
 * Fix: Script de backup utiliza COPY en lugar de INSERTS, es mucho más rápido
 * Update: Adicionados validatores para email, twitter, facebook
