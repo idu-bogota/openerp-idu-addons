@@ -29,7 +29,6 @@
 
 from osv import fields,osv
 from base_geoengine import geo_model
-import urllib,json
 from crm import crm
 from tools.translate import _
 import re
@@ -386,50 +385,3 @@ def is_bogota_address_valid(address):
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-
-
-
-class idu_geocode(osv.osv):
-    """
-    Usefull to geocodeAddress
-    """
-    def __init__(self):
-        self.url = 'http://gi03cc01/ArcGIS/rest/services/GeocodeIDU/GeocodeServer/findAddressCandidates?'    
-    
-    
-    def geoCodeAddress(self,cr,uid,addr,srid = 900913, context = None):
-        """
-        Post parameter example
-        http://gi03cc01/ArcGIS/rest/services/GeocodeIDU/GeocodeServer/findAddressCandidates?Street=CL%2047%203%2058%20E&Zone=1100100&outFields=&outSR=900913&f=json
-        """
-        url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'geocoder.ws.url', default='', context=context)
-        if (url is False):
-            url = self.url  
-        addr = addr.encode('utf8')
-        if (addr is False):
-            return None
-        else :
-            url = url+addr+"&Zone=1100100&outFields=&outSR="+srid+"&f=json"
-            try:
-                xml = urllib.urlopen(url).read()
-            except Exception, e:
-                raise osv.except_osv(_('Network error'),
-                                     _('Could not contact geolocation servers, please make sure you or contact geomatic group (%s)') % e)
-                
-            if '<error>' in xml:
-                return None
-            json.decoder(xml)
-        
-           
-          
-        #url = 'http://maps.google.com/maps/geo?q='
-    
-    
-    
-    
-    
-    #
-
-    
-    
-    
