@@ -177,7 +177,7 @@ class ResPartnerAddress(geo_model.GeoModel):
         'district_id':fields.many2one('ocs.district','District'),
         'neighborhood_id':fields.many2one('ocs.neighborhood','Neighborhood'),
         'full_name':fields.function(_get_full_name,type='char',string='Full Name',method=True),
-        'geo_point':fields.geo_point('Location',srid=4668,readonly=True),
+        'geo_point':fields.geo_point('Location',readonly=True),
         'claim_id':fields.one2many('crm.claim','id','Historic of Claims',help="Claims opened by User")
     }
     _rec_name = 'document_number'
@@ -205,7 +205,7 @@ class ocs_citizen_service_point(geo_model.GeoModel):
         'creation_date': fields.datetime('Creation Date',help='Date when Citizen Service Point is installed',required=True),
         'close_date': fields.datetime('End Date',help='When Citizen Service Point is closed'),
         'schedule': fields.char('Schedule',size=60,help='For example L-V 8:30 am -12:50 pm'),
-        'geo_point':fields.geo_point('Location',srid=4668,readonly=True),
+        'geo_point':fields.geo_point('Location',readonly=True),
         'users_id':fields.many2many('res.users','ocs_citizen_service_point_users','csp_id','user_id','Users'),
     }
 ocs_citizen_service_point()
@@ -274,7 +274,7 @@ class ocs_district(geo_model.GeoModel):
     def neighborhood_ids(self, cr, uid, id, default=None, context=None):
         """Return a list with neighborhoods from the district uses a postgis query
         """
-        #neighborhoods = self.pool.get('ocs.neighborhood').geo_search(cr, uid, geo_domain=[('geo_polygon', 'geo_intersect', 'ocs.district.geo_polygon')])
+        #neighborhoods = self.pool.get('ocs.neighborhood').geo_search(cr, uid, geo_domain=[('geo_polygon', 'geo_intersect', {'ocs.district.geo_polygon': []})])
         query = 'SELECT DISTINCT(n.id) FROM ocs_neighborhood AS n, ocs_district AS d ' \
             "WHERE intersects(n.geo_polygon, d.geo_polygon) = TRUE AND d.id = {0};".format(id[0])
         cr.execute(query)
