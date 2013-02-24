@@ -1,3 +1,6 @@
+openerp6.1-rev2013022400
+* Fix: Eliminado codigo que no permite instalar ocs_idu
+
 openerp6.1-rev2013022200
 * Fix: Vista de impresión del PQR corregido reclamo pos requerimiento
 
