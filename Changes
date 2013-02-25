@@ -1,3 +1,5 @@
+* New: Adicionado servicio para crear PQR desde aplicativo de reporte ciudadano 
+
 openerp6.1-rev2013022400
 * Fix: Eliminado codigo que no permite instalar ocs_idu
 

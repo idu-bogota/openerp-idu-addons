@@ -28,6 +28,7 @@
 ###############################################################################
 
 from osv import fields,osv
+from osv.orm import except_orm
 from base_geoengine import geo_model
 from crm import crm
 from tools.translate import _
@@ -127,6 +128,57 @@ class crm_claim(crm.crm_case,osv.osv):
                 v['classification_id'] = classification[0][0]
 
         return {'domain':d, 'value':v}
+
+    def new_from_data(self, cr, uid, data, context = None):
+        """
+        Metodo que sirve para ser llamado via servicio XML-RPC desde aplicaciones externas
+        Retorna {'status': 'success|failed', 'message':'error message','result': {'id': claim.id }}
+        """
+        print data
+        result = {'status': 'success', 'result': {}}
+        ctz_uniq_fields = ['document_number','email','twitter','facebook']
+        ctz_where = []
+        cnt = 0
+        for f in ctz_uniq_fields:
+            if f in data['partner_address_id']:
+                ctz_where.insert(0,(f,'=',data['partner_address_id'][f]))
+                cnt += 1
+                if cnt > 1:
+                    ctz_where.insert(0, '|')
+
+        if len(ctz_where):
+            try:
+                ctz_ids = self.pool.get('res.partner.address').search(cr, uid, ctz_where)
+                ctz_cnt = len(ctz_ids)
+                if ctz_cnt == 0:
+                    #Crear un nuevo citizen
+                    ctz_id = self.pool.get('res.partner.address').create(cr, uid, data['partner_address_id'])
+                elif ctz_cnt == 1:
+                    #Utilizar citizen y actualizar datos
+                    ctz_id = ctz_ids[0]
+                    self.pool.get('res.partner.address').write(cr, uid, ctz_ids, data['partner_address_id'])
+                elif ctz_cnt > 1:
+                    #FIXME: Revisar cual de todos actualizar y utilizar
+                    ctz_ids = self.pool.get('res.partner.address').search(cr, uid, [('document_number','=',data['partner_address_id']['document_number'])])
+                    ctz_id = ctz_ids[0]
+                    self.pool.get('res.partner.address').write(cr, uid, ctz_id, data['partner_address_id'])
+            except except_orm as e:
+                return {'status': 'failed', 'message': e.value }
+            except Exception as e:
+                return {'status': 'failed', 'message': e.message }
+        else:
+            return {'status': 'failed', 'message': 'No hay datos del ciudadano para registrar' }
+
+        data['partner_address_id'] = ctz_id
+
+        try:
+            result['result']['id'] = self.create(cr, uid, data, context)
+        except except_orm as e:
+            return {'status': 'failed', 'message': e.value }
+        except Exception as e:
+            return {'status': 'failed', 'message': e.message }
+
+        return result
 
     _name="crm.claim"
     _inherit="crm.claim"
