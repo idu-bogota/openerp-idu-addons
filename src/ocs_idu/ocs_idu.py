@@ -50,8 +50,6 @@ class crm_claim(crm.crm_case,osv.osv):
                 is_valid = False
         return is_valid
 
-
-
     def _check_is_outsourced(self,cr,uid,ids,fieldname,arg,context=None):
         """
         Check if the citizen service point is outsourced, with this
@@ -280,6 +278,16 @@ class ResPartnerAddress(geo_model.GeoModel):
                 is_valid_data = True
         return is_valid_data
 
+    def _check_address_related_fields(self, cr, uid, ids, context = None):
+        """
+        If address district and neighborhood must be selected
+        """
+        is_valid = True
+        for citizen in self.browse(cr,uid,ids,context=None):
+            if ((citizen.street != False) and (citizen.neighborhood_id.id == False or citizen.district_id.id == False)):
+                is_valid = False
+        return is_valid
+
     _name = 'res.partner.address'
     _inherit='res.partner.address'
     _columns = {
@@ -291,6 +299,7 @@ class ResPartnerAddress(geo_model.GeoModel):
         (_check_address,'Claim Address should follow IDU conventions ie. KR 102 BIS 10 A BIS Z 30 INT 3 LOC 4',['street']),
         (_check_document,'When Document Type is CC, the document number must be numeric only!!!',['document_number']),
         (_check_gender,'Please select gender',['gender']),
+        (_check_address_related_fields,'Please select district and neigboohood',['street']),
     ]
     _rec_name = 'document_number'
 
