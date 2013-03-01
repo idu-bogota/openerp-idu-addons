@@ -366,8 +366,6 @@ class crm_claim(geo_model.GeoModel):
           :param part: Partner's id
           :param email: ignored
         """
-        if not add:
-            return {'value': {'email_from': False}}
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         return {'value': {'email_from': address.email, 'partner_phone': address.phone,
                           'partner_id': address.partner_id.id,

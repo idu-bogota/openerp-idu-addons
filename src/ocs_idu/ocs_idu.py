@@ -115,6 +115,21 @@ class crm_claim(crm.crm_case,osv.osv):
 
         return {'value':v}
 
+    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
+        """This function returns value of partner email based on Partner Address
+          :param part: Partner's id
+        """
+        result = super(crm_claim, self).onchange_district_id(cr, uid, ids, add)
+        address = self.pool.get('res.partner.address').browse(cr, uid, add)
+        if(address.twitter):
+            channel = self.pool.get('crm.case.channel').name_search(cr, uid, name='Twitter', args=None, operator='=', context=None)
+            result['value']['channel'] = channel[0][0]
+        if(address.facebook):
+            channel = self.pool.get('crm.case.channel').name_search(cr, uid, name='Facebook', args=None, operator='=', context=None)
+            result['value']['channel'] = channel[0][0]
+
+        return result
+
     def onchange_district_id(self, cr, uid, ids, district_id):
         """Restricts the neighborhood list to the selected district_id
         """
