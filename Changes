@@ -1,3 +1,4 @@
+* Update: Al seleccionar document_type se debe ingresar document number y viceversa
 * Update: Cuando se registre la dirección de correspondencia, exigir diligenciar el barrio y la localidad del mismo.
 * Update: Exigir diligenciar la entidad a la cual se remite el requerimiento  > para el criterio Trámites a cargo de otras entidades remitidos a IDU.
 * Update: Contacto: twitter y facebook. Colocar automáticamente el canal de atención.

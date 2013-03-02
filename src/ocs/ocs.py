@@ -105,6 +105,20 @@ class ResPartnerAddress(geo_model.GeoModel):
                 is_valid_data = True
         return is_valid_data
 
+    def _check_document_type_and_number(self, cr, uid, ids, context = None):
+        """
+        Constraint:
+
+        Document type defined must have document number
+        """
+        is_valid_document = True
+        for citizen in self.browse(cr, uid, ids,context=None):
+            if ((citizen.document_type and not citizen.document_number) or
+                (citizen.document_number and not citizen.document_type)):
+                is_valid_document = False
+
+        return is_valid_document
+
     def _check_twitter(self, cr, uid, ids, context = None):
         """
         Constraint:
@@ -193,6 +207,7 @@ class ResPartnerAddress(geo_model.GeoModel):
         (_check_twitter,'twitter account is max 15 long and contains just letters, numbers and "_"',['twitter']),
         (_check_facebook,'facebook account is min 5 max 50 long and contains just letters, numbers and "."',['facebook']),
         (_check_email,'email is not valid',['email']),
+        (_check_document_type_and_number,'Document Type and Document Number are required',['document_type','document_number']),
     ]
 ResPartnerAddress()
 
