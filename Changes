@@ -1,3 +1,10 @@
+openerp6.1-rev2013030100
+* Update: Al seleccionar document_type se debe ingresar document number y viceversa
+* Update: Cuando se registre la dirección de correspondencia, exigir diligenciar el barrio y la localidad del mismo.
+* Update: Exigir diligenciar la entidad a la cual se remite el requerimiento  > para el criterio Trámites a cargo de otras entidades remitidos a IDU.
+* Update: Contacto: twitter y facebook. Colocar automáticamente el canal de atención.
+* New: Adicionado servicio para crear PQR desde aplicativo de reporte ciudadano 
+
 openerp6.1-rev2013022400
 * Fix: Eliminado codigo que no permite instalar ocs_idu
 

@@ -28,6 +28,7 @@
 ###############################################################################
 
 from osv import fields,osv
+from osv.orm import except_orm
 from base_geoengine import geo_model
 from crm import crm
 from tools.translate import _
@@ -37,6 +38,20 @@ class crm_claim(crm.crm_case,osv.osv):
     """
     Inherit from ocs and ocs crm_claim
     """
+
+    def test_response(self, cr, uid, ids, *args):
+        """
+        Check if Response Text is Empty and partner_forwarded_id is selected when claim is redirected
+        """
+        is_valid_super = super(crm_claim, self).test_response(cr, uid, ids, args)
+        is_valid = True
+        for claim in self.browse(cr, uid, ids,context = None):
+            classification = self.pool.get('ocs.claim_classification').name_search(cr, uid, name='Trámites a cargo de otras entidades remitidos a IDU', args=None, operator='=', context=None)
+            if claim.classification_id.id == classification[0][0] and claim.partner_forwarded_id.id == False:
+                self.log(cr, uid, claim.id, 'Need Partner Forwarded')
+                is_valid = False
+        return is_valid and is_valid_super
+
 
     def _check_is_outsourced(self,cr,uid,ids,fieldname,arg,context=None):
         """
@@ -114,6 +129,22 @@ class crm_claim(crm.crm_case,osv.osv):
 
         return {'value':v}
 
+    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
+        """This function returns value of partner email based on Partner Address
+          :param part: Partner's id
+        """
+        result = super(crm_claim, self).onchange_district_id(cr, uid, ids, add)
+        if add:
+            address = self.pool.get('res.partner.address').browse(cr, uid, add)
+            if(address.twitter):
+                channel = self.pool.get('crm.case.channel').name_search(cr, uid, name='Twitter', args=None, operator='=', context=None)
+                result['value']['channel'] = channel[0][0]
+            if(address.facebook):
+                channel = self.pool.get('crm.case.channel').name_search(cr, uid, name='Facebook', args=None, operator='=', context=None)
+                result['value']['channel'] = channel[0][0]
+
+        return result
+
     def onchange_district_id(self, cr, uid, ids, district_id):
         """Restricts the neighborhood list to the selected district_id
         """
@@ -127,6 +158,57 @@ class crm_claim(crm.crm_case,osv.osv):
                 v['classification_id'] = classification[0][0]
 
         return {'domain':d, 'value':v}
+
+    def new_from_data(self, cr, uid, data, context = None):
+        """
+        Metodo que sirve para ser llamado via servicio XML-RPC desde aplicaciones externas
+        Retorna {'status': 'success|failed', 'message':'error message','result': {'id': claim.id }}
+        """
+        print data
+        result = {'status': 'success', 'result': {}}
+        ctz_uniq_fields = ['document_number','email','twitter','facebook']
+        ctz_where = []
+        cnt = 0
+        for f in ctz_uniq_fields:
+            if f in data['partner_address_id']:
+                ctz_where.insert(0,(f,'=',data['partner_address_id'][f]))
+                cnt += 1
+                if cnt > 1:
+                    ctz_where.insert(0, '|')
+
+        if len(ctz_where):
+            try:
+                ctz_ids = self.pool.get('res.partner.address').search(cr, uid, ctz_where)
+                ctz_cnt = len(ctz_ids)
+                if ctz_cnt == 0:
+                    #Crear un nuevo citizen
+                    ctz_id = self.pool.get('res.partner.address').create(cr, uid, data['partner_address_id'])
+                elif ctz_cnt == 1:
+                    #Utilizar citizen y actualizar datos
+                    ctz_id = ctz_ids[0]
+                    self.pool.get('res.partner.address').write(cr, uid, ctz_ids, data['partner_address_id'])
+                elif ctz_cnt > 1:
+                    #FIXME: Revisar cual de todos actualizar y utilizar
+                    ctz_ids = self.pool.get('res.partner.address').search(cr, uid, [('document_number','=',data['partner_address_id']['document_number'])])
+                    ctz_id = ctz_ids[0]
+                    self.pool.get('res.partner.address').write(cr, uid, ctz_id, data['partner_address_id'])
+            except except_orm as e:
+                return {'status': 'failed', 'message': e.value }
+            except Exception as e:
+                return {'status': 'failed', 'message': e.message }
+        else:
+            return {'status': 'failed', 'message': 'No hay datos del ciudadano para registrar' }
+
+        data['partner_address_id'] = ctz_id
+
+        try:
+            result['result']['id'] = self.create(cr, uid, data, context)
+        except except_orm as e:
+            return {'status': 'failed', 'message': e.value }
+        except Exception as e:
+            return {'status': 'failed', 'message': e.message }
+
+        return result
 
     _name="crm.claim"
     _inherit="crm.claim"
@@ -199,6 +281,16 @@ class ResPartnerAddress(geo_model.GeoModel):
                 is_valid_data = True
         return is_valid_data
 
+    def _check_address_related_fields(self, cr, uid, ids, context = None):
+        """
+        If address district and neighborhood must be selected
+        """
+        is_valid = True
+        for citizen in self.browse(cr,uid,ids,context=None):
+            if ((citizen.street != False) and (citizen.neighborhood_id.id == False or citizen.district_id.id == False)):
+                is_valid = False
+        return is_valid
+
     _name = 'res.partner.address'
     _inherit='res.partner.address'
     _columns = {
@@ -210,6 +302,7 @@ class ResPartnerAddress(geo_model.GeoModel):
         (_check_address,'Claim Address should follow IDU conventions ie. KR 102 BIS 10 A BIS Z 30 INT 3 LOC 4',['street']),
         (_check_document,'When Document Type is CC, the document number must be numeric only!!!',['document_number']),
         (_check_gender,'Please select gender',['gender']),
+        (_check_address_related_fields,'Please select district and neigboohood',['street']),
     ]
     _rec_name = 'document_number'
 

@@ -105,6 +105,20 @@ class ResPartnerAddress(geo_model.GeoModel):
                 is_valid_data = True
         return is_valid_data
 
+    def _check_document_type_and_number(self, cr, uid, ids, context = None):
+        """
+        Constraint:
+
+        Document type defined must have document number
+        """
+        is_valid_document = True
+        for citizen in self.browse(cr, uid, ids,context=None):
+            if ((citizen.document_type and not citizen.document_number) or
+                (citizen.document_number and not citizen.document_type)):
+                is_valid_document = False
+
+        return is_valid_document
+
     def _check_twitter(self, cr, uid, ids, context = None):
         """
         Constraint:
@@ -177,7 +191,7 @@ class ResPartnerAddress(geo_model.GeoModel):
         'district_id':fields.many2one('ocs.district','District'),
         'neighborhood_id':fields.many2one('ocs.neighborhood','Neighborhood'),
         'full_name':fields.function(_get_full_name,type='char',string='Full Name',method=True),
-        'geo_point':fields.geo_point('Location',srid=4668,readonly=True),
+        'geo_point':fields.geo_point('Location',readonly=True),
         'claim_id':fields.one2many('crm.claim','id','Historic of Claims',help="Claims opened by User")
     }
     _rec_name = 'document_number'
@@ -193,6 +207,7 @@ class ResPartnerAddress(geo_model.GeoModel):
         (_check_twitter,'twitter account is max 15 long and contains just letters, numbers and "_"',['twitter']),
         (_check_facebook,'facebook account is min 5 max 50 long and contains just letters, numbers and "."',['facebook']),
         (_check_email,'email is not valid',['email']),
+        (_check_document_type_and_number,'Document Type and Document Number are required',['document_type','document_number']),
     ]
 ResPartnerAddress()
 
@@ -205,7 +220,7 @@ class ocs_citizen_service_point(geo_model.GeoModel):
         'creation_date': fields.datetime('Creation Date',help='Date when Citizen Service Point is installed',required=True),
         'close_date': fields.datetime('End Date',help='When Citizen Service Point is closed'),
         'schedule': fields.char('Schedule',size=60,help='For example L-V 8:30 am -12:50 pm'),
-        'geo_point':fields.geo_point('Location',srid=4668,readonly=True),
+        'geo_point':fields.geo_point('Location',readonly=True),
         'users_id':fields.many2many('res.users','ocs_citizen_service_point_users','csp_id','user_id','Users'),
     }
 ocs_citizen_service_point()
@@ -274,7 +289,7 @@ class ocs_district(geo_model.GeoModel):
     def neighborhood_ids(self, cr, uid, id, default=None, context=None):
         """Return a list with neighborhoods from the district uses a postgis query
         """
-        #neighborhoods = self.pool.get('ocs.neighborhood').geo_search(cr, uid, geo_domain=[('geo_polygon', 'geo_intersect', 'ocs.district.geo_polygon')])
+        #neighborhoods = self.pool.get('ocs.neighborhood').geo_search(cr, uid, geo_domain=[('geo_polygon', 'geo_intersect', {'ocs.district.geo_polygon': []})])
         query = 'SELECT DISTINCT(n.id) FROM ocs_neighborhood AS n, ocs_district AS d ' \
             "WHERE intersects(n.geo_polygon, d.geo_polygon) = TRUE AND d.id = {0};".format(id[0])
         cr.execute(query)
@@ -353,7 +368,6 @@ class crm_claim(geo_model.GeoModel):
                     is_valid_data = True
         return is_valid_data
 
-
     def _get_full_name(self,cr,uid,ids,fieldname,arg,context=None):
         """Get Full Name of Citizen """
         res = {}
@@ -368,6 +382,7 @@ class crm_claim(geo_model.GeoModel):
         """
         if not add:
             return {'value': {'email_from': False}}
+
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         return {'value': {'email_from': address.email, 'partner_phone': address.phone,
                           'partner_id': address.partner_id.id,
@@ -428,6 +443,16 @@ class crm_claim(geo_model.GeoModel):
         custom_values['sub_classification_id'] = self.pool.get('ocs.claim_classification').search(cr, uid, [('parent_id','=',custom_values['classification_id'])], offset=0, limit=1)[0]
         return custom_values
 
+    def _check_address_related_fields(self, cr, uid, ids, context = None):
+        """
+        If address district and neighborhood must be selected
+        """
+        is_valid = True
+        for claim in self.browse(cr,uid,ids,context=None):
+            if ((claim.claim_address != False) and (claim.neighborhood_id.id == False or claim.district_id.id == False)):
+                is_valid = False
+        return is_valid
+
     _columns={
         #'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
         'description': fields.text('Description',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
@@ -473,6 +498,7 @@ class crm_claim(geo_model.GeoModel):
         }
     _constraints = [
     (_check_user_in_csp,'User must registered in the Point of Citizen Service',['user_id']),
+    (_check_address_related_fields,'Please select district and neigboohood',['claim_address']),
     ]
 crm_claim()
 
