@@ -353,7 +353,6 @@ class crm_claim(geo_model.GeoModel):
                     is_valid_data = True
         return is_valid_data
 
-
     def _get_full_name(self,cr,uid,ids,fieldname,arg,context=None):
         """Get Full Name of Citizen """
         res = {}
@@ -366,6 +365,9 @@ class crm_claim(geo_model.GeoModel):
           :param part: Partner's id
           :param email: ignored
         """
+        if not add:
+            return {'value': {'email_from': False}}
+
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         return {'value': {'email_from': address.email, 'partner_phone': address.phone,
                           'partner_id': address.partner_id.id,
@@ -426,6 +428,16 @@ class crm_claim(geo_model.GeoModel):
         custom_values['sub_classification_id'] = self.pool.get('ocs.claim_classification').search(cr, uid, [('parent_id','=',custom_values['classification_id'])], offset=0, limit=1)[0]
         return custom_values
 
+    def _check_address_related_fields(self, cr, uid, ids, context = None):
+        """
+        If address district and neighborhood must be selected
+        """
+        is_valid = True
+        for claim in self.browse(cr,uid,ids,context=None):
+            if ((claim.claim_address != False) and (claim.neighborhood_id.id == False or claim.district_id.id == False)):
+                is_valid = False
+        return is_valid
+
     _columns={
         #'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
         'description': fields.text('Description',required=True,readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
@@ -471,6 +483,7 @@ class crm_claim(geo_model.GeoModel):
         }
     _constraints = [
     (_check_user_in_csp,'User must registered in the Point of Citizen Service',['user_id']),
+    (_check_address_related_fields,'Please select district and neigboohood',['claim_address']),
     ]
 crm_claim()
 

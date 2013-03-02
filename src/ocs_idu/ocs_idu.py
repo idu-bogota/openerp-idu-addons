@@ -131,13 +131,14 @@ class crm_claim(crm.crm_case,osv.osv):
           :param part: Partner's id
         """
         result = super(crm_claim, self).onchange_district_id(cr, uid, ids, add)
-        address = self.pool.get('res.partner.address').browse(cr, uid, add)
-        if(address.twitter):
-            channel = self.pool.get('crm.case.channel').name_search(cr, uid, name='Twitter', args=None, operator='=', context=None)
-            result['value']['channel'] = channel[0][0]
-        if(address.facebook):
-            channel = self.pool.get('crm.case.channel').name_search(cr, uid, name='Facebook', args=None, operator='=', context=None)
-            result['value']['channel'] = channel[0][0]
+        if add:
+            address = self.pool.get('res.partner.address').browse(cr, uid, add)
+            if(address.twitter):
+                channel = self.pool.get('crm.case.channel').name_search(cr, uid, name='Twitter', args=None, operator='=', context=None)
+                result['value']['channel'] = channel[0][0]
+            if(address.facebook):
+                channel = self.pool.get('crm.case.channel').name_search(cr, uid, name='Facebook', args=None, operator='=', context=None)
+                result['value']['channel'] = channel[0][0]
 
         return result
 
