@@ -39,16 +39,19 @@ class crm_claim(crm.crm_case,osv.osv):
     Inherit from ocs and ocs crm_claim
     """
 
-    def _check_classification_partner_forwarded_id(self, cr, uid, ids, context = None):
+    def test_response(self, cr, uid, ids, *args):
         """
-        Check a partner_forwarded_id is selected
+        Check if Response Text is Empty and partner_forwarded_id is selected when claim is redirected
         """
+        is_valid_super = super(crm_claim, self).test_response(cr, uid, ids, args)
         is_valid = True
-        for claim in self.browse(cr, uid, ids,context):
+        for claim in self.browse(cr, uid, ids,context = None):
             classification = self.pool.get('ocs.claim_classification').name_search(cr, uid, name='Trámites a cargo de otras entidades remitidos a IDU', args=None, operator='=', context=None)
             if claim.classification_id.id == classification[0][0] and claim.partner_forwarded_id.id == False:
+                self.log(cr, uid, claim.id, 'Need Partner Forwarded')
                 is_valid = False
-        return is_valid
+        return is_valid and is_valid_super
+
 
     def _check_is_outsourced(self,cr,uid,ids,fieldname,arg,context=None):
         """
@@ -226,7 +229,6 @@ class crm_claim(crm.crm_case,osv.osv):
     _constraints = [
         (_check_contract_reference,'Contract Reference format is number-year, ie. 123-2012',['contract_reference']),
         (_check_claim_address,'Claim Address should follow IDU conventions ie. Cr 102 BIS 10 A BIS Z 30 Int 3 Loc 4',['claim_address']),
-        (_check_classification_partner_forwarded_id,'Please select partner forwarded',['classification_id']),
     ]
 
 crm_claim()
