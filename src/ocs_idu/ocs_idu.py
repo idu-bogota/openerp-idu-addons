@@ -158,6 +158,18 @@ class crm_claim(crm.crm_case,osv.osv):
                 v['classification_id'] = classification[0][0]
 
         return {'domain':d, 'value':v}
+     
+    def onchange_address_value(self, cr, uid, ids, addr):
+        """
+        GeoCode claim address
+        param addr: Claim Address        
+        """
+        
+        
+        
+        
+        
+    
 
     def new_from_data(self, cr, uid, data, context = None):
         """
