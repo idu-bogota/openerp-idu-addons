@@ -32,7 +32,7 @@ from osv.orm import except_orm
 from base_geoengine import geo_model
 from crm import crm
 from tools.translate import _
-import re
+import re, urllib, json
 
 class crm_claim(crm.crm_case,osv.osv):
     """
@@ -164,7 +164,23 @@ class crm_claim(crm.crm_case,osv.osv):
         GeoCode claim address
         param addr: Claim Address        
         """
-        
+        default_res = {'value':{'geo_point':False}} 
+        res = {}
+        if not addr:
+            res = default_res
+        else :
+            try:
+                url_geocoder = self.pool.get('ir.config_parameter').get_param(cr, uid, 'geo_coder.ws.url', default='', context=None)
+                srid = 900913
+                zone = 1100100 #Bogota
+                point = geocode_dAddress(addr,srid,url_geocoder,zone)
+                if (point is not False):
+                    res = {'value':{'geo_point':point}}
+                else :
+                    res = default_res            
+            except Exception: 
+                res = default_res
+        return res
         
         
         
@@ -490,3 +506,28 @@ def is_bogota_address_valid(address):
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
+    
+    
+def geocode_dAddress(addr,srid,uri,city_code):
+    """
+    Resolve geo - location from address with REST web service technique
+    http://gi03cc01/ArcGIS/rest/services/GeocodeIDU/GeocodeServer/findAddressCandidates?Street=cra+82+a+6+37&Zone=Bogot%C3%A1+D.C.&outFields=&outSR=&f=html    
+    default geocoder address= 'http://gi03cc01/ArcGIS/rest/services/GeocodeIDU/GeocodeServer/findAddressCandidates?'
+    """
+    point = False
+    try:
+        addr = addr.encode('utf8')
+        url = "{0}Street={1}&Zone={2}&outSR={3}&f=pjson".format(uri,addr,city_code,srid)
+        jsonstr = urllib.urlopen(url).read()
+        vals = json.loads(jsonstr)       
+        if (dict.__len__ >= 2):           
+            candidates = vals['candidates'] 
+            if (candidates.__len__>0) :
+                location = candidates[0]['location']
+                x = location['x']
+                y = location['y']
+                #value return pattern: {"type": "Point", "coordinates": [746676.106813609, 5865349.7175855]}
+                point ='{"type":"Point","coordinates":[{0}, {1}]}'.format(x,y)          
+    except Exception:
+        return False      
+    return point
