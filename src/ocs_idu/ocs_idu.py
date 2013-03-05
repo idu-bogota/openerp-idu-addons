@@ -129,14 +129,13 @@ class crm_claim(crm.crm_case,osv.osv):
                     if (len(classification) and classification_id == classification[0][0]):
                         solution = self.pool.get('ocs.claim_solution_classification').name_search(cr, uid, name='Redireccionado Externamente', args=None, operator='=', context=None)
                         v['solution_classification_id'] = solution[0][0]
-
         return {'value':v}
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         """This function returns value of partner email based on Partner Address
           :param part: Partner's id
         """
-        result = super(crm_claim, self).onchange_district_id(cr, uid, ids, add)
+        result = super(crm_claim, self).onchange_partner_address_id(cr, uid, ids, add, email)
         if add:
             address = self.pool.get('res.partner.address').browse(cr, uid, add)
             if(address.twitter):
@@ -161,13 +160,13 @@ class crm_claim(crm.crm_case,osv.osv):
                 v['classification_id'] = classification[0][0]
 
         return {'domain':d, 'value':v}
-     
+
     def onchange_address_value(self, cr, uid, ids, addr):
         """
         GeoCode claim address
         param addr: Claim Address
         """
-        default_res = {'value':{'geo_point':False}} 
+        default_res = {'value':{'geo_point':False}}
         res = {}
         if not addr:
             res = default_res
@@ -204,7 +203,7 @@ class crm_claim(crm.crm_case,osv.osv):
                     res = {'value':{'geo_point':point,'district_id':district_id,'neighborhood_id':neighborhood_id}}
                 else :
                     res = default_res
-            except Exception: 
+            except Exception:
                 res = default_res
         return res
 
@@ -529,8 +528,8 @@ if __name__ == "__main__":
     doctest.testmod()
 
 
-def geocodeAddress(addr, 
-                srid, 
+def geocodeAddress(addr,
+                srid,
                 uri = '',
                 zone = 1100100): #Default = Bogota
     """
@@ -544,23 +543,23 @@ def geocodeAddress(addr,
     """
     try:
         addr = addr.encode('utf8')
-        url = "{0}Street={1}&Zone={2}&outSR={3}&f=pjson".format(uri,addr,zone,4326) #Because to Geocoder Bug, firstable we need to get information in Geographic coordinate system 
+        url = "{0}Street={1}&Zone={2}&outSR={3}&f=pjson".format(uri,addr,zone,4326) #Because to Geocoder Bug, firstable we need to get information in Geographic coordinate system
         jsonstr = urllib.urlopen(url).read()
         vals = json.loads(jsonstr)
         if (dict.__len__ >= 2):
-            candidates = vals['candidates'] 
+            candidates = vals['candidates']
             if (candidates.__len__>0) :
                 location = candidates[0]['location']
                 x = location['x']
-                y = location['y'] 
+                y = location['y']
                 if (srid is "epsg:4326"):
                     x1 = x
                     y1 = y
                 else :
                     pGeographic = Proj(init="epsg:4326")
                     pOtherRefSys = Proj(init=srid)
-                    x1,y1 = transform(pGeographic,pOtherRefSys,x,y)    
-                #format :   {"type": "Point", "coordinates": [746676.106813609, 5865349.7175855]}            
+                    x1,y1 = transform(pGeographic,pOtherRefSys,x,y)
+                #format :   {"type": "Point", "coordinates": [746676.106813609, 5865349.7175855]}
                 return '{"type": "Point", "coordinates":[%10.12f, %10.12f]}' % (x1,y1)
     except Exception :
         return False
