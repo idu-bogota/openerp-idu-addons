@@ -31,6 +31,8 @@ from osv import fields,osv
 from base_geoengine import geo_model
 from datetime import datetime
 from datetime import timedelta
+from pyproj import Proj
+from pyproj import transform
 from crm import crm
 from crm_claim import crm_claim
 import re
@@ -191,7 +193,7 @@ class ResPartnerAddress(geo_model.GeoModel):
         'district_id':fields.many2one('ocs.district','District'),
         'neighborhood_id':fields.many2one('ocs.neighborhood','Neighborhood'),
         'full_name':fields.function(_get_full_name,type='char',string='Full Name',method=True),
-        'geo_point':fields.geo_point('Location',readonly=True),
+        'geo_point':fields.geo_point('Location',readonly=False),
         'claim_id':fields.one2many('crm.claim','id','Historic of Claims',help="Claims opened by User")
     }
     _rec_name = 'document_number'
