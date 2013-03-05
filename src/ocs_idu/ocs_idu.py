@@ -165,7 +165,7 @@ class crm_claim(crm.crm_case,osv.osv):
     def onchange_address_value(self, cr, uid, ids, addr):
         """
         GeoCode claim address
-        param addr: Claim Address        
+        param addr: Claim Address
         """
         default_res = {'value':{'geo_point':False}} 
         res = {}
@@ -178,17 +178,35 @@ class crm_claim(crm.crm_case,osv.osv):
                 zone = 1100100 #Bogota
                 point = geocodeAddress(addr,srid,url_geocoder,zone)
                 if (point is not False):
-                    res = {'value':{'geo_point':point}}
+                    """
+                    Calculating District and Neighborhood of claim_address
+                    """
+                    coord = json.loads(point)["coordinates"]
+                    x = coord[0]
+                    y = coord[1]
+                    query = "select id from ocs_district \
+                    where intersects (geo_polygon,st_geometryfromtext('POINT({0} {1})',900913)) \
+                    is true".format(x,y)
+                    cr.execute(query)
+                    district_id = False
+                    for n_ids in cr.fetchall():
+                        for i in n_ids :
+                            district_id = i
+                    #res = {'value':{'geo_point':point}}
+                    query_neigh = "select id from ocs_neighborhood\
+                    where intersects (geo_polygon,st_geometryfromtext('POINT({0} {1})',900913)) \
+                    is true".format(x,y)
+                    cr.execute(query_neigh)
+                    neighborhood_id = False
+                    for n_ids in cr.fetchall():
+                        for i in n_ids :
+                            neighborhood_id = i
+                    res = {'value':{'geo_point':point,'district_id':district_id,'neighborhood_id':neighborhood_id}}
                 else :
-                    res = default_res            
+                    res = default_res
             except Exception: 
                 res = default_res
         return res
-        
-        
-        
-        
-    
 
     def new_from_data(self, cr, uid, data, context = None):
         """
@@ -509,8 +527,8 @@ def is_bogota_address_valid(address):
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-    
-    
+
+
 def geocodeAddress(addr, 
                 srid, 
                 uri = '',
