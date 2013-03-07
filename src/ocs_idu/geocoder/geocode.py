@@ -25,11 +25,11 @@
 #
 ##############################################################################
 import urllib
-import json
+import json, math
 from pyproj import Proj
 from pyproj import transform
 
-def geo_CodeAddress(addr, 
+def geo_code_address(addr, 
                 srid, 
                 uri = '',
                 zone = 1100100): #Default = Bogota
@@ -49,19 +49,20 @@ def geo_CodeAddress(addr,
         vals = json.loads(jsonstr)       
         if (dict.__len__ >= 2):           
             candidates = vals['candidates'] 
-            if (candidates.__len__>0) :
-                location = candidates[0]['location']
+            for candidate in candidates :
+                location = candidate['location']
                 x = location['x']
-                y = location['y'] 
-                if (srid is "epsg:4326"):
-                    x1 = x
-                    y1 = y
-                else :
-                    pGeographic = Proj(init="epsg:4326")
-                    pOtherRefSys = Proj(init=srid)
-                    x1,y1 = transform(pGeographic,pOtherRefSys,x,y)    
-                #format :   {"type": "Point", "coordinates": [746676.106813609, 5865349.7175855]}            
-                return '{"type": "Point", "coordinates":[%10.12f, %10.12f]}' % (x1,y1)          
+                y = location['y']
+                if (not (math.isnan(x) or math.isnan(y))):
+                    if (srid is "epsg:4326"):
+                        x1 = x
+                        y1 = y
+                    else :
+                        pGeographic = Proj(init="epsg:4326")
+                        pOtherRefSys = Proj(init=srid)
+                        x1,y1 = transform(pGeographic,pOtherRefSys,x,y)    
+                        #format :   {"type": "Point", "coordinates": [746676.106813609, 5865349.7175855]}            
+                        return '{"type": "Point", "coordinates":[%10.12f, %10.12f]}' % (x1,y1)
     except Exception :
         return False
     return False

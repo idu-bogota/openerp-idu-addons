@@ -11,16 +11,16 @@ def main():
     usage = "Create an OpenERP database\nusage: %prog [options]"
     parser = OptionParser(usage)
     parser.add_option("-n", "--db_name", dest="db_name", help="New database name")
+    parser.add.option("-u", "--db_user",dest="db_user",help="Database user")
     parser.add_option("-p", "--db_password", dest="db_password", help="New database password")
+    parser.add_option("-H", "--host", dest="host", help="OpenERP server host", default="localhost")
     parser.add_option("-l", "--db_lang", dest="db_lang", help="New database language", default="en_US")
     parser.add_option("-d", "--demo_data", action="store_true", dest="demo_data", help="New database loads demo data")
     parser.add_option("-g", "--activate_postgis", action="store_true", dest="activate_postgis", help="Activate postgis 1.5")
     parser.add_option("-i", "--init_module", dest="init_module", help="Init module")
-    parser.add_option("-s", "--super_admin_pwd", dest="super_admin_pwd", help="Super Admin Password", default="admin")
-    parser.add_option("-H", "--host", dest="host", help="OpenERP server host", default="http://localhost:8069")
+    parser.add_option("-s", "--super_admin_pwd", dest="super_admin_pwd", help="Super Admin Password", default="admin")    
     parser.add_option("-c", "--config_file", dest="config_file", help="OpenERP config file - absolute path", default="/etc/openerp/openerp-server.conf")
     parser.add_option("-b", "--data_dir", dest="data_dir", help="Folder that includes SQL files to be loaded via psql", default="/opt/addons-idu/data_idu/sql/")
-
     (options, args) = parser.parse_args()
     #pprint.pprint(options);
     if not options.db_name:

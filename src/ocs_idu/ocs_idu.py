@@ -32,9 +32,8 @@ from osv.orm import except_orm
 from base_geoengine import geo_model
 from crm import crm
 from tools.translate import _
-import re, urllib, json
-from pyproj import Proj
-from pyproj import transform
+import re, json
+from geocoder.geocode import geo_code_address
 ##"other.extra:900913"
 
 class crm_claim(crm.crm_case,osv.osv):
@@ -175,7 +174,7 @@ class crm_claim(crm.crm_case,osv.osv):
                 url_geocoder = self.pool.get('ir.config_parameter').get_param(cr, uid, 'geo_coder.ws.url', default='', context=None)
                 srid = "other.extra:900913"
                 zone = 1100100 #Bogota
-                point = geocodeAddress(addr,srid,url_geocoder,zone)
+                point = geo_code_address(addr,srid,url_geocoder,zone)
                 if (point is not False):
                     """
                     Calculating District and Neighborhood of claim_address
@@ -526,40 +525,3 @@ def is_bogota_address_valid(address):
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-
-
-def geocodeAddress(addr,
-                srid,
-                uri = '',
-                zone = 1100100): #Default = Bogota
-    """
-    Resolve geo - location from address with REST web service technique
-    Parameters :
-    addr = Address to Geocode
-    srid = Spatial Reference System ID. in this format ie "epsg:4326" or "other.extra:900913"
-    uri = Geocoder Web Service addr, for idu = http://gi03cc01/ArcGIS/rest/services/GeocodeIDU/GeocodeServer/findAddressCandidates?
-    zone = City or town code for example Bogota = 1100100
-    REST POST Example http://gi03cc01/ArcGIS/rest/services/GeocodeIDU/GeocodeServer/findAddressCandidates?Street=cra+82+a+6+37&Zone=Bogot%C3%A1+D.C.&outFields=&outSR=&f=html
-    """
-    try:
-        addr = addr.encode('utf8')
-        url = "{0}Street={1}&Zone={2}&outSR={3}&f=pjson".format(uri,addr,zone,4326) #Because to Geocoder Bug, firstable we need to get information in Geographic coordinate system
-        jsonstr = urllib.urlopen(url).read()
-        vals = json.loads(jsonstr)
-        if (dict.__len__ >= 2):
-            candidates = vals['candidates']
-            if (candidates.__len__>0) :
-                location = candidates[0]['location']
-                x = location['x']
-                y = location['y']
-                if (srid is "epsg:4326"):
-                    x1 = x
-                    y1 = y
-                else :
-                    pGeographic = Proj(init="epsg:4326")
-                    pOtherRefSys = Proj(init=srid)
-                    x1,y1 = transform(pGeographic,pOtherRefSys,x,y)
-                #format :   {"type": "Point", "coordinates": [746676.106813609, 5865349.7175855]}
-                return '{"type": "Point", "coordinates":[%10.12f, %10.12f]}' % (x1,y1)
-    except Exception :
-        return False
