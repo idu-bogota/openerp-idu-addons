@@ -392,6 +392,18 @@ class crm_claim(geo_model.GeoModel):
                           }
                 }
 
+    def onchange_district_id(self, cr, uid, ids, district_id):
+        """Restricts the neighborhood list to the selected district_id
+        """
+        v={}
+        d={}
+        if district_id:
+            district = self.pool.get('ocs.district').browse(cr, uid, district_id)
+            n_ids = district.neighborhood_ids()
+            d['neighborhood_id'] = "[('id','in',{0})]".format(n_ids)
+            v['neighborhood_id'] = ''
+        return {'domain':d, 'value':v}
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """Automatically called when new email message arrives"""
         subject = msg.get('subject')

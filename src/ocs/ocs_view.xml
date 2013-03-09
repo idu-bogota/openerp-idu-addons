@@ -646,7 +646,7 @@ Claims
                     <field name="claim_address" select ="0"/>
                     <newline />
                     <group colspan="6" col="6" />
-                    <field name="district_id" select ="0"/>
+                    <field name="district_id" select ="0" on_change="onchange_district_id(district_id)"/>
                     <field name="neighborhood_id" select ="0" />
             </separator>
           <page string="Follow Up" position="replace">

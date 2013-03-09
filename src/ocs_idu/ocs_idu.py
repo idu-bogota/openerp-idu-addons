@@ -128,6 +128,7 @@ class crm_claim(crm.crm_case,osv.osv):
                     if (len(classification) and classification_id == classification[0][0]):
                         solution = self.pool.get('ocs.claim_solution_classification').name_search(cr, uid, name='Redireccionado Externamente', args=None, operator='=', context=None)
                         v['solution_classification_id'] = solution[0][0]
+
         return {'value':v}
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
