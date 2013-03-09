@@ -33,7 +33,7 @@ from base_geoengine import geo_model
 from crm import crm
 from tools.translate import _
 import re, json
-from geocoder.geocode import geo_code_address
+from geocoder.geocode import geo_code_address,is_bogota_address_valid
 ##"other.extra:900913"
 
 class crm_claim(crm.crm_case,osv.osv):
@@ -428,100 +428,3 @@ class ocs_tract(osv.osv):
     }
     _rec_name = 'full_name'
 ocs_tract()
-
-def is_bogota_address_valid(address):
-    """ This function checks if the parameter fits Bogotá D.C. address schema.
-
-    >>> print is_bogota_address_valid('KR 102 10 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 10 30 INT 2 AP 1023')
-    True
-    >>> print is_bogota_address_valid('KR 102 10 30 INT 2')
-    True
-    >>> print is_bogota_address_valid('KR 102 10 30 AP 1123')
-    True
-    >>> print is_bogota_address_valid('KR 102 A 10 A 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A 10 A 30 INT 3 AP 12')
-    True
-    >>> print is_bogota_address_valid('KR 102 A 10 A BIS 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A 10 A BIS Z 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS 10 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS 10 30 AP 12')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS 10 A 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS 10 BIS 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS 10 BIS Z 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS 10 A BIS 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS 10 A BIS Z 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS 10 A BIS Z 30 INT 3 LOC 4')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS A 10 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS A 10 30 E')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS A 10 A 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS A 10 A BIS 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS A 10 A BIS A 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS A 10 A BIS A 30 LOC 5')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS A 10 BIS Z 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS 10 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS 10 A 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS 10 A BIS 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS 10 A BIS A 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS 10 BIS Z 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS Z 10 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS Z 10 30 SE')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS Z 10 A 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS Z 10 A BIS 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS Z 10 A BIS A 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS Z 10 BIS Z 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS Z 10 BIS Z 30 N')
-    True
-    >>> print is_bogota_address_valid('TV 34 F 45 B BIS Z 32 MZ 32 INT 5 TO 23 AP 123 S')
-    True
-    >>> print is_bogota_address_valid('CL 22 A 52 07 TO C AP 1102')
-    True
-    """
-    st_type = '(CL|AC|DG|KR|AK|TV|CA|CT|PS)'
-    st_number = '[0-9]+'
-    st_suffix = '(\s[A-Z])?((\sBIS)|(\sBIS\s[A-Z]))?'
-    st_horizontal = '(\s(AP|OF|CON|PEN|LOC|DEP|GJ)\s[0-9]+)?'
-    st_interior = '(\s((INT|BQ|TO|CA)\s[0-9A-Z]+))?'
-    st_manzana = '(\s((MZ|LO|ET)\s[A-Z0-9]+))?'
-    st_sector = '(\s(N|E|S|O|NE|SE|SO|NO))?'
-    regex = "^{0}\s{1}{2}\s{1}{2}\s{1}{6}{6}{3}{3}{4}{5}$".format(st_type, st_number, st_suffix, st_interior, st_horizontal, st_sector, st_manzana);
-    #print regex
-    if re.match(regex, address) != None:
-        return True
-    else:
-        return False
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
