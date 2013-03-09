@@ -147,10 +147,10 @@ class crm_claim(crm.crm_case,osv.osv):
 
         return result
 
-    def onchange_district_id(self, cr, uid, ids, district_id):
+    def onchange_district_id(self, cr, uid, ids, district_id, geo_point):
         """Restricts the neighborhood list to the selected district_id
         """
-        result = super(crm_claim, self).onchange_district_id(cr, uid, ids, district_id)
+        result = super(crm_claim, self).onchange_district_id(cr, uid, ids, district_id, geo_point)
         d = result['domain']
         v = result['value']
         if district_id:
@@ -158,7 +158,6 @@ class crm_claim(crm.crm_case,osv.osv):
             if(district.name == 'FUERA DE BOGOTÁ'):
                 classification = self.pool.get('ocs.claim_classification').name_search(cr, uid, name='Trámites a cargo de otras entidades remitidos a IDU', args=None, operator='=', context=None, limit=1)
                 v['classification_id'] = classification[0][0]
-
         return {'domain':d, 'value':v}
 
     def onchange_address_value(self, cr, uid, ids, addr):
@@ -166,45 +165,14 @@ class crm_claim(crm.crm_case,osv.osv):
         GeoCode claim address
         param addr: Claim Address
         """
-        default_res = {'value':{'geo_point':False}}
-        res = {}
-        if not addr:
-            res = default_res
-        else :
-            try:
-                url_geocoder = self.pool.get('ir.config_parameter').get_param(cr, uid, 'geo_coder.ws.url', default='', context=None)
-                srid = "other.extra:900913"
-                zone = 1100100 #Bogota
-                point = geo_code_address(addr,srid,url_geocoder,zone)
-                if (point is not False):
-                    """
-                    Calculating District and Neighborhood of claim_address
-                    """
-                    coord = json.loads(point)["coordinates"]
-                    x = coord[0]
-                    y = coord[1]
-                    query = "select id from ocs_district \
-                    where intersects (geo_polygon,st_geometryfromtext('POINT({0} {1})',900913)) \
-                    is true".format(x,y)
-                    cr.execute(query)
-                    district_id = False
-                    for n_ids in cr.fetchall():
-                        for i in n_ids :
-                            district_id = i
-                    #res = {'value':{'geo_point':point}}
-                    query_neigh = "select id from ocs_neighborhood\
-                    where intersects (geo_polygon,st_geometryfromtext('POINT({0} {1})',900913)) \
-                    is true".format(x,y)
-                    cr.execute(query_neigh)
-                    neighborhood_id = False
-                    for n_ids in cr.fetchall():
-                        for i in n_ids :
-                            neighborhood_id = i
-                    res = {'value':{'geo_point':point,'district_id':district_id,'neighborhood_id':neighborhood_id}}
-                else :
-                    res = default_res
-            except Exception:
-                res = default_res
+        res = {'value':{'geo_point':False}}
+        if addr:
+            url_geocoder = self.pool.get('ir.config_parameter').get_param(cr, uid, 'geo_coder.ws.url', default='', context=None)
+            srid = "other.extra:900913"
+            zone = 1100100 #Bogota
+            point = geo_code_address(addr, srid, url_geocoder, zone)
+            res['value']['geo_point'] = point
+
         return res
 
     def new_from_data(self, cr, uid, data, context = None):

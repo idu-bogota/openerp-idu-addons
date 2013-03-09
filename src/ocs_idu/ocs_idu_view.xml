@@ -194,12 +194,6 @@
         <field name="sub_classification_id" position="after">
             <field name="contract_reference" select="0"/>
         </field>
-        <field name="claim_address" position = "replace">
-        	<field name="claim_address" select ="0" on_change="onchange_address_value(claim_address)"/>
-        	<newline />
-        	<field name="geo_point" widget="text" select="0" colspan = "4" readonly = "0" invisible="True"/>
-        
-        </field>
         <page string="Follow Up" position="after">
             <page string="Reporte malla vial" >
                 <field name="damage_type_by_citizen" />

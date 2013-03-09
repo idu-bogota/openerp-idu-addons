@@ -643,10 +643,11 @@ Claims
                 context="{'form_view_ref' : 'ocs.view_ocs_res_partner_form_small','tree_view_ref':'ocs.view_res_partner_tree_ocs_small','search_view_ref':'ocs.view_res_partner_search_ocs'}" />
             </field>
             <separator colspan="4" string="Claim/Action Description" position="after">
-                    <field name="claim_address" select ="0"/>
+                    <field name="claim_address" select ="0" on_change="onchange_address_value(claim_address)"/>
                     <newline />
+                    <field name="geo_point" widget="text" select="0" colspan = "4" readonly = "0" invisible="True" on_change="onchange_geopoint(geo_point)"/>
                     <group colspan="6" col="6" />
-                    <field name="district_id" select ="0" on_change="onchange_district_id(district_id)"/>
+                    <field name="district_id" select ="0" on_change="onchange_district_id(district_id, geo_point)"/>
                     <field name="neighborhood_id" select ="0" />
             </separator>
           <page string="Follow Up" position="replace">

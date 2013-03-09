@@ -35,7 +35,9 @@ from pyproj import Proj
 from pyproj import transform
 from crm import crm
 from crm_claim import crm_claim
-import re
+import re, json
+from openerp.osv.osv import except_osv
+
 
 class crm_case_channel(osv.osv):
     _name = "crm.case.channel"
@@ -392,7 +394,7 @@ class crm_claim(geo_model.GeoModel):
                           }
                 }
 
-    def onchange_district_id(self, cr, uid, ids, district_id):
+    def onchange_district_id(self, cr, uid, ids, district_id, geo_point):
         """Restricts the neighborhood list to the selected district_id
         """
         v={}
@@ -401,8 +403,51 @@ class crm_claim(geo_model.GeoModel):
             district = self.pool.get('ocs.district').browse(cr, uid, district_id)
             n_ids = district.neighborhood_ids()
             d['neighborhood_id'] = "[('id','in',{0})]".format(n_ids)
-            v['neighborhood_id'] = ''
+            if not geo_point: 
+                v['neighborhood_id'] = ''
         return {'domain':d, 'value':v}
+
+    def onchange_address_value(self, cr, uid, ids, addr):
+        """
+        GeoCode claim address Override this using your own geocoder
+        param addr: Claim Address
+        """
+        return {'value':{'geo_point':False}}
+
+    def onchange_geopoint(self, cr, uid, ids, point):
+        """
+        Based on geo referenced address update district_id and neighborhood
+        geo_point is set by a geocoder 
+        param geo_point: claim address coordinate in GeoJSON format
+        """
+        try:
+            if (point is not False):
+                """
+                Calculating District and Neighborhood from claim_address
+                """
+                coord = json.loads(point)["coordinates"]
+                x = coord[0]
+                y = coord[1]
+                query = "SELECT id FROM ocs_district \
+                    WHERE INTERSECTS(geo_polygon, ST_GEOMETRYFROMTEXT('POINT({0} {1})',900913)) IS TRUE".format(x,y)
+                cr.execute(query)
+                district_id = False
+                for n_ids in cr.fetchall():
+                    for i in n_ids :
+                        district_id = i
+                #res = {'value':{'geo_point':point}}
+                query_neigh = "SELECT id FROM ocs_neighborhood \
+                    WHERE INTERSECTS(geo_polygon, ST_GEOMETRYFROMTEXT('POINT({0} {1})',900913)) IS TRUE".format(x,y)
+                cr.execute(query_neigh)
+                neighborhood_id = False
+                for n_ids in cr.fetchall():
+                    for i in n_ids :
+                        neighborhood_id = i
+                return {'value':{'district_id':district_id,'neighborhood_id':neighborhood_id}}
+            else :
+                return {}
+        except Exception, exc:
+            raise except_osv(_('Geoencoding fails'), str(exc))
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """Automatically called when new email message arrives"""
