@@ -26,19 +26,20 @@
         "website" : "www.idu.gov.co",
         "category" : "Social Management",
         "description": """For Public Organizations, useful to receive claims from Citizens""",
-        "depends" : ['base',         
-                     'crm',                     
+        "depends" : ['base',
+                     'crm',
                      'crm_claim',
                      'base_geoengine',
                      'geoengine_partner',
-                     'process',                     
+                     'process',
                      ],
-        "init_xml" : ['ocs_view.xml'],        
+        "init_xml" : ['ocs_view.xml'],
         "demo_xml" : [],
         "update_xml" : ['security/ocs_security.xml',
                         'security/ir.model.access.csv',
                         'ocs_view.xml',
-                        'ocs_workflow.xml'                 
+                        'ocs_workflow.xml',
+                        'report/ocs_claim_report.xml'
                         ],
         "installable": True
 }

@@ -63,7 +63,7 @@ Reporting
             <field name="context">{"search_default_year":1,"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="help">Have a general overview of all claims processed in the system by sorting them with specific criteria.</field>
 </record>
-<menuitem name="Claim report" id="menu_ocs_report_claim_report" action="action_ocs_report_claim_report" parent="menu_ocs_reporting"/>
+<menuitem name="Claim report 111" id="menu_ocs_report_claim_report" action="action_ocs_report_claim_report" parent="menu_ocs_reporting"/>
 
 <!--
 ;==============================================================

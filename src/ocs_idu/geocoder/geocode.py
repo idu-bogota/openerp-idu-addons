@@ -25,7 +25,7 @@
 #
 ##############################################################################
 import urllib
-import json, math
+import math
 from pyproj import Proj
 from pyproj import transform
 import re, json
