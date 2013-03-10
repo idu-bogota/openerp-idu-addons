@@ -35,7 +35,7 @@ class ocs_orfeo_wizard_radicar(osv.osv_memory):
     _description = 'Radica la PQR como en el sistema de gestión documental Orfeo'
 
     _columns = {
-        'description': fields.text('Description', help='Texto a ser radicado', readonly=True),
+        'description': fields.text('Description', help='Texto a ser radicado', required=True),
         'dependencia_id':fields.many2one('ocs_orfeo.dependencia', 'Dependencia', required=True),
     }
 
@@ -57,6 +57,9 @@ class ocs_orfeo_wizard_radicar(osv.osv_memory):
 
         form_object_id = ids and ids[0] or False
         form_object = self.browse(cr, uid, form_object_id, context=context)
+        asunto = form_object.description.strip()
+        if(len(asunto) > 300):
+            raise osv.except_osv('Error de validación','El texto a ser radicado es demasiado largo, por favor resumalo')
         dependenciaDestino = form_object.dependencia_id.code
 
         usuarioLogin = current_user.login
@@ -104,11 +107,14 @@ class ocs_orfeo_wizard_radicar(osv.osv_memory):
                 else:
                     destinoRemiteApellido1 = 'no reporta'
 
-            asunto = claim.description
             orfeo_radicar = getattr(client.service, 'OrfeoWs.radicar')
-            result = orfeo_radicar(usuarioLogin, tipoRadicacion, tipoTercero, destinoRemiteNombre, destinoRemiteApellido1, destinoRemiteApellido2,
-                                   destinoRemiteDireccion, destinoRemiteTelefono, destinoRemiteEmail, destinoRemiteDocumento, municipio, departamento,
-                                   pais, continente, dependenciaDestino, asunto)
+            try:
+                result = orfeo_radicar(usuarioLogin, tipoRadicacion, tipoTercero, destinoRemiteNombre, destinoRemiteApellido1, destinoRemiteApellido2,
+                                    destinoRemiteDireccion, destinoRemiteTelefono, destinoRemiteEmail, destinoRemiteDocumento, municipio, departamento,
+                                    pais, continente, dependenciaDestino, asunto)
+            except Exception as e:
+                raise osv.except_osv('Error al consultar servicio web ORFEO', str(e))
+
             if result['ESTADO_TRANSACCION'] == '1':
                 claim_table.write(cr, uid, claim.id, {'orfeo_id': result['RADICADO']}, context=context)
             else:
