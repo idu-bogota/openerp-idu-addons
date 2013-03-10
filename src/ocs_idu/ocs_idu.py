@@ -32,7 +32,7 @@ from osv.orm import except_orm
 from base_geoengine import geo_model
 from crm import crm
 from tools.translate import _
-import re, json
+import re
 from geocoder.geocode import geo_code_address,is_bogota_address_valid
 ##"other.extra:900913"
 

@@ -31,12 +31,11 @@ from osv import fields,osv
 from base_geoengine import geo_model
 from datetime import datetime
 from datetime import timedelta
-from pyproj import Proj
-from pyproj import transform
 from crm import crm
 from crm_claim import crm_claim
 import re, json
 from openerp.osv.osv import except_osv
+from tools.translate import _
 
 
 class crm_case_channel(osv.osv):
