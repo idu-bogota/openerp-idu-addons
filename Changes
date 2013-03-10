@@ -1,3 +1,6 @@
+* New: Adicionado Geocodificador para crm_claim y res_partner_address
+* Update: Wizard orfeo indica cuando descripción es mayor de lo permitido para ser corregido 
+
 openerp6.1-rev2013030100
 * Update: Al seleccionar document_type se debe ingresar document number y viceversa
 * Update: Cuando se registre la dirección de correspondencia, exigir diligenciar el barrio y la localidad del mismo.
