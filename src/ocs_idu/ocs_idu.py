@@ -165,15 +165,7 @@ class crm_claim(crm.crm_case,osv.osv):
         GeoCode claim address
         param addr: Claim Address
         """
-        res = {'value':{'geo_point':False}}
-        if addr:
-            url_geocoder = self.pool.get('ir.config_parameter').get_param(cr, uid, 'geo_coder.ws.url', default='', context=None)
-            srid = "other.extra:900913"
-            zone = 1100100 #Bogota
-            point = geo_code_address(addr, srid, url_geocoder, zone)
-            res['value']['geo_point'] = point
-
-        return res
+        return geocode_address(self, cr, uid, ids, addr)
 
     def new_from_data(self, cr, uid, data, context = None):
         """
@@ -307,6 +299,13 @@ class ResPartnerAddress(geo_model.GeoModel):
                 is_valid = False
         return is_valid
 
+    def onchange_street(self, cr, uid, ids, addr):
+        """
+        GeoCode claim address
+        param addr: Claim Address
+        """
+        return geocode_address(self, cr, uid, ids, addr)
+
     _name = 'res.partner.address'
     _inherit='res.partner.address'
     _columns = {
@@ -397,3 +396,14 @@ class ocs_tract(osv.osv):
     }
     _rec_name = 'full_name'
 ocs_tract()
+
+
+def geocode_address(self, cr, uid, ids, addr):
+    res = {'value':{'geo_point':False}}
+    if addr:
+        url_geocoder = self.pool.get('ir.config_parameter').get_param(cr, uid, 'geo_coder.ws.url', default='', context=None)
+        srid = "other.extra:900913"
+        zone = 1100100 #Bogota
+        point = geo_code_address(addr, srid, url_geocoder, zone)
+        res['value']['geo_point'] = point
+    return res
