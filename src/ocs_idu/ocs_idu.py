@@ -33,6 +33,8 @@ from base_geoengine import geo_model
 from crm import crm
 from tools.translate import _
 import re
+from geocoder.geocode import geo_code_address,is_bogota_address_valid
+##"other.extra:900913"
 
 class crm_claim(crm.crm_case,osv.osv):
     """
@@ -133,7 +135,7 @@ class crm_claim(crm.crm_case,osv.osv):
         """This function returns value of partner email based on Partner Address
           :param part: Partner's id
         """
-        result = super(crm_claim, self).onchange_district_id(cr, uid, ids, add)
+        result = super(crm_claim, self).onchange_partner_address_id(cr, uid, ids, add, email)
         if add:
             address = self.pool.get('res.partner.address').browse(cr, uid, add)
             if(address.twitter):
@@ -145,10 +147,10 @@ class crm_claim(crm.crm_case,osv.osv):
 
         return result
 
-    def onchange_district_id(self, cr, uid, ids, district_id):
+    def onchange_district_id(self, cr, uid, ids, district_id, geo_point):
         """Restricts the neighborhood list to the selected district_id
         """
-        result = super(crm_claim, self).onchange_district_id(cr, uid, ids, district_id)
+        result = super(crm_claim, self).onchange_district_id(cr, uid, ids, district_id, geo_point)
         d = result['domain']
         v = result['value']
         if district_id:
@@ -156,8 +158,14 @@ class crm_claim(crm.crm_case,osv.osv):
             if(district.name == 'FUERA DE BOGOTÁ'):
                 classification = self.pool.get('ocs.claim_classification').name_search(cr, uid, name='Trámites a cargo de otras entidades remitidos a IDU', args=None, operator='=', context=None, limit=1)
                 v['classification_id'] = classification[0][0]
-
         return {'domain':d, 'value':v}
+
+    def onchange_address_value(self, cr, uid, ids, addr):
+        """
+        GeoCode claim address
+        param addr: Claim Address
+        """
+        return geocode_address(self, cr, uid, ids, addr)
 
     def new_from_data(self, cr, uid, data, context = None):
         """
@@ -291,6 +299,13 @@ class ResPartnerAddress(geo_model.GeoModel):
                 is_valid = False
         return is_valid
 
+    def onchange_street(self, cr, uid, ids, addr):
+        """
+        GeoCode claim address
+        param addr: Claim Address
+        """
+        return geocode_address(self, cr, uid, ids, addr)
+
     _name = 'res.partner.address'
     _inherit='res.partner.address'
     _columns = {
@@ -382,99 +397,13 @@ class ocs_tract(osv.osv):
     _rec_name = 'full_name'
 ocs_tract()
 
-def is_bogota_address_valid(address):
-    """ This function checks if the parameter fits Bogotá D.C. address schema.
 
-    >>> print is_bogota_address_valid('KR 102 10 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 10 30 INT 2 AP 1023')
-    True
-    >>> print is_bogota_address_valid('KR 102 10 30 INT 2')
-    True
-    >>> print is_bogota_address_valid('KR 102 10 30 AP 1123')
-    True
-    >>> print is_bogota_address_valid('KR 102 A 10 A 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A 10 A 30 INT 3 AP 12')
-    True
-    >>> print is_bogota_address_valid('KR 102 A 10 A BIS 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A 10 A BIS Z 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS 10 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS 10 30 AP 12')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS 10 A 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS 10 BIS 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS 10 BIS Z 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS 10 A BIS 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS 10 A BIS Z 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS 10 A BIS Z 30 INT 3 LOC 4')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS A 10 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS A 10 30 E')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS A 10 A 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS A 10 A BIS 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS A 10 A BIS A 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS A 10 A BIS A 30 LOC 5')
-    True
-    >>> print is_bogota_address_valid('KR 102 BIS A 10 BIS Z 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS 10 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS 10 A 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS 10 A BIS 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS 10 A BIS A 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS 10 BIS Z 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS Z 10 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS Z 10 30 SE')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS Z 10 A 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS Z 10 A BIS 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS Z 10 A BIS A 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS Z 10 BIS Z 30')
-    True
-    >>> print is_bogota_address_valid('KR 102 A BIS Z 10 BIS Z 30 N')
-    True
-    >>> print is_bogota_address_valid('TV 34 F 45 B BIS Z 32 MZ 32 INT 5 TO 23 AP 123 S')
-    True
-    >>> print is_bogota_address_valid('CL 22 A 52 07 TO C AP 1102')
-    True
-    """
-    st_type = '(CL|AC|DG|KR|AK|TV|CA|CT|PS)'
-    st_number = '[0-9]+'
-    st_suffix = '(\s[A-Z])?((\sBIS)|(\sBIS\s[A-Z]))?'
-    st_horizontal = '(\s(AP|OF|CON|PEN|LOC|DEP|GJ)\s[0-9]+)?'
-    st_interior = '(\s((INT|BQ|TO|CA)\s[0-9A-Z]+))?'
-    st_manzana = '(\s((MZ|LO|ET)\s[A-Z0-9]+))?'
-    st_sector = '(\s(N|E|S|O|NE|SE|SO|NO))?'
-    regex = "^{0}\s{1}{2}\s{1}{2}\s{1}{6}{6}{3}{3}{4}{5}$".format(st_type, st_number, st_suffix, st_interior, st_horizontal, st_sector, st_manzana);
-    #print regex
-    if re.match(regex, address) != None:
-        return True
-    else:
-        return False
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
+def geocode_address(self, cr, uid, ids, addr):
+    res = {'value':{'geo_point':False}}
+    if addr:
+        url_geocoder = self.pool.get('ir.config_parameter').get_param(cr, uid, 'geo_coder.ws.url', default='', context=None)
+        srid = "other.extra:900913"
+        zone = 1100100 #Bogota
+        point = geo_code_address(addr, srid, url_geocoder, zone)
+        res['value']['geo_point'] = point
+    return res

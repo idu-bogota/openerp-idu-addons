@@ -33,7 +33,10 @@ from datetime import datetime
 from datetime import timedelta
 from crm import crm
 from crm_claim import crm_claim
-import re
+import re, json
+from openerp.osv.osv import except_osv
+from tools.translate import _
+
 
 class crm_case_channel(osv.osv):
     _name = "crm.case.channel"
@@ -152,7 +155,7 @@ class ResPartnerAddress(geo_model.GeoModel):
                 is_valid_data = True
         return is_valid_data
 
-    def onchange_district_id(self, cr, uid, ids, district_id):
+    def onchange_district_id(self, cr, uid, ids, district_id, geo_point):
         """Restricts the neighborhood list to the selected district_id
         """
         v={}
@@ -161,8 +164,19 @@ class ResPartnerAddress(geo_model.GeoModel):
             district = self.pool.get('ocs.district').browse(cr, uid, district_id)
             n_ids = district.neighborhood_ids()
             d['neighborhood_id'] = "[('id','in',{0})]".format(n_ids)
-            v['neighborhood_id'] = ''
+            if not geo_point:
+                v['neighborhood_id'] = ''
         return {'domain':d, 'value':v}
+
+    def onchange_street(self, cr, uid, ids, street):
+        """
+        GeoCode claim address Override this using your own geocoder
+        param addr: Claim Address
+        """
+        return {'value':{'geo_point':False}}
+
+    def onchange_geopoint(self, cr, uid, ids, point):
+        return onchange_geopoint(cr, uid, ids, point)
 
     def create(self, cr, uid, vals, context=None):
         vals = self.trim_vals(vals)
@@ -191,7 +205,7 @@ class ResPartnerAddress(geo_model.GeoModel):
         'district_id':fields.many2one('ocs.district','District'),
         'neighborhood_id':fields.many2one('ocs.neighborhood','Neighborhood'),
         'full_name':fields.function(_get_full_name,type='char',string='Full Name',method=True),
-        'geo_point':fields.geo_point('Location',readonly=True),
+        'geo_point':fields.geo_point('Location',readonly=False),
         'claim_id':fields.one2many('crm.claim','id','Historic of Claims',help="Claims opened by User")
     }
     _rec_name = 'document_number'
@@ -386,11 +400,10 @@ class crm_claim(geo_model.GeoModel):
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         return {'value': {'email_from': address.email, 'partner_phone': address.phone,
                           'partner_id': address.partner_id.id,
-                          'district_id': address.district_id.id, 'neighborhood_id': address.neighborhood_id.id
                           }
                 }
 
-    def onchange_district_id(self, cr, uid, ids, district_id):
+    def onchange_district_id(self, cr, uid, ids, district_id, geo_point):
         """Restricts the neighborhood list to the selected district_id
         """
         v={}
@@ -399,8 +412,19 @@ class crm_claim(geo_model.GeoModel):
             district = self.pool.get('ocs.district').browse(cr, uid, district_id)
             n_ids = district.neighborhood_ids()
             d['neighborhood_id'] = "[('id','in',{0})]".format(n_ids)
-            v['neighborhood_id'] = ''
+            if not geo_point: 
+                v['neighborhood_id'] = ''
         return {'domain':d, 'value':v}
+
+    def onchange_address_value(self, cr, uid, ids, addr):
+        """
+        GeoCode claim address Override this using your own geocoder
+        param addr: Claim Address
+        """
+        return {'value':{'geo_point':False}}
+
+    def onchange_geopoint(self, cr, uid, ids, point):
+        return onchange_geopoint(cr, uid, ids, point)
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """Automatically called when new email message arrives"""
@@ -513,3 +537,38 @@ def date_by_adding_business_days(from_date, add_days):
             continue
         business_days_to_add -= 1
     return current_date
+
+def onchange_geopoint(cr, uid, ids, point):
+    """
+    Based on geo referenced address update district_id and neighborhood
+    geo_point is set by a geocoder 
+    param geo_point: address coordinate in GeoJSON format
+    """
+    try:
+        if (point is not False):
+            """
+            Calculating District and Neighborhood from claim_address
+            """
+            coord = json.loads(point)["coordinates"]
+            x = coord[0]
+            y = coord[1]
+            query = "SELECT id FROM ocs_district \
+                WHERE INTERSECTS(geo_polygon, ST_GEOMETRYFROMTEXT('POINT({0} {1})',900913)) IS TRUE".format(x,y)
+            cr.execute(query)
+            district_id = False
+            for n_ids in cr.fetchall():
+                for i in n_ids :
+                    district_id = i
+            #res = {'value':{'geo_point':point}}
+            query_neigh = "SELECT id FROM ocs_neighborhood \
+                WHERE INTERSECTS(geo_polygon, ST_GEOMETRYFROMTEXT('POINT({0} {1})',900913)) IS TRUE".format(x,y)
+            cr.execute(query_neigh)
+            neighborhood_id = False
+            for n_ids in cr.fetchall():
+                for i in n_ids :
+                    neighborhood_id = i
+            return {'value':{'district_id':district_id,'neighborhood_id':neighborhood_id}}
+        else :
+            return {}
+    except Exception, exc:
+        raise except_osv(_('Geoencoding fails'), str(exc))
