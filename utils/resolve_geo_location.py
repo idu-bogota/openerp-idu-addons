@@ -67,7 +67,7 @@ def geo_code_claim(_database,_user,_password,_host,_port=5432):
 
 def geo_code_res_partner_address(_database,_user,_password,_host,_port=5432):
     try: 
-        con = psycopg2.connect(database='openerp-idu', user='postgres', password = 'sigidu', host='localhost') 
+        con = psycopg2.connect(database=_database, user=_user, password = _password, host=_host) 
         cur = con.cursor()
         cur.execute('select id,street from res_partner_address where geo_point is null and street is not null')              
         rows = cur.fetchall()
