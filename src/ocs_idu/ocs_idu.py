@@ -402,7 +402,7 @@ def geocode_address(self, cr, uid, ids, addr):
     res = {'value':{'geo_point':False}}
     if addr:
         url_geocoder = self.pool.get('ir.config_parameter').get_param(cr, uid, 'geo_coder.ws.url', default='', context=None)
-        srid = "other.extra:900913"
+        srid = "esri.extra:900913"
         zone = 1100100 #Bogota
         point = geo_code_address(addr, srid, url_geocoder, zone)
         res['value']['geo_point'] = point
