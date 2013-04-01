@@ -1,3 +1,4 @@
+openerp6.1-rev2013040100
 openerp6.1-rev2013032600
 * New: Adicionado Geocodificador para crm_claim y res_partner_address
 * Update: Wizard orfeo indica cuando descripción es mayor de lo permitido para ser corregido 

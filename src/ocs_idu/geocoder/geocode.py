@@ -25,10 +25,11 @@
 #
 ##############################################################################
 import urllib
-import json, math
+import math
 from pyproj import Proj
 from pyproj import transform
 import re, json
+import logging
 
 def geo_code_address(addr, 
                 srid, 
@@ -48,9 +49,9 @@ def geo_code_address(addr,
         addr = addr.encode('utf8')
         url = "{0}Street={1}&Zone={2}&outSR={3}&f=pjson".format(uri,addr,zone,4326) #Because to Geocoder Bug, first we need to get information in Geographic coordinate system 
         jsonstr = urllib.urlopen(url).read()
-        vals = json.loads(jsonstr)       
-        if (dict.__len__ >= 2):           
-            candidates = vals['candidates'] 
+        vals = json.loads(jsonstr)
+        if (len(vals) >= 2):
+            candidates = vals['candidates']
             for candidate in candidates :
                 location = candidate['location']
                 x = location['x']
@@ -62,10 +63,11 @@ def geo_code_address(addr,
                     else :
                         pGeographic = Proj(init="epsg:4326")
                         pOtherRefSys = Proj(init=srid)
-                        x1,y1 = transform(pGeographic,pOtherRefSys,x,y)    
+                        x1,y1 = transform(pGeographic,pOtherRefSys,x,y)
                         #format :   {"type": "Point", "coordinates": [746676.106813609, 5865349.7175855]}            
                         return '{"type": "Point", "coordinates":[%10.12f, %10.12f]}' % (x1,y1)
-    except Exception :
+    except Exception as e:
+        logging.getLogger(__name__).error(str(e))
         return False
     return False
 
