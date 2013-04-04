@@ -52,7 +52,24 @@ class ocs_report(osv.osv_memory):
    
     def create_report(self,cr,uid,ids,context={}):
         this = self.browse(cr, uid, ids)[0]
-        cr.execute("""SELECT
+
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        otc_admin = False;
+        otc_user = False
+
+        for grp in user.groups_id:
+            if grp.name == 'Usuario Oficina de Atención al Ciudadano':
+                otc_user = True
+                #print grp.name
+
+            if grp.name == 'Administrador Oficina de Atención al Ciudadano':
+                otc_admin = True
+                #print grp.name
+            #Usuario de Punto Crea
+            #Administrador PQR Obras
+ 
+
+        query = """SELECT
               pqr.id AS "ID",
               pqr.create_date::timestamp::date AS "Fecha de atención (a-m-d)",
               COALESCE(ctz.document_type,'NO REPORTA')  AS "Tipo de documento",
@@ -62,11 +79,11 @@ class ocs_report(osv.osv_memory):
               COALESCE(ctz.gender,'NO REPORTA') AS "Genero",
               COALESCE(ctz.mobile,ctz.phone,ctz.email,ctz.twitter,ctz.facebook,ctz.fax,'NO REPORTA') AS "Datos de contacto",
               COALESCE(ctz.street,'NO REPORTA') AS "Dirección correspondencia",
-              COALESCE(ctz_loc.name,'NO REPORTA') AS "Localidad Correspondencia",
               COALESCE(ctz_bar.name,'NO REPORTA') AS "Barrio Correspondencia",
+              COALESCE(ctz_loc.name,'NO REPORTA') AS "Localidad Correspondencia",
               COALESCE(pqr.claim_address,'NO REPORTA') AS "Dirección del asunto",
-              COALESCE(pqr_loc.name,'NO REPORTA') AS "Localidad",
               COALESCE(pqr_bar.name,'NO REPORTA') AS "Barrio",
+              COALESCE(pqr_loc.name,'NO REPORTA') AS "Localidad",
               COALESCE(cri.name,'NO REPORTA') AS "Criterio (Tipificación)",
               COALESCE(scr.name,'NO REPORTA') AS "Sub Criterio",
               COALESCE(tip.name,'NO REPORTA') AS "Tipo requerimiento",
@@ -90,14 +107,21 @@ class ocs_report(osv.osv_memory):
               LEFT JOIN crm_case_categ AS tip ON pqr.categ_id = tip.id
               LEFT JOIN crm_case_channel AS can ON pqr.channel = can.id
               LEFT JOIN res_users AS usr ON pqr.create_uid = usr.id
-              LEFT JOIN res_partner AS ent ON pqr.partner_forwarded_id = ent.id 
+              LEFT JOIN res_partner AS ent ON pqr.partner_forwarded_id = ent.id
           WHERE 
               pqr.create_date BETWEEN '{0}' AND '{1}'
-          """.format(this.start_date, this.end_date))
+          """.format(this.start_date, this.end_date)
 
+        if not otc_user and not otc_admin:
+            query += " AND 0"
+
+        if otc_user and not otc_admin:
+            query += " AND pqr.create_uid = {0}".format(uid)
+
+        cr.execute(query)
         csvfile = StringIO.StringIO()
         csvwriter = csv.writer(csvfile, dialect='excel')
-        csvwriter.writerow(["ID","Fecha de atención (a-m-d)","Tipo de documento","Número documento de identidad","Nombres","Apellidos","Genero","Datos de contacto","Dirección correspondencia","Localidad Correspondencia","Barrio Correspondencia","Dirección del asunto","Localidad","Barrio","Criterio (Tipificación)","Sub Criterio","Tipo requerimiento","Asunto","Solución","Canal de atención","Funcionario que atendió","Contrato o Convenio","Entidad","Estado"])
+        csvwriter.writerow(["ID","Fecha de atención (a-m-d)","Tipo de documento","Número documento de identidad","Nombres","Apellidos","Genero","Datos de contacto","Dirección correspondencia","Barrio Correspondencia","Localidad Correspondencia","Dirección del asunto","Barrio","Localidad","Criterio (Tipificación)","Sub Criterio","Tipo requerimiento","Asunto","Solución","Canal de atención","Funcionario que atendió","Contrato o Convenio","Entidad","Estado"])
         map(lambda x:csvwriter.writerow(x), cr.fetchall())
         out = base64.encodestring(csvfile.getvalue())
         return self.write(cr, uid, ids, {'state':'get', 'data':out, 'filename':'pqr_{0}_{1}.csv'.format(this.start_date, this.end_date)}, context=context)
