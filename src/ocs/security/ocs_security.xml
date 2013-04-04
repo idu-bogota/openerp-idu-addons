@@ -18,7 +18,7 @@
         ;============================================================================= -->
 
         <record model="ir.ui.menu" id="menu_ocs_reporting">
-                <field eval="[(4, ref('group_ocs_manager'))]" name="groups_id"/>
+                <field eval="[(4, ref('group_ocs_manager')),(4, ref('group_ocs_user'))]" name="groups_id"/>
         </record>
 
         <record model="ir.ui.menu" id="menu_ocs_settings">
