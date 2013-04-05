@@ -306,6 +306,12 @@ class ResPartnerAddress(geo_model.GeoModel):
         """
         return geocode_address(self, cr, uid, ids, addr)
 
+    def _check_facebook(self, cr, uid, ids, context = None):
+        """
+        OTC no desea esta validacion
+        """
+        return True
+
     _name = 'res.partner.address'
     _inherit='res.partner.address'
     _columns = {
@@ -318,6 +324,7 @@ class ResPartnerAddress(geo_model.GeoModel):
         (_check_document,'When Document Type is CC, the document number must be numeric only!!!',['document_number']),
         (_check_gender,'Please select gender',['gender']),
         (_check_address_related_fields,'Please select district and neigboohood',['street']),
+        (_check_facebook,'facebook account is min 5 max 50 long and contains just letters, numbers and "."',['facebook']),
     ]
     _rec_name = 'document_number'
 
