@@ -358,7 +358,9 @@ class crm_claim(geo_model.GeoModel):
             if not message:
                 isResponsed = True
                 message = "The claim: {0} -- has been closed".format(claim.name)
-        self.log(cr, uid, claim.id, message)
+        if not isResponsed:
+            raise osv.except_osv(_('Error'),_(message))
+
         return isResponsed
 
     def set_default_csp_id(self, cr, uid, context = None):

@@ -214,17 +214,18 @@
     <field name="priority" eval="30"/>
     <field name="arch" type="xml">
         <form string="Claims">
-            <field name="state" select="1" widget="statusbar"
-                statusbar_visible="draft,review,open,done" statusbar_colors='{"pending":"blue"}'
-                colspan="4" />
-            <group>
-                <field name="name" />
+            <group col="8" colspan="4">
+	            <field name="state" select="1" widget="statusbar"
+	                statusbar_visible="draft,review,open,done" statusbar_colors='{"pending":"blue"}'
+	                colspan="4" />
+            </group>
+            <group col="8" colspan="4">
+                <field name="user_id" />
+                <field name="csp_id" widget="selection" domain="[('is_outsourced','=',True),'|',('close_date','=',False),('close_date','>=','now()')]" />
+                <field name="id"/>
                 <field name="create_date" />
             </group>
             <group colspan="4" col="6">
-                <field name="csp_id" widget="selection" domain="[('is_outsourced','=',True),'|',('close_date','=',False),('close_date','>=','now()')]" />
-                <field name="user_id" />
-                <field name="id"/>
                 <newline />
                 <field name="priority" />
                 <field name="date_deadline" />
@@ -234,12 +235,12 @@
                     <page string="Claim Description">
                         <group colspan="2" col="2">
                             <separator colspan="2" string="Claim Reporter" />
-                            <field name="partner_id" string="Partner"
-                                context="{'form_view_ref' : 'ocs.view_ocs_res_partner_form_small','tree_view_ref':'ocs.view_res_partner_tree_ocs_small','search_view_ref':'ocs.view_res_partner_search_ocs'}"
-                                on_change="onchange_partner_id(partner_id)" />
                             <field name="partner_address_id" string="Contact"
                                 on_change="onchange_partner_address_id(partner_address_id, email_from)"
                                 context="{'form_view_ref' : 'ocs.view_res_partner_address_form_small'}"/>
+                            <field name="partner_id" string="Partner"
+                                context="{'form_view_ref' : 'ocs.view_ocs_res_partner_form_small','tree_view_ref':'ocs.view_res_partner_tree_ocs_small','search_view_ref':'ocs.view_res_partner_search_ocs'}"
+                                on_change="onchange_partner_id(partner_id)" />
                             <field name="partner_phone" />
                             <field name="email_from" widget="email" />
                         </group>
@@ -248,24 +249,27 @@
                             <field name="channel" select="0" widget="selection" />
                             <field name="categ_id" widget="selection"
                                 domain="[('object_id.model', '=', 'crm.claim')]" />
-                            <field name="classification_id" />
-                            <field name="sub_classification_id" on_change="onchange_sub_classification_id(sub_classification_id)"/>
+                            <field name="classification_id" on_change="onchange_classification_id(classification_id)"/>
+                            <field name="sub_classification_id"/>
                         </group>
                         <separator colspan="4" string="Claim/Action Description" />
                         <group colspan="4" col="4">
-                            <field name="claim_address" />
+                            <field name="claim_address" on_change="onchange_address_value(claim_address)"/>
                             <newline />
+                            <field name="geo_point" widget="text" select="0" colspan = "4" readonly = "0" invisible="True" on_change="onchange_geopoint(geo_point)"/>
+                            <field name="district_id" select ="0" on_change="onchange_district_id(district_id, geo_point)"/>
                             <field name="neighborhood_id" />
-                            <field name="district_id" />
                         </group>
                         <field name="description" colspan="4" nolabel="1" />
                     </page>
                     <page string="Follow Up">
                         <separator string="Solution" colspan="4" />
+                        <field name="solution_classification_id"/>
                         <field name="date_closed" />
+                        <field name="partner_forwarded_id" attrs="{'invisible': [('classification_id','!=',16)]}" />
                         <field name="resolution" colspan="4" nolabel="1" />
                     </page>
-                    <page string="Communication &amp; History" groups="base.group_extended">
+                    <page string="Communication &amp; History">
                         <group colspan="4">
                             <field colspan="4" name="email_cc" string="Global CC"
                                 widget="char" />
@@ -285,8 +289,8 @@
                             context="{'form_view_ref':'crm.crm_add_new_note_view','model': 'crm.lead' }"
                             icon="terp-document-new" type="action" />
 
-                        <!--<button string="Send New Email" name="%(mail.action_email_compose_message_wizard)d"
-                            icon="terp-mail-message-new" type="action"/> -->
+                        <button string="Send New Email" name="%(mail.action_email_compose_message_wizard)d"
+                            icon="terp-mail-message-new" type="action"/>
                     </page>
                 </notebook>
             </group>
