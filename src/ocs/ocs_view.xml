@@ -617,7 +617,6 @@ Claims
                     <field name="claim_address" select ="0" on_change="onchange_address_value(claim_address)"/>
                     <newline />
                     <field name="geo_point" widget="text" select="0" colspan = "4" readonly = "0" invisible="True" on_change="onchange_geopoint(geo_point)"/>
-                    <group colspan="6" col="6" />
                     <field name="district_id" select ="0" on_change="onchange_district_id(district_id, geo_point)"/>
                     <field name="neighborhood_id" select ="0" />
             </separator>
@@ -631,7 +630,7 @@ Claims
                  <field name="solution_classification_id"/>
                  <field name="date_closed"/>
                  <field name="partner_forwarded_id"/>
-                 <field  name="resolution" colspan="4" nolabel="1" />
+                 <field name="resolution" colspan="4" nolabel="1" />
                  <group col="8" colspan="4">
 	                 <button name="cas_cancel" string="Cancel" type="workflow" icon="gtk-cancel" states="draft"/> <!-- states= "Estados en los cuales el boton es visible" -->
 	                 <button name="cas_pending" string="Pending" type="workflow" icon="gtk-media-pause" states="open" />

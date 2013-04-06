@@ -46,13 +46,13 @@ class crm_claim(crm.crm_case,osv.osv):
         Check if Response Text is Empty and partner_forwarded_id is selected when claim is redirected
         """
         is_valid_super = super(crm_claim, self).test_response(cr, uid, ids, args)
-        is_valid = True
+
         for claim in self.browse(cr, uid, ids,context = None):
             classification = self.pool.get('ocs.claim_classification').name_search(cr, uid, name='Trámites a cargo de otras entidades remitidos a IDU', args=None, operator='=', context=None)
             if claim.classification_id.id == classification[0][0] and claim.partner_forwarded_id.id == False:
-                self.log(cr, uid, claim.id, 'Need Partner Forwarded')
-                is_valid = False
-        return is_valid and is_valid_super
+                raise osv.except_osv(_('Error'),_('Need Partner Forwarded'))
+
+        return is_valid_super
 
 
     def _check_is_outsourced(self,cr,uid,ids,fieldname,arg,context=None):
@@ -167,6 +167,16 @@ class crm_claim(crm.crm_case,osv.osv):
         """
         return geocode_address(self, cr, uid, ids, addr)
 
+    def _check_address_related_fields(self, cr, uid, ids, context = None):
+        """
+        If address district and neighborhood must be selected except when address is "fuera de bogota"
+        """
+        is_valid = True
+        for claim in self.browse(cr,uid,ids,context=None):
+            if ((claim.claim_address != False) and (claim.neighborhood_id.id == False or claim.district_id.id == False) and (claim.district_id.name != 'FUERA DE BOGOTÁ')):
+                is_valid = False
+        return is_valid
+
     def new_from_data(self, cr, uid, data, context = None):
         """
         Metodo que sirve para ser llamado via servicio XML-RPC desde aplicaciones externas
@@ -237,6 +247,7 @@ class crm_claim(crm.crm_case,osv.osv):
     _constraints = [
         (_check_contract_reference,'Contract Reference format is number-year, ie. 123-2012',['contract_reference']),
         (_check_claim_address,'Claim Address should follow IDU conventions ie. Cr 102 BIS 10 A BIS Z 30 Int 3 Loc 4',['claim_address']),
+        (_check_address_related_fields,'Please select district and neigboohood',['claim_address']),
     ]
 
 crm_claim()
