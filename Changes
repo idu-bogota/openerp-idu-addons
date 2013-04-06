@@ -1,3 +1,5 @@
+* Fix: Corrección para permitir guardar FUERA DE BOGOTÁ sin barrio
+
 openerp6.1-rev2013040500
 * Update: El Administrador de OTC se le quita el permiso de eliminar PQRs
 * Update: Desactivar la validación de la cuenta de facebook por solicitud de OTC (atn: mahecha)
