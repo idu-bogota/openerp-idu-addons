@@ -330,7 +330,7 @@ class ResPartnerAddress(geo_model.GeoModel):
         """
         is_valid = True
         for citizen in self.browse(cr,uid,ids,context=None):
-            if ((citizen.street != False) and (citizen.neighborhood_id.id == False or citizen.district_id.id == False)):
+            if ((citizen.street != False) and (citizen.neighborhood_id.id == False or citizen.district_id.id == False) and (citizen.district_id.name != 'FUERA DE BOGOTÁ')):
                 is_valid = False
         return is_valid
 
