@@ -433,7 +433,7 @@ class ocs_tract(osv.osv):
     _columns = {
         'full_name':fields.function(_get_full_name,type='char',string='Full Name',method=True),
         'road_id': fields.char('Road ID',size = 16,help="Road Identification Number",required=True),
-        'name': fields.char('Description',size=20,required=True),
+        'name': fields.char('Description',size=255,required=True),
         'contract_id': fields.many2one('ocs.contract','Contract',required=True),
     }
     _rec_name = 'full_name'
