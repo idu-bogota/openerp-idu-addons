@@ -245,10 +245,15 @@ class crm_claim(crm.crm_case,osv.osv):
     _name="crm.claim"
     _inherit="crm.claim"
     _columns = {
-        'resolution': fields.text('Resolution',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)],'rejected':[('readonly',False)]}),
-        'solution_classification_id':fields.many2one('ocs.claim_solution_classification','Solution Classification', \
+        'resolution': fields.text('Resolution',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)],'rejected':[('readonly',False)]},
+            write = ['ocs_idu.group_ocs_outsourced_user','ocs_idu.group_ocs_outsourced_manager','ocs.group_ocs_user','ocs.group_ocs_manager'],
+            read = ['ocs_idu.group_ocs_outsourced_user','ocs_idu.group_ocs_outsourced_manager','ocs_idu.group_ocs_outsourced_reviewer','ocs.group_ocs_user','ocs.group_ocs_manager'],
+            ),
+        'solution_classification_id':fields.many2one('ocs.claim_solution_classification','Solution Classification',
             domain="[('parent_id','!=',False),('enabled','=',True)]",required=False,readonly=True,
-            states={'draft':[('readonly',False)],'open':[('readonly',False)],'rejected':[('readonly',False)]}
+            states={'draft':[('readonly',False)],'open':[('readonly',False)],'rejected':[('readonly',False)]},
+            write = ['ocs_idu.group_ocs_outsourced_user','ocs_idu.group_ocs_outsourced_manager','ocs.group_ocs_user','ocs.group_ocs_manager'],
+            read = ['ocs_idu.group_ocs_outsourced_user','ocs_idu.group_ocs_outsourced_manager','ocs_idu.group_ocs_outsourced_reviewer','ocs.group_ocs_user','ocs.group_ocs_manager'],
             ),
         'priority': fields.selection([('h','High'),('n','Normal'),('l','Low')], 'Priority', required=True, readonly=True),
         'date_deadline': fields.date('Deadline',readonly=True),
