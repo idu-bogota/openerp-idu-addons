@@ -510,7 +510,8 @@ class crm_claim(geo_model.GeoModel):
         'date_deadline': fields.date('Deadline',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'user_id': fields.many2one('res.users', 'Responsible',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]},domain="[('csp_id','=',csp_id)]"),
         'solution_classification_id':fields.many2one('ocs.claim_solution_classification','Solution Classification', \
-                                              domain="[('parent_id','!=',False),('enabled','=',True)]",required=False,readonly=False,states={'cancel':[('readonly',True)],'done':[('readonly',True)]}),
+            domain="[('parent_id','!=',False),('enabled','=',True)]",required=False,readonly=True,
+            states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'partner_forwarded_id': fields.many2one('res.partner', 'Partner Forwarded',domain="[('supplier','=',True)]",readonly=False,states={'cancel':[('readonly',True)],'done':[('readonly',True)]}),
     }
 

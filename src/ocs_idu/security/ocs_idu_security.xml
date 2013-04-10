@@ -11,16 +11,21 @@
 		<record id="group_ocs_outsourced_manager" model="res.groups">
     		<field name="name">OCS Outsourced Manager</field>
 		</record>	
+
+        <record id="group_ocs_outsourced_reviewer" model="res.groups">
+            <field name="name">OCS Outsourced Reviewer</field>
+        </record>
+
 		<!--===========================================================================  
 		 Menu Access
 		;===============================================================================-->
 				
 		<record model="ir.ui.menu" id="ocs.menu_ocs">
-        		<field eval="[(4, ref('group_ocs_outsourced_user')),(4, ref('group_ocs_outsourced_manager'))]" name="groups_id"/>
+        		<field eval="[(4, ref('group_ocs_outsourced_user')),(4, ref('group_ocs_outsourced_manager')),(4, ref('group_ocs_outsourced_reviewer'))]" name="groups_id"/>
     	</record>
     	
     	<record model="ir.ui.menu" id="ocs_idu.menu_ocs_construction_issues">
-        		<field eval="[(4, ref('group_ocs_outsourced_user')),(4, ref('group_ocs_outsourced_manager'))]" name="groups_id"/>
+                <field eval="[(4, ref('group_ocs_outsourced_user')),(4, ref('group_ocs_outsourced_manager')),(4, ref('group_ocs_outsourced_reviewer'))]" name="groups_id"/>
     	</record>
     	
     	<record model="ir.ui.menu" id="ocs_idu.menu_construction_ocs_settings">

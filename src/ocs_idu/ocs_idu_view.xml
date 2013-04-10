@@ -304,10 +304,12 @@
                 <button name="cas_open" string="Open" type="workflow" icon="gtk-go-forward" groups="ocs_idu.group_ocs_outsourced_user"
                     states="draft,pending" />
                 <button name="cas_review" string="Review" type="workflow" groups="ocs_idu.group_ocs_outsourced_user"
-                    icon="gtk-go-forward" states="open" />
+                    icon="gtk-go-forward" states="open,rejected" />
+                <button name="cas_reject" string="Reject" type="workflow" groups="ocs_idu.group_ocs_outsourced_reviewer"
+                    icon="gtk-no" states="review" />
                 <button name="cas_reset" string="Reset to in Progress" groups="ocs_idu.group_ocs_outsourced_manager"
                     type="workflow" icon="gtk-convert" states="done,review" />
-                <button name="cas_close" string="Done" type="workflow" groups="ocs_idu.group_ocs_outsourced_manager"
+                <button name="cas_close" string="Done" type="workflow" groups="ocs_idu.group_ocs_outsourced_reviewer"
                     icon="gtk-jump-to" states="review" />
             </group>
         </form>
@@ -404,7 +406,9 @@
                     icon="gtk-go-forward" states="open" />
             <button name="cas_reset" string="Reset to in Progress" groups="ocs_idu.group_ocs_outsourced_manager"
                     type="workflow" icon="gtk-convert" states="done,review" />
-            <button name="cas_close" string="Done" type="workflow" groups="ocs_idu.group_ocs_outsourced_manager"
+            <button name="cas_reject" string="Reject" type="workflow" groups="ocs_idu.group_ocs_outsourced_reviewer"
+                    icon="gtk-no" states="review" />
+            <button name="cas_close" string="Done" type="workflow" groups="ocs_idu.group_ocs_outsourced_reviewer"
                     icon="gtk-jump-to" states="review" />
         </tree>
     </field>

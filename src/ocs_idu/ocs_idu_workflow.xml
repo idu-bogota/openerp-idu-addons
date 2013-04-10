@@ -15,6 +15,12 @@
             <field name="action">case_review()</field>
     </record>
 
+    <record id="act_ocs_claim_rejected" model="workflow.activity">
+            <field name="wkf_id" ref="ocs.ocs_claim_workflow"/>
+            <field name="name">rejected</field>
+            <field name="kind">function</field>
+            <field name="action">case_reject()</field>
+    </record>
 
     <!--
     ===================================================================================
@@ -28,23 +34,31 @@
             <field name="condition">test_response()</field>
             <field name="group_id" ref="group_ocs_outsourced_user"/>
             <field name="signal">cas_review</field>
-  	</record>
+    </record>
 
-  	<record id="ocs_tr_review_to_in_in_progress" model="workflow.transition">
+    <record id="ocs_tr_review_to_rejected" model="workflow.transition">
             <field name="act_from" ref="act_ocs_claim_review"/>
-            <field name="act_to" ref="ocs.act_ocs_claim_in_progress"/>
+            <field name="act_to" ref="act_ocs_claim_rejected"/>
             <field name="condition">True</field>
-            <field name="group_id" ref="group_ocs_outsourced_manager"/>
-            <field name="signal">cas_reset</field>
-  	</record>
+            <field name="group_id" ref="group_ocs_outsourced_reviewer"/>
+            <field name="signal">cas_reject</field>
+    </record>
 
-  	<record id="ocs_tr_review_to_done" model="workflow.transition">
+    <record id="ocs_tr_rejected_to_review" model="workflow.transition">
+            <field name="act_from" ref="act_ocs_claim_rejected"/>
+            <field name="act_to" ref="act_ocs_claim_review"/>
+            <field name="condition">True</field>
+            <field name="group_id" ref="group_ocs_outsourced_user"/>
+            <field name="signal">cas_review</field>
+    </record>
+
+    <record id="ocs_tr_review_to_done" model="workflow.transition">
             <field name="act_from" ref="act_ocs_claim_review"/>
             <field name="act_to" ref="ocs.act_ocs_claim_done"/>
             <field name="condition">True</field>
             <field name="signal">cas_close</field>
-            <field name="group_id" ref="group_ocs_outsourced_manager"/>
-  	</record>
+            <field name="group_id" ref="group_ocs_outsourced_reviewer"/>
+    </record>
 
   	<record id="ocs_tr_in_done_to_in_progress" model="workflow.transition">
             <field name="act_from" ref="ocs.act_ocs_claim_done"/>

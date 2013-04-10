@@ -79,6 +79,20 @@ class crm_claim(crm.crm_case,osv.osv):
         self._action(cr, uid, cases, 'review')
         return True
 
+    def case_reject(self, cr, uid, ids, *args):
+        """Case Rejected
+        :param ids: List of case Ids
+        """
+        cases = self.browse(cr, uid, ids)
+        self.message_append(cr, uid, cases, _('Rejected'))
+        for case in cases:
+            data = {'state': 'rejected', 'active': True }
+            if not case.user_id:
+                data['user_id'] = uid
+            self.write(cr, uid, case.id, data)
+        self._action(cr, uid, cases, 'rejected')
+        return True
+
     def _check_contract_reference(self, cr, uid, ids, context = None):
         """
         Constraint:
@@ -231,10 +245,15 @@ class crm_claim(crm.crm_case,osv.osv):
     _name="crm.claim"
     _inherit="crm.claim"
     _columns = {
+        'resolution': fields.text('Resolution',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)],'rejected':[('readonly',False)]}),
+        'solution_classification_id':fields.many2one('ocs.claim_solution_classification','Solution Classification', \
+            domain="[('parent_id','!=',False),('enabled','=',True)]",required=False,readonly=True,
+            states={'draft':[('readonly',False)],'open':[('readonly',False)],'rejected':[('readonly',False)]}
+            ),
         'priority': fields.selection([('h','High'),('n','Normal'),('l','Low')], 'Priority', required=True, readonly=True),
         'date_deadline': fields.date('Deadline',readonly=True),
         'state':fields.selection([('draft', 'New'),('open', 'In Progress'),('cancel', 'Cancelled'),
-                                  ('review','Review'),('done', 'Closed'),('pending', 'Pending')],
+                                  ('review','Review'),('rejected','Rejected'),('done', 'Closed'),('pending', 'Pending')],
                                  'State',help='Introduce a new state between open and done, in this step,\
                                   other people makes a review and approve the response given to citizen'),
         'is_outsourced':fields.function(_check_is_outsourced,type='boolean',string='Is Outsourced',method=True),
