@@ -28,7 +28,7 @@
 #    la localizacion de las direcciones 
 #    para la clase crm_claim y res_partner_address
 
-from geocode import geo_code_address
+from geocode import geo_code_address,extract_basic_address
 from optparse import OptionParser
 import psycopg2
 import sys
@@ -47,7 +47,7 @@ def geo_code_claim(_database,_user,_password,_host,_port=5432):
             idx = row[0]
             addr = row [1]
             print '-- ID = {0}, Address = {1}'.format(idx,addr)
-            jsonpoint = geo_code_address(addr, srid = "esri.extra:900913", uri = ws_url, zone = 1100100 )
+            jsonpoint = geo_code_address(extract_basic_address(addr), srid = "esri.extra:900913", uri = ws_url, zone = 1100100 )
             if jsonpoint is not False:
                 puntos = json.loads(jsonpoint)["coordinates"]
                 x = puntos[0]

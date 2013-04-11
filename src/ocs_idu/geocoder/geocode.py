@@ -163,6 +163,24 @@ def is_bogota_address_valid(address):
     else:
         return False
 
+def extract_basic_address(address):
+    """
+    If address follows IDU format like CL 22 A 52 07 TO C AP 1102, then remove the innecesary data like apartment, tower, etc
+    """
+    st_type = '(CL|AC|DG|KR|AK|TV|CA|CT|PS)'
+    st_number = '[0-9]+'
+    st_suffix = '(\s[A-Z])?((\sBIS)|(\sBIS\s[A-Z]))?'
+    st_horizontal = '(\s(AP|OF|CON|PEN|LOC|DEP|GJ)\s[0-9]+)?'
+    st_interior = '(\s((INT|BQ|TO|CA)\s[0-9A-Z]+))?'
+    st_manzana = '(\s((MZ|LO|ET)\s[A-Z0-9]+))?'
+    st_sector = '(\s(N|E|S|O|NE|SE|SO|NO))?'
+    regex = "^({0}\s{1}{2}\s{1}{2}\s{1}{5}).*$".format(st_type, st_number, st_suffix, st_interior, st_horizontal, st_sector, st_manzana);
+    #print regex
+    result = re.search(regex, address)
+    if re.search(regex, address):
+        return result.group(1)
+    return address
+
 
 if __name__ == "__main__":
     import doctest

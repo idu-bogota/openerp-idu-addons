@@ -1,3 +1,5 @@
+* Fix: Geocoder del IDU no reconocer Apartamento, Torre, etc, se remuven esos datos de la direccion antes de geocodificar
+
 openerp6.1-rev2013041000
 * Update: Actualizado workflow para PQR Obras
 * Update: Descripción del tramo de 255 carácteres
