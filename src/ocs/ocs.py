@@ -245,8 +245,19 @@ class res_users(osv.osv):
     """
     _name="res.users"
     _inherit="res.users"
+
+    def _get_csp_ids(self, cr, uid, ids, fieldname, arg, context=None):
+        """
+        Return list of csp_ids this user belongs to, used to force_domain, as the csp_id is not iterable
+        """
+        res = {}
+        for user in self.browse(cr, uid, ids, context = context):
+            res[user.id] = [csp.id for csp in user.csp_id] 
+        return  res
+
     _columns = {
-        'csp_id':fields.many2many('ocs.citizen_service_point','ocs_citizen_service_point_users','user_id','csp_id','Citizen Service Point')
+        'csp_id':fields.many2many('ocs.citizen_service_point','ocs_citizen_service_point_users','user_id','csp_id','Citizen Service Point'),
+        'get_csp_ids': fields.function(_get_csp_ids, type='list', string='List of CSP IDs', method=True),
     }
 
 class ocs_claim_classification(osv.osv):
@@ -300,6 +311,7 @@ class ocs_district(geo_model.GeoModel):
         'name': fields.char('District Name',size=20),
         'geo_polygon':fields.geo_multi_polygon('Geometry'),
     }
+
     def neighborhood_ids(self, cr, uid, id, default=None, context=None):
         """Return a list with neighborhoods from the district uses a postgis query
         """
@@ -512,7 +524,7 @@ class crm_claim(geo_model.GeoModel):
         'solution_classification_id':fields.many2one('ocs.claim_solution_classification','Solution Classification', \
             domain="[('parent_id','!=',False),('enabled','=',True)]",required=False,readonly=True,
             states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'partner_forwarded_id': fields.many2one('res.partner', 'Partner Forwarded',domain="[('supplier','=',True)]",readonly=False,states={'cancel':[('readonly',True)],'done':[('readonly',True)]}),
+        'partner_forwarded_id': fields.many2one('res.partner', 'Partner Forwarded',domain="[('supplier','=',True)]",readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
     }
 
     _order='create_date desc'

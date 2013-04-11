@@ -73,6 +73,12 @@
         	<field name="domain_force">[('users_id','=',user.id)]</field>
         	<field name="groups" eval="[(4, ref('group_ocs_outsourced_user'))]"/>
     	</record>
-		
+        <record id="ocs_idu_rule_reviewer_claims" model="ir.rule">
+            <field name="name">Reviewer Claims</field>
+            <field name="model_id" ref="ocs.model_crm_claim"/>
+            <field name="domain_force">[('csp_id','in',user.get_csp_ids)]</field>
+            <field name="groups" eval="[(4, ref('group_ocs_outsourced_reviewer'))]"/>
+        </record>
+
 	</data>
 </openerp>
