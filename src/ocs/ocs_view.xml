@@ -672,6 +672,9 @@ Claims
         <field name="type">tree</field>
         <field name="inherit_id" ref="crm_claim.crm_case_claims_tree_view"/>
         <field name="arch" type="xml">
+            <xpath expr="//tree[@string='Claims']" position="attributes">
+                <attribute name="colors">blue:state in ('draft','open');gray:state in ('close', 'cancel');red:state=='pending'</attribute>
+            </xpath>
             <field name="name" position="replace">
                 <field name="partner_address_id" string="Contact"/>
             </field>

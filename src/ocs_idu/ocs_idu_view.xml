@@ -394,7 +394,7 @@
     <field name="priority" eval="50" />
     <field name="type">tree</field>
     <field name="arch" type="xml">
-        <tree string="Claims" colors="blue:state=='pending' and not(date_deadline and (date_deadline &lt; current_date));gray:state in ('close', 'cancel');red:date_deadline and (date_deadline &lt; current_date);green:state=='review'">
+        <tree string="Claims" colors="blue:state in ('draft','open');gray:state in ('close', 'cancel');red:state in ('pending','rejected')">
             <field name="partner_address_id"/>
             <field name="user_id" />
             <field name="date"/>

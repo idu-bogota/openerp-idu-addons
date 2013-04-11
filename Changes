@@ -1,4 +1,5 @@
 * Fix: Geocoder del IDU no reconocer Apartamento, Torre, etc, se remuven esos datos de la direccion antes de geocodificar
+* Update: Cambio en el despliegue de colores en el listado de PQRs
 
 openerp6.1-rev2013041000
 * Update: Actualizado workflow para PQR Obras
