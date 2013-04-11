@@ -33,7 +33,7 @@ from base_geoengine import geo_model
 from crm import crm
 from tools.translate import _
 import re
-from geocoder.geocode import geo_code_address,is_bogota_address_valid
+from geocoder.geocode import geo_code_address,is_bogota_address_valid,extract_basic_address
 ##"other.extra:900913"
 
 class crm_claim(crm.crm_case,osv.osv):
@@ -450,6 +450,6 @@ def geocode_address(self, cr, uid, ids, addr):
         url_geocoder = self.pool.get('ir.config_parameter').get_param(cr, uid, 'geo_coder.ws.url', default='', context=None)
         srid = "esri.extra:900913"
         zone = 1100100 #Bogota
-        point = geo_code_address(addr, srid, url_geocoder, zone)
+        point = geo_code_address(extract_basic_address(addr), srid, url_geocoder, zone)
         res['value']['geo_point'] = point
     return res

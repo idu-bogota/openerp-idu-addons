@@ -1,10 +1,61 @@
 id,active,customer,name,supplier
-__export__.res_partner_2,True,False,Unidad Administrativa Especial de Rehabilitación y Mantenimiento Vial – UAERMV,True
-__export__.res_partner_3,True,False,Secretaría de Movilidad,True
-__export__.res_partner_4,True,False,Empresa de Acueducto y Alcantarillado de Bogotá – EEAB,True
+__export__.res_partner_2,True,False,UNIDAD ADMINISTRATIVA ESPECIAL DE REHABILITACIÓN Y MANTENIMIENTO VIAL – UAERMV,True
+__export__.res_partner_3,True,False,SECRETARÍA DE MOVILIDAD,True
+__export__.res_partner_4,True,False,EMPRESA DE ACUEDUCTO Y ALCANTARILLADO DE BOGOTÁ – EEAB,True
 __export__.res_partner_5,True,False,CODENSA,True
-__export__.res_partner_6,True,False,Alcaldía Local,True
-__export__.res_partner_7,True,False,Alcaldía Mayor,True
-__export__.res_partner_8,True,False,Transmilenio,True
-__export__.res_partner_9,True,False,Secretaría de Hacienda,True
-__export__.res_partner_10,True,False,Catastro,True
+__export__.res_partner_6,True,False,ALCALDÍA LOCAL,True
+__export__.res_partner_7,True,False,ALCALDÍA MAYOR,True
+__export__.res_partner_8,True,False,TRANSMILENIO,True
+__export__.res_partner_9,True,False,SECRETARÍA DE HACIENDA,True
+__export__.res_partner_10,True,False,CATASTRO,True
+__export__.res_partner_11,True,False,ALCALDÍA MUNICIPAL,True
+__export__.res_partner_12,True,False,SECRETARÍA DISTRITAL DE PLANEACIÓN,True
+__export__.res_partner_13,True,False,TALLER DEL ESPACIO PÚBLICO,True
+__export__.res_partner_14,True,False,SIN DATO,True
+__export__.res_partner_15,True,False,CURADURÍA URBANA,True
+__export__.res_partner_16,True,False,SUPERINTENDENCIA DE NOTARIADO Y REGISTRO,True
+__export__.res_partner_17,True,False,FOPAE - FONDO DE PREVENCIÓN Y ATENCIÓN DE EMERGENCIAS,True
+__export__.res_partner_18,True,False,BOMBEROS,True
+__export__.res_partner_19,True,False,DEFENSORÍA DEL ESPACIO PÚBLICO,True
+__export__.res_partner_20,True,False,SECRETARÍA DISTRITAL DE AMBIENTE,True
+__export__.res_partner_21,True,False,CADE,True
+__export__.res_partner_22,True,False,INCODER - INSTITUTO COLOMBIANO DE DESARROLLO RURAL,True
+__export__.res_partner_23,True,False,CAJA DE VIVIENDA POPULAR,True
+__export__.res_partner_24,True,False,SECRETARÍA GENERAL,True
+__export__.res_partner_25,True,False,IPES - INSTITUTO PARA LA ECONOMÍA SOCIAL,True
+__export__.res_partner_26,True,False,LONJA INMOBILIARIA,True
+__export__.res_partner_27,True,False,JARDÍN BOTÁNICO JOSÉ CELESTINO MUTIS,True
+__export__.res_partner_28,True,False,CURADURÍA URBANA,True
+__export__.res_partner_29,True,False,SECRETARÍA DISTRITAL DE HÁBITAT,True
+__export__.res_partner_30,True,False,IDRD - INSTITUTO DISTRITAL DE RECREACIÓN Y DEPORTE,True
+__export__.res_partner_31,True,False,INSTITUTO DISTRITAL DE PATRIMONIO CULTURAL,True
+__export__.res_partner_32,True,False,ERU - EMPRESA DE RENOVACIÓN URBANA,True
+__export__.res_partner_33,True,False,ALCALDÍA MAYOR DE BOGOTÁ,True
+__export__.res_partner_34,True,False,CONSEJO DE ESTADO,True
+__export__.res_partner_35,True,False,INVIAS,True
+__export__.res_partner_36,True,False,SECRETARÍA DISTRITAL DE SALUD,True
+__export__.res_partner_37,True,False,DIAN - DIRECCIÓN DE IMPUESTOS Y ADUANAS NACIONALES,True
+__export__.res_partner_38,True,False,URBANIZADORES,True
+__export__.res_partner_39,True,False,CONTRATISTA,True
+__export__.res_partner_40,True,False,INSTITUTO GEOGRÁFICO AGUSTIN CODAZZI,True
+__export__.res_partner_41,True,False,POLICIA ,True
+__export__.res_partner_42,True,False,AGENCIA NACIONAL DE INFRAESTRUCTURA,True
+__export__.res_partner_43,True,False,REGISTRADURÍA NACIONAL DEL ESTADO CIVIL,True
+__export__.res_partner_44,True,False,MINISTERIO DE SALUD Y PROTECCIÓN SOCIAL,True
+__export__.res_partner_45,True,False,SECRETARÍA DE EDUCACIÓN DEL DISTRITO,True
+__export__.res_partner_46,True,False,SECRETARÍA DE GOBIERNO,True
+__export__.res_partner_47,True,False,SUPERINTENDENCIA DE INDUSTRIA Y COMERCIO,True
+__export__.res_partner_48,True,False,FIDUAGRARIA,True
+__export__.res_partner_49,True,False,ETESA,True
+__export__.res_partner_50,True,False,BIBLIOTECA LUIS ANGEL ARANGO,True
+__export__.res_partner_51,True,False,"MINISTERIO DE COMERCIO, INDUSTRIA Y TURISMO",True
+__export__.res_partner_52,True,False,CÁMARA DE COMERCIO DE BOGOTÁ,True
+__export__.res_partner_53,True,False,MINISTERIO DE TRANSPORTE,True
+__export__.res_partner_54,True,False,BOMBEROS,True
+__export__.res_partner_55,True,False,JUZGADO,True
+__export__.res_partner_56,True,False,UAESP - UNIDAD ADMINISTRATIVA ESPECIAL DE SERVICIOS PÚBLICOS ,True
+__export__.res_partner_57,True,False,GAS NATURAL FENOSA,True
+__export__.res_partner_58,True,False,EEB - EMPRESA DE ENERGÍA DE BOGOTÁ,True
+__export__.res_partner_59,True,False,LIME - LIMPIEZA METROPOLITANA,True
+__export__.res_partner_60,True,False,UNE,True
+__export__.res_partner_61,True,False,ETB - EMPRESA DE TELÉFONOS DE BOGOTÁ,True
