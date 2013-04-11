@@ -341,6 +341,12 @@
                 help="All Claim pending to Review"
             />
 
+            <filter icon="gtk-no"
+                string="Rejected"
+                domain="[('state','=','rejected')]"
+                help="All Rejected Claim"
+            />
+
             <filter icon="terp-check"
                 string="Done"
                 domain="[('state','=','done')]"
