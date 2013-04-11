@@ -206,7 +206,7 @@ class ResPartnerAddress(geo_model.GeoModel):
         'neighborhood_id':fields.many2one('ocs.neighborhood','Neighborhood'),
         'full_name':fields.function(_get_full_name,type='char',string='Full Name',method=True),
         'geo_point':fields.geo_point('Location',readonly=False),
-        'claim_id':fields.one2many('crm.claim','id','Historic of Claims',help="Claims opened by User")
+        'claim_id':fields.one2many('crm.claim','partner_address_id','Historic of Claims',help="Claims opened by User")
     }
     _rec_name = 'document_number'
     _order= "last_name asc"
