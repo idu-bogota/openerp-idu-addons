@@ -234,6 +234,7 @@ class ocs_citizen_service_point(geo_model.GeoModel):
         'creation_date': fields.datetime('Creation Date',help='Date when Citizen Service Point is installed',required=True),
         'close_date': fields.datetime('End Date',help='When Citizen Service Point is closed'),
         'schedule': fields.char('Schedule',size=60,help='For example L-V 8:30 am -12:50 pm'),
+        'description': fields.text('Description',help="Description about this Service Point"),
         'geo_point':fields.geo_point('Location',readonly=True),
         'users_id':fields.many2many('res.users','ocs_citizen_service_point_users','csp_id','user_id','Users'),
     }

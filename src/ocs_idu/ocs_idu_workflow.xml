@@ -22,6 +22,22 @@
             <field name="action">case_reject()</field>
     </record>
 
+  <record id="ocs.act_ocs_claim_done" model="workflow.activity">
+        <field name="wkf_id" ref="ocs.ocs_claim_workflow"/>
+        <field name="name">done</field>
+        <field name="kind">function</field>
+        <field name="action">case_close()</field>
+        <field name="flow_stop" eval="False" />
+  </record>
+
+    <record id="ocs.act_ocs_claim_cancel" model="workflow.activity">
+            <field name="wkf_id" ref="ocs.ocs_claim_workflow"/>
+            <field name="name">cancel</field>
+            <field name="kind">function</field>
+            <field name="action">case_cancel()</field>
+            <field name="flow_stop" eval="False" />
+    </record>
+
     <!--
     ===================================================================================
     Transiciones
