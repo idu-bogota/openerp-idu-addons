@@ -25,6 +25,7 @@
             />
             <field name="start_date" select="0" />
             <field name="end_date" select="0" />
+            <field name="description" select="0" />
         </form>
     </field>
 </record>
@@ -94,8 +95,8 @@
     <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
 </record>
-<menuitem name="Tracts" id="menu_ocs_tract" action="action_ocs_tract"
-            parent="menu_construction_ocs_settings" sequence="3" />
+<!-- <menuitem name="Tracts" id="menu_ocs_tract" action="action_ocs_tract" -->
+<!--             parent="menu_construction_ocs_settings" sequence="3" /> -->
 
 <!-- ==================================================================
             Outsourced Citizen Service Points....
@@ -127,7 +128,7 @@
                 <field name="creation_date"/>
                 <field name="close_date"/>
                 <field name="schedule"/>
-                <field name="tract_id" required="True"/>
+                <field name="contract_id"/>
                 <field name="full_name" select="0" />
                 <field name="users_id" colspan="4" nolabel="1" />
         </form>

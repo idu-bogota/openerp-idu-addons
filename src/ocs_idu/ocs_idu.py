@@ -389,9 +389,6 @@ class ocs_citizen_service_point(geo_model.GeoModel):
         """Get Full Name of Contract """
         res = {}
         for csp in self.browse(cr, uid, ids, context = context):
-            if csp.is_outsourced:
-                res[csp.id] = "{0} / {1} ".format(csp.tract_id.full_name, csp.name)
-            else :
                 res[csp.id] = "{0}".format(csp.name)
         return  res
 
@@ -399,7 +396,7 @@ class ocs_citizen_service_point(geo_model.GeoModel):
     _inherit="ocs.citizen_service_point"
     _columns = {
         'is_outsourced':fields.boolean('is Outsourced',help='When is set, this is an outsourced citizen service point'),
-        'tract_id':fields.many2one('ocs.tract','Tract Id'),
+        'contract_id':fields.many2one('ocs.contract','Contract Id', required=True),
         'full_name':fields.function(_get_full_name,type='char',string='Full Name',method=True),
     }
     _defaults={
@@ -418,12 +415,14 @@ class ocs_contract(osv.osv):
         'contract_id': fields.char('Contract Number',size=20,help="Contract Number or Serial", required=True),
         'start_date': fields.datetime('Start Date',help="When contract start", required=True),
         'end_date': fields.datetime('End Date',help="When contract ends"),
+        'description': fields.text('Description',help="Description about this contract"),
         'partner_id': fields.many2one('res.partner','Contractor',size=30,required=True),
     }
     _rec_name = 'contract_id'
 ocs_contract()
 
 class ocs_tract(osv.osv):
+    # FIXME: This class should change, and the relationships with a CSP is many2many
     """ This class is only for IDU (Instituto Desarrollo Urbano Colombia), who need take control about claims
     in building projects, from outsourcing  """
     def _get_full_name(self,cr,uid,ids,fieldname,arg,context=None):

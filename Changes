@@ -1,3 +1,7 @@
+openerp6.1-rev2013041800
+* Update: Cambios en PQR-Obras para no requerir Tramos de obra. OTC no tiene esa info para alimentar el sistema.
+* Fix: Corregido workflow de crm_claim para adicionar nodos de finalizacion
+
 openerp6.1-rev2013041100
 * Fix: Geocoder del IDU no reconocer Apartamento, Torre, etc, se remuven esos datos de la direccion antes de geocodificar
 * Update: Cambio en el despliegue de colores en el listado de PQRs
