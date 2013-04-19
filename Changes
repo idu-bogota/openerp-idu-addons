@@ -1,3 +1,5 @@
+* Fix: Corregido nodos de workflow para que OTC pueda cambiar estados de done a in progress para corrección de errores
+
 openerp6.1-rev2013041800
 * Update: Cambios en PQR-Obras para no requerir Tramos de obra. OTC no tiene esa info para alimentar el sistema.
 * Fix: Corregido workflow de crm_claim para adicionar nodos de finalizacion
