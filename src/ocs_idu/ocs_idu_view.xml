@@ -298,7 +298,7 @@
 
             <separator colspan="4" string="" />
             <group col="8" colspan="4">
-                <button name="cas_cancel" string="Cancel" type="workflow" groups="ocs_idu.group_ocs_outsourced_user"
+                <button name="cas_cancel" string="Cancel" type="workflow" groups="ocs_idu.group_ocs_outsourced_manager"
                     icon="gtk-cancel" states="draft" /> <!-- states= "Estados en los cuales el boton es visible" -->
                 <button name="cas_pending" string="Pending" type="workflow"
                     icon="gtk-media-pause" states="open" groups="ocs_idu.group_ocs_outsourced_user" />
@@ -403,7 +403,7 @@
             <field name="csp_id"/>
             <field name="categ_id" string="Type" select="1"/>
             <field name="state"/>
-            <button name="cas_cancel" string="Cancel" type="workflow" groups="ocs_idu.group_ocs_outsourced_user"
+            <button name="cas_cancel" string="Cancel" type="workflow" groups="ocs_idu.group_ocs_outsourced_manager"
                     icon="gtk-cancel" states="draft" /> <!-- states= "Estados en los cuales el boton es visible" -->
             <button name="cas_pending" string="Pending" type="workflow"
                     icon="gtk-media-pause" states="open" groups="ocs_idu.group_ocs_outsourced_user" />
