@@ -97,6 +97,15 @@ class crm_claim(crm.crm_case,osv.osv):
             res[claim.id] = is_editable
         return  res
 
+    def _get_csp_contract(self, cr, uid, ids, fieldname, arg, context=None):
+        """
+        Returns current contract linked to the CSP
+        """
+        res = {}
+        for claim in self.browse(cr, uid, ids, context = context):
+            res[claim.id] = claim.csp_id.contract_id.contract_id
+        return  res
+
     def case_review(self, cr, uid, ids, *args):
         """Review the Case
         :param ids: List of case Ids
@@ -299,6 +308,7 @@ class crm_claim(crm.crm_case,osv.osv):
                                   other people makes a review and approve the response given to citizen'),
         'is_outsourced':fields.function(_check_is_outsourced,type='boolean',string='Is Outsourced',method=True),
         'is_editable':fields.function(_check_is_editable,type='boolean',string='Check if current user can edit the data',method=True),
+        'csp_contract':fields.function(_get_csp_contract,type='string',string='Contract',method=True),
         'contract_reference': fields.char('Contract Reference',size=9,help='Construction contract number number-year',states={'done':[('readonly',True)]}),
         'damage_type_by_citizen': fields.selection([('fisura', 'Fisura'),('hueco', 'Hueco'),('hundimiento', 'Hundimiento')], 'Via Damage Type',help='Damage type provided by the citizen'),
         'damage_width_by_citizen':  fields.char('Via damage width',size=10,help='Damage width provided by the citizen',states={'done':[('readonly',True)]}),

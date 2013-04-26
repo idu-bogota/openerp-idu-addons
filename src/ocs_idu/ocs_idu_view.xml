@@ -402,6 +402,7 @@
             <field name="date"/>
             <field name="date_deadline" invisible ="1"/>
             <field name="csp_id"/>
+            <field name="csp_contract"/>
             <field name="categ_id" string="Type" select="1"/>
             <field name="state"/>
             <button name="cas_cancel" string="Cancel" type="workflow" groups="ocs_idu.group_ocs_outsourced_manager"
