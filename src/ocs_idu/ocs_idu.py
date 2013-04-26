@@ -306,7 +306,7 @@ class crm_claim(crm.crm_case,osv.osv):
                                   ('review','Review'),('rejected','Rejected'),('done', 'Closed'),('pending', 'Pending')],
                                  'State',help='Introduce a new state between open and done, in this step,\
                                   other people makes a review and approve the response given to citizen'),
-        'is_outsourced':fields.function(_check_is_outsourced,type='boolean',string='Is Outsourced',method=True),
+        'is_outsourced':fields.function(_check_is_outsourced,type='boolean',string='Is Outsourced',method=True, store=True),
         'is_editable':fields.function(_check_is_editable,type='boolean',string='Check if current user can edit the data',method=True),
         'csp_contract':fields.function(_get_csp_contract,type='string',string='Contract',method=True),
         'contract_reference': fields.char('Contract Reference',size=9,help='Construction contract number number-year',states={'done':[('readonly',True)]}),

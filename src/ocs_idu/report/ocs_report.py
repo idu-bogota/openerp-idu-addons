@@ -29,7 +29,6 @@
 
 import base64
 from osv import fields,osv
-from tools.translate import _
 import time
 import cStringIO as StringIO
 import csv
@@ -54,20 +53,18 @@ class ocs_report(osv.osv_memory):
         this = self.browse(cr, uid, ids)[0]
 
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        otc_admin = False;
+        otc_admin = False
         otc_user = False
+        otc_reviewer = False
+        otc_reader = False
 
         for grp in user.groups_id:
-            if grp.name == 'Usuario Oficina de Atención al Ciudadano':
+            grp_id = grp.get_external_id()[grp.id] # Returns the external id like ocs.group_ocs_outsourced_user
+            if grp_id in ['ocs_idu.group_ocs_outsourced_user','ocs.group_ocs_user']:
                 otc_user = True
-                #print grp.name
 
-            if grp.name == 'Administrador Oficina de Atención al Ciudadano':
+            if grp_id in ['ocs_idu.group_ocs_outsourced_manager','ocs.group_ocs_manager']:
                 otc_admin = True
-                #print grp.name
-            #Usuario de Punto Crea
-            #Administrador PQR Obras
- 
 
         query = """SELECT
               pqr.id AS "ID",
@@ -91,7 +88,11 @@ class ocs_report(osv.osv_memory):
               COALESCE(pqr.resolution,'NO REPORTA') AS "Solución",
               COALESCE(can.name,'NO REPORTA') AS "Canal de atención",
               COALESCE(usr.name,'NO REPORTA') AS "Funcionario que atendió",
-              COALESCE(pqr.contract_reference,'NO REPORTA') AS "Contrato o Convenio",
+              COALESCE(csp.name,'NO ASIGNADO') AS "Punto de atención",
+              CASE WHEN csp.is_outsourced=TRUE THEN COALESCE(ctr.contract_id,'NO ASIGNADO')
+                  WHEN csp.is_outsourced=FALSE THEN COALESCE(pqr.contract_reference,'NO REPORTA')
+              END AS "Contrato o Convenio",
+              COALESCE(pqr.contract_reference,'NO REPORTA'),
               COALESCE(ent.name,'NO REPORTA') AS "Entidad",
               pqr.state AS "Estado"
             FROM
@@ -108,6 +109,8 @@ class ocs_report(osv.osv_memory):
               LEFT JOIN crm_case_channel AS can ON pqr.channel = can.id
               LEFT JOIN res_users AS usr ON pqr.create_uid = usr.id
               LEFT JOIN res_partner AS ent ON pqr.partner_forwarded_id = ent.id
+              LEFT JOIN ocs_citizen_service_point as csp ON pqr.csp_id = csp.id
+              LEFT JOIN ocs_contract as ctr ON csp.contract_id = ctr.id
           WHERE 
               pqr.create_date BETWEEN '{0}' AND '{1}'
           """.format(this.start_date, this.end_date)
@@ -121,7 +124,7 @@ class ocs_report(osv.osv_memory):
         cr.execute(query)
         csvfile = StringIO.StringIO()
         csvwriter = csv.writer(csvfile, dialect='excel')
-        csvwriter.writerow(["ID","Fecha de atención (a-m-d)","Tipo de documento","Número documento de identidad","Nombres","Apellidos","Genero","Datos de contacto","Dirección correspondencia","Barrio Correspondencia","Localidad Correspondencia","Dirección del asunto","Barrio","Localidad","Criterio (Tipificación)","Sub Criterio","Tipo requerimiento","Asunto","Solución","Canal de atención","Funcionario que atendió","Contrato o Convenio","Entidad","Estado"])
+        csvwriter.writerow(["ID","Fecha de atención (a-m-d)","Tipo de documento","Número documento de identidad","Nombres","Apellidos","Genero","Datos de contacto","Dirección correspondencia","Barrio Correspondencia","Localidad Correspondencia","Dirección del asunto","Barrio","Localidad","Criterio (Tipificación)","Sub Criterio","Tipo requerimiento","Asunto","Solución","Canal de atención","Funcionario que atendió","Punto de Atención","Contrato o Convenio","Entidad","Estado"])
         map(lambda x:csvwriter.writerow(x), cr.fetchall())
         out = base64.encodestring(csvfile.getvalue())
         return self.write(cr, uid, ids, {'state':'get', 'data':out, 'filename':'pqr_{0}_{1}.csv'.format(this.start_date, this.end_date)}, context=context)
