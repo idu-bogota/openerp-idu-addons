@@ -1,4 +1,5 @@
 * Update: Solo administrador puede cancelar PQRs
+* Update: Permisos en PQR-Obras actualizados y codigo centralizado en campo tipo funcion
 
 openerp6.1-rev2013041901
 * Update: Adicionado grupo OCS_reader, con permisos de solo lectura en las PQR de obras
