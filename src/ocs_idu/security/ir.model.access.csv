@@ -51,6 +51,7 @@ access_ocs_reviewer_crm_case_channel,crm.user.crm.case.channel,crm.model_crm_cas
 access_ocs_reviewer_crm_case_stage,crm.user.crm.case.stage,crm.model_crm_case_stage,ocs_idu.group_ocs_outsourced_reviewer,1,0,0,0
 access_ocs_reviewer_mail_message,mail.message.user.mail.message,mail.model_mail_message,ocs_idu.group_ocs_outsourced_reviewer,1,1,1,0
 access_ocs_reviewer_res_partner_category,base.user.res_partner_category,base.model_res_partner_category,ocs_idu.group_ocs_outsourced_reviewer,1,0,0,0
+access_ocs_reviewer_ocs_contract,ocs.contract,ocs_idu.model_ocs_contract,ocs_idu.group_ocs_outsourced_reviewer,1,0,0,0
 access_ocs_reader_district,ocs.user.district,ocs.model_ocs_district,ocs_idu.group_ocs_outsourced_reader,1,0,0,0
 access_ocs_reader_sub_district,ocs.user.sub_district,ocs.model_ocs_sub_district,ocs_idu.group_ocs_outsourced_reader,1,0,0,0
 access_ocs_reader_neighborhood,ocs.user.neighborhood,ocs.model_ocs_neighborhood,ocs_idu.group_ocs_outsourced_reader,1,0,0,0
@@ -65,3 +66,4 @@ access_ocs_reader_crm_case_channel,crm.user.crm.case.channel,crm.model_crm_case_
 access_ocs_reader_crm_case_stage,crm.user.crm.case.stage,crm.model_crm_case_stage,ocs_idu.group_ocs_outsourced_reader,1,0,0,0
 access_ocs_reader_mail_message,mail.message.user.mail.message,mail.model_mail_message,ocs_idu.group_ocs_outsourced_reader,1,1,1,0
 access_ocs_reader_res_partner_category,base.user.res_partner_category,base.model_res_partner_category,ocs_idu.group_ocs_outsourced_reader,1,0,0,0
+access_ocs_reader_ocs_contract,ocs.contract,ocs_idu.model_ocs_contract,ocs_idu.group_ocs_outsourced_reader,1,0,0,0
