@@ -36,6 +36,9 @@
                   <field eval="[(4, ref('group_ocs_outsourced_manager'))]" name="groups_id"/>
     	</record>
     	
+        <record model="ir.ui.menu" id="ocs.menu_ocs_reporting">
+                <field eval="[(4, ref('group_ocs_outsourced_user')),(4, ref('group_ocs_outsourced_manager')),(4, ref('group_ocs_outsourced_reviewer')),(4, ref('group_ocs_outsourced_reader'))]" name="groups_id"/>
+        </record>
     	
     	<!-- 
     	FETUCCINI:

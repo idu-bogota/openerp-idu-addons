@@ -53,18 +53,40 @@ class ocs_report(osv.osv_memory):
         this = self.browse(cr, uid, ids)[0]
 
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        otc = False
         otc_admin = False
+        otc_admin_outsourced = False
         otc_user = False
+        otc_user_outsourced = False
         otc_reviewer = False
         otc_reader = False
 
         for grp in user.groups_id:
             grp_id = grp.get_external_id()[grp.id] # Returns the external id like ocs.group_ocs_outsourced_user
-            if grp_id in ['ocs_idu.group_ocs_outsourced_user','ocs.group_ocs_user']:
+            if grp_id == 'ocs.group_ocs_user':
                 otc_user = True
+                otc = True
 
-            if grp_id in ['ocs_idu.group_ocs_outsourced_manager','ocs.group_ocs_manager']:
+            if grp_id == 'ocs_idu.group_ocs_outsourced_user':
+                otc_user_outsourced = True
+                otc = True
+
+            if grp_id == 'ocs.group_ocs_manager':
                 otc_admin = True
+                otc = True
+
+            if grp_id == 'ocs_idu.group_ocs_outsourced_manager':
+                otc_admin_outsourced = True
+                otc = True
+
+            if grp_id == 'ocs_idu.group_ocs_outsourced_reviewer':
+                otc_reviewer = True
+                otc = True
+
+            if grp_id == 'ocs_idu.group_ocs_outsourced_reader':
+                otc_reader = True
+                otc = True
+
 
         query = """SELECT
               pqr.id AS "ID",
@@ -115,11 +137,20 @@ class ocs_report(osv.osv_memory):
               pqr.create_date BETWEEN '{0}' AND '{1}'
           """.format(this.start_date, this.end_date)
 
-        if not otc_user and not otc_admin:
-            query += " AND 0"
+        if not otc:
+            raise osv.except_osv(_('Error'),_('Su usuario no tiene asignado ningún grupo de la OTC'))
 
-        if otc_user and not otc_admin:
+        if (otc_admin or otc_admin_outsourced):
+            if (otc_admin and otc_admin_outsourced):
+                pass
+            elif (otc_admin):
+                query += " AND csp.is_outsourced = FALSE"
+            elif (otc_admin_outsourced):
+                query += " AND csp.is_outsourced = TRUE"
+        elif (otc_user or otc_user_outsourced):
             query += " AND pqr.create_uid = {0}".format(uid)
+        elif (otc_reviewer or otc_reader):
+            query += " AND pqr.csp_id IN ({0})".format(",".join(str(x) for x in user.get_csp_ids))
 
         cr.execute(query)
         csvfile = StringIO.StringIO()
