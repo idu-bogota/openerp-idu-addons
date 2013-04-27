@@ -1,3 +1,10 @@
+openerp6.1-rev2013042600
+* Update: Reporte en CSV despliega numero de contrato y punto de atencion
+* Update: Desplegar el contrato relacionado en una PQR de Obras
+* Update: Solo administrador puede cancelar PQRs
+* Update: Permisos en PQR-Obras actualizados y codigo centralizado en campo tipo funcion
+* Update: Actualizado reporte para que pueda ser descargado por usuarios PQR-Obras
+
 openerp6.1-rev2013041901
 * Update: Adicionado grupo OCS_reader, con permisos de solo lectura en las PQR de obras
 

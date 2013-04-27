@@ -65,6 +65,47 @@ class crm_claim(crm.crm_case,osv.osv):
             res[claim.id] = claim.csp_id.is_outsourced
         return  res
 
+    def _check_is_editable(self,cr,uid,ids,fieldname,arg,context=None):
+        """
+        Check if current user can edit the PQR based on status and group.
+        Used this options instead of attributes with some logic in the view
+        useful just in web mode no in XMLRPC.
+        cannot use object level permissions as all roles need to add messages and for that requires update permission on crm.claim
+        """
+        res = {}
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        ocs_role = None
+
+        regex = "^ocs_idu\.group_ocs_outsourced_(.*)$"
+        for grp in user.groups_id:
+            grp_id = grp.get_external_id()[grp.id] # Returns the external id like ocs.group_ocs_outsourced_user
+            result = re.search(regex, grp_id)
+            if result:
+                ocs_role = result.group(1)
+                if ocs_role == 'manager':
+                    break
+
+        for claim in self.browse(cr, uid, ids, context = context):
+            status = claim.state
+            is_editable = True
+            if status in ['done', 'cancel', 'pending']:
+                is_editable = False
+            elif ocs_role in ['reader','reviewer']:
+                is_editable = False
+            elif ocs_role == 'user' and status in ['review']:
+                is_editable = False
+            res[claim.id] = is_editable
+        return  res
+
+    def _get_csp_contract(self, cr, uid, ids, fieldname, arg, context=None):
+        """
+        Returns current contract linked to the CSP
+        """
+        res = {}
+        for claim in self.browse(cr, uid, ids, context = context):
+            res[claim.id] = claim.csp_id.contract_id.contract_id
+        return  res
+
     def case_review(self, cr, uid, ids, *args):
         """Review the Case
         :param ids: List of case Ids
@@ -265,7 +306,9 @@ class crm_claim(crm.crm_case,osv.osv):
                                   ('review','Review'),('rejected','Rejected'),('done', 'Closed'),('pending', 'Pending')],
                                  'State',help='Introduce a new state between open and done, in this step,\
                                   other people makes a review and approve the response given to citizen'),
-        'is_outsourced':fields.function(_check_is_outsourced,type='boolean',string='Is Outsourced',method=True),
+        'is_outsourced':fields.function(_check_is_outsourced,type='boolean',string='Is Outsourced',method=True, store=True),
+        'is_editable':fields.function(_check_is_editable,type='boolean',string='Check if current user can edit the data',method=True),
+        'csp_contract':fields.function(_get_csp_contract,type='string',string='Contract',method=True),
         'contract_reference': fields.char('Contract Reference',size=9,help='Construction contract number number-year',states={'done':[('readonly',True)]}),
         'damage_type_by_citizen': fields.selection([('fisura', 'Fisura'),('hueco', 'Hueco'),('hundimiento', 'Hundimiento')], 'Via Damage Type',help='Damage type provided by the citizen'),
         'damage_width_by_citizen':  fields.char('Via damage width',size=10,help='Damage width provided by the citizen',states={'done':[('readonly',True)]}),
