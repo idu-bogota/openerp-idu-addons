@@ -1,3 +1,6 @@
+openerp6.1-rev2013042900
+* Fix: Resulve problema con PQR de obras nuevas que el formulario no es editable
+
 openerp6.1-rev2013042600
 * Update: Reporte en CSV despliega numero de contrato y punto de atencion
 * Update: Desplegar el contrato relacionado en una PQR de Obras
