@@ -320,6 +320,9 @@ class crm_claim(crm.crm_case,osv.osv):
         (_check_claim_address,'Claim Address should follow IDU conventions ie. Cr 102 BIS 10 A BIS Z 30 Int 3 Loc 4',['claim_address']),
         (_check_address_related_fields,'Please select district and neigboohood',['claim_address']),
     ]
+    _defaults = {
+        'is_editable': True
+    }
 
 crm_claim()
 
