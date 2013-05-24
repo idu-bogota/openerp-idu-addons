@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+<menuitem name="Pavement Management System" id="menu_urban_pavement"/>
+<menuitem name="Roadway Component" id="menu_urban_pavement_roadway_component" parent="menu_urban_pavement"  sequence="1"/>
+
+<record model="ir.ui.view" id="view_urban_pavement_roadway_form">
+        <field name="name">urban_pavement.roadway.form</field>
+        <field name="model">urban_pavement.roadway</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Roadway Polygon">
+                <field name="ric"/>
+                <field name="create_date"/>
+                <field name="adherence"/>
+            </form>
+        </field>
+</record>
+
+<record model="ir.ui.view" id="view_urban_pavement_roadway_tree">
+        <field name="name">urban_pavement.roadway.tree</field>
+        <field name="model">urban_pavement.roadway</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Roadway Polygon">
+                <field name="id"/>
+                <field name="ric"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+</record>
+
+
+<record model="ir.actions.act_window" id="action_urban_pavement_roadway">
+        <field name="name">Roadway</field>
+        <field name="res_model">urban_pavement.roadway</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem name="Roadway" id="menu_urban_pavement_roadway_component_roadway" parent="menu_urban_pavement_roadway_component" action="action_urban_pavement_roadway"/>
+
+</data>
+</openerp>

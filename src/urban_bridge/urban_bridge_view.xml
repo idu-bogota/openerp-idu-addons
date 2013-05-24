@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+
+<!--
+==================================================================================
+Bridges
+==================================================================================
+-->
+
+
+<!-- Form -->
+<record model="ir.ui.view" id="view_urban_bridge_bridge_form">
+        <field name="name">urban_bridge.bridge.form</field>
+        <field name="model">urban_bridge.bridge</field>
+        <field name="type">form</field>        
+        <field name="arch" type="xml">
+            <form string="Bridge Inventory">
+            <group colspan="4" col="4">
+                <group colspan="2" col="4">
+                    <field name="name"/>
+                    <field name="code" select="1"/>
+                    <field name="address"/>
+                    <field name="last_address"/>
+                    <field name="category" />
+                    <field name="structure_type" widget="selection" />
+                </group>
+                <group colspan="2" col="2">
+                    <field name="photo" widget='image' nolabel="1"/>
+                </group>            
+            </group>
+             <group colspan="4" col="4">
+             <notebook>
+             <page string="Structure Data">
+                    <field name="construction_date"/>
+                    <field name="length"/>
+                    <field name="width"/>
+                    <field name="superstructure_area"/>
+                    <field name="gauge"/>
+              </page>        	 
+              <page string="Geometry">
+                    <group colspan="4" col="2">
+                        <field name="shape" widget="geo_edit_map" readonly="True"/>
+                    </group>
+              </page>
+              </notebook>
+              </group>
+            </form>
+        </field>
+</record>
+<!-- Tree -->
+
+<record model="ir.ui.view" id="view_urban_bridge_bridge_tree">
+        <field name="name">urban_bridge.bridge.tree</field>
+        <field name="model">urban_bridge.bridge</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Bridge Inventory">
+                <field name="code"/>
+                <field name="category"/>
+                <field name="address"/>
+            </tree>
+        </field>
+</record>
+
+<!-- Geoengine Views -->
+
+<record  model="ir.ui.view" id="ir_ui_view_urban_bridge_bridge_OSM" >
+            <field name="name">urban_bridge.bridge.geo_view</field>
+            <field name="arch"><![CDATA[
+                <form >
+                    <field name="code"/>
+                    <field name="name"/>                    
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">urban_bridge.bridge</field>
+</record>
+
+<!-- Geoengine Base Raster -->
+<record model="geoengine.raster.layer" id="geoengine_raster_layer_urban_bridge_bridge">
+            <field name="raster_type">osm</field>
+            <field name="name">Bridge OSM</field>
+            <field name="view_id" ref="ir_ui_view_urban_bridge_bridge_OSM"/>
+            <field eval="0" name="overlay"/>
+</record>
+
+<!-- Geoengine Vector Layer -->
+
+<record  model="geoengine.vector.layer" id="geoengine_vector_layer_urban_bridge_bridge_plain">
+            <field name="geo_field_id" ref="urban_bridge.field_urban_bridge_bridge_shape"/>            
+            <field name="name">Bridge</field>
+            <field name="view_id" ref="ir_ui_view_urban_bridge_bridge_OSM"/>
+            <field name="geo_repr">basic</field>
+            <field name="attribute_field_id" ref="urban_bridge.field_urban_bridge_bridge_code"/>
+            <field name="begin_color">#FF680A</field>
+</record>
+
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_urban_bridge_bridge">
+        <field name="name">Bridges</field>
+        <field name="res_model">urban_bridge.bridge</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,geoengine</field>
+</record>
+<menuitem name="Bridge Management System" id="menu_urban_bridge"/>
+<menuitem name="Inventory" id="menu_urban_bridge_inventory" parent="menu_urban_bridge"/>
+<menuitem name="Bridges" id="menu_urban_bridge_bridge" parent="menu_urban_bridge_inventory" action="action_urban_bridge_bridge" sequence="1"/>
+
+
+<!-- 
+=============================================================================================
+Structure Type
+=============================================================================================
+ -->
+<!-- Form View -->
+
+<record model="ir.ui.view" id="view_urban_bridge_structure_type_form">
+        <field name="name">urban_bridge.structure_type.form</field>
+        <field name="model">urban_bridge.structure_type</field>
+        <field name="type">form</field>        
+        <field name="arch" type="xml">
+            <form string="Structure Type"> 
+             <field name="code" select="1"/>
+             <field name="name"/>
+            </form>
+        </field>
+</record>
+
+<!-- Tree View -->
+
+<record model="ir.ui.view" id="view_urban_bridge_structure_type_tree">
+        <field name="name">urban_bridge.structure_type.tree</field>
+        <field name="model">urban_bridge.structure_type</field>
+        <field name="type">tree</field>        
+        <field name="arch" type="xml">
+            <tree string="Structure Type"> 
+             <field name="code" select="1"/>
+             <field name="name"/>
+            </tree>
+        </field>
+</record>
+
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_urban_bridge_structure_type">
+        <field name="name">Structure Type</field>
+        <field name="res_model">urban_bridge.structure_type</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+
+<!-- Menus  -->
+<menuitem name="Domains" id="menu_urban_bridge_domain" parent="menu_urban_bridge"/>
+<menuitem name="Structure Type" id="menu_urban_bridge_structure_type" parent="menu_urban_bridge_domain" action="action_urban_bridge_structure_type" sequence="1"/>
+
+
+</data>
+</openerp>
