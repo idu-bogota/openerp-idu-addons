@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>,        
- <openerp>,        
- <data>  
+<?xml version="1.0" encoding="UTF-8"?>        
+<openerp>        
+<data>
     <record model='base_map.district' id='base_map.district_1'>
         <field name='name'>SANTA FE</field>
         <field name='code'>  3</field>
@@ -103,4 +103,3 @@
     </record>
 </data>
 </openerp>
-Programa Finalizo
