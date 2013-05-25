@@ -122,7 +122,7 @@ Sub Districts
         <field name="arch" type="xml">
             <form string="Sub Districts">
                 <field name="code"/>
-                <field name="name"/>
+                <field name="name" select="1"/>
                 <field name="classification"/>
                 <group colspan="4" col="2">
                     <field name="shape" widget="geo_edit_map" readonly="True"/>

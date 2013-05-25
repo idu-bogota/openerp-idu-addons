@@ -43,7 +43,8 @@
         "init_xml" : ['base_map.xml'],
         "demo_xml" : [],
         "update_xml" : ['base_map.xml',
-                        'data/district_bogota.xml'
+                        'data/district_bogota.xml',
+                        'data/sub_district_bogota.xml'
                         ],
         "installable": True
 }
