@@ -16,6 +16,7 @@
                         <separator string="Fechas" colspan="2"/>
                         <field name="start_date" width="200"/>
                         <field name="end_date" width="200"/>
+                        <field name="format" />
                         <separator colspan="2"/>
                         <group colspan="2">
                             <button special="cancel" icon="gtk-cancel" string="Cancel"/>
