@@ -31,7 +31,8 @@ import base64
 from osv import fields,osv
 import time
 import cStringIO as StringIO
-import csv
+import csv, xlwt
+from datetime import datetime
 
 class ocs_report(osv.osv_memory):
     """
@@ -47,6 +48,9 @@ class ocs_report(osv.osv_memory):
                 'state': fields.selection( ( ('choose','choose'),# choose date
                      ('get','get'),# get the file
                    ) ),
+                'format': fields.selection( ( ('xls','MS Excel'),
+                     ('csv','CSV - Comma Separated Values'),
+                   ), 'Formato del reporte', required=True ),
                 }
    
     def create_report(self,cr,uid,ids,context={}):
@@ -114,7 +118,6 @@ class ocs_report(osv.osv_memory):
               CASE WHEN csp.is_outsourced=TRUE THEN COALESCE(ctr.contract_id,'NO ASIGNADO')
                   WHEN csp.is_outsourced=FALSE THEN COALESCE(pqr.contract_reference,'NO REPORTA')
               END AS "Contrato o Convenio",
-              COALESCE(pqr.contract_reference,'NO REPORTA'),
               COALESCE(ent.name,'NO REPORTA') AS "Entidad",
               pqr.state AS "Estado"
             FROM
@@ -153,17 +156,52 @@ class ocs_report(osv.osv_memory):
             query += " AND pqr.csp_id IN ({0})".format(",".join(str(x) for x in user.get_csp_ids))
 
         cr.execute(query)
-        csvfile = StringIO.StringIO()
-        csvwriter = csv.writer(csvfile, dialect='excel')
-        csvwriter.writerow(["ID","Fecha de atención (a-m-d)","Tipo de documento","Número documento de identidad","Nombres","Apellidos","Genero","Datos de contacto","Dirección correspondencia","Barrio Correspondencia","Localidad Correspondencia","Dirección del asunto","Barrio","Localidad","Criterio (Tipificación)","Sub Criterio","Tipo requerimiento","Asunto","Solución","Canal de atención","Funcionario que atendió","Punto de Atención","Contrato o Convenio","Entidad","Estado"])
-        map(lambda x:csvwriter.writerow(x), cr.fetchall())
-        out = base64.encodestring(csvfile.getvalue())
-        return self.write(cr, uid, ids, {'state':'get', 'data':out, 'filename':'pqr_{0}_{1}.csv'.format(this.start_date, this.end_date)}, context=context)
+        out = ''
+        headers = ("ID",u"Fecha de atención (a-m-d)","Tipo de documento",u"Número documento de identidad","Nombres","Apellidos","Genero","Datos de contacto",u"Dirección correspondencia","Barrio Correspondencia","Localidad Correspondencia",u"Dirección del asunto","Barrio","Localidad",u"Criterio (Tipificación)","Sub Criterio","Tipo requerimiento","Asunto",u"Solución",u"Canal de atención",u"Funcionario que atendió",u"Punto de Atención","Contrato o Convenio","Entidad","Estado")
+        if(this.format == 'csv'):
+            csvfile = StringIO.StringIO()
+            csvwriter = csv.writer(csvfile, dialect='excel')
+            csvwriter.writerow(headers)
+            map(lambda x:csvwriter.writerow(x), cr.fetchall())
+            out = base64.encodestring(csvfile.getvalue())
+        else:
+            xlsfile = StringIO.StringIO()
+
+            date_style = xlwt.XFStyle()
+            date_style.num_format_str = 'DD-MM-YYYY'
+            bold_font = xlwt.Font()
+            bold_font.bold = True
+            bold_style = xlwt.XFStyle()
+            bold_style.font = bold_font
+
+            wb = xlwt.Workbook()
+            ws = wb.add_sheet('Reporte PQR')
+
+            ws.write(0, 0, 'Reporte PQRs periodo: {0} {1}'.format(this.start_date, this.end_date), bold_style)
+            row_cnt = 2;
+            results = cr.fetchall()
+            results.insert(0, headers)
+            for row in results:
+                col_cnt = 0
+                for value in row:
+                    if(row_cnt != 2 and col_cnt == 1):
+                        ws.write(row_cnt, col_cnt, datetime.strptime(value, '%Y-%m-%d'), date_style)
+                    elif(row_cnt == 2):
+                        ws.write(row_cnt, col_cnt, value, bold_style)#set Bold style to header
+                    else:
+                        ws.write(row_cnt, col_cnt, value)
+                    col_cnt += 1
+                row_cnt += 1
+            wb.save(xlsfile)
+            out = base64.encodestring(xlsfile.getvalue())
+
+        return self.write(cr, uid, ids, {'state':'get', 'data':out, 'filename':'pqr_{0}_{1}.{2}'.format(this.start_date, this.end_date, this.format)}, context=context)
        
     _defaults = {
                  'state': lambda *a: 'choose',
                  'start_date' : lambda *a: time.strftime('%Y-%m-%d'),
                  'end_date' : lambda *a: time.strftime('%Y-%m-%d'),
+                 'format': 'xls',
                 }
 
 
