@@ -44,7 +44,8 @@
         "demo_xml" : [],
         "update_xml" : ['base_map.xml',
                         'data/district_bogota.xml',
-                        'data/sub_district_bogota.xml'
+                        'data/sub_district_bogota.xml',
+                        'data/cadastral_zone.xml'
                         ],
         "installable": True
 }

@@ -200,8 +200,8 @@ Sub Districts
         <field name="arch" type="xml">
             <form string="Cadastral Zone">
                 <field name="code"/>
-                <field name="name"/>
-                <field name="create_date"/>
+                <field name="name" select="1"/>
+                <field name="start_date"/>
                 <field name="update_0"/>
                 <field name="update_1"/>
                 <field name="update_2"/>

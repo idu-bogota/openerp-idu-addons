@@ -41,7 +41,7 @@ Bridges
               </page>        	 
               <page string="Geometry">
                     <group colspan="4" col="2">
-                        <field name="shape" widget="geo_edit_map" readonly="True"/>
+                        <field name="shape" widget="geo_edit_map"/>
                     </group>
               </page>
               </notebook>
