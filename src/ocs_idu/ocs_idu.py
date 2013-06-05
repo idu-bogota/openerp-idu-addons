@@ -242,7 +242,7 @@ class crm_claim(crm.crm_case,osv.osv):
         ctz_uniq_fields = ['document_number','email','twitter','facebook']
         ctz_where = []
         cnt = 0
-        for f in ctz_uniq_fields:
+        for f in ctz_uniq_fields:#Create a search condition to find any previous citizen with same data
             if f in data['partner_address_id']:
                 ctz_where.insert(0,(f,'=',data['partner_address_id'][f]))
                 cnt += 1
@@ -273,6 +273,28 @@ class crm_claim(crm.crm_case,osv.osv):
             return {'status': 'failed', 'message': 'No hay datos del ciudadano para registrar' }
 
         data['partner_address_id'] = ctz_id
+
+        search_by_name_fields = {
+            'channel': {'class': 'crm.case.channel', 'ignore_not_found': False, 'operator': 'ilike'},
+            'categ_id': {'class': 'crm.case.categ', 'ignore_not_found': False, 'operator': 'ilike'},
+            'classification_id': {'class': 'ocs.claim_classification', 'ignore_not_found': False, 'operator': '='},
+            'sub_classification_id': {'class': 'ocs.claim_classification', 'ignore_not_found': False, 'operator': '='},
+            'district_id': {'class': 'ocs.district', 'ignore_not_found': False, 'operator': 'ilike'},
+            'neighborhood_id': {'class': 'ocs.neighborhood', 'ignore_not_found': True, 'operator': 'ilike'},
+        }
+        for f in search_by_name_fields.keys():
+            if f in data and type(data[f]) == str: #ID is a name to search
+                objs = self.pool.get(search_by_name_fields[f]['class']).name_search(cr, uid, name=data[f], args=None, operator=search_by_name_fields[f]['operator'], context=None, limit=1)
+                if(not len(objs)):
+                    if search_by_name_fields[f]['ignore_not_found']:
+                        del data[f] #remove not found value
+                    else:
+                        return {'status': 'failed', 'message': 'not found "{0}" for field "{1}"'.format(data[f], f)}
+                data[f] = objs[0][0] #assign found object's id
+
+        if 'sub_classification_id' in data:
+            sub_classification = self.pool.get('ocs.claim_classification').browse(cr, uid, data['sub_classification_id'],context)
+            data['classification_id'] = sub_classification.parent_id.id
 
         try:
             result['result']['id'] = self.create(cr, uid, data, context)
