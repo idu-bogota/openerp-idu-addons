@@ -206,4 +206,10 @@ class urban_bridge_structure_element_attribute(osv.osv):
         'data_type':fields.selection([('I','Integer'),('S','String'),('D','Value Date Time'),('F','Float'),('B','Boolean')],'Data Type'),
         'element_type_id':fields.integer('Element ID'),
     }
+    
+class urban_bridge_infraestructure_element(osv.osv):
+    """
+    EAV Infraestructure Element
+    """
+    _name="urban_bridge.infraestructure_element"
 
