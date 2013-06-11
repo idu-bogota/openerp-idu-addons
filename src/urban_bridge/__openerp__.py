@@ -27,7 +27,6 @@
         "category" : "Transportation, Free Bridge Management System",
         "description": """For Public Organizations, this is a bridge management System, first module Bridge inventory survey.""",
         "depends" : ['base',
-                     'base_geoengine',
                      'base_map',
                      ],
         "init_xml" : ['urban_bridge_view.xml'],

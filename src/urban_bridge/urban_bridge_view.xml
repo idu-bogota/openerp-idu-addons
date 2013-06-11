@@ -28,21 +28,34 @@ Bridges
                 </group>
                 <group colspan="2" col="2">
                     <field name="photo" widget='image' nolabel="1"/>
-                </group>            
+                </group>
             </group>
              <group colspan="4" col="4">
              <notebook>
+             <page string="Geometry">
+                    <group colspan="2" col="2">
+                    <field name="district"/>
+                    <field name="sub_district"/>
+                    <field name="cadastral_zone"/>
+                    <field name="micro_seismicity"/>
+                    <field name="geological_zone" widget="selection"/>
+                    <field name="calc_area"/>
+                    <field name="calc_perimeter"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <field name="shape" widget="geo_edit_map"/>
+                    </group>
+              </page>
              <page string="Structure Data">
                     <field name="construction_date"/>
                     <field name="length"/>
                     <field name="width"/>
                     <field name="superstructure_area"/>
-                    <field name="gauge"/>
-              </page>        	 
-              <page string="Geometry">
-                    <group colspan="4" col="2">
-                        <field name="shape" widget="geo_edit_map"/>
-                    </group>
+                    <field name="vertical_gauge"/>
+                    <field name="horizontal_gauge"/>
+                    <field name="design_load_capacity"/>
+                    <field name="design_load_code" widget="selection"/>
+                    <field name="structure_material" widget="selection"/>
               </page>
               </notebook>
               </group>
@@ -70,8 +83,7 @@ Bridges
             <field name="name">urban_bridge.bridge.geo_view</field>
             <field name="arch"><![CDATA[
                 <form >
-                    <field name="code"/>
-                    <field name="name"/>                    
+                    <field name="name"/>
                 </form>]]></field>
             <field eval="16" name="priority"/>
             <field name="type">geoengine</field>
@@ -89,12 +101,12 @@ Bridges
 <!-- Geoengine Vector Layer -->
 
 <record  model="geoengine.vector.layer" id="geoengine_vector_layer_urban_bridge_bridge_plain">
-            <field name="geo_field_id" ref="urban_bridge.field_urban_bridge_bridge_shape"/>            
+            <field name="geo_field_id" ref="urban_bridge.field_urban_bridge_bridge_shape"/>
             <field name="name">Bridge</field>
             <field name="view_id" ref="ir_ui_view_urban_bridge_bridge_OSM"/>
             <field name="geo_repr">basic</field>
             <field name="attribute_field_id" ref="urban_bridge.field_urban_bridge_bridge_code"/>
-            <field name="begin_color">#FF680A</field>
+            <field name="begin_color">#F0680A</field>
 </record>
 
 <!-- Action -->
@@ -102,7 +114,7 @@ Bridges
         <field name="name">Bridges</field>
         <field name="res_model">urban_bridge.bridge</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form,geoengine</field>
+        <field name="view_mode">tree,form</field>
 </record>
 <menuitem name="Bridge Management System" id="menu_urban_bridge"/>
 <menuitem name="Inventory" id="menu_urban_bridge_inventory" parent="menu_urban_bridge"/>
@@ -121,9 +133,16 @@ Structure Type
         <field name="model">urban_bridge.structure_type</field>
         <field name="type">form</field>        
         <field name="arch" type="xml">
-            <form string="Structure Type"> 
+            <form string="Structure Type">
+            <group colspan="2" col="2">
              <field name="code" select="1"/>
              <field name="name"/>
+             <separator colspan="2" string="Description:"/>
+             <field name="description" nolabel="1" colspan="2"/>
+            </group> 
+            <group colspan="2" col="2">
+                <field name="photo" widget="image" nolabel="1"/>
+            </group>
             </form>
         </field>
 </record>
@@ -154,6 +173,163 @@ Structure Type
 <menuitem name="Domains" id="menu_urban_bridge_domain" parent="menu_urban_bridge"/>
 <menuitem name="Structure Type" id="menu_urban_bridge_structure_type" parent="menu_urban_bridge_domain" action="action_urban_bridge_structure_type" sequence="1"/>
 
+<!-- ==================================================================================================
+Structure Design Load Code
+======================================================================================================= -->
+
+
+<!-- Form View -->
+<record model="ir.ui.view" id="view_urban_bridge_design_load_code_form">
+        <field name="name">urban_bridge.design_load_code.form</field>
+        <field name="model">urban_bridge.design_load_code</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Design Load Code">
+             <field name="code" select="1"/>
+             <field name="name"/>
+            </form>
+        </field>
+</record>
+<!-- Tree View -->
+
+<record model="ir.ui.view" id="view_urban_bridge_design_load_code_tree">
+        <field name="name">urban_bridge.design_load_code.tree</field>
+        <field name="model">urban_bridge.design_load_code</field>
+        <field name="type">tree</field>        
+        <field name="arch" type="xml">
+            <tree string="Design Load Code"> 
+             <field name="code" select="1"/>
+             <field name="name"/>
+            </tree>
+        </field>
+</record>
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_urban_bridge_design_load_code">
+        <field name="name">Structure Type</field>
+        <field name="res_model">urban_bridge.design_load_code</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+<!-- Menu -->
+<menuitem name="Design Load Codes" id="menu_urban_bridge_design_load_code" parent="menu_urban_bridge_domain" action="action_urban_bridge_design_load_code" sequence="2"/>
+
+<!--========================================================================================================
+ Structure Material
+============================================================================================================ -->
+<!-- Form View -->
+<record model="ir.ui.view" id="view_urban_bridge_structure_material_form">
+        <field name="name">urban_bridge.structure_material.form</field>
+        <field name="model">urban_bridge.structure_material</field>
+        <field name="type">form</field>        
+        <field name="arch" type="xml">
+            <form string="Structure Material"> 
+             <field name="code" select="1"/>
+             <field name="name"/>
+            </form>
+        </field>
+</record>
+<!-- Tree View -->
+<record model="ir.ui.view" id="view_urban_bridge_structure_material_tree">
+        <field name="name">urban_bridge.structure_material.tree</field>
+        <field name="model">urban_bridge.structure_material</field>
+        <field name="type">tree</field>        
+        <field name="arch" type="xml">
+            <tree string="Structure Material"> 
+             <field name="code" select="1"/>
+             <field name="name"/>
+            </tree>
+        </field>
+</record>
+
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_urban_bridge_structure_material">
+        <field name="name">Structure Type</field>
+        <field name="res_model">urban_bridge.structure_material</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+<!-- Menu -->
+<menuitem name="Structure Material" id="menu_urban_bridge_structure_material" parent="menu_urban_bridge_domain" action="action_urban_bridge_structure_material" sequence="3"/>
+
+<!-- ===================================================================================================
+Urban Bridge - EAV
+Structure Elemt
+urban_bridge.structure_element_type
+======================================================================================================== -->
+<!-- Form View -->
+<record model="ir.ui.view" id="view_urban_bridge_structure_element_type_form">
+        <field name="name">urban_bridge.structure_element_type.form</field>
+        <field name="model">urban_bridge.structure_element_type</field>
+        <field name="type">form</field>        
+        <field name="arch" type="xml">
+            <form string="Structure Element Type">
+             <field name="name" select="1"/>
+             <field name="classification" select="1"/>
+             <field name="sub_classification" select="1"/>
+             <group colspan="4" col="2">
+                <field name="attributes" nolabel="1"/>
+             </group>
+            </form>
+        </field>
+</record>
+<!-- Tree View -->
+<record model="ir.ui.view" id="view_urban_bridge_structure_element_type_tree">
+        <field name="name">urban_bridge.structure_element_type.tree</field>
+        <field name="model">urban_bridge.structure_element_type</field>
+        <field name="type">tree</field>        
+        <field name="arch" type="xml">
+            <tree string="Structure Element Type">
+             <field name="name" select="1"/>
+             <field name="classification" select="1"/>
+             <field name="sub_classification" select="1"/>
+            </tree>
+        </field>
+</record>
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_urban_bridge_structure_element_type">
+        <field name="name">Structure Element Type</field>
+        <field name="res_model">urban_bridge.structure_element_type</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+<!-- Menu -->
+<menuitem name="Structure Element Type" id="menu_urban_bridge_structure_element_type" parent="menu_urban_bridge_domain" action="action_urban_bridge_structure_element_type" sequence="4"/>
+<!-- =========================================================================================================
+Intalling 
+Structure Element Attribute
+============================================================================================================== -->
+<!-- Form View -->
+<record model="ir.ui.view" id="view_urban_bridge_structure_element_attribute_form">
+        <field name="name">urban_bridge.structure_element_attribute.form</field>
+        <field name="model">urban_bridge.structure_element_attribute</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Structure Element Attribute">
+             <field name="name" select="1"/>
+             <field name="data_type" select="1"/>
+            </form>
+        </field>
+</record>
+<!-- Tree View -->
+<record model="ir.ui.view" id="view_urban_bridge_structure_element_attribute_tree">
+        <field name="name">urban_bridge.structure_element_attribute.tree</field>
+        <field name="model">urban_bridge.structure_element_attribute</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Structure Element Attribute">
+             <field name="name" select="1"/>
+             <field name="data_type" select="1"/>
+            </tree>
+        </field>
+</record>
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_urban_bridge_structure_element_attribute">
+        <field name="name">Structure Element Attribute</field>
+        <field name="res_model">urban_bridge.structure_element_attribute</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+<!-- Menu -->
 
 </data>
 </openerp>
