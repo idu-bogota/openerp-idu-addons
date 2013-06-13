@@ -146,6 +146,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
         'micro_seismicity':fields.function(_get_micro_seismicity,string="Micro-Seismicity",method=True,type="char"),        
         'calc_area':fields.function(_get_area,string="Calculated Area",method=True,type="float"),
         'calc_perimeter':fields.function(_get_perimeter,string="Calculated Perimeter",method=True,type="float"),
+        'elements':fields.one2many('urban_bridge.structure_element','bridge_id','Element'),
     }
 urban_bridge_bridge()
 
@@ -186,7 +187,7 @@ urban_bridge_structure_material()
 
 class urban_bridge_structure_element_type(osv.osv):
     """
-    EAV Entity Definition for Elements of Structure
+    EAV Entity Definition for Elements of Bridge Structure
     """
     _name="urban_bridge.structure_element_type"
     _columns={
@@ -195,6 +196,7 @@ class urban_bridge_structure_element_type(osv.osv):
         'sub_classification':fields.selection([('SS','Super Structure'),('IS','Infrastructure'),('FP','Foundation'),('SE','Structure Element'),('FE','Functional Elements')],'SubClassification'),
         'attributes':fields.one2many('urban_bridge.structure_element_attribute','element_type_id')
     }
+urban_bridge_structure_element_type()
 class urban_bridge_structure_element_attribute(osv.osv):
     """
     EAV Attribute Definition for Elements of Structure
@@ -206,10 +208,35 @@ class urban_bridge_structure_element_attribute(osv.osv):
         'data_type':fields.selection([('I','Integer'),('S','String'),('D','Value Date Time'),('F','Float'),('B','Boolean')],'Data Type'),
         'element_type_id':fields.integer('Element ID'),
     }
-    
-class urban_bridge_infraestructure_element(osv.osv):
+urban_bridge_structure_element_attribute()
+class urban_bridge_structure_element_value(osv.osv):
     """
-    EAV Infraestructure Element
+    EAV Value Definition for elements of Structure
     """
-    _name="urban_bridge.infraestructure_element"
+    _name="urban_bridge.structure_element_value"
+    _columns={
+        'element_id':fields.integer('Element'),
+        'element_attribute_id':fields.many2one('urban_bridge.structure_element_attribute','Attribute'),
+        'value_integer':fields.integer('Integer'),
+        'value_char':fields.char('Char',size=256),
+        'value_date':fields.date('Date'),
+        'value_datetime':fields.datetime('Date Time'),
+        'value_text':fields.text('Text'),
+        'value_float':fields.float('Float'),
+        'value_bool':fields.boolean('Boolean'),
+        }
+urban_bridge_structure_element_value()
 
+class urban_bridge_structure_element(osv.osv):
+    """
+    EAV Structure Element
+    
+    """
+    _name="urban_bridge.structure_element"
+    _columns={
+        'name':fields.char('Name',size=128),
+        'type_element_id':fields.many2one('urban_bridge.structure_element_type','Element Type'),
+        'values':fields.one2many('urban_bridge.structure_element_value','element_id','Values'),
+        'bridge_id':fields.integer('Bridge')
+        }
+urban_bridge_structure_element()

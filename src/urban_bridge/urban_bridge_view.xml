@@ -57,6 +57,9 @@ Bridges
                     <field name="design_load_code" widget="selection"/>
                     <field name="structure_material" widget="selection"/>
               </page>
+              <page string="Structure Elements">
+                    <field name="elements"/>
+              </page>
               </notebook>
               </group>
             </form>
@@ -329,7 +332,40 @@ Structure Element Attribute
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
 </record>
-<!-- Menu -->
+<!-- =============================================================================================== 
+Structure Element 
+=====================================================================================================-->
+<!-- Form View -->
+<record model="ir.ui.view" id="view_urban_bridge_structure_element_form">
+        <field name="name">urban_bridge.structure_element.form</field>
+        <field name="model">urban_bridge.structure_element</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Structure Element">
+                <field name="type_element_id" select="1" widget="selection"/>
+                <field name="name" select="1"/>
+            </form>
+        </field>
+</record> 
+<!-- Tree View -->
+<record model="ir.ui.view" id="view_urban_bridge_structure_element_tree">
+        <field name="name">urban_bridge.structure_element.tree</field>
+        <field name="model">urban_bridge.structure_element</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Structure Element">
+             <field name="name" select="1"/>
+             <field name="type_element_id" select="1"/>
+            </tree>
+        </field>
+</record> 
 
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_urban_bridge_structure_element">
+        <field name="name">Structure Element</field>
+        <field name="res_model">urban_bridge.structure_element</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
 </data>
 </openerp>
