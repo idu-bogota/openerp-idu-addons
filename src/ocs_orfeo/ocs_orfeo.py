@@ -48,5 +48,13 @@ class ocs_orfeo_dependencia(osv.osv):
       'code':fields.char('Code',size=6),
       'name':fields.char('Name',size=128),
     }
-
 ocs_orfeo_dependencia()
+
+class ocs_claim_classification(osv.osv):
+    """This field contains internal classification for claims """
+    _name="ocs.claim_classification"
+    _inherit = "ocs.claim_classification"
+    _columns={
+      'orfeo_id':fields.integer('orfeo_id'),
+    }
+ocs_claim_classification()

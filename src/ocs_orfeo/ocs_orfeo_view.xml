@@ -25,5 +25,25 @@ Claims
                     </page>
                 </field>
             </record>
+
+<!--
+========================================================================================
+Classification
+========================================================================================
+-->
+
+            <!-- Form View -->
+            <record model="ir.ui.view" id="view_ocs_orfeo_claim_classification_form_inherit">
+                <field name="name">crm.claim.classification.form.inherit</field>
+                <field name="model">ocs.claim_classification</field>
+                <field name="type">form</field>
+                <field name="inherit_id" ref="ocs.view_ocs_claim_classification_form"/>
+                <field name="arch" type="xml">
+                    <field name="id" position="after">
+                        <field name="orfeo_id" />
+                    </field>
+                </field>
+            </record>
+
     </data>
 </openerp>

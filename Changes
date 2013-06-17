@@ -1,3 +1,4 @@
+* New: Adicionado orfeo_id para ocs_classification
 * New: Adicionado servicio new_from_data para crear PQR con adjuntos
 
 openerp6.1-rev2013052700
