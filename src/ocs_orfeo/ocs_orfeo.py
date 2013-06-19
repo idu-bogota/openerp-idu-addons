@@ -46,9 +46,9 @@ class crm_claim(osv.osv):
         Retorna {data} o Exception
         """
         search_for_orfeo = {
-            'id_medio_recepcion': {'class': 'crm.case.channel', 'ignore_not_found': False, 'crm_claim_field': 'channel', 'type': 'id'},
-            'id_tipo_requerimiento': {'class': 'crm.case.categ', 'ignore_not_found': False, 'crm_claim_field': 'categ_id', 'type': 'id'},
-            'id_subcriterio': {'class': 'ocs.claim_classification', 'ignore_not_found': False, 'crm_claim_field': 'sub_classification_id', 'type': 'id'},
+            'medio_recepcion_id': {'class': 'crm.case.channel', 'ignore_not_found': False, 'crm_claim_field': 'channel', 'type': 'id'},
+            'tipo_requerimiento_id': {'class': 'crm.case.categ', 'ignore_not_found': False, 'crm_claim_field': 'categ_id', 'type': 'id'},
+            'subcriterio_id': {'class': 'ocs.claim_classification', 'ignore_not_found': False, 'crm_claim_field': 'sub_classification_id', 'type': 'id'},
             'nombre_localidad': {'class': 'ocs.district', 'ignore_not_found': True, 'operator': 'ilike', 'crm_claim_field': 'district_id', 'type': 'name'},
             'nombre_barrio': {'class': 'ocs.neighborhood', 'ignore_not_found': True, 'operator': 'ilike', 'crm_claim_field': 'neighborhood_id', 'type': 'name'},
         }
@@ -65,6 +65,9 @@ class crm_claim(osv.osv):
             solution = self.pool.get('ocs.claim_solution_classification').name_search(cr, uid, name='Redireccionado Internamente', args=None, operator='=', context=None)
             data['solution_classification_id'] = solution[0][0]
             data['resolution'] = 'Requerimiento creado en el sistema orfeo con el número: {0}'.format(data['orfeo_id'])
+            data['state'] = 'done';
+            data['priority'] = 'l';
+
         return data
 
     def _search_details_for_orfeo(self, cr, uid, data, search_for_orfeo, context = None):
