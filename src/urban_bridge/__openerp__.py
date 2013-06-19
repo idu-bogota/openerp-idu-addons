@@ -29,9 +29,11 @@
         "depends" : ['base',
                      'base_map',
                      ],
-        "init_xml" : ['urban_bridge_view.xml'],
+        "init_xml" : ['urban_bridge_view.xml',
+                      ],
         "demo_xml" : [],
         "update_xml" : ['urban_bridge_view.xml',
+                        'wizard/structure_elem.xml',
                         ],
         "installable": True
 }

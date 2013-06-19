@@ -1,0 +1,33 @@
+<openerp>
+  <data>
+        <record id="view_urban_bridge_wizard_structure_elem_form" model="ir.ui.view">
+            <field name="name">Structure Element</field>
+            <field name="model">urban_bridge.wizard.structure_elem</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Structure Elements">
+                    <field name="bridge_id" readonly="True"/>
+                    <newline />
+                    <field name="elem_type" widget="selection" on_change="on_change_structure_elem_type(elem_type)"/>
+                    <field name="name"/>
+                    <separator string="Elements" colspan="4"/>
+                    <group col="4" colspan="4">
+                        <label string="" colspan="2"/>
+                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_urban_bridge_wizard_structure_elem" model="ir.actions.act_window">
+            <field name="name">Elements</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">urban_bridge.wizard.structure_elem</field>
+            <field name="src_model">urban_bridge.wizard.structure_elem</field>
+            <field name="view_id" ref="view_urban_bridge_wizard_structure_elem_form"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+</data>
+</openerp>

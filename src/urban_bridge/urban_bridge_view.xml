@@ -59,6 +59,8 @@ Bridges
               </page>
               <page string="Structure Elements">
                     <field name="elements"/>
+                    <button name="%(urban_bridge.action_urban_bridge_wizard_structure_elem)d" string="Crear"
+                                type="action" icon="gtk-ok"/>
               </page>
               </notebook>
               </group>
@@ -134,7 +136,7 @@ Structure Type
 <record model="ir.ui.view" id="view_urban_bridge_structure_type_form">
         <field name="name">urban_bridge.structure_type.form</field>
         <field name="model">urban_bridge.structure_type</field>
-        <field name="type">form</field>        
+        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Structure Type">
             <group colspan="2" col="2">
