@@ -61,6 +61,10 @@ class crm_claim(osv.osv):
         if data['partner_address_id']:
             data['partner_address_id'] = self._search_details_for_orfeo(cr, uid, data['partner_address_id'], search_for_orfeo_ctz, context)
 
+        if 'orfeo_id' in data:
+            solution = self.pool.get('ocs.claim_solution_classification').name_search(cr, uid, name='Redireccionado Internamente', args=None, operator='=', context=None)
+            data['solution_classification_id'] = solution[0][0]
+            data['resolution'] = 'Requerimiento creado en el sistema orfeo con el número: {0}'.format(data['orfeo_id'])
         return data
 
     def _search_details_for_orfeo(self, cr, uid, data, search_for_orfeo, context = None):
