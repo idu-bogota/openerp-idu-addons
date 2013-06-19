@@ -31,16 +31,108 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
         'elem_type':fields.many2one('urban_bridge.structure_element_type','Type'),
         'bridge_id':fields.many2one('urban_bridge.bridge')
     }
+#    _states={
+#        'init':{
+#            'actions':[_trans_rec_get],
+#            'result':{
+#                'type':'form',
+#                'arch':_transaction_form,
+#                'fields':_transaction_fields,
+#                'state':[('survey','Survey'),('end','Cancel')]
+#            },
+#        },
+#        'survey':{
+#            'actions':[_trans_rec_survey],
+#            'result':{
+#                'type':'state',
+#                'state':'end'
+#            },
+#        }
+#    }
+#    
+#    def _trans_rec_get(self,uid,data,res_get=False):
+#        res = {
+#            'result':{'type':'state',
+#                      'state':'end'}
+#        }
+#        return res
+#    def _transaction_form(self,cr,uid,data,res_get=False):
+#        res = {}
+#        return res
+#    def _transaction_fields(self,cr,uid,data,res_get=False):
+#        res = {}
+#        return res
+#    def _trans_rec_survey(self,cr,uid,data,res_get=False):
+#        res={}
+#        return res
+#
+#    _form = """<?xml version="1.0"?>
+#        <form title="Reconciliation">
+#          <separator string="Reconciliation transactions" colspan="4"/>
+#          <field name="trans_nbr"/>
+#          <newline/>
+#          <field name="credit"/>
+#          <field name="debit"/>
+#          <field name="state"/>
+#          <separator string="Write-Off" colspan="4"/>
+#          <field name="writeoff"/>
+#          <newline/>
+#          <field name="writeoff_acc_id" colspan="3"/>
+#        </form>
+#        """
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        """
+        Fields View Get method :- generate the new view and display the survey pages of selected survey.
+        """
+        attrib_obj = self.pool.get('urban_bridge.structure_element_attribute')
+        struct_elem_obj = self.pool.get('urban_bridge.structure_element_type')
+        if context is None:
+            context = {}
+        result = super(urban_bridge_wizard_structure_elem, self).fields_view_get(cr, uid, view_id, \
+                                        view_type, context, toolbar,submenu)
+
+
+        #1. Se obtienen los ID del combo box con los tipos de elementos de infraestructura
+        elem_types = result['fields']['elem_type']['selection']
+        xml = result['arch']
+        elem_types_id = []
+        for x in elem_types:
+            elem_types_id.append(x[0])
+        #2. Para cada elemento de infraestructura del combo, se obtienen la lista de atributos para construir un diccionario
+        
+        for elem_inf in struct_elem_obj.browse(cr,uid,elem_types_id):
+            attributes = elem_inf.attributes
+            new_fields={}
+            for att in attributes:
+                new_id = str(elem_inf.id)+"_"+str(att.id)
+                elem_string = att.name
+                data_type=att.data_type
+                new_fields[new_id]={
+                        'domain':[],
+                        'string':elem_string,
+                        'selectable':True,
+                        'type':data_type,
+                        'string':elem_string,
+                        'context':{},
+                }
+                if (data_type == 'char'):
+                    new_fields[new_id]['size']=256 
+        return result
+
+
     
     def default_get(self,cr, uid, fields, context=None):
+        """
+        Fields View Get method :- generate the new view and display the survey pages of selected survey.
+        """
         bridge = self.pool.get('urban_bridge.bridge').browse(cr, uid, context['active_id'], context=None);
         res = super(urban_bridge_wizard_structure_elem, self).default_get(cr, uid, fields, context=context)
         res.update({'bridge_id': bridge.id})
-        return res 
+        return res
     
     def on_change_structure_elem_type(self,cr,uid,fields,context=None):
         #res = super(urban_bridge_wizard_structure_elem, self).default_get(cr, uid, fields, context=context)
-        elem_type=self.pool.get('')
+        
         
 #        elem_type=res.elem_type
 #        attr = elem_type.attributes

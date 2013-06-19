@@ -205,7 +205,7 @@ class urban_bridge_structure_element_attribute(osv.osv):
     _columns={
         'id':fields.integer('Id'),
         'name':fields.char('Name',size=256),
-        'data_type':fields.selection([('I','Integer'),('S','String'),('D','Value Date Time'),('F','Float'),('B','Boolean')],'Data Type'),
+        'data_type':fields.selection([('integer','Integer'),('text','Text'),('datetime',' Date Time'),('float','Float'),('boolean','Boolean'),('char','Char')],'Data Type'),
         'element_type_id':fields.integer('Element ID'),
     }
 urban_bridge_structure_element_attribute()
