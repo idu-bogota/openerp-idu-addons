@@ -37,6 +37,7 @@ class crm_claim(osv.osv):
 
     _columns = {
         'orfeo_id': fields.char('Orfeo Number',size=20,help='Número de Radicado en el sistema Orfeo',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+        'accion_juridica_id': fields.many2one('ocs_orfeo.accion_juridica','Acción Juridica'),
     }
 
     def _custom_new_from_data(self, cr, uid, data, context = None):
@@ -92,6 +93,15 @@ class ocs_orfeo_dependencia(osv.osv):
     _columns = {
       'id':fields.integer('ID',readonly=True),
       'code':fields.char('Code',size=6),
+      'name':fields.char('Name',size=128),
+    }
+ocs_orfeo_dependencia()
+
+class ocs_orfeo_accion_juridica(osv.osv):
+    _name = "ocs_orfeo.accion_juridica"
+
+    _columns = {
+      'id':fields.integer('ID',readonly=True),
       'name':fields.char('Name',size=128),
     }
 ocs_orfeo_dependencia()
