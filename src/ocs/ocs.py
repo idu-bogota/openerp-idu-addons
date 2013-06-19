@@ -493,48 +493,120 @@ class crm_claim(geo_model.GeoModel):
                 is_valid = False
         return is_valid
 
+    def custom_new_from_data(self, cr, uid, data, context = None):
+        """
+        llamado desde new_from_data para adicionar lógica en clases hijas
+        Retorna {data} o Exception
+        """
+        return data
+
     def new_from_data(self, cr, uid, data, context = None):
         """
         Metodo que sirve para ser llamado via servicio XML-RPC desde aplicaciones externas
         Retorna {'status': 'success|failed', 'message':'error message','result': {'id': claim.id }}
         """
         result = {'status': 'success', 'result': {}}
+        attachment = None
+        attachment_name = None
+        try:
+            data = self._custom_new_from_data(cr, uid, data, context) #Hook to allow inherited classes to add further logic
+            if 'partner_address_id' in data:
+                data = self._new_from_data_citizen(cr, uid, data, context)
+            if 'partner_id' in data:
+                data = self._new_from_data_partner(cr, uid, data, context)
+            if 'attachment' in data:
+                attachment = data['attachment']
+                attachment_name = data['attachment_name']
+                del data['attachment']
+                del data['attachment_name']
+            data = self._new_from_data_find_by_name(cr, uid, data, context)
+            if 'sub_classification_id' in data:
+                sub_classification = self.pool.get('ocs.claim_classification').browse(cr, uid, data['sub_classification_id'],context)
+                data['classification_id'] = sub_classification.parent_id.id
+            result['result']['id'] = self.create(cr, uid, data, context)
+        except except_orm as e:
+            return {'status': 'failed', 'message': e.value }
+        except Exception as e:
+            return {'status': 'failed', 'message': e.message }
+
+        if attachment:
+            try:
+                self._attach_file(cr, uid, result['result']['id'], attachment_name, attachment, context)
+            except except_orm as e:
+                return {'status': 'failed', 'message': 'attachment_failed: ' + e.value, 'result': {'id': result['result']['id']} }
+            except Exception as e:
+                return {'status': 'failed', 'message': 'attachment_failed: ' + e.message, 'result': {'id': result['result']['id']} }
+
+        return result
+
+    def _new_from_data_citizen(self, cr, uid, data, context = None):
+        """Search or creates a citizen using data received"""
         ctz_uniq_fields = ['document_number','email','twitter','facebook']
         ctz_where = []
         cnt = 0
-        if 'partner_address_id' in data:
-            for f in ctz_uniq_fields:#Create a search condition to find any previous citizen with same data
-                if f in data['partner_address_id']:
-                    ctz_where.insert(0,(f,'=',data['partner_address_id'][f]))
-                    cnt += 1
-                    if cnt > 1:
-                        ctz_where.insert(0, '|')
+        for f in ctz_uniq_fields:#Create a search condition to find any previous citizen with same data
+            if f in data['partner_address_id']:
+                ctz_where.insert(0,(f,'=',data['partner_address_id'][f]))
+                cnt += 1
+                if cnt > 1:
+                    ctz_where.insert(0, '|')
 
-            if len(ctz_where):
-                try:
-                    ctz_ids = self.pool.get('res.partner.address').search(cr, uid, ctz_where)
-                    ctz_cnt = len(ctz_ids)
-                    if ctz_cnt == 0:
-                        #Crear un nuevo citizen
-                        ctz_id = self.pool.get('res.partner.address').create(cr, uid, data['partner_address_id'])
-                    elif ctz_cnt == 1:
-                        #Utilizar citizen y actualizar datos
-                        ctz_id = ctz_ids[0]
-                        self.pool.get('res.partner.address').write(cr, uid, ctz_ids, data['partner_address_id'])
-                    elif ctz_cnt > 1:
-                        #FIXME: Revisar cual de todos actualizar y utilizar
-                        ctz_ids = self.pool.get('res.partner.address').search(cr, uid, [('document_number','=',data['partner_address_id']['document_number'])])
-                        ctz_id = ctz_ids[0]
-                        self.pool.get('res.partner.address').write(cr, uid, ctz_id, data['partner_address_id'])
-                except except_orm as e:
-                    return {'status': 'failed', 'message': e.value }
-                except Exception as e:
-                    return {'status': 'failed', 'message': e.message }
-            else:
-                return {'status': 'failed', 'message': 'No hay datos del ciudadano para registrar' }
+        if len(ctz_where):
+            ctz_ids = self.pool.get('res.partner.address').search(cr, uid, ctz_where)
+            ctz_cnt = len(ctz_ids)
+            if ctz_cnt == 0:
+                #Crear un nuevo citizen
+                ctz_id = self.pool.get('res.partner.address').create(cr, uid, data['partner_address_id'])
+            elif ctz_cnt == 1:
+                #Utilizar citizen y actualizar datos
+                ctz_id = ctz_ids[0]
+                self.pool.get('res.partner.address').write(cr, uid, ctz_ids, data['partner_address_id'])
+            elif ctz_cnt > 1:
+                #FIXME: Revisar cual de todos actualizar y utilizar
+                ctz_ids = self.pool.get('res.partner.address').search(cr, uid, [('document_number','=',data['partner_address_id']['document_number'])])
+                ctz_id = ctz_ids[0]
+                self.pool.get('res.partner.address').write(cr, uid, ctz_id, data['partner_address_id'])
+        else:
+            raise Exception('There is no citizen data to store')
 
-            data['partner_address_id'] = ctz_id
+        data['partner_address_id'] = ctz_id
+        return data
 
+    def _new_from_data_partner(self, cr, uid, data, context = None):
+        """Search or creates a res_partner using data received"""
+        uniq_fields = ['name', 'vat']
+        where = []
+        cnt = 0
+        for f in uniq_fields:#Create a search condition to find any previous partner with same data
+            if f in data['partner_id']:
+                where.insert(0,(f,'=',data['partner_id'][f]))
+                cnt += 1
+                if cnt > 1:
+                    where.insert(0, '|')
+
+        if len(where):
+            ids = self.pool.get('res.partner').search(cr, uid, where)
+            cnt = len(ids)
+            if cnt == 0:
+                #Crear un nuevo partner
+                oid = self.pool.get('res.partner').create(cr, uid, data['partner_id'])
+            elif cnt == 1:
+                #Utilizar partner y actualizar datos
+                oid = ids[0]
+                self.pool.get('res.partner').write(cr, uid, ids, data['partner_id'])
+            elif cnt > 1:
+                #FIXME: Revisar cual de todos actualizar y utilizar
+                ids = self.pool.get('res.partner').search(cr, uid, [('ref','=',data['partner_id']['ref'])])
+                oid = ids[0]
+                self.pool.get('res.partner').write(cr, uid, id, data['partner_id'])
+        else:
+            raise Exception('There is no partner data to store')
+
+        data['partner_id'] = oid
+        return data
+
+    def _new_from_data_find_by_name(self, cr, uid, data, context = None):
+        """Find ID for foreign key objects using name values from data"""
         search_by_name_fields = {
             'channel': {'class': 'crm.case.channel', 'ignore_not_found': False, 'operator': 'ilike'},
             'categ_id': {'class': 'crm.case.categ', 'ignore_not_found': False, 'operator': 'ilike'},
@@ -551,38 +623,11 @@ class crm_claim(geo_model.GeoModel):
                         del data[f] #remove not found value
                     else:
                         return {'status': 'failed', 'message': 'not found "{0}" for field "{1}"'.format(data[f], f)}
-                data[f] = objs[0][0] #assign found object's id
+                else:
+                    data[f] = objs[0][0] #assign found object's id
+        return data
 
-        if 'sub_classification_id' in data:
-            sub_classification = self.pool.get('ocs.claim_classification').browse(cr, uid, data['sub_classification_id'],context)
-            data['classification_id'] = sub_classification.parent_id.id
-
-        attachment = None
-        attachment_name = None
-        if 'attachment' in data:
-            attachment = data['attachment']
-            attachment_name = data['attachment_name']
-            del data['attachment']
-            del data['attachment_name']
-
-        try:
-            result['result']['id'] = self.create(cr, uid, data, context)
-        except except_orm as e:
-            return {'status': 'failed', 'message': e.value }
-        except Exception as e:
-            return {'status': 'failed', 'message': e.message }
-
-        if attachment:
-            try:
-                self.attach_file(cr, uid, result['result']['id'], attachment_name, attachment, context)
-            except except_orm as e:
-                return {'status': 'failed', 'message': 'attachment_failed: ' + e.value, 'result': {'id': result['result']['id']} }
-            except Exception as e:
-                return {'status': 'failed', 'message': 'attachment_failed: ' + e.message, 'result': {'id': result['result']['id']} }
-
-        return result
-
-    def attach_file(self, cr, uid, ids, fname, file_content_encode64, context={}):
+    def _attach_file(self, cr, uid, ids, fname, file_content_encode64, context={}):
         return self.pool.get('ir.attachment').create(cr, uid, {
             'name': fname,
             'datas': file_content_encode64,
