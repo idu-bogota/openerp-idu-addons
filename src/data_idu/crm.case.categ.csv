@@ -1,6 +1,6 @@
-id,active,section_id/id,name,object_id/id
-crm_claim.categ_claim4,True,,Reclamo,crm_claim.model_crm_claim
-crm_claim.categ_claim5,True,,Solicitud,crm_claim.model_crm_claim
-crm_claim.categ_claim6,True,,Sugerencia,crm_claim.model_crm_claim
-crm_claim.categ_claim7,True,,Denuncia,crm_claim.model_crm_claim
-crm_claim.categ_claim8,True,,Queja,crm_claim.model_crm_claim
+id,active,section_id/id,name,object_id/id,orfeo_id
+crm_claim.categ_claim4,True,,Reclamo,crm_claim.model_crm_claim,3
+crm_claim.categ_claim5,True,,Solicitud,crm_claim.model_crm_claim,1
+crm_claim.categ_claim6,True,,Sugerencia,crm_claim.model_crm_claim,4
+crm_claim.categ_claim7,True,,Denuncia,crm_claim.model_crm_claim,0
+crm_claim.categ_claim8,True,,Queja,crm_claim.model_crm_claim,2
