@@ -16,6 +16,7 @@
       'ocs.claim_solution_classification.csv',
       'res.partner.csv',
       'ocs_orfeo.dependencia.csv',
+      'ocs_orfeo.accion_juridica.csv',
   ],
   'update_xml': [],
   'installable': True,
