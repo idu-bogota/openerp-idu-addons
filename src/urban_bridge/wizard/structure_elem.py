@@ -21,6 +21,7 @@
 
 
 from osv import osv, fields
+from lxml import etree
 #from suds.client import Client
 
 class urban_bridge_wizard_structure_elem(osv.osv_memory):
@@ -31,60 +32,12 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
         'elem_type':fields.many2one('urban_bridge.structure_element_type','Type'),
         'bridge_id':fields.many2one('urban_bridge.bridge')
     }
-#    _states={
-#        'init':{
-#            'actions':[_trans_rec_get],
-#            'result':{
-#                'type':'form',
-#                'arch':_transaction_form,
-#                'fields':_transaction_fields,
-#                'state':[('survey','Survey'),('end','Cancel')]
-#            },
-#        },
-#        'survey':{
-#            'actions':[_trans_rec_survey],
-#            'result':{
-#                'type':'state',
-#                'state':'end'
-#            },
-#        }
-#    }
-#    
-#    def _trans_rec_get(self,uid,data,res_get=False):
-#        res = {
-#            'result':{'type':'state',
-#                      'state':'end'}
-#        }
-#        return res
-#    def _transaction_form(self,cr,uid,data,res_get=False):
-#        res = {}
-#        return res
-#    def _transaction_fields(self,cr,uid,data,res_get=False):
-#        res = {}
-#        return res
-#    def _trans_rec_survey(self,cr,uid,data,res_get=False):
-#        res={}
-#        return res
-#
-#    _form = """<?xml version="1.0"?>
-#        <form title="Reconciliation">
-#          <separator string="Reconciliation transactions" colspan="4"/>
-#          <field name="trans_nbr"/>
-#          <newline/>
-#          <field name="credit"/>
-#          <field name="debit"/>
-#          <field name="state"/>
-#          <separator string="Write-Off" colspan="4"/>
-#          <field name="writeoff"/>
-#          <newline/>
-#          <field name="writeoff_acc_id" colspan="3"/>
-#        </form>
-#        """
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """
         Fields View Get method :- generate the new view and display the survey pages of selected survey.
         """
-        attrib_obj = self.pool.get('urban_bridge.structure_element_attribute')
+        #attrib_obj = self.pool.get('urban_bridge.structure_element_attribute')
         struct_elem_obj = self.pool.get('urban_bridge.structure_element_type')
         if context is None:
             context = {}
@@ -94,7 +47,7 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
 
         #1. Se obtienen los ID del combo box con los tipos de elementos de infraestructura
         elem_types = result['fields']['elem_type']['selection']
-        xml = result['arch']
+        xml = etree.fromstring(result['arch'])
         elem_types_id = []
         for x in elem_types:
             elem_types_id.append(x[0])
@@ -102,12 +55,11 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
         
         for elem_inf in struct_elem_obj.browse(cr,uid,elem_types_id):
             attributes = elem_inf.attributes
-            new_fields={}
             for att in attributes:
                 new_id = str(elem_inf.id)+"_"+str(att.id)
                 elem_string = att.name
                 data_type=att.data_type
-                new_fields[new_id]={
+                result['fields'][new_id]={
                         'domain':[],
                         'string':elem_string,
                         'selectable':True,
@@ -116,7 +68,9 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                         'context':{},
                 }
                 if (data_type == 'char'):
-                    new_fields[new_id]['size']=256 
+                    result['fields'][new_id]['size']=256
+                xml.insert(5,etree.Element("field",name=new_id))
+        result['arch']=etree.tostring(xml)
         return result
 
 

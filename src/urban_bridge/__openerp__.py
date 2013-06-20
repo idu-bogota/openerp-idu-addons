@@ -32,8 +32,8 @@
         "init_xml" : ['urban_bridge_view.xml',
                       ],
         "demo_xml" : [],
-        "update_xml" : ['urban_bridge_view.xml',
-                        'wizard/structure_elem.xml',
+        "update_xml" : ['wizard/structure_elem.xml',
+                        'urban_bridge_view.xml',
                         ],
         "installable": True
 }
