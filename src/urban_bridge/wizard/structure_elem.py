@@ -69,22 +69,31 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                 }
                 if (data_type == 'char'):
                     result['fields'][new_id]['size']=256
-                xml.insert(5,etree.Element("field",name=new_id))
+                xml.insert(5,etree.Element("field",invisible="True",name=new_id)) #attrs="{'invisible':[('elem_type','=','"+elem_string+"')]}"
         result['arch']=etree.tostring(xml)
         return result
 
-
-    
     def default_get(self,cr, uid, fields, context=None):
         """
         Fields View Get method :- generate the new view and display the survey pages of selected survey.
         """
-        bridge = self.pool.get('urban_bridge.bridge').browse(cr, uid, context['active_id'], context=None);
+        str_element = self.pool.get('urban_bridge.structure_element').browse(cr, uid, context['active_id'], context=None);
         res = super(urban_bridge_wizard_structure_elem, self).default_get(cr, uid, fields, context=context)
-        res.update({'bridge_id': bridge.id})
+        res.update({'bridge_id':str_element.bridge_id})
+        res.update({'elem_type':str_element.type_element_id})
         return res
+
     
-    def on_change_structure_elem_type(self,cr,uid,fields,context=None):
+    def on_change_structure_elem_type(self,cr,uid,ids,elem_type,context=None):
+        """
+        Set Visible only the fields defined by Structure Element Type
+        """
+#        res = {}
+#        elem_type_obj=self.pool.get('urban_bridge.structure_element_type') 
+#        for elem_type in elem_type_obj.browse(cr,uid,elem_type):
+#            for attr in elem_type.attributes:
+#                field_id = elem_type.id+"_"+attr.id
+#                res[field_id]
         #res = super(urban_bridge_wizard_structure_elem, self).default_get(cr, uid, fields, context=context)
         
         

@@ -59,8 +59,6 @@ Bridges
               </page>
               <page string="Structure Elements">
                     <field name="elements"/>
-                    <button name="%(urban_bridge.action_urban_bridge_wizard_structure_elem)d" string="Crear"
-                                type="action" icon="gtk-ok"/>
               </page>
               </notebook>
               </group>
@@ -355,9 +353,11 @@ Structure Element
         <field name="model">urban_bridge.structure_element</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Structure Element">
+            <tree string="Structure Element" editable="top">
              <field name="name" select="1"/>
              <field name="type_element_id" select="1"/>
+             <button name="%(urban_bridge.action_urban_bridge_wizard_structure_elem)d" string="Propiedades"
+                                type="action" icon="gtk-ok" />
             </tree>
         </field>
 </record> 
@@ -366,8 +366,8 @@ Structure Element
 <record model="ir.actions.act_window" id="action_urban_bridge_structure_element">
         <field name="name">Structure Element</field>
         <field name="res_model">urban_bridge.structure_element</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_type">tree</field>
+        <field name="view_mode">tree</field>
 </record>
 </data>
 </openerp>
