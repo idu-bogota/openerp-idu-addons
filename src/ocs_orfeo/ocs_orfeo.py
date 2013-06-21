@@ -58,7 +58,7 @@ class crm_claim(osv.osv):
             'nombre_localidad': {'class': 'ocs.district', 'ignore_not_found': True, 'operator': 'ilike', 'crm_claim_field': 'district_id', 'type': 'name'},
             'nombre_barrio': {'class': 'ocs.neighborhood', 'ignore_not_found': True, 'operator': 'ilike', 'crm_claim_field': 'neighborhood_id', 'type': 'name'},
         }
-        if data['partner_address_id']:
+        if 'partner_address_id' in data:
             data['partner_address_id'] = self._search_details_for_orfeo(cr, uid, data['partner_address_id'], search_for_orfeo_ctz, context)
 
         if 'orfeo_id' in data:
