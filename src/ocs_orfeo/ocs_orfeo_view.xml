@@ -17,6 +17,7 @@ Claims
                     <page string="Follow Up" position="after">
                         <page string="Orfeo">
                             <field name="orfeo_id" select ="0" readonly="1" />
+                            <field name="accion_juridica_id" />
                             <button name="%(ocs_orfeo.action_ocs_orfeo_wizard_radicar)d" string="Radicar"
                                 type="action" icon="gtk-ok"
                                 attrs="{'invisible': [('orfeo_id','!=',False)]}"
@@ -25,5 +26,61 @@ Claims
                     </page>
                 </field>
             </record>
+
+<!--
+========================================================================================
+Classification
+========================================================================================
+-->
+
+            <!-- Form View -->
+            <record model="ir.ui.view" id="view_ocs_orfeo_claim_classification_form_inherit">
+                <field name="name">crm.claim.classification.form.inherit</field>
+                <field name="model">ocs.claim_classification</field>
+                <field name="type">form</field>
+                <field name="inherit_id" ref="ocs.view_ocs_claim_classification_form"/>
+                <field name="arch" type="xml">
+                    <field name="name" position="after">
+                        <field name="orfeo_id" />
+                    </field>
+                </field>
+            </record>
+
+<!--
+========================================================================================
+Channel
+========================================================================================
+-->
+
+            <!-- Form View -->
+            <record model="ir.ui.view" id="view_ocs_orfeo_claim_channel_form_inherit">
+                <field name="name">crm.claim.channel.form.inherit</field>
+                <field name="model">crm.case.channel</field>
+                <field name="type">form</field>
+                <field name="inherit_id" ref="crm.crm_case_channel_view_form"/>
+                <field name="arch" type="xml">
+                    <field name="name" position="after">
+                        <field name="orfeo_id" />
+                    </field>
+                </field>
+            </record>
+<!--
+========================================================================================
+Categ
+========================================================================================
+-->
+            <!-- Form View -->
+            <record model="ir.ui.view" id="view_ocs_orfeo_claim_categ_form_inherit">
+                <field name="name">crm.claim.categ.form.inherit</field>
+                <field name="model">crm.case.categ</field>
+                <field name="type">form</field>
+                <field name="inherit_id" ref="crm.crm_case_categ-view"/>
+                <field name="arch" type="xml">
+                    <field name="name" position="after">
+                        <field name="orfeo_id" />
+                    </field>
+                </field>
+            </record>
+
     </data>
 </openerp>
