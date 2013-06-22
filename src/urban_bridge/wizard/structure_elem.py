@@ -105,8 +105,8 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
         for value_form in vals:
             if not (str(value_form).startswith("n") or str(value_form).startswith("e")):#Values aren't name or structure_elem
                 s = value_form.split('_')
-                struct_elem_attribute_id = s[1]
-                attribute = structure_elem_attribute_obj.browse(cr,uid,int(struct_elem_attribute_id))
+                struct_elem_attribute_id = int(s[1])    
+                attribute = structure_elem_attribute_obj.browse(cr,uid,struct_elem_attribute_id)
                 data_type = attribute.data_type
                 #4. Se arma el diccionario que se va a pasar al metodo
                 str_elem_val_vals={}
@@ -129,7 +129,7 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                 isnew=True
                 id_value=0 
                 for struc_elem_value in structure_elem.values:
-                    if (struc_elem_value.element_attribute_id == struct_elem_attribute_id):
+                    if (int(struc_elem_value.element_attribute_id) == struct_elem_attribute_id):
                         id_value=struc_elem_value.id
                         isnew=False
                 if (not isnew):
