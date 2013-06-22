@@ -342,7 +342,7 @@ Structure Element
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Structure Element">
-                <field name="type_element_id" select="1" widget="selection"/>
+                <field name="element_type_id" select="1" widget="selection"/>
                 <field name="name" select="1"/>
             </form>
         </field>
@@ -355,9 +355,9 @@ Structure Element
         <field name="arch" type="xml">
             <tree string="Structure Element" editable="top">
              <field name="name" select="1"/>
-             <field name="type_element_id" select="1"/>
+             <field name="element_type_id" select="1"/>
              <button name="%(urban_bridge.action_urban_bridge_wizard_structure_elem)d" string="Propiedades"
-                                type="action" icon="gtk-ok" />
+                                type="action" icon="gtk-ok" context="{'element_type_id':element_type_id}" />
             </tree>
         </field>
 </record> 

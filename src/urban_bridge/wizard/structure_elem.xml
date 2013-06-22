@@ -6,13 +6,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Structure Elements">
-                    <field name="bridge_id" readonly="True"/>
-                    <newline />
-                    <field name="elem_type" widget="selection" on_change="on_change_structure_elem_type(elem_type)"/>
-                    <field name="name"/>
-                    <separator string="Elements" colspan="4"/>
+                    <field name="elem_id" readonly="True"/>
                     <group col="4" colspan="4">
                         <label string="" colspan="2"/>
+                        <button name="elem_create" string="Create" type="object" icon="gtk-ok"/>
                         <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
                     </group>
                 </form>

@@ -205,7 +205,7 @@ class urban_bridge_structure_element_attribute(osv.osv):
     _columns={
         'id':fields.integer('Id'),
         'name':fields.char('Name',size=256),
-        'data_type':fields.selection([('integer','Integer'),('text','Text'),('datetime',' Date Time'),('float','Float'),('boolean','Boolean'),('char','Char')],'Data Type'),
+        'data_type':fields.selection([('integer','Integer'),('text','Text'),('datetime',' Date Time'),('date','Date'),('float','Float'),('boolean','Boolean'),('char','Char')],'Data Type'),
         'element_type_id':fields.integer('Element ID'),
     }
 urban_bridge_structure_element_attribute()
@@ -235,7 +235,7 @@ class urban_bridge_structure_element(osv.osv):
     _name="urban_bridge.structure_element"
     _columns={
         'name':fields.char('Name',size=128),
-        'type_element_id':fields.many2one('urban_bridge.structure_element_type','Element Type'),
+        'element_type_id':fields.many2one('urban_bridge.structure_element_type','Element Type'),
         'values':fields.one2many('urban_bridge.structure_element_value','element_id','Values'),
         'bridge_id':fields.integer('Bridge')
         }
