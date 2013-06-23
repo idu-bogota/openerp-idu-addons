@@ -74,18 +74,42 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
         """
         Fields View Get method :- generate the new view and display the survey pages of selected survey.
         """
-        str_element = self.pool.get('urban_bridge.structure_element').browse(cr, uid, context['active_id'], context=None);
+        str_element_obj = self.pool.get('urban_bridge.structure_element')
+        #str_element_value = self.pool.get('urban_bridge_structure_element_value') 
+        str_element = str_element_obj.browse(cr, uid, context['active_id'], context=None);
         res = super(urban_bridge_wizard_structure_elem, self).default_get(cr, uid, fields, context=context)
         res.update({'elem_id':str_element.id})
+        for value in str_element.values:
+            #Llenar el valor de cada campo con lo que venga en los datos
+            elem_type = str_element.element_type_id
+            attribute = value.element_attribute_id
+            field_id=str(elem_type.id)+"_"+str(attribute.id)
+            #Se debe verificar la definicion de tipo de dato para evitar inconsistencias o errores            
+            data_type = attribute.data_type
+            if (data_type=='integer'):
+                res.update({field_id:value.value_integer})
+            elif (data_type=='text'):
+                res.update({field_id:value.value_text})
+            elif (data_type=='datetime'):
+                res.update({field_id:value.value_datetime})
+            elif (data_type=='float'):
+                res.update({field_id:value.value_float})
+            elif (data_type=='boolean'):
+                res.update({field_id:value.value_boolean})
+            elif(data_type=='char'):
+                res.update({field_id:value.value_char})
+            elif(data_type=='date'):
+                res.update({field_id:value.value_date})
         return res
-
+            
+        
     def elem_create (self, cr, uid, ids, context=None):
         return {'type': 'ir.actions.act_window_close'}
 
 
     def create(self, cr, uid, vals, context=None):
         """
-        Create the Answer of survey and store in survey.response object, and if set validation of question then check the value of question if value is wrong then raise the exception.
+        Create the wizard and set the values for structure element in EAV model 
         """
         if context is None: context = {}
         #1. Se obtiene el valor de elem_id
@@ -105,7 +129,7 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
         for value_form in vals:
             if not (str(value_form).startswith("n") or str(value_form).startswith("e")):#Values aren't name or structure_elem
                 s = value_form.split('_')
-                struct_elem_attribute_id = int(s[1])    
+                struct_elem_attribute_id = int(s[1])
                 attribute = structure_elem_attribute_obj.browse(cr,uid,struct_elem_attribute_id)
                 data_type = attribute.data_type
                 #4. Se arma el diccionario que se va a pasar al metodo
