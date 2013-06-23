@@ -29,7 +29,7 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
     _description="Fill Bridge Properties"
     _columns={
         'name':fields.char('Name',size=128),
-        'elem_id':fields.many2one('urban_bridge.structure_element','structure_elem')
+        'elem_id':fields.many2one('urban_bridge.structure_element','Structure Element')
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
