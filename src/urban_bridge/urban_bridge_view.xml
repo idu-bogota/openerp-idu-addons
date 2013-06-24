@@ -256,8 +256,7 @@ Structure Design Load Code
 
 <!-- ===================================================================================================
 Urban Bridge - EAV
-Structure Elemt
-urban_bridge.structure_element_type
+Structure Element Type
 ======================================================================================================== -->
 <!-- Form View -->
 <record model="ir.ui.view" id="view_urban_bridge_structure_element_type_form">
@@ -310,6 +309,8 @@ Structure Element Attribute
             <form string="Structure Element Attribute">
              <field name="name" select="1"/>
              <field name="data_type" select="1"/>
+             <field name="is_enabled"/>
+             <field name="is_required"/>
             </form>
         </field>
 </record>

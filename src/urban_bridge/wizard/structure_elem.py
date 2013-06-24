@@ -95,7 +95,7 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
             elif (data_type=='float'):
                 res.update({field_id:value.value_float})
             elif (data_type=='boolean'):
-                res.update({field_id:value.value_boolean})
+                res.update({field_id:value.value_bool})
             elif(data_type=='char'):
                 res.update({field_id:value.value_char})
             elif(data_type=='date'):

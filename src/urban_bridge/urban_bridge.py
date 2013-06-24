@@ -143,7 +143,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
         'district':fields.function(_get_district,string='Districts',method=True,type="char"),
         'sub_district':fields.function(_get_sub_district,string='Sub Districts',method=True,type="char"),
         'cadastral_zone':fields.function(_get_cadastral_zone,string="Cadastral Zone",method=True,type="char"),
-        'micro_seismicity':fields.function(_get_micro_seismicity,string="Micro-Seismicity",method=True,type="char"),        
+        'micro_seismicity':fields.function(_get_micro_seismicity,string="Micro-Seismicity",method=True,type="char"),
         'calc_area':fields.function(_get_area,string="Calculated Area",method=True,type="float"),
         'calc_perimeter':fields.function(_get_perimeter,string="Calculated Perimeter",method=True,type="float"),
         'elements':fields.one2many('urban_bridge.structure_element','bridge_id','Element'),
@@ -157,7 +157,7 @@ class urban_bridge_structure_type(osv.osv):
     _name="urban_bridge.structure_type"
     _columns={
         'code':fields.integer('Code','Code - Value equivalent Domain'),
-        'name':fields.char('Name :',size=256),
+        'name':fields.char('Name :',size=256,required=True),
         'description':fields.text('Description'),
         'photo':fields.binary('Photo'),
     }
@@ -191,9 +191,9 @@ class urban_bridge_structure_element_type(osv.osv):
     """
     _name="urban_bridge.structure_element_type"
     _columns={
-        'name':fields.char('Name',size=256),
-        'classification':fields.selection([('M','Main Element'),('S','Secondary Element'),('A','Accessory Element')],'Main Classification'),
-        'sub_classification':fields.selection([('SS','Super Structure'),('IS','Infrastructure'),('FP','Foundation'),('SE','Structure Element'),('FE','Functional Elements')],'SubClassification'),
+        'name':fields.char('Name',size=256,required=True),
+        'classification':fields.selection([('M','Main Element'),('S','Secondary Element'),('A','Accessory Element')],'Main Classification', required=True),
+        'sub_classification':fields.selection([('SS','Super Structure'),('IS','Infrastructure'),('FP','Foundation'),('SE','Structure Element'),('FE','Functional Elements')],'SubClassification',required=True),
         'attributes':fields.one2many('urban_bridge.structure_element_attribute','element_type_id')
     }
 urban_bridge_structure_element_type()
@@ -204,8 +204,10 @@ class urban_bridge_structure_element_attribute(osv.osv):
     _name="urban_bridge.structure_element_attribute"
     _columns={
         'id':fields.integer('Id'),
-        'name':fields.char('Name',size=256),
-        'data_type':fields.selection([('integer','Integer'),('text','Text'),('datetime',' Date Time'),('date','Date'),('float','Float'),('boolean','Boolean'),('char','Char')],'Data Type'),
+        'name':fields.char('Name',size=256,required=True),
+        'is_required':fields.boolean('Is Required'),
+        'is_enabled':fields.boolean('Is Enabled'),
+        'data_type':fields.selection([('integer','Integer'),('text','Text'),('datetime',' Date Time'),('date','Date'),('float','Float'),('boolean','Boolean'),('char','Char'),('selection','Selection')],'Data Type',required=True),
         'element_type_id':fields.integer('Element ID'),
     }
 urban_bridge_structure_element_attribute()
@@ -224,6 +226,7 @@ class urban_bridge_structure_element_value(osv.osv):
         'value_text':fields.text('Text'),
         'value_float':fields.float('Float'),
         'value_bool':fields.boolean('Boolean'),
+        'value_selection':fields.char('Selection',size=10),
         }
 urban_bridge_structure_element_value()
 
