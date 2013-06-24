@@ -1,3 +1,6 @@
+openerp6.1-rev2013062400
+* Fix: Corregida referencia a formulario de búsqueda de ciudadanos
+
 openerp6.1-rev2013062100
 * New: Adicionado orfeo_id para ocs_classification, channel, categ
 * New: Adicionado servicio new_from_data para crear PQR con adjuntos
