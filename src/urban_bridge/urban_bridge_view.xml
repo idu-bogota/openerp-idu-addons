@@ -311,6 +311,7 @@ Structure Element Attribute
              <field name="data_type" select="1"/>
              <field name="is_enabled"/>
              <field name="is_required"/>
+             <field name="selection_text" attrs="{'invisible':[('data_type','!=','selection')]}"/>
             </form>
         </field>
 </record>

@@ -209,6 +209,7 @@ class urban_bridge_structure_element_attribute(osv.osv):
         'is_enabled':fields.boolean('Is Enabled'),
         'data_type':fields.selection([('integer','Integer'),('text','Text'),('datetime',' Date Time'),('date','Date'),('float','Float'),('boolean','Boolean'),('char','Char'),('selection','Selection')],'Data Type',required=True),
         'element_type_id':fields.integer('Element ID'),
+        'selection_text':fields.char('Selection',size=1024),
     }
 urban_bridge_structure_element_attribute()
 class urban_bridge_structure_element_value(osv.osv):
