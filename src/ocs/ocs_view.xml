@@ -610,7 +610,7 @@ Claims
             </field>
             <field name="partner_phone" position="before">
                 <field name="partner_address_id" default_focus="1" on_change="onchange_partner_address_id(partner_address_id, email_from)"
-                context="{'form_view_ref' : 'ocs.view_res_partner_address_form_small'}"/>
+                context="{'form_view_ref' : 'ocs.view_res_partner_address_form_small','search_view_ref':'view_res_partner_address_search_ocs'}"/>
                 <field name="partner_id" colspan="2"
                 context="{'form_view_ref' : 'ocs.view_ocs_res_partner_form_small','tree_view_ref':'ocs.view_res_partner_tree_ocs_small','search_view_ref':'ocs.view_res_partner_search_ocs'}" />
             </field>
