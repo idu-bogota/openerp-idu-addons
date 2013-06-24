@@ -188,6 +188,7 @@ res.partner.address
             <field name="name">res.partner.address.select_ocs</field>
             <field name="model">res.partner.address</field>
             <field name="type">search</field>
+            <field name="priority">10</field>
             <field name="arch" type="xml">
                 <search string="Search Contact">
                     <group>
