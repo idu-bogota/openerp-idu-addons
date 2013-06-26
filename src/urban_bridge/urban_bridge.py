@@ -211,6 +211,11 @@ class urban_bridge_structure_element_attribute(osv.osv):
         'element_type_id':fields.integer('Element ID'),
         'selection_text':fields.char('Selection',size=1024),
     }
+    _defaults={
+        'is_required': lambda *args: True,
+        'is_enabled': lambda *args: True,
+    }
+    
 urban_bridge_structure_element_attribute()
 class urban_bridge_structure_element_value(osv.osv):
     """
@@ -237,9 +242,10 @@ class urban_bridge_structure_element(osv.osv):
     
     """
     _name="urban_bridge.structure_element"
+    _order='element_type_id'
     _columns={
-        'name':fields.char('Name',size=128),
-        'element_type_id':fields.many2one('urban_bridge.structure_element_type','Element Type'),
+        'name':fields.char('Name',size=128,required=True),
+        'element_type_id':fields.many2one('urban_bridge.structure_element_type','Element Type',required=True),
         'values':fields.one2many('urban_bridge.structure_element_value','element_id','Values'),
         'bridge_id':fields.integer('Bridge')
         }

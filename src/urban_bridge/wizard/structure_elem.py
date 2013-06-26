@@ -22,6 +22,7 @@
 
 from osv import osv, fields
 from lxml import etree
+from ast import literal_eval
 #from suds.client import Client
 
 class urban_bridge_wizard_structure_elem(osv.osv_memory):
@@ -46,27 +47,53 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
         xml = etree.fromstring(result['arch'])
         elem_types_id=[]
         elem_types_id.append(context['element_type_id'])
-        
         #2. Para cada elemento de infraestructura del combo, se obtienen la lista de atributos para construir un diccionario
-        
         for elem_inf in struct_elem_obj.browse(cr,uid,elem_types_id):
             xml.insert(1,etree.Element("separator",colspan="4",string=elem_inf.name))
             attributes = elem_inf.attributes
             for att in attributes:
                 new_id = str(elem_inf.id)+"_"+str(att.id)
                 elem_string = att.name
+                is_required="0"
+                if (att.is_required):
+                    is_required="1"
                 data_type=att.data_type
-                result['fields'][new_id]={
+                if (data_type =='char'):
+                    result['fields'][new_id]={
                         'domain':[],
                         'string':elem_string,
                         'selectable':True,
                         'type':data_type,
                         'string':elem_string,
                         'context':{},
-                }
-                if (data_type == 'char'):
-                    result['fields'][new_id]['size']=256
-                xml.insert(2,etree.Element("field",name=new_id)) #attrs="{'invisible':[('elem_type','=','"+elem_string+"')]}"
+                        'size':256,
+                        'required':is_required,
+                        }
+                    xml.insert(2,etree.Element("field",required=is_required,name=new_id))
+                elif (data_type == 'selection'):
+                    result['fields'][new_id]={
+                        'domain':[],
+                        'string':elem_string,
+                        'selectable':True,
+                        'type':data_type,
+                        'string':elem_string,
+                        'context':{},
+                        'selection':literal_eval(att.selection_text),
+                        'required':is_required,
+                        }
+                    xml.insert(2,etree.Element("field",required=is_required,name=new_id))
+                else:
+                    result['fields'][new_id]={
+                        'domain':[],
+                        'string':elem_string,
+                        'selectable':True,
+                        'type':data_type,
+                        'string':elem_string,
+                        'context':{},
+                        'required':is_required,
+                        }
+                    xml.insert(2,etree.Element("field",required=is_required,name=new_id))
+                    #Se verifica si es requerido o no:
         result['arch']=etree.tostring(xml)
         return result
 
@@ -100,6 +127,8 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                 res.update({field_id:value.value_char})
             elif(data_type=='date'):
                 res.update({field_id:value.value_date})
+            elif(data_type=='selection'):
+                res.update({field_id:value.value_selection})
         return res
             
         
@@ -150,6 +179,8 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                     str_elem_val_vals['value_char']=vals[value_form]
                 elif(data_type=='date'):
                     str_elem_val_vals['value_date']=vals[value_form]
+                elif(data_type=='selection'):
+                    str_elem_val_vals['value_selection']=vals[value_form]
                 isnew=True
                 id_value=0 
                 for struc_elem_value in structure_elem.values:
