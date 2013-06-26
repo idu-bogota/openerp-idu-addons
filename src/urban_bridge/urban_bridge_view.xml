@@ -50,6 +50,7 @@ Bridges
                     <field name="construction_date"/>
                     <field name="length"/>
                     <field name="width"/>
+                    <field name="level"/>
                     <field name="superstructure_area"/>
                     <field name="vertical_gauge"/>
                     <field name="horizontal_gauge"/>

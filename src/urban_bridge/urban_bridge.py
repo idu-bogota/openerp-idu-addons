@@ -136,6 +136,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
         'vertical_gauge':fields.float('Vertical Gauge'),
         'horizontal_gauge':fields.float('Horizontal Gauge'),
         'design_load_capacity':fields.float('Design Load Capacity'),
+        'level':fields.selection([('-2','-2'),('-1','-1'),('0','0'),('1','1'),('2','2'),('3','3'),('4','4')],'Bridge Level'),
         'structure_material':fields.many2one('urban_bridge.structure_material','Structure Materials'),
         'design_load_code':fields.many2one('urban_bridge.design_load_code','Design Load Code'),
         'photo':fields.binary('Photo'),
@@ -193,7 +194,7 @@ class urban_bridge_structure_element_type(osv.osv):
     _columns={
         'name':fields.char('Name',size=256,required=True),
         'classification':fields.selection([('M','Main Element'),('S','Secondary Element'),('A','Accessory Element')],'Main Classification', required=True),
-        'sub_classification':fields.selection([('SS','Super Structure'),('IS','Infrastructure'),('FP','Foundation'),('SE','Structure Element'),('FE','Functional Elements')],'SubClassification',required=True),
+        'sub_classification':fields.selection([('SS','Super Structure'),('IS','Infrastructure'),('FP','Foundation'),('SE','Structure Element'),('FE','Functional Elements'),('IN','Instrumentation')],'SubClassification',required=True),
         'attributes':fields.one2many('urban_bridge.structure_element_attribute','element_type_id')
     }
 urban_bridge_structure_element_type()

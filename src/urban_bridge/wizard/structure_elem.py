@@ -56,10 +56,10 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                 elem_string = att.name
                 is_required="0"
                 if (att.is_required):
-                    is_required="1"
-                data_type=att.data_type
+                    is_required = "1"
+                data_type = att.data_type
                 if (data_type =='char'):
-                    result['fields'][new_id]={
+                    result['fields'][new_id] = {
                         'domain':[],
                         'string':elem_string,
                         'selectable':True,
@@ -71,7 +71,7 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                         }
                     xml.insert(2,etree.Element("field",required=is_required,name=new_id))
                 elif (data_type == 'selection'):
-                    result['fields'][new_id]={
+                    result['fields'][new_id] = {
                         'domain':[],
                         'string':elem_string,
                         'selectable':True,
@@ -83,7 +83,7 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                         }
                     xml.insert(2,etree.Element("field",required=is_required,name=new_id))
                 else:
-                    result['fields'][new_id]={
+                    result['fields'][new_id] = {
                         'domain':[],
                         'string':elem_string,
                         'selectable':True,
@@ -94,7 +94,7 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                         }
                     xml.insert(2,etree.Element("field",required=is_required,name=new_id))
                     #Se verifica si es requerido o no:
-        result['arch']=etree.tostring(xml)
+        result['arch'] = etree.tostring(xml)
         return result
 
     def default_get(self,cr, uid, fields, context=None):
@@ -105,12 +105,12 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
         #str_element_value = self.pool.get('urban_bridge_structure_element_value') 
         str_element = str_element_obj.browse(cr, uid, context['active_id'], context=None);
         res = super(urban_bridge_wizard_structure_elem, self).default_get(cr, uid, fields, context=context)
-        res.update({'elem_id':str_element.id})
+        res.update({'elem_id': str_element.id})
         for value in str_element.values:
             #Llenar el valor de cada campo con lo que venga en los datos
             elem_type = str_element.element_type_id
             attribute = value.element_attribute_id
-            field_id=str(elem_type.id)+"_"+str(attribute.id)
+            field_id = str(elem_type.id)+"_"+str(attribute.id)
             #Se debe verificar la definicion de tipo de dato para evitar inconsistencias o errores            
             data_type = attribute.data_type
             if (data_type=='integer'):
