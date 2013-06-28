@@ -129,7 +129,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
         'structure_type':fields.many2one('urban_bridge.structure_type','Bridge Type',required=True),
         'address':fields.char('Bridge Address',size=256),
         'last_address':fields.char('Last Address',size=256),
-        'construction_date':fields.datetime('Construction Date'),
+        'construction_date':fields.date('Construction Date'),
         'length':fields.float('Total Length'),
         'width':fields.float('Total Width'),
         'superstructure_area':fields.float('Bridge SuperStructure Area:'),
@@ -246,8 +246,24 @@ class urban_bridge_structure_element(osv.osv):
     _order='element_type_id'
     _columns={
         'name':fields.char('Name',size=128,required=True),
+        'photo':fields.binary('Photo'),
         'element_type_id':fields.many2one('urban_bridge.structure_element_type','Element Type',required=True),
         'values':fields.one2many('urban_bridge.structure_element_value','element_id','Values'),
         'bridge_id':fields.integer('Bridge')
         }
 urban_bridge_structure_element()
+
+class urban_bridge_methodology(osv.osv):
+    """
+    Define the Methodology to apply survey's to the bridges and its elements 
+    """
+    _name="urban_bridge.methodology"
+    _columns={
+        'name':fields.char('Methodology Name',size=128,required=True),
+    }
+
+# class urban_bridge_inspection_entity(osv.osv):
+#     """
+#     Defines entity to has inspect attributes to inspect and  where 
+#     """
+
