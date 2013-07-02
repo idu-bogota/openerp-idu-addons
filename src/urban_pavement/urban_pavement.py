@@ -58,29 +58,19 @@ urban_pavement_evaluator()
 
 class urban_pavement_evaluation(geo_model.GeoModel):
 
-    def SayHello(self, cr, uid, ids,context=None):
+    def calculate_pci(self, cr, uid, ids,pci):
         v={}
-        evaluations = self.browse(cr,uid,ids,context=context)
-        for evaluation in evaluations:            
-            pci = 0
+        evaluations = self.browse(cr,uid,ids)
+        for evaluation in evaluations:
+            pci = pci+1
             components = evaluation.component_id
             for component in components:
                 damage_id = component.damage_id
                 extension = component.extension
             v['pci'] = pci
-        return {'value':v}
-        
-     
-                
-                
-                
-            
-        for control in self.browse(cr, uid, ids, context = context):                                
-            print 'hello world'    
-            
-    """
-        Structure Type Main Classification
-    """
+        res = {'value':v}
+        return res
+
     _name="urban_pavement.evaluation"
     _columns={
         'civ': fields.char('CIV',size = 20),
