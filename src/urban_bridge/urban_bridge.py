@@ -148,6 +148,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
         'calc_area':fields.function(_get_area,string="Calculated Area",method=True,type="float"),
         'calc_perimeter':fields.function(_get_perimeter,string="Calculated Perimeter",method=True,type="float"),
         'elements':fields.one2many('urban_bridge.structure_element','bridge_id','Element'),
+        'survey_id':fields.one2many('urban_bridge.inspection_survey','bridge_id','Inspection Survey')
     }
 urban_bridge_bridge()
 
@@ -210,7 +211,7 @@ class urban_bridge_structure_element_attribute(osv.osv):
         'is_enabled':fields.boolean('Is Enabled'),
         'data_type':fields.selection([('integer','Integer'),('text','Text'),('datetime',' Date Time'),('date','Date'),('float','Float'),('boolean','Boolean'),('char','Char'),('selection','Selection')],'Data Type',required=True),
         'element_type_id':fields.integer('Element ID'),
-        'selection_text':fields.char('Selection',size=1024),
+        'selection_text':fields.char('Selection',size=1024,help='If Data type : selection then selection text contain the dictionary'),
     }
     _defaults={
         'is_required': lambda *args: True,
@@ -249,9 +250,24 @@ class urban_bridge_structure_element(osv.osv):
         'photo':fields.binary('Photo'),
         'element_type_id':fields.many2one('urban_bridge.structure_element_type','Element Type',required=True),
         'values':fields.one2many('urban_bridge.structure_element_value','element_id','Values'),
-        'bridge_id':fields.integer('Bridge')
+        'bridge_id':fields.many2one('urban_bridge.bridge','Bridge'),
         }
 urban_bridge_structure_element()
+
+############################### Inspection Use Case Implementation #################################
+
+class urban_bridge_inspection_survey(osv.osv):
+    """
+    Survey Inspections
+    """
+    _name = "urban_bridge.inspection_survey"
+    _columns = {
+        'inspection_date':fields.date('Inspection Date'),
+        'score':fields.float('Inspection '),
+        'bridge_id':fields.float('Bridge'),
+    }
+
+urban_bridge_inspection_survey()
 
 class urban_bridge_methodology(osv.osv):
     """
@@ -260,10 +276,45 @@ class urban_bridge_methodology(osv.osv):
     _name="urban_bridge.methodology"
     _columns={
         'name':fields.char('Methodology Name',size=128,required=True),
+        'expression':fields.text('Expression'),
     }
 
-# class urban_bridge_inspection_entity(osv.osv):
-#     """
-#     Defines entity to has inspect attributes to inspect and  where 
-#     """
 
+class urban_bridge_inspection_entity(osv.osv):
+    """
+    Inspection Entity Definition 
+    """
+    _name="urban_bridge.inspection_entity"
+    _columns = {
+        'name':fields.char('Name',size=128,required=True),
+        'char':fields.char('Character Id:',size=1,required=True,help="This field is to identify the field at methodology expression"),
+    }
+
+class urban_bridge_inspection_attribute(osv.osv):
+    """
+    EAV for Inspection attribute definition
+    """
+    _name ="urban_bridge.inspection_attribute"
+    _columns = {
+        'name':fields.char('Name',size=128),
+        'data_type':fields.selection([('integer','Integer'),('text','Text'),('datetime',' Date Time'),('date','Date'),('float','Float'),('boolean','Boolean'),('char','Char'),('selection','Selection')],'Data Type',required=True),
+        'selection_text':fields.char('Selection',size=1024,help='If Data type : selection then selection text contain the dictionary'),
+        'is_required':fields.boolean('Is Required'),
+        'is_enabled':fields.boolean('Is Enabled'),
+    }
+
+class urban_bridge_inspection_value(osv.osv):
+    """
+    EAV for inspection value measured or calculated
+    """
+    _name = "urban_bridge.inspection_value"
+    _columns = {
+        'value_integer':fields.integer('Integer'),
+        'value_char':fields.char('Char',size=256),
+        'value_date':fields.date('Date'),
+        'value_datetime':fields.datetime('Date Time'),
+        'value_text':fields.text('Text'),
+        'value_float':fields.float('Float'),
+        'value_bool':fields.boolean('Boolean'),
+        'value_selection':fields.char('Selection',size=10),
+    }
