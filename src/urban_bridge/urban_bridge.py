@@ -260,11 +260,14 @@ class urban_bridge_inspection_survey(osv.osv):
     """
     Survey Inspections
     """
+    _rec_name = 'methodology_id'
     _name = "urban_bridge.inspection_survey"
+    _order = 'inspection_date desc'
     _columns = {
         'inspection_date':fields.date('Inspection Date'),
         'score':fields.float('Inspection '),
         'bridge_id':fields.float('Bridge'),
+        'methodology_id':fields.many2one('urban_bridge.methodology','Methodology'),
     }
 
 urban_bridge_inspection_survey()

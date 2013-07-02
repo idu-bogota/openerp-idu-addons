@@ -61,6 +61,9 @@ Bridges
               <page string="Structure Elements">
                     <field name="elements"/>
               </page>
+              <page string="Inspections">
+                    <field name="survey_id"/>
+              </page>
               </notebook>
               </group>
             </form>
@@ -372,5 +375,51 @@ Structure Element
         <field name="view_type">tree</field>
         <field name="view_mode">tree</field>
 </record>
+
+<!--  ======================================================================================================
+Inspection Survey
+============================================================================================================= -->
+
+<!-- Form View -->
+
+<record model="ir.ui.view" id="view_urban_bridge_structure_inspection_survey_form">
+        <field name="name">urban_bridge.inspection_survey.form</field>
+        <field name="model">urban_bridge.inspection_survey</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Structure Element Attribute">
+             <field name="bridge_id" readonly="1"/>
+             <field name="methodology_id" select="1" widget="selection"/>
+             <field name="inspection_date" />
+             <field name="score" />
+            </form>
+        </field>
+</record>
+
+<!-- Tree View -->
+
+<record model="ir.ui.view" id="view_urban_bridge_structure_inspection_survey_tree">
+        <field name="name">urban_bridge.inspection_survey.tree</field>
+        <field name="model">urban_bridge.inspection_survey</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Structure Element Attribute">
+             <field name="inspection_date" />
+             <field name="methodology_id" select="1"/>
+             <field name="score" />
+            </tree>
+        </field>
+</record>
+
+<!-- Action -->
+
+<record model="ir.actions.act_window" id="action_urban_bridge_inspection_survey">
+        <field name="name">Structure Element</field>
+        <field name="res_model">urban_bridge.inspection_survey</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+
+
 </data>
 </openerp>

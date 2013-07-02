@@ -98,15 +98,18 @@ class base_map_geological_zone(geo_model.GeoModel):
         'code':fields.char('Code',size=128),
         'shape':fields.geo_multi_polygon('Shape'),
     }
-#
-#class pms_segment(geo_model.GeoModel):
-#    _name='pms.segmBsize=128ent'
-#    _columns={
-#        'HIC':fields.char('Highway Identification Code',size=128,),
-#        'sec_type':fields.integer('Section Type'),
-#        'level':fields.integer('Level'),
-#        'name':fields.char('Name',size=128),
-#        'start_name':fields.char('Start Name',size=128),
-#        'end_name':fields.char('End Name',size=128),
-#        'highway_cattegory':fields.integer('Category'),
-#    }
+base_map_geological_zone()
+
+class base_map_road_section(geo_model.GeoModel):
+    """
+    Road section basic data of rodways
+    """
+    _name="base_map.road_section"
+    _columns={
+        'rsic':fields.char('Road Section ID Code',size=128),
+        'name':fields.char('Road Section Name',size=128),
+        'start_edge':fields.char('Start Edge',size=128),
+        'end_edge':fields.char('End edge',size=128),
+        'shape':fields.geo_multi_line('Shape')
+    }
+base_map_road_section()

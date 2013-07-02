@@ -4,6 +4,7 @@
 <menuitem name="Base Maps" id="base_map_main"/>
 <menuitem name="Administrative Layers" id="base_map_administrative" parent="base_map_main"/>
 <menuitem name="Environmental Layers" id="base_map_environmental" parent="base_map_main"/>
+<menuitem name="Transportation Layers" id="base_map_transportation" parent="base_map_main"/>
 
 <!-- ================================================================================
 Base Map _ District
@@ -458,5 +459,77 @@ Geological Zone
         <field name="view_mode">tree,form</field>
 </record>
 <menuitem name="Geological Zone" id="base_map_geological_zone" parent="base_map_environmental" action="action_base_map_geological_zone" sequence="1"/>
+<!-- =========================================================================================================
+Road Section
+============================================================================================================== -->
+<!-- Geoengine View -->
+
+<record  model="ir.ui.view" id="ir_ui_view_base_map_road_section_OSM" >
+            <field name="name">base_map.road_section.geo_view</field>
+            <field name="arch"><![CDATA[
+                <form >
+                    <field name="name"/>
+                    <field name="rsic"/>
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">base_map.road_section</field>
+</record>
+
+<record model="geoengine.raster.layer" id="geoengine_raster_layer_base_map_road_section">
+            <field name="raster_type">osm</field>
+            <field name="name">Road Section OSM</field>
+            <field name="view_id" ref="ir_ui_view_base_map_road_section_OSM"/>
+            <field eval="0" name="overlay"/>
+</record>
+
+<record  model="geoengine.vector.layer" id="geoengine_vector_layer_base_map_road_section_plain">
+            <field name="geo_field_id" ref="base_map.field_base_map_road_section_shape"/>
+            <field name="name">Road Section</field>
+            <field name="view_id" ref="ir_ui_view_base_map_road_section_OSM"/>
+            <field name="geo_repr">basic</field>
+            <field name="attribute_field_id" ref="base_map.field_base_map_road_section_rsic"/>
+            <field name="begin_color">#FFFF0A</field>
+</record>
+
+<!-- Form View -->
+<record model="ir.ui.view" id="view_base_map_road_section_form">
+        <field name="name">base_map.road_section.form</field>
+        <field name="model">base_map.road_section</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Geological Zone">
+                <field name="rsic" select="1"/>
+                <field name="name"/>
+                <field name="start_edge"/>
+                <field name="end_edge"/>
+                <group col="2" colspan="4">
+                    <field name="shape" widget="geo_edit_map" readonly="1"/>
+                </group>
+            </form>
+        </field>
+</record>
+<!-- Tree View -->
+<record model="ir.ui.view" id="view_base_map_road_section_tree">
+        <field name="name">base_map.road_section.tree</field>
+        <field name="model">base_map.road_section</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Road Section">
+                <field name="rsic"/>
+                <field name="name"/>
+            </tree>
+        </field>
+</record>
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_base_map_road_section">
+        <field name="name">Road Section</field>
+        <field name="res_model">base_map.road_section</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,geoengine</field>
+</record>
+
+<!-- Menu Item -->
+<menuitem name="Road Section" id="menu_base_map_road_section" parent="base_map_transportation" action="action_base_map_road_section" sequence="1"/>
 </data>
 </openerp>
