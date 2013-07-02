@@ -21,19 +21,63 @@
 from osv import fields,osv
 from base_geoengine import geo_model
 
+class urban_pavement_display(osv.osv):
+    """
+        Structure Type Main Classification
+    """
+    _name="urban_pavement.display"
+    _columns={
+        'code':fields.integer('Code'),
+        'name':fields.char('Name',size=200),
+    }
+
+class urban_pavement_damage(osv.osv):
+    """
+        Structure Type Main Classification
+    """
+    _name="urban_pavement.damage"
+    _columns={
+        'code':fields.integer('Code'),
+        'name':fields.char('Name',size=200),
+    }
+
+
 class urban_pavement_evaluator(osv.osv):
     """
         Structure Type Main Classification
     """
     _name="urban_pavement.evaluator"
     _columns={
-        'name':fields.char('Name :',size=256),
-        'identification':fields.char('Identification :',size=20),
+        'name':fields.char('Name',size=256),
+        'identification':fields.char('Identification',size=20),
     }
 
 urban_pavement_evaluator()
 
+
+
 class urban_pavement_evaluation(geo_model.GeoModel):
+
+    def SayHello(self, cr, uid, ids,context=None):
+        v={}
+        evaluations = self.browse(cr,uid,ids,context=context)
+        for evaluation in evaluations:            
+            pci = 0
+            components = evaluation.component_id
+            for component in components:
+                damage_id = component.damage_id
+                extension = component.extension
+            v['pci'] = pci
+        return {'value':v}
+        
+     
+                
+                
+                
+            
+        for control in self.browse(cr, uid, ids, context = context):                                
+            print 'hello world'    
+            
     """
         Structure Type Main Classification
     """
@@ -41,12 +85,14 @@ class urban_pavement_evaluation(geo_model.GeoModel):
     _columns={
         'civ': fields.char('CIV',size = 20),
         'pci': fields.integer('PCI'),
+        'unit_display_id': fields.many2one('urban_pavement.display',"Display",required = True),
+        'number_slabs': fields.integer('Number Slabs'),
         'eval_date': fields.date('Date Evaluation'),
         'evaluator_id': fields.many2one('urban_pavement.evaluator',"Evaluator",required = True),
         'photo':fields.binary('Photo'),
         'component_id':fields.one2many('urban_pavement.component','component_id',required = True),
-        'shape':fields.geo_multi_polygon('Shape'),
     }
+    
    
 urban_pavement_evaluation()
 
@@ -56,9 +102,9 @@ class urban_pavement_component(osv.osv):
     """
     _name="urban_pavement.component"
     _columns={
-        'damage':fields.float('Damage :'),
-        'extension':fields.float('Extension :'),
-        'severity':fields.integer('Severity :'),
+        'damage_id':fields.many2one('urban_pavement.damage',"Damage",required = True),
+        'extension':fields.float('Extension',required = True),
+        'severity':fields.integer('Severity',required = True),
         'component_id':fields.integer('component_id'),
     }
  

@@ -4,6 +4,90 @@
 
 <menuitem name="Pavement Management System" id="menu_urban_pavement"/>
 <menuitem name="Roadway Component" id="menu_urban_pavement_roadway_component" parent="menu_urban_pavement"  sequence="1"/>
+<menuitem name="Domains" id="menu_urban_pavement_roadway_domains" parent="menu_urban_pavement"  sequence="2"/>
+
+
+<!-- =================================================================================================
+Display
+====================================================================================================== -->
+<!-- Form View -->
+<record model="ir.ui.view" id="view_urban_pavement_display_form">
+        <field name="name">urban_pavement.display.form</field>
+        <field name="model">urban_pavement.display</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Display">
+                <field name="code"/>
+                <field name="name"/>
+            </form>
+        </field>
+</record>
+
+<!-- Tree (List) View -->
+<record model="ir.ui.view" id="view_urban_pavement_display_tree">
+        <field name="name">urban_pavement.display.tree</field>
+        <field name="model">urban_pavement.display</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Dispaly">
+                <field name="code"/>
+                <field name="name"/>                
+            </tree>
+        </field>
+</record>
+
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_urban_display_evaluator">
+        <field name="name">Display</field>
+        <field name="res_model">urban_pavement.display</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+<!-- Menu -->
+<menuitem name="Display" id="menu_urban_pavement_display" parent="menu_urban_pavement_roadway_domains" action="action_urban_display_evaluator"/>
+
+
+
+
+<!-- =================================================================================================
+Damage
+====================================================================================================== -->
+<!-- Form View -->
+<record model="ir.ui.view" id="view_urban_pavement_damage_form">
+        <field name="name">urban_pavement.damage.form</field>
+        <field name="model">urban_pavement.damage</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Damage">
+                <field name="code"/>
+                <field name="name"/>
+            </form>
+        </field>
+</record>
+
+<!-- Tree (List) View -->
+<record model="ir.ui.view" id="view_urban_pavement_damage_tree">
+        <field name="name">urban_pavement.damage.tree</field>
+        <field name="model">urban_pavement.damage</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Damage">
+                <field name="code"/>
+                <field name="name"/>                
+            </tree>
+        </field>
+</record>
+
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_urban_damage_evaluator">
+        <field name="name">Damage</field>
+        <field name="res_model">urban_pavement.damage</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+<!-- Menu -->
+<menuitem name="Damage" id="menu_urban_pavement_damage" parent="menu_urban_pavement_roadway_domains" action="action_urban_damage_evaluator"/>
+
 
 
 <!-- =================================================================================================
@@ -16,7 +100,7 @@ Components
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Components">
-                <field name="damage"/>
+                <field name="damage_id"/>
                 <field name="extension"/>
                 <field name="severity"/>
             </form>
@@ -30,7 +114,7 @@ Components
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Components">
-                <field name="damage"/>
+                <field name="damage_id"/>
                 <field name="extension"/>                
                 <field name="severity"/>
             </tree>
@@ -85,7 +169,7 @@ Evaluator
         <field name="view_mode">tree,form</field>
 </record>
 <!-- Menu -->
-<menuitem name="Evaluator" id="menu_urb••••••an_pavement_evaluator" parent="menu_urban_pavement_roadway_component" action="action_urban_pavement_evaluator"/>
+<menuitem name="Evaluator" id="menu_urban_pavement_evaluator" parent="menu_urban_pavement_roadway_component" action="action_urban_pavement_evaluator"/>
 
 
 <!-- =================================================================================================
@@ -98,20 +182,29 @@ Evaluation
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Evaluation">
-                <field name="civ"/>
-                <field name="pci"/>
-                <field name="eval_date"/>                
-                <field name="photo" widget="image"/>
-                <field name="evaluator_id"/>
-                <notebook>
-                	<page string = "components">
-                		<field name="component_id"/>		
-                	</page>
-                	<page string = "Shape">
-                		 <field name="shape" widget="geo_edit_map" readonly="False"/>
-                	</page>
-                </notebook>
-                
+             <group colspan="4" col="4">
+             	<group colspan="2" col="4">
+                	<field name="civ"/>
+                	<field name="pci"/>
+                	<field name="unit_display_id"/>                	                	
+                	<field name="number_slabs"/>
+                	<field name="eval_date"/>
+                	<field name="evaluator_id"/>
+             	</group>     
+                <group colspan="2" col="2">
+                    <field name="photo" widget="image"/>
+                </group>             	                                           
+                <group colspan="4" col="4">
+                	<notebook>
+                		<page string = "components">
+	                		<field name="component_id"/>		
+                		</page>
+                	</notebook>
+                </group>
+             </group>
+             <group colspan="1" col="4">
+             	<button name="SayHello" string="Calculate PCI" type="object" icon="gtk-apply" />
+             </group>
             </form>
         </field>
 </record>
@@ -124,24 +217,13 @@ Evaluation
         <field name="arch" type="xml">
             <tree string="Evaluation">
                 <field name="civ"/>
-                <field name="pci"/>                
+                <field name="pci"/>      
+                <field name="eval_date"/>          
             </tree>
         </field>
 </record>
 
-<!-- Geoengine Views -->
 
-<record  model="ir.ui.view" id="view_urban_pavement_evaluation_OSM" >
-            <field name="name">urban_pavement.evaluation.geo_view</field>
-            <field name="arch"><![CDATA[
-                <form >
-                    <field name="code"/>
-                    <field name="name"/>                    
-                </form>]]></field>
-            <field eval="16" name="priority"/>
-            <field name="type">geoengine</field>
-            <field name="model">urban_pavement.evaluation</field>
-</record>
 <!-- Action -->
 <record model="ir.actions.act_window" id="action_urban_pavement_evaluation">
         <field name="name">Evaluation</field>
