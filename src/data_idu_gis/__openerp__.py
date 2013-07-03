@@ -32,6 +32,7 @@
                'micro_seismicity.xml',
                'cadastral_zone.xml',
                'geological_zone.xml',
+               'road_hierarchy_bogota.xml',
   ],
   'update_xml': [],
   'installable': True,
