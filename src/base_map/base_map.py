@@ -27,7 +27,7 @@
 #     structure, and will be re-factored#
 #
 #
-from osv import fields
+from osv import fields,osv
 from base_geoengine import geo_model
 
 class base_map_district(geo_model.GeoModel):
@@ -110,6 +110,17 @@ class base_map_road_section(geo_model.GeoModel):
         'name':fields.char('Road Section Name',size=128),
         'start_edge':fields.char('Start Edge',size=128),
         'end_edge':fields.char('End edge',size=128),
-        'shape':fields.geo_multi_line('Shape')
+        'road_hierarchy':fields.many2one('base_map.road_hierarchy','Road Hierarchy'),
+        'shape':fields.geo_multi_line('Shape'),
     }
 base_map_road_section()
+
+class base_map_road_hierarchy(osv.osv):
+    _name="base_map.road_hierarchy"
+    _columns={
+        'code':fields.integer('Road Hierachy Code',required=True),
+        'name':fields.char('Name',size=128,required=True),
+    }
+base_map_road_hierarchy()
+    
+
