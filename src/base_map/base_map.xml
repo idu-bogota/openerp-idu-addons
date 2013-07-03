@@ -504,10 +504,16 @@ Road Section
                 <field name="name"/>
                 <field name="start_edge"/>
                 <field name="end_edge"/>
-                <group col="2" colspan="4">
-                    <field name="shape" widget="geo_edit_map" readonly="1"/>
-                </group>
-            </form>
+                <field name="road_hierarchy" widget="selection"/>
+                <group colspan="4" col="4">
+                    <notebook>
+                        <page string="Geometry">
+                            <group col="2" colspan="4">
+                                <field name="shape" widget="geo_edit_map" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </group>            </form>
         </field>
 </record>
 <!-- Tree View -->
