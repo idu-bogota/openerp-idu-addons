@@ -20,6 +20,7 @@
 ##############################################################################
 from osv import fields,osv
 from base_geoengine import geo_model
+from openerp.workflow.instance import create
 
 class urban_pavement_severity(osv.osv):
     """
@@ -68,8 +69,12 @@ urban_pavement_evaluator()
 
 class urban_pavement_evaluation(geo_model.GeoModel):
 
-    def search_civ(self, cr, uid, ids,civ):
-        print "Hello World" 
+    def search_civ(self, cr, uid, ids,pci):
+        param = {}
+        obj_evaluation = self.pool.get('urban_pavement.evaluation')
+        param['pci'] = 999        
+       # obj_evaluation.create(cr, uid, param,context = None)        
+        print "Hello World"         
 
     def calculate_pci(self, cr, uid, ids,pci):
         v={}
@@ -94,7 +99,7 @@ class urban_pavement_evaluation(geo_model.GeoModel):
         'evaluator_id': fields.many2one('urban_pavement.evaluator',"Evaluator",required = True),
         'photo':fields.binary('Photo'),
         'component_id':fields.one2many('urban_pavement.component','component_id',required = True),
-        'shape':fields.function('Shape'),
+        'shape':fields.geo_multi_polygon('Shape'),#shape':fields.function(search_civ,string='Shape',method=True,type="MultiPolygon"), 
     }
     
    

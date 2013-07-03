@@ -224,8 +224,8 @@ Evaluation
             <form string="Evaluation">
              <group colspan="4" col="4">
              	<group colspan="2" col="4">
-                	<field name="civ" on_change="search_civ(civ)"/>
-                	<field name="pci" readonly="1"/>
+                	<field name="civ" on_change="search_civ(pci)"/>
+                	<field name="pci"/>
                 	<field name="unit_display_id"/>
                 	<field name="number_slabs"/>
                 	<field name="eval_date"/>
@@ -240,7 +240,7 @@ Evaluation
 	                		<field name="component_id" on_change="calculate_pci(pci)"/>
                 		</page>
               			<page string = "Shape">
-                		 	<field name="shape" widget="geo_edit_map" readonly="False"/>
+                		 	<field name="shape" widget="geo_edit_map"/>
                 		</page>                		
                 	</notebook>
                 </group>
