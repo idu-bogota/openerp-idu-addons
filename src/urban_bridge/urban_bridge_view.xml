@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
-
+<menuitem name="Bridge Management System" id="menu_urban_bridge"/>
+<menuitem name="Inventory" id="menu_urban_bridge_inventory" parent="menu_urban_bridge"/>
+<menuitem name="Settings" id="menu_urban_bridge_domain" parent="menu_urban_bridge"/>
+<menuitem name="Bridges" id="menu_urban_bridge_bridge" parent="menu_urban_bridge_inventory" action="action_urban_bridge_bridge" sequence="1"/>
 
 <!--
 ==================================================================================
@@ -123,9 +126,6 @@ Bridges
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
 </record>
-<menuitem name="Bridge Management System" id="menu_urban_bridge"/>
-<menuitem name="Inventory" id="menu_urban_bridge_inventory" parent="menu_urban_bridge"/>
-<menuitem name="Bridges" id="menu_urban_bridge_bridge" parent="menu_urban_bridge_inventory" action="action_urban_bridge_bridge" sequence="1"/>
 
 
 <!-- 
@@ -177,7 +177,7 @@ Structure Type
 </record>
 
 <!-- Menus  -->
-<menuitem name="Domains" id="menu_urban_bridge_domain" parent="menu_urban_bridge"/>
+
 <menuitem name="Structure Type" id="menu_urban_bridge_structure_type" parent="menu_urban_bridge_domain" action="action_urban_bridge_structure_type" sequence="1"/>
 
 <!-- ==================================================================================================
@@ -401,7 +401,7 @@ Inspection Survey
 <record model="ir.ui.view" id="view_urban_bridge_structure_inspection_survey_tree">
         <field name="name">urban_bridge.inspection_survey.tree</field>
         <field name="model">urban_bridge.inspection_survey</field>
-        <field name="type">tree</field>
+            <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Structure Element Attribute">
              <field name="inspection_date" />
@@ -419,7 +419,143 @@ Inspection Survey
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
 </record>
+<!-- ==========================================================================================
+Inspection Methodology
+=============================================================================================== -->
+<!-- Form View -->
+<record model="ir.ui.view" id="view_urban_bridge_methodology_form">
+        <field name="name">urban_bridge.methodology.form</field>
+        <field name="model">urban_bridge.methodology</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Inspection Methodology">
+             <field name="name"/>
+             <newline/>
+             <group colspan="4" col="2">
+                <field name="expression"/>
+             </group>
+             <group colspan="4" col="4">
+             <notebook>
+                <page string="Entities">
+                    <group colspan="4" col="2">
+                        <field name="entity_id" nolabel="1"/>
+                    </group>
+                </page>
+             </notebook>
+             </group>
+            </form>
+        </field>
+</record>
+<!-- Tree View -->
+<record model="ir.ui.view" id="view_urban_bridge_methodology_tree">
+        <field name="name">urban_bridge.methodology.tree</field>
+        <field name="model">urban_bridge.methodology</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Inspection Methodology">
+             <field name="name"/>
+            </tree>
+        </field>
+</record>
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_urban_bridge_methodology">
+        <field name="name">Inspection Methodology</field>
+        <field name="res_model">urban_bridge.methodology</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+<!-- Menu Item -->
+<menuitem name="Inspection Methodology" id="menu_urban_bridge_methodology" parent="menu_urban_bridge_domain" action="action_urban_bridge_methodology"/>
+<!-- =========================================================================================================
+ Inspection Entity
+ =============================================================================================================-->
+<!-- Form View -->
+<record model="ir.ui.view" id="view_urban_bridge_inspection_entity_form">
+        <field name="name">urban_bridge.inspection_entity.form</field>
+        <field name="model">urban_bridge.inspection_entity</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <tree string="Inspection Entity">
+             <field name="name"/>
+             <newline/>
+             <group colspan="4" col="2">
+                <notebook >
+                    <page string="Inspection Attributes">
+                    <group colspan="4" col="2">
+                        <field name="attribute_id" nolabel="1"/>
+                    </group>
+                    </page>
+                </notebook>
+             </group>
+            </tree>
+        </field>
+</record>
+<!-- Tree View -->
+<record model="ir.ui.view" id="view_urban_bridge_inspection_entity_tree">
+        <field name="name">urban_bridge.inspection_entity.tree</field>
+        <field name="model">urban_bridge.inspection_entity</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Inspection Entity">
+             <field name="name"/>
+            </tree>
+        </field>
+</record>
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_urban_bridge_inspection_entity">
+        <field name="name">Inspection Entity</field>
+        <field name="res_model">urban_bridge.inspection_entity</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+<!--=========================================================================================================
+ Inspection Attribute
+============================================================================================================= -->
 
-
+<!-- Form View -->
+<record model="ir.ui.view" id="view_urban_bridge_inspection_attribute_form">
+        <field name="name">urban_bridge.inspection_attribute.form</field>
+        <field name="model">urban_bridge.inspection_attribute</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Inspection Attribute">
+             <field name="name"/>
+             <field name="data_type"/>
+             <field name="selection_text"/>
+             <field name="is_required"/>
+             <field name="is_enabled"/>
+             <field name="alias"/>
+             <newline/>
+             <group colspan="4" col="2">
+             <notebook>
+                <page string="Elements to Inspect">
+                <group colspan="4" col="2">
+                    <field name="structure_element_type" nolabel="1"/>
+                </group>
+                </page>
+             </notebook>
+             </group>
+            </form>
+        </field>
+</record>
+<!-- Tree View -->
+<record model="ir.ui.view" id="view_urban_bridge_inspection_attribute_tree">
+        <field name="name">urban_bridge.inspection_attribute.tree</field>
+        <field name="model">urban_bridge.inspection_attribute</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Inspection Attribute">
+             <field name="name"/>
+             <field name="data_type"/>
+            </tree>
+        </field>
+</record>
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_urban_bridge_inspection_attribute">
+        <field name="name">Inspection Attribute</field>
+        <field name="res_model">urban_bridge.inspection_attribute</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
 </data>
 </openerp>

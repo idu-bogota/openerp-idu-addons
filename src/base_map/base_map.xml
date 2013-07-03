@@ -513,7 +513,8 @@ Road Section
                             </group>
                         </page>
                     </notebook>
-                </group>            </form>
+                </group>
+            </form>
         </field>
 </record>
 <!-- Tree View -->

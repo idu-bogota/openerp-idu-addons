@@ -274,12 +274,13 @@ urban_bridge_inspection_survey()
 
 class urban_bridge_methodology(osv.osv):
     """
-    Define the Methodology to apply survey's to the bridges and its elements 
+    Define the Inspection Methodology to apply survey's to the bridges and its elements 
     """
     _name="urban_bridge.methodology"
     _columns={
         'name':fields.char('Methodology Name',size=128,required=True),
         'expression':fields.text('Expression'),
+        'entity_id':fields.one2many('urban_bridge.inspection_entity','methodology_id','Inspection Issues'),
     }
 
 
@@ -290,7 +291,8 @@ class urban_bridge_inspection_entity(osv.osv):
     _name="urban_bridge.inspection_entity"
     _columns = {
         'name':fields.char('Name',size=128,required=True),
-        'char':fields.char('Character Id:',size=1,required=True,help="This field is to identify the field at methodology expression"),
+        'methodology_id':fields.many2one('urban_bridge.methodology','Methodology'),
+        'attribute_id':fields.one2many('urban_bridge.inspection_attribute','inspection_entity_id','Attributes'),
     }
 
 class urban_bridge_inspection_attribute(osv.osv):
@@ -304,6 +306,9 @@ class urban_bridge_inspection_attribute(osv.osv):
         'selection_text':fields.char('Selection',size=1024,help='If Data type : selection then selection text contain the dictionary'),
         'is_required':fields.boolean('Is Required'),
         'is_enabled':fields.boolean('Is Enabled'),
+        'alias':fields.char('Alias:',size=1,required=True,help="This field is to identify the field at methodology expression"),
+        'inspection_entity_id':fields.many2one('urban_bridge.inspection_entity','Entity'),
+        'structure_element_type':fields.many2many('urban_bridge.structure_element_type','urban_bridge_struct_elem_type_insp_entity_rel','inspection_attribute_id','element_type_id','Element to Inspect:')
     }
 
 class urban_bridge_inspection_value(osv.osv):
