@@ -21,6 +21,16 @@
 from osv import fields,osv
 from base_geoengine import geo_model
 
+class urban_pavement_severity(osv.osv):
+    """
+        Structure Type Main severity
+    """
+    _name="urban_pavement.severity"
+    _columns={
+        'code':fields.integer('Code'),
+        'name':fields.char('Name',size=200),
+    }
+
 class urban_pavement_display(osv.osv):
     """
         Structure Type Main Classification
@@ -58,6 +68,9 @@ urban_pavement_evaluator()
 
 class urban_pavement_evaluation(geo_model.GeoModel):
 
+    def search_civ(self, cr, uid, ids,civ):
+        print "Hello World" 
+
     def calculate_pci(self, cr, uid, ids,pci):
         v={}
         evaluations = self.browse(cr,uid,ids)
@@ -66,7 +79,7 @@ class urban_pavement_evaluation(geo_model.GeoModel):
             components = evaluation.component_id
             for component in components:
                 damage_id = component.damage_id
-                extension = component.extension
+                extension = component.extension_id
             v['pci'] = pci
         res = {'value':v}
         return res
@@ -81,6 +94,7 @@ class urban_pavement_evaluation(geo_model.GeoModel):
         'evaluator_id': fields.many2one('urban_pavement.evaluator',"Evaluator",required = True),
         'photo':fields.binary('Photo'),
         'component_id':fields.one2many('urban_pavement.component','component_id',required = True),
+        'shape':fields.function('Shape'),
     }
     
    
@@ -93,8 +107,8 @@ class urban_pavement_component(osv.osv):
     _name="urban_pavement.component"
     _columns={
         'damage_id':fields.many2one('urban_pavement.damage',"Damage",required = True),
-        'extension':fields.float('Extension',required = True),
-        'severity':fields.integer('Severity',required = True),
+        'extension':fields.integer('Extension',required = True),
+        'severity_id':fields.many2one('urban_pavement.severity',"Severity",required = True),
         'component_id':fields.integer('component_id'),
     }
  

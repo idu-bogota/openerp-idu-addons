@@ -8,6 +8,47 @@
 
 
 <!-- =================================================================================================
+Severity
+====================================================================================================== -->
+<!-- Form View -->
+<record model="ir.ui.view" id="view_urban_pavement_severity_form">
+        <field name="name">urban_pavement.severity.form</field>
+        <field name="model">urban_pavement.severity</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Severity">
+                <field name="code"/>
+                <field name="name"/>
+            </form>
+        </field>
+</record>
+
+<!-- Tree (List) View -->
+<record model="ir.ui.view" id="view_urban_pavement_severity_tree">
+        <field name="name">urban_pavement.severity.tree</field>
+        <field name="model">urban_pavement.severity</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Severity">
+                <field name="code"/>
+                <field name="name"/>
+            </tree>
+        </field>
+</record>
+
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_urban_severity">
+        <field name="name">Severity</field>
+        <field name="res_model">urban_pavement.severity</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+<!-- Menu -->
+<menuitem name="Severity" id="menu_urban_pavement_severity" parent="menu_urban_pavement_roadway_domains" action="action_urban_severity"/>
+
+
+
+<!-- =================================================================================================
 Display
 ====================================================================================================== -->
 <!-- Form View -->
@@ -102,7 +143,7 @@ Components
             <form string="Components">
                 <field name="damage_id"/>
                 <field name="extension"/>
-                <field name="severity"/>
+                <field name="severity_id"/>
             </form>
         </field>
 </record>
@@ -116,7 +157,7 @@ Components
             <tree string="Components">
                 <field name="damage_id"/>
                 <field name="extension"/>
-                <field name="severity"/>
+                <field name="severity_id"/>
             </tree>
         </field>
 </record>
@@ -169,8 +210,7 @@ Evaluator
         <field name="view_mode">tree,form</field>
 </record>
 <!-- Menu -->
-<menuitem name="Evaluator" id="menu_urban_pavement_evaluator" parent="menu_urban_pavement_roadway_component" action="action_urban_pavement_evaluator"/>
-
+<menuitem name="Evaluator" id="menu_urban_pavement_evaluator" parent="menu_urban_pavement_roadway_domains" action="action_urban_pavement_evaluator"/>
 
 <!-- =================================================================================================
 Evaluation 
@@ -184,7 +224,7 @@ Evaluation
             <form string="Evaluation">
              <group colspan="4" col="4">
              	<group colspan="2" col="4">
-                	<field name="civ"/>
+                	<field name="civ" on_change="search_civ(civ)"/>
                 	<field name="pci" readonly="1"/>
                 	<field name="unit_display_id"/>
                 	<field name="number_slabs"/>
@@ -199,6 +239,9 @@ Evaluation
                 		<page string = "components">
 	                		<field name="component_id" on_change="calculate_pci(pci)"/>
                 		</page>
+              			<page string = "Shape">
+                		 	<field name="shape" widget="geo_edit_map" readonly="False"/>
+                		</page>                		
                 	</notebook>
                 </group>
              </group>
@@ -228,6 +271,41 @@ Evaluation
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,geoengine</field>
 </record>
+
+<!-- Geoengine Views -->
+
+<record  model="ir.ui.view" id="ir_ui_view_urban_pavement_evaluation_OSM" >
+            <field name="name">urban_pavement.evaluation.geo_view</field>
+            <field name="arch"><![CDATA[
+                <form >
+                    <field name="code"/>
+                    <field name="name"/>                    
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">urban_pavement.evaluation</field>
+</record>
+
+<!-- Geoengine Base Raster -->
+<record model="geoengine.raster.layer" id="geoengine_raster_layer_urban_pavement_evaluation">
+            <field name="raster_type">osm</field>
+            <field name="name">Pavement OSM</field>
+            <field name="view_id" ref="ir_ui_view_urban_pavement_evaluation_OSM"/>
+            <field eval="0" name="overlay"/>
+</record>
+
+<!-- Geoengine Vector Layer -->
+
+<record  model="geoengine.vector.layer" id="geoengine_vector_layer_urban_pavement_evaluation">
+            <field name="geo_field_id" ref="urban_pavement.field_urban_pavement_evaluation_shape"/>            
+            <field name="name">Bridge</field>
+            <field name="view_id" ref="ir_ui_view_urban_pavement_evaluation_OSM"/>
+            <field name="geo_repr">basic</field>
+            <field name="attribute_field_id" ref="urban_pavement.field_urban_pavement_evaluation_civ"/>
+            <field name="begin_color">#FF680A</field>
+</record>
+
+
 <!-- Menu -->
 <menuitem name="Evaluation" id="menu_urban_pavement_evaluation" parent="menu_urban_pavement_roadway_component" action="action_urban_pavement_evaluation"/>
 
