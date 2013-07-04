@@ -310,6 +310,10 @@ class urban_bridge_inspection_attribute(osv.osv):
         'inspection_entity_id':fields.many2one('urban_bridge.inspection_entity','Entity'),
         'structure_element_type':fields.many2many('urban_bridge.structure_element_type','urban_bridge_struct_elem_type_insp_entity_rel','inspection_attribute_id','element_type_id','Element to Inspect:')
     }
+    _defaults={
+        'is_required': lambda *args: True,
+        'is_enabled': lambda *args: True,
+    }
 
 class urban_bridge_inspection_value(osv.osv):
     """

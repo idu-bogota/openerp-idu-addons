@@ -521,10 +521,10 @@ Inspection Methodology
             <form string="Inspection Attribute">
              <field name="name"/>
              <field name="data_type"/>
-             <field name="selection_text"/>
+             <field name="alias"/>
              <field name="is_required"/>
              <field name="is_enabled"/>
-             <field name="alias"/>
+             <field name="selection_text" attrs="{'invisible':[('data_type','!=','selection')]}"/>
              <newline/>
              <group colspan="4" col="2">
              <notebook>
