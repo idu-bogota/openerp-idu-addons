@@ -306,6 +306,7 @@ class urban_bridge_inspection_attribute(osv.osv):
         'selection_text':fields.char('Selection',size=1024,help='If Data type : selection then selection text contain the dictionary'),
         'is_required':fields.boolean('Is Required'),
         'is_enabled':fields.boolean('Is Enabled'),
+        'is_general':fields.boolean('This field applies to all the Bridge in general?'),
         'alias':fields.char('Alias:',size=1,required=True,help="This field is to identify the field at methodology expression"),
         'inspection_entity_id':fields.many2one('urban_bridge.inspection_entity','Entity'),
         'structure_element_type':fields.many2many('urban_bridge.structure_element_type','urban_bridge_struct_elem_type_insp_entity_rel','inspection_attribute_id','element_type_id','Element to Inspect:')
@@ -329,4 +330,7 @@ class urban_bridge_inspection_value(osv.osv):
         'value_float':fields.float('Float'),
         'value_bool':fields.boolean('Boolean'),
         'value_selection':fields.char('Selection',size=10),
+        'bridge_id':fields.many2one('urban_bridge.bridge','Bridge'),
+        'element_id':fields.many2one('urban_bridge.structure_element','Structure Element'),
+        'inspect_attribute_id':fields.many2one('urban_bridge.inspection_attribute','Inspection Attribute'),
     }

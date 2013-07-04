@@ -17,6 +17,20 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
+#
+#    Creado por Andres Ignacio Baez Alba
+#
 ##############################################################################
-import structure_elem
-import inspection_survey
+
+from osv import osv, fields
+from lxml import etree
+from ast import literal_eval
+#from suds.client import Client
+
+class urban_bridge_wizard_inspection_survey(osv.osv_memory):
+    _name="urban_bridge.wizard.inspection_survey"
+    _description="Creates a survey for the Bridge"
+    _columns={
+        'name':fields.char('Name',size=128),
+        'bridge_id':fields.many2one('urban_bridge.bridge','Bridge')
+    }

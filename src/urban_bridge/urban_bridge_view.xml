@@ -522,6 +522,7 @@ Inspection Methodology
              <field name="name"/>
              <field name="data_type"/>
              <field name="alias"/>
+             <field name="is_general"/>
              <field name="is_required"/>
              <field name="is_enabled"/>
              <field name="selection_text" attrs="{'invisible':[('data_type','!=','selection')]}"/>
@@ -547,6 +548,7 @@ Inspection Methodology
             <tree string="Inspection Attribute">
              <field name="name"/>
              <field name="data_type"/>
+             <field name="alias"/>
             </tree>
         </field>
 </record>
