@@ -34,3 +34,24 @@ class urban_bridge_wizard_inspection_survey(osv.osv_memory):
         'name':fields.char('Name',size=128),
         'bridge_id':fields.many2one('urban_bridge.bridge','Bridge')
     }
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        """
+        Fields View Get method :- generate the new view and display the survey pages of selected survey.
+        """
+        result = super(urban_bridge_wizard_inspection_survey, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)
+        
+        #1. Mostrar de acuerdo a la metodología escogida los datos que son generales
+        
+        #2. De acuerdo al inventario existente para cada elemento de infraestructura, se muestra los aspectos que 
+        #se deben evaluar
+        
+        #3. De acuerdo a los valores ingresados por el usuario se manda un vector de datos al interpretador para que muestre 
+        #el resultado del diagnostico...
+        
+        #4. El resultado del diagnostico se debe almacenar en el objeto inspection_survey para obtener la calificacion general
+        # del puente de acuerdo con la metodología seleccionada.
+        
+        return result
+
+urban_bridge_wizard_inspection_survey()

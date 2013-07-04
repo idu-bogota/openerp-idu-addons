@@ -362,7 +362,7 @@ Structure Element
             <tree string="Structure Element" editable="top">
              <field name="name" select="1"/>
              <field name="element_type_id" select="1"/>
-             <button name="%(urban_bridge.action_urban_bridge_wizard_structure_elem)d" string="Propiedades"
+             <button name="%(urban_bridge.action_urban_bridge_wizard_structure_elem)d" string="Details"
                                 type="action" icon="gtk-ok" context="{'element_type_id':element_type_id}" />
             </tree>
         </field>
@@ -387,11 +387,13 @@ Inspection Survey
         <field name="model">urban_bridge.inspection_survey</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Structure Element Attribute">
+            <form string="Inspection Survey">
              <field name="bridge_id" readonly="1"/>
              <field name="methodology_id" select="1" widget="selection"/>
              <field name="inspection_date" />
              <field name="score" />
+             <button name="%(urban_bridge.action_urban_bridge_wizard_inspection_survey)d" string="Details"
+                                type="action" icon="gtk-ok" context="{'bridge_id':bridge_id,'methodology_id':methodology_id}" />
             </form>
         </field>
 </record>
@@ -403,7 +405,7 @@ Inspection Survey
         <field name="model">urban_bridge.inspection_survey</field>
             <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Structure Element Attribute">
+            <tree string="Inspection Survey">
              <field name="inspection_date" />
              <field name="methodology_id" select="1"/>
              <field name="score" />

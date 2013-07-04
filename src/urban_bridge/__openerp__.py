@@ -30,10 +30,12 @@
                      'base_map',
                      ],
         "init_xml" : ['wizard/structure_elem.xml',
+                      'wizard/inspection_survey.xml',
                       'urban_bridge_view.xml',
                       ],
         "demo_xml" : [],
         "update_xml" : ['wizard/structure_elem.xml',
+                        'wizard/inspection_survey.xml',
                         'urban_bridge_view.xml',
                         ],
         "installable": True
