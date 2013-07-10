@@ -12,7 +12,6 @@ Bridges
 ==================================================================================
 -->
 
-
 <!-- Form -->
 <record model="ir.ui.view" id="view_urban_bridge_bridge_form">
         <field name="name">urban_bridge.bridge.form</field>
@@ -28,9 +27,6 @@ Bridges
                     <field name="last_address"/>
                     <field name="category" />
                     <field name="structure_type" widget="selection" />
-                </group>
-                <group colspan="2" col="2">
-                    <field name="photo" widget='image' nolabel="1"/>
                 </group>
             </group>
              <group colspan="4" col="4">
@@ -50,6 +46,7 @@ Bridges
                     </group>
               </page>
              <page string="Structure Data">
+                 <group colspan="2" col="2">
                     <field name="construction_date"/>
                     <field name="length"/>
                     <field name="width"/>
@@ -60,6 +57,10 @@ Bridges
                     <field name="design_load_capacity"/>
                     <field name="design_load_code" widget="selection"/>
                     <field name="structure_material" widget="selection"/>
+                </group>
+                <group colspan="2" col="2">
+                        <field name="photo" widget='image'  img_width="840" img_height="600" width="840" height="600" nolabel="1"/>
+                </group>
               </page>
               <page string="Structure Elements">
                     <field name="elements"/>
@@ -301,7 +302,6 @@ Structure Element Type
 <!-- Menu -->
 <menuitem name="Structure Element Type" id="menu_urban_bridge_structure_element_type" parent="menu_urban_bridge_domain" action="action_urban_bridge_structure_element_type" sequence="4"/>
 <!-- =========================================================================================================
-Intalling 
 Structure Element Attribute
 ============================================================================================================== -->
 <!-- Form View -->
@@ -348,8 +348,15 @@ Structure Element
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Structure Element">
-                <field name="element_type_id" select="1" widget="selection"/>
-                <field name="name" select="1"/>
+                <group colspan="4" col="2">
+                    <field name="element_type_id" select="1" widget="selection"/>
+                    <field name="name" select="1"/>
+                </group>
+                <group colspan="4" col="2">
+                    <field name="photo" widget="image"/>
+                </group>
+                <button name="%(urban_bridge.action_urban_bridge_wizard_structure_elem)d" string="Details"
+                                type="action" icon="gtk-ok" context="{'element_type_id':element_type_id}" />
             </form>
         </field>
 </record> 
@@ -362,8 +369,6 @@ Structure Element
             <tree string="Structure Element" editable="top">
              <field name="name" select="1"/>
              <field name="element_type_id" select="1"/>
-             <button name="%(urban_bridge.action_urban_bridge_wizard_structure_elem)d" string="Details"
-                                type="action" icon="gtk-ok" context="{'element_type_id':element_type_id}" />
             </tree>
         </field>
 </record> 
@@ -372,8 +377,8 @@ Structure Element
 <record model="ir.actions.act_window" id="action_urban_bridge_structure_element">
         <field name="name">Structure Element</field>
         <field name="res_model">urban_bridge.structure_element</field>
-        <field name="view_type">tree</field>
-        <field name="view_mode">tree</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
 </record>
 
 <!--  ======================================================================================================
@@ -388,12 +393,19 @@ Inspection Survey
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Inspection Survey">
+            <field name="state" select="1" widget="statusbar"
+                    statusbar_visible="draft,open,done" statusbar_colors='{"draft":"green","open":"blue"}'
+                    colspan="4" />
+             <newline/>
+             <separator string="Inspection Survey"/>
+             <newline/>
              <field name="bridge_id" readonly="1"/>
              <field name="methodology_id" select="1" widget="selection"/>
              <field name="inspection_date" />
              <field name="score" />
              <button name="%(urban_bridge.action_urban_bridge_wizard_inspection_survey)d" string="Details"
                                 type="action" icon="gtk-ok" context="{'bridge_id':bridge_id,'methodology_id':methodology_id}" />
+
             </form>
         </field>
 </record>
@@ -479,6 +491,10 @@ Inspection Methodology
         <field name="arch" type="xml">
             <tree string="Inspection Entity">
              <field name="name"/>
+             <field name="alias"/>
+             <group colspan="4" col="2">
+                <field name="expression"/>
+             </group>
              <newline/>
              <group colspan="4" col="2">
                 <notebook >
@@ -500,6 +516,7 @@ Inspection Methodology
         <field name="arch" type="xml">
             <tree string="Inspection Entity">
              <field name="name"/>
+             <field name="alias"/>
             </tree>
         </field>
 </record>

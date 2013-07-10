@@ -210,7 +210,7 @@ class urban_bridge_structure_element_attribute(osv.osv):
         'is_required':fields.boolean('Is Required'),
         'is_enabled':fields.boolean('Is Enabled'),
         'data_type':fields.selection([('integer','Integer'),('text','Text'),('datetime',' Date Time'),('date','Date'),('float','Float'),('boolean','Boolean'),('char','Char'),('selection','Selection')],'Data Type',required=True),
-        'element_type_id':fields.integer('Element ID'),
+        'element_type_id':fields.many2one('urban_bridge.structure_element_type','Element ID'),
         'selection_text':fields.char('Selection',size=1024,help='If Data type : selection then selection text contain the dictionary'),
     }
     _defaults={
@@ -225,7 +225,7 @@ class urban_bridge_structure_element_value(osv.osv):
     """
     _name="urban_bridge.structure_element_value"
     _columns={
-        'element_id':fields.integer('Element'),
+        'element_id':fields.many2one('urban_bridge.structure_element','Element'),
         'element_attribute_id':fields.many2one('urban_bridge.structure_element_attribute','Attribute'),
         'value_integer':fields.integer('Integer'),
         'value_char':fields.char('Char',size=256),
@@ -268,6 +268,7 @@ class urban_bridge_inspection_survey(osv.osv):
         'score':fields.float('Inspection '),
         'bridge_id':fields.float('Bridge'),
         'methodology_id':fields.many2one('urban_bridge.methodology','Methodology'),
+        'state':fields.selection([('draft', 'New'),('open', 'In Progress'),('cancel', 'Cancelled'),('done', 'Closed')],'State'),
     }
 
 urban_bridge_inspection_survey()
@@ -292,7 +293,9 @@ class urban_bridge_inspection_entity(osv.osv):
     _columns = {
         'name':fields.char('Name',size=128,required=True),
         'methodology_id':fields.many2one('urban_bridge.methodology','Methodology'),
+        'expression':fields.text('Expression'),
         'attribute_id':fields.one2many('urban_bridge.inspection_attribute','inspection_entity_id','Attributes'),
+        'alias':fields.char('Alias:',size=1,required=True,help="This field is to identify the field at methodology expression"),
     }
 
 class urban_bridge_inspection_attribute(osv.osv):
