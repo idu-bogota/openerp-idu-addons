@@ -132,6 +132,8 @@ Bridges
 <!-- 
 =============================================================================================
 Structure Type
+
+
 =============================================================================================
  -->
 <!-- Form View -->
@@ -184,9 +186,7 @@ Structure Type
 <!-- ==================================================================================================
 Structure Design Load Code
 ======================================================================================================= -->
-
-
-<!-- Form View -->
+|<!-- Form View -->
 <record model="ir.ui.view" id="view_urban_bridge_design_load_code_form">
         <field name="name">urban_bridge.design_load_code.form</field>
         <field name="model">urban_bridge.design_load_code</field>
@@ -227,6 +227,8 @@ Structure Design Load Code
 <!-- Form View -->
 <record model="ir.ui.view" id="view_urban_bridge_structure_material_form">
         <field name="name">urban_bridge.structure_material.form</field>
+
+        
         <field name="model">urban_bridge.structure_material</field>
         <field name="type">form</field>        
         <field name="arch" type="xml">
@@ -257,7 +259,9 @@ Structure Design Load Code
         <field name="view_mode">tree,form</field>
 </record>
 <!-- Menu -->
-<menuitem name="Structure Material" id="menu_urban_bridge_structure_material" parent="menu_urban_bridge_domain" action="action_urban_bridge_structure_material" sequence="3"/>
+<menuitem name="Structure Material" id="menu_urban_bridge_structure_material" 
+
+parent="menu_urban_bridge_domain" action="action_urban_bridge_structure_material" sequence="3"/>
 
 <!-- ===================================================================================================
 Urban Bridge - EAV
@@ -346,6 +350,8 @@ Structure Element
         <field name="name">urban_bridge.structure_element.form</field>
         <field name="model">urban_bridge.structure_element</field>
         <field name="type">form</field>
+
+        
         <field name="arch" type="xml">
             <form string="Structure Element">
                 <group colspan="4" col="2">
@@ -354,9 +360,9 @@ Structure Element
                 </group>
                 <group colspan="4" col="2">
                     <field name="photo" widget="image"/>
+                    <button name="%(urban_bridge.action_urban_bridge_wizard_structure_elem)d" string="Details"
+                                    type="action" icon="gtk-ok" context="{'element_type_id':element_type_id}" />
                 </group>
-                <button name="%(urban_bridge.action_urban_bridge_wizard_structure_elem)d" string="Details"
-                                type="action" icon="gtk-ok" context="{'element_type_id':element_type_id}" />
             </form>
         </field>
 </record> 
@@ -366,7 +372,7 @@ Structure Element
         <field name="model">urban_bridge.structure_element</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Structure Element" editable="top">
+            <tree string="Structure Element"> <!-- editable="top" -->
              <field name="name" select="1"/>
              <field name="element_type_id" select="1"/>
             </tree>
@@ -491,7 +497,7 @@ Inspection Methodology
         <field name="arch" type="xml">
             <tree string="Inspection Entity">
              <field name="name"/>
-             <field name="alias"/>
+             <field name="alias"/>123
              <group colspan="4" col="2">
                 <field name="expression"/>
              </group>

@@ -209,7 +209,7 @@ class urban_bridge_structure_element_attribute(osv.osv):
         'name':fields.char('Name',size=256,required=True),
         'is_required':fields.boolean('Is Required'),
         'is_enabled':fields.boolean('Is Enabled'),
-        'data_type':fields.selection([('integer','Integer'),('text','Text'),('datetime',' Date Time'),('date','Date'),('float','Float'),('boolean','Boolean'),('char','Char'),('selection','Selection')],'Data Type',required=True),
+        'data_type':fields.selection([('integer','Integer'),('text','Text'),('datetime',' Date Time'),('date','Date'),('float','Float'),('boolean','Boolean'),('char','Char'),('selection','Selection'),('line','Geometry Line'),('point','Geometry Point'),('polygon','Geometry Polygon')],'Data Type',required=True),
         'element_type_id':fields.many2one('urban_bridge.structure_element_type','Element ID'),
         'selection_text':fields.char('Selection',size=1024,help='If Data type : selection then selection text contain the dictionary'),
     }
@@ -219,7 +219,7 @@ class urban_bridge_structure_element_attribute(osv.osv):
     }
     
 urban_bridge_structure_element_attribute()
-class urban_bridge_structure_element_value(osv.osv):
+class urban_bridge_structure_element_value(geo_model.GeoModel):
     """
     EAV Value Definition for elements of Structure
     """
@@ -235,6 +235,9 @@ class urban_bridge_structure_element_value(osv.osv):
         'value_float':fields.float('Float'),
         'value_bool':fields.boolean('Boolean'),
         'value_selection':fields.char('Selection',size=10),
+        'value_point':fields.geo_multi_point('Shape Point'),
+        'value_line':fields.geo_multi_line('Shape Line'),
+        'value_polygon':fields.geo_multi_polygon('Shape Line'),
         }
 urban_bridge_structure_element_value()
 
@@ -284,7 +287,6 @@ class urban_bridge_methodology(osv.osv):
         'entity_id':fields.one2many('urban_bridge.inspection_entity','methodology_id','Inspection Issues'),
     }
 
-
 class urban_bridge_inspection_entity(osv.osv):
     """
     Inspection Entity Definition 
@@ -325,6 +327,7 @@ class urban_bridge_inspection_value(osv.osv):
     """
     _name = "urban_bridge.inspection_value"
     _columns = {
+        'value_photo':fields.binary('Photo'),
         'value_integer':fields.integer('Integer'),
         'value_char':fields.char('Char',size=256),
         'value_date':fields.date('Date'),

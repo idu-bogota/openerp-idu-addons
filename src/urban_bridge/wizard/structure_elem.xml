@@ -1,5 +1,27 @@
 <openerp>
   <data>
+    <!-- 
+    View inherit from Structure Element and add botton to view form 
+    
+     -->
+     <!-- 
+        <record id="view_urban_bridge_structure_element_form_inherit" model="ir.ui.view">
+            <field name="name">Structure Element</field>
+            <field name="model">urban_bridge.structure_elem</field>
+            <field name="inherit_id" ref="urban_bridge.view_urban_bridge_structure_element_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Structure Elements">
+                    <field name="photo" position="after">
+                        <button name="%(urban_bridge.action_urban_bridge_wizard_structure_elem)d" string="Details"
+                                    type="action" icon="gtk-ok" context="{'element_type_id':element_type_id}" />
+                    </field>
+                    
+                </form>
+            </field>
+        </record>
+   -->
+  
         <record id="view_urban_bridge_wizard_structure_elem_form" model="ir.ui.view">
             <field name="name">Structure Element</field>
             <field name="model">urban_bridge.wizard.structure_elem</field>
