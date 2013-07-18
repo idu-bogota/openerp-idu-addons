@@ -497,7 +497,7 @@ Inspection Methodology
         <field name="arch" type="xml">
             <tree string="Inspection Entity">
              <field name="name"/>
-             <field name="alias"/>123
+             <field name="alias"/>
              <group colspan="4" col="2">
                 <field name="expression"/>
              </group>

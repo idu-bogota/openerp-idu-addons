@@ -1,27 +1,39 @@
 <openerp>
   <data>
-    <!-- 
-    View inherit from Structure Element and add botton to view form 
-    
-     -->
-     <!-- 
-        <record id="view_urban_bridge_structure_element_form_inherit" model="ir.ui.view">
-            <field name="name">Structure Element</field>
-            <field name="model">urban_bridge.structure_elem</field>
-            <field name="inherit_id" ref="urban_bridge.view_urban_bridge_structure_element_form"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Structure Elements">
-                    <field name="photo" position="after">
-                        <button name="%(urban_bridge.action_urban_bridge_wizard_structure_elem)d" string="Details"
-                                    type="action" icon="gtk-ok" context="{'element_type_id':element_type_id}" />
-                    </field>
-                    
-                </form>
-            </field>
-        </record>
-   -->
-  
+<!-- Geoengine View-->
+<record  model="ir.ui.view" id="ir_ui_view_urban_bridge_wizard_structure_elem_OSM" >
+            <field name="name">urban_bridge.wizard.structure_elem.geo_view</field>
+            <field name="arch"><![CDATA[
+                <form >
+                    <field name="name"/>
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">urban_bridge.wizard.structure_elem.geo_view</field>
+</record>
+
+<!-- Geoengine Base Raster -->
+<record model="geoengine.raster.layer" id="geoengine_raster_layer_base_map_district">
+            <field name="raster_type">osm</field>
+            <field name="name">District OSM</field>
+            <field name="view_id" ref="ir_ui_view_base_map_district_OSM"/>
+            <field eval="0" name="overlay"/>
+</record>
+
+<!-- Geoengine Vector Layer -->
+
+<record  model="geoengine.vector.layer" id="geoengine_vector_layer_base_map_district_plain">
+            <field name="geo_field_id" ref="base_map.field_base_map_district_shape"/>
+            <field name="name">District</field>
+            <field name="view_id" ref="ir_ui_view_base_map_district_OSM"/>
+            <field name="geo_repr">basic</field>
+            <field name="attribute_field_id" ref="base_map.field_base_map_district_code"/>
+            <field name="begin_color">#FF680A</field>
+</record>
+   
+   
+   
+  <!-- Form View -->
         <record id="view_urban_bridge_wizard_structure_elem_form" model="ir.ui.view">
             <field name="name">Structure Element</field>
             <field name="model">urban_bridge.wizard.structure_elem</field>
@@ -37,7 +49,7 @@
                 </form>
             </field>
         </record>
-
+<!-- Action View -->
         <record id="action_urban_bridge_wizard_structure_elem" model="ir.actions.act_window">
             <field name="name">Elements</field>
             <field name="type">ir.actions.act_window</field>
