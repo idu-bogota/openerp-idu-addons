@@ -209,7 +209,7 @@ class urban_bridge_structure_element_attribute(osv.osv):
         'name':fields.char('Name',size=256,required=True),
         'is_required':fields.boolean('Is Required'),
         'is_enabled':fields.boolean('Is Enabled'),
-        'data_type':fields.selection([('integer','Integer'),('text','Text'),('datetime',' Date Time'),('date','Date'),('float','Float'),('boolean','Boolean'),('char','Char'),('selection','Selection'),('line','Geometry Line'),('point','Geometry Point'),('polygon','Geometry Polygon')],'Data Type',required=True),
+        'data_type':fields.selection([('integer','Integer'),('text','Text'),('datetime',' Date Time'),('date','Date'),('float','Float'),('boolean','Boolean'),('char','Char'),('selection','Selection'),('line','Geometry Line'),('binary','Photo'),('geo_multi_point','Geometry Point'),('geo_multi_line','Geometry Line'),('geo_multi_polygon','Geometry Polygon')],'Data Type',required=True),
         'element_type_id':fields.many2one('urban_bridge.structure_element_type','Element ID'),
         'selection_text':fields.char('Selection',size=1024,help='If Data type : selection then selection text contain the dictionary'),
     }
@@ -234,6 +234,7 @@ class urban_bridge_structure_element_value(geo_model.GeoModel):
         'value_text':fields.text('Text'),
         'value_float':fields.float('Float'),
         'value_bool':fields.boolean('Boolean'),
+        'value_binary':fields.binary('Photo'),
         'value_selection':fields.char('Selection',size=10),
         'value_point':fields.geo_multi_point('Shape Point'),
         'value_line':fields.geo_multi_line('Shape Line'),
@@ -250,7 +251,6 @@ class urban_bridge_structure_element(osv.osv):
     _order='element_type_id'
     _columns={
         'name':fields.char('Name',size=128,required=True),
-        'photo':fields.binary('Photo'),
         'element_type_id':fields.many2one('urban_bridge.structure_element_type','Element Type',required=True),
         'values':fields.one2many('urban_bridge.structure_element_value','element_id','Values'),
         'bridge_id':fields.many2one('urban_bridge.bridge','Bridge'),

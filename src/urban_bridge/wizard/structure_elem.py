@@ -85,6 +85,39 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                         'required':is_required,
                         }
                     xml.insert(2,etree.Element("field",required=is_required,name=new_id))
+                elif (data_type=='binary'):
+                    result['fields'][new_id] = {
+                        'domain':[],
+                        'string':elem_string,
+                        'selectable':True,
+                        'type':data_type,
+                        'string':elem_string,
+                        'context':{},
+                        'required':is_required,
+                        }
+                    xml.insert(2,etree.Element("field",widget="image",required=is_required,name=new_id))
+                elif (data_type=='binary'):
+                    result['fields'][new_id] = {
+                        'domain':[],
+                        'string':elem_string,
+                        'selectable':True,
+                        'type':data_type,
+                        'string':elem_string,
+                        'context':{},
+                        'required':is_required,
+                        }
+                    xml.insert(2,etree.Element("field",widget="image",required=is_required,name=new_id))
+                elif (data_type=="geo_multi_point"):
+                    result['fields'][new_id] = {
+                        'domain':[],
+                        'string':elem_string,
+                        'selectable':True,
+                        'type':data_type,
+                        'string':elem_string,
+                        'context':{},
+                        'required':is_required,
+                        }
+                    xml.insert(2,etree.Element("field",widget="geo_edit_map",required=is_required,name=new_id))
                 else:
                     result['fields'][new_id] = {
                         'domain':[],
@@ -106,7 +139,7 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
         """
         str_element_obj = self.pool.get('urban_bridge.structure_element')
         #str_element_value = self.pool.get('urban_bridge_structure_element_value') 
-        str_element = str_element_obj.browse(cr, uid, context['active_id'], context=None);
+        str_element = str_element_obj.browse(cr, uid, context['active_id'], context=context);
         res = super(urban_bridge_wizard_structure_elem, self).default_get(cr, uid, fields, context=context)
         res.update({'elem_id': str_element.id})
         for value in str_element.values:
@@ -132,6 +165,9 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                 res.update({field_id:value.value_date})
             elif(data_type=='selection'):
                 res.update({field_id:value.value_selection})
+            elif(data_type=='binary'):
+                res.update({field_id:value.value_binary})
+                
         return res
             
         
@@ -184,6 +220,8 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                     str_elem_val_vals['value_date']=vals[value_form]
                 elif(data_type=='selection'):
                     str_elem_val_vals['value_selection']=vals[value_form]
+                elif(data_type=='binary'):
+                    str_elem_val_vals['value_binary']=vals[value_form]
                 isnew=True
                 id_value=0 
                 for struc_elem_value in structure_elem.values:

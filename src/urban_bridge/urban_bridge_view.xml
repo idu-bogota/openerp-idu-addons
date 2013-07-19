@@ -359,7 +359,6 @@ Structure Element
                     <field name="name" select="1"/>
                 </group>
                 <group colspan="4" col="2">
-                    <field name="photo" widget="image"/>
                     <button name="%(urban_bridge.action_urban_bridge_wizard_structure_elem)d" string="Details"
                                     type="action" icon="gtk-ok" context="{'element_type_id':element_type_id}" />
                 </group>

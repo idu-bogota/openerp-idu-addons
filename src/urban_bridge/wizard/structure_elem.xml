@@ -1,38 +1,6 @@
 <openerp>
   <data>
-<!-- Geoengine View-->
-<record  model="ir.ui.view" id="ir_ui_view_urban_bridge_wizard_structure_elem_OSM" >
-            <field name="name">urban_bridge.wizard.structure_elem.geo_view</field>
-            <field name="arch"><![CDATA[
-                <form >
-                    <field name="name"/>
-                </form>]]></field>
-            <field eval="16" name="priority"/>
-            <field name="type">geoengine</field>
-            <field name="model">urban_bridge.wizard.structure_elem.geo_view</field>
-</record>
 
-<!-- Geoengine Base Raster -->
-<record model="geoengine.raster.layer" id="geoengine_raster_layer_base_map_district">
-            <field name="raster_type">osm</field>
-            <field name="name">District OSM</field>
-            <field name="view_id" ref="ir_ui_view_base_map_district_OSM"/>
-            <field eval="0" name="overlay"/>
-</record>
-
-<!-- Geoengine Vector Layer -->
-
-<record  model="geoengine.vector.layer" id="geoengine_vector_layer_base_map_district_plain">
-            <field name="geo_field_id" ref="base_map.field_base_map_district_shape"/>
-            <field name="name">District</field>
-            <field name="view_id" ref="ir_ui_view_base_map_district_OSM"/>
-            <field name="geo_repr">basic</field>
-            <field name="attribute_field_id" ref="base_map.field_base_map_district_code"/>
-            <field name="begin_color">#FF680A</field>
-</record>
-   
-   
-   
   <!-- Form View -->
         <record id="view_urban_bridge_wizard_structure_elem_form" model="ir.ui.view">
             <field name="name">Structure Element</field>
