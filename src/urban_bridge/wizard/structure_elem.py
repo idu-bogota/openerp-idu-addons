@@ -95,7 +95,7 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                         'context':{},
                         'required':is_required,
                         }
-                    xml.insert(2,etree.Element("field",widget="image",required=is_required,name=new_id))
+                    xml.insert(2,etree.Element("field",context='{"elem_id":elem_id}',widget="image",required=is_required,name=new_id))
                 elif (data_type=='binary'):
                     result['fields'][new_id] = {
                         'domain':[],
@@ -138,8 +138,9 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
         Fields View Get method :- generate the new view and display the survey pages of selected survey.
         """
         str_element_obj = self.pool.get('urban_bridge.structure_element')
-        #str_element_value = self.pool.get('urban_bridge_structure_element_value') 
-        str_element = str_element_obj.browse(cr, uid, context['active_id'], context=context);
+        #str_element_value = self.pool.get('urban_bridge_structure_element_value')         
+        str_element = str_element_obj.browse(cr, uid, active_id, context=context);
+        
         res = super(urban_bridge_wizard_structure_elem, self).default_get(cr, uid, fields, context=context)
         res.update({'elem_id': str_element.id})
         for value in str_element.values:
