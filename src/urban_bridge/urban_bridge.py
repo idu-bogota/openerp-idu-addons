@@ -34,9 +34,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
     """ 
     Bridge Infraestructure Data
     """
-    v={}
 
-        
     def _get_district(self,cr,uid,ids,fieldname,arg,context=None):
         res = {}
         for bridge in self.browse(cr, uid, ids, context = context):
@@ -209,7 +207,7 @@ class urban_bridge_structure_element_attribute(osv.osv):
         'name':fields.char('Name',size=256,required=True),
         'is_required':fields.boolean('Is Required'),
         'is_enabled':fields.boolean('Is Enabled'),
-        'data_type':fields.selection([('integer','Integer'),('text','Text'),('datetime',' Date Time'),('date','Date'),('float','Float'),('boolean','Boolean'),('char','Char'),('selection','Selection'),('line','Geometry Line'),('binary','Photo'),('geo_multi_point','Geometry Point'),('geo_multi_line','Geometry Line'),('geo_multi_polygon','Geometry Polygon')],'Data Type',required=True),
+        'data_type':fields.selection([('integer','Integer'),('text','Text'),('datetime',' Date Time'),('date','Date'),('float','Float'),('boolean','Boolean'),('char','Char'),('selection','Selection'),('binary','Photo')],'Data Type',required=True),
         'element_type_id':fields.many2one('urban_bridge.structure_element_type','Element ID'),
         'selection_text':fields.char('Selection',size=1024,help='If Data type : selection then selection text contain the dictionary'),
     }
@@ -225,7 +223,7 @@ class urban_bridge_structure_element_value(geo_model.GeoModel):
     """
     _name="urban_bridge.structure_element_value"
     _columns={
-        'element_id':fields.many2one('urban_bridge.structure_element','Element'),
+        'element_id':fields.many2one('urban_bridge.structure_element','Element',ondelete="cascade"),
         'element_attribute_id':fields.many2one('urban_bridge.structure_element_attribute','Attribute'),
         'value_integer':fields.integer('Integer'),
         'value_char':fields.char('Char',size=256),
@@ -252,7 +250,7 @@ class urban_bridge_structure_element(osv.osv):
     _columns={
         'name':fields.char('Name',size=128,required=True),
         'element_type_id':fields.many2one('urban_bridge.structure_element_type','Element Type',required=True),
-        'values':fields.one2many('urban_bridge.structure_element_value','element_id','Values'),
+        'values':fields.one2many('urban_bridge.structure_element_value','element_id','Values',ondelete="cascade"),
         'bridge_id':fields.many2one('urban_bridge.bridge','Bridge'),
         }
 urban_bridge_structure_element()

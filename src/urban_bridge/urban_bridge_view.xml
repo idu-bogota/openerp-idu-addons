@@ -4,8 +4,6 @@
 <menuitem name="Bridge Management System" id="menu_urban_bridge"/>
 <menuitem name="Inventory" id="menu_urban_bridge_inventory" parent="menu_urban_bridge"/>
 <menuitem name="Settings" id="menu_urban_bridge_domain" parent="menu_urban_bridge"/>
-<menuitem name="Bridges" id="menu_urban_bridge_bridge" parent="menu_urban_bridge_inventory" action="action_urban_bridge_bridge" sequence="1"/>
-
 <!--
 ==================================================================================
 Bridges
@@ -108,9 +106,7 @@ Bridges
             <field name="view_id" ref="ir_ui_view_urban_bridge_bridge_OSM"/>
             <field eval="0" name="overlay"/>
 </record>
-
 <!-- Geoengine Vector Layer -->
-
 <record  model="geoengine.vector.layer" id="geoengine_vector_layer_urban_bridge_bridge_plain">
             <field name="geo_field_id" ref="urban_bridge.field_urban_bridge_bridge_shape"/>
             <field name="name">Bridge</field>
@@ -119,7 +115,6 @@ Bridges
             <field name="attribute_field_id" ref="urban_bridge.field_urban_bridge_bridge_code"/>
             <field name="begin_color">#F0680A</field>
 </record>
-
 <!-- Action -->
 <record model="ir.actions.act_window" id="action_urban_bridge_bridge">
         <field name="name">Bridges</field>
@@ -127,13 +122,10 @@ Bridges
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
 </record>
-
-
+<menuitem name="Bridges" id="menu_urban_bridge_bridge" parent="menu_urban_bridge_inventory" action="action_urban_bridge_bridge" sequence="1"/>
 <!-- 
 =============================================================================================
 Structure Type
-
-
 =============================================================================================
  -->
 <!-- Form View -->
@@ -360,7 +352,7 @@ Structure Element
                 </group>
                 <group colspan="4" col="2">
                     <button name="%(urban_bridge.action_urban_bridge_wizard_structure_elem)d" string="Details"
-                                    type="action" icon="gtk-ok" context="{'element_type_id':element_type_id}" />
+                                    type="action" icon="gtk-ok" context="{'element_type_id':element_type_id,'element_id':id}" />
                 </group>
             </form>
         </field>
@@ -535,7 +527,6 @@ Inspection Methodology
 <!--=========================================================================================================
  Inspection Attribute
 ============================================================================================================= -->
-
 <!-- Form View -->
 <record model="ir.ui.view" id="view_urban_bridge_inspection_attribute_form">
         <field name="name">urban_bridge.inspection_attribute.form</field>

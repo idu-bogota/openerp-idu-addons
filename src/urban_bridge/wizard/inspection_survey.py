@@ -149,12 +149,16 @@ class urban_bridge_wizard_inspection_survey(osv.osv_memory):
                                                         'required':is_required,
                                                         }
                             xml.insert(xml_index,etree.Element("field",name=new_id))
+
+        result['arch'] = etree.tostring(xml)
+        return result
+    
+    #def create(self, cr, uid, vals, context=None):
         #3. De acuerdo a los valores ingresados por el usuario se manda un vector de datos al interpretador para que muestre 
         #el resultado del diagnostico...
         
+        #Registrar los valores de la Inspeccion
         #4. El resultado del diagnostico se debe almacenar en el objeto inspection_survey para obtener la calificacion general
         # del puente de acuerdo con la metodología seleccionada.
-        result['arch'] = etree.tostring(xml)
-        return result
 
 urban_bridge_wizard_inspection_survey()

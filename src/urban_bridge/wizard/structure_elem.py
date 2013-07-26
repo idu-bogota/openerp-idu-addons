@@ -48,6 +48,7 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                                         view_type, context, toolbar,submenu)
         #1. Se obtiene el ID del combo box con los tipos de elementos de infraestructura
         xml = etree.fromstring(result['arch'])
+        elem_id = context['element_id']
         elem_types_id=[]
         elem_types_id.append(context['element_type_id'])
         #2. Para cada elemento de infraestructura del combo, se obtienen la lista de atributos para construir un diccionario
@@ -55,7 +56,7 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
             xml.insert(1,etree.Element("separator",colspan="4",string=elem_inf.name))
             attributes = elem_inf.attributes
             for att in attributes:
-                new_id = str(elem_inf.id)+"_"+str(att.id)
+                new_id = str(elem_inf.id)+"_"+str(att.id)+"_"+str(elem_id)
                 elem_string = att.name
                 is_required="0"
                 if (att.is_required):
@@ -95,29 +96,7 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                         'context':{},
                         'required':is_required,
                         }
-                    xml.insert(2,etree.Element("field",context='{"elem_id":elem_id}',widget="image",required=is_required,name=new_id))
-                elif (data_type=='binary'):
-                    result['fields'][new_id] = {
-                        'domain':[],
-                        'string':elem_string,
-                        'selectable':True,
-                        'type':data_type,
-                        'string':elem_string,
-                        'context':{},
-                        'required':is_required,
-                        }
-                    xml.insert(2,etree.Element("field",widget="image",required=is_required,name=new_id))
-                elif (data_type=="geo_multi_point"):
-                    result['fields'][new_id] = {
-                        'domain':[],
-                        'string':elem_string,
-                        'selectable':True,
-                        'type':data_type,
-                        'string':elem_string,
-                        'context':{},
-                        'required':is_required,
-                        }
-                    xml.insert(2,etree.Element("field",widget="geo_edit_map",required=is_required,name=new_id))
+                    xml.insert(2,etree.Element("field",widget="image",required=is_required,name=new_id,))
                 else:
                     result['fields'][new_id] = {
                         'domain':[],
@@ -127,8 +106,9 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                         'string':elem_string,
                         'context':{},
                         'required':is_required,
+                        'readonly':True,
                         }
-                    xml.insert(2,etree.Element("field",required=is_required,name=new_id))
+                    xml.insert(2,etree.Element("field",required=is_required,name=new_id,readonly="1"))
                     #Se verifica si es requerido o no:
         result['arch'] = etree.tostring(xml)
         return result
@@ -137,17 +117,45 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
         """
         Fields View Get method :- generate the new view and display the survey pages of selected survey.
         """
-        str_element_obj = self.pool.get('urban_bridge.structure_element')
-        #str_element_value = self.pool.get('urban_bridge_structure_element_value')         
-        str_element = str_element_obj.browse(cr, uid, active_id, context=context);
         
         res = super(urban_bridge_wizard_structure_elem, self).default_get(cr, uid, fields, context=context)
+        #1. Se determina si el campo field viene dentro del contexto, si no esta se trata de una solicitud de imagen
+        #si el campo [active_id] viene dentro del contexto el programa necesita refrescar los campos alfanuméricos de la vista 
+        active_id = False
+        for k in context:
+            if k == 'active_id':
+                active_id = context[k]
+        
+        if active_id == False:#Se trata de una solicitud de imagen
+            value_obj = self.pool.get('urban_bridge.structure_element_value')
+            for field in fields:
+                #Descomponer los elementos del field de la vista que entra en el metodo en donde esta almacenada la imagen, para luego devolverla a la plataforma
+                field_list=field.split("_")
+                attr_id=field_list[1]
+                elem_id=field_list[2]
+                #3. Lastimosamente toca mandar el query ya que los parametros que se intentan enviar se convierten en False False, ya que lo que el OpenErp hace es comparación de
+                #nombres de manera subyacente y eso en esta logica del EAV no funciona.
+                query = "select id from urban_bridge_structure_element_value \
+                        where element_id = %s and element_attribute_id = %s"
+                cr.execute(query,(elem_id,attr_id))
+                
+                #list_ids = value_obj.search(cr,uid,[("element_id","=",elem_id),("element_attribute_id","=",attr_id)])
+                for row in cr.fetchall():#Actualizacion de la imagen el el field que entra
+                    value = value_obj.browse(cr,uid,row[0])
+                    image =  value.value_binary
+                    res.update({field:image})
+            return res
+        elem_id= context['active_id']
+        str_element_obj = self.pool.get('urban_bridge.structure_element')
+        #str_element_value = self.pool.get('urban_bridge_structure_element_value')         
+        str_element = str_element_obj.browse(cr, uid,elem_id, context=context);
+        
         res.update({'elem_id': str_element.id})
         for value in str_element.values:
             #Llenar el valor de cada campo con lo que venga en los datos
             elem_type = str_element.element_type_id
             attribute = value.element_attribute_id
-            field_id = str(elem_type.id)+"_"+str(attribute.id)
+            field_id = str(elem_type.id)+"_"+str(attribute.id)+"_"+str(elem_id)
             #Se debe verificar la definicion de tipo de dato para evitar inconsistencias o errores            
             data_type = attribute.data_type
             if (data_type=='integer'):
