@@ -45,14 +45,15 @@ class urban_bridge_wizard_inspection_survey(osv.osv_memory):
         methodology_id = context['methodology_id']
         bridge_id = context['bridge_id']
         xml = etree.fromstring(result['arch'])
-        xml_index=1
-        #1. Mostrar de acuerdo a la metodología escogida los datos que son generales
-        xml.insert(xml_index,etree.Element("separator",colspan="4",string="General Data"))
+        #Generar un xml para insertar al final del ciclo
+        maingroup = etree.Element("group",colspan="4",col="4")
+        notebook = etree.SubElement(maingroup,"notebook")
+        page_gral_data = etree.SubElement(notebook,"page",string="General Data")
+        #1. Mostrar de acuerdo a la metodología escogida los datos que son generales        
         methodology =methodology_obj.browse(cr,uid,methodology_id)
         for entity in methodology.entity_id:
             for attribute in entity.attribute_id:
                 if (attribute.is_general):
-                    xml_index=xml_index+1
                     new_id = str(entity.id)+"_"+str(attribute.id)
                     elem_string = attribute.name
                     is_required="0"
@@ -70,7 +71,7 @@ class urban_bridge_wizard_inspection_survey(osv.osv_memory):
                                                     'size':256,
                                                     'required':is_required,
                                                     }
-                        xml.insert(xml_index,etree.Element("field",required=is_required,name=new_id))
+                        etree.SubElement(page_gral_data,"field",required=is_required,name=new_id)
                     elif (data_type == 'selection'):
                         result['fields'][new_id] = {
                                                     'domain':[],
@@ -82,7 +83,7 @@ class urban_bridge_wizard_inspection_survey(osv.osv_memory):
                                                     'selection':literal_eval(attribute.selection_text),
                                                     'required':is_required,
                                                     }
-                        xml.insert(xml_index,etree.Element("field",required=is_required,name=new_id))
+                        etree.SubElement(page_gral_data,"field",required=is_required,name=new_id)
                     else:
                         result['fields'][new_id] = {
                                                     'domain':[],
@@ -93,13 +94,17 @@ class urban_bridge_wizard_inspection_survey(osv.osv_memory):
                                                     'context':{},
                                                     'required':is_required,
                                                     }
-                        xml.insert(xml_index,etree.Element("field",required=is_required,name=new_id))
+                        etree.SubElement(page_gral_data,"field",required=is_required,name=new_id)
         #2. De acuerdo al inventario existente para cada elemento de infraestructura, se muestra los aspectos que 
         #se deben evaluar
         bridge = bridge_obj.browse(cr,uid,bridge_id)
+        
+        pgInd=0#Reference to page index group
+        page_group = []
         for elem_if in bridge.elements:
-            xml_index=xml_index+1
-            xml.insert(xml_index,etree.Element("separator",colspan="4",string="Inspection "+str(elem_if.element_type_id.name) +" : "+str(elem_if.name)))
+            page_group.append(etree.SubElement(notebook,"page",string=str(elem_if.name)))
+            etree.SubElement(page_group[pgInd],"separator",colspan="4",string="Inspection "+str(elem_if.element_type_id.name) +" : "+str(elem_if.name))
+            #xml.insert(xml_index,etree.Element("separator",colspan="4",string="Inspection "+str(elem_if.element_type_id.name) +" : "+str(elem_if.name)))
             for entity in methodology.entity_id:
                 for attribute in entity.attribute_id:
                     this_attribute_applies = False
@@ -107,7 +112,7 @@ class urban_bridge_wizard_inspection_survey(osv.osv_memory):
                         if (attribute.is_general == False and str_elem_type.id == elem_if.element_type_id.id):
                             this_attribute_applies = True
                     if (this_attribute_applies):
-                        xml_index=xml_index+1
+                        #xml_index=xml_index+1
                         new_id=str(elem_if.id)+"_"+str(entity.id)+"_"+str(attribute.id)
                         elem_string = attribute.name
                         is_required="0"
@@ -125,7 +130,7 @@ class urban_bridge_wizard_inspection_survey(osv.osv_memory):
                                                         'size':256,
                                                         'required':is_required,
                                                         }
-                            xml.insert(xml_index,etree.Element("field",required=is_required,name=new_id))
+                            etree.SubElement(page_group[pgInd],"field",required=is_required,name=new_id)
                         elif (data_type == 'selection'):
                             result['fields'][new_id] = {
                                                         'domain':[],
@@ -137,7 +142,7 @@ class urban_bridge_wizard_inspection_survey(osv.osv_memory):
                                                         'selection':literal_eval(attribute.selection_text),
                                                         'required':is_required,
                                                         }
-                            xml.insert(xml_index,etree.Element("field",{'required':is_required},name=new_id))
+                            etree.SubElement(page_group[pgInd],"field",required=is_required,name=new_id)
                         else:
                             result['fields'][new_id] = {
                                                         'domain':[],
@@ -148,8 +153,9 @@ class urban_bridge_wizard_inspection_survey(osv.osv_memory):
                                                         'context':{},
                                                         'required':is_required,
                                                         }
-                            xml.insert(xml_index,etree.Element("field",name=new_id))
-
+                            etree.SubElement(page_group[pgInd],"field",required=is_required,name=new_id)
+            pgInd=pgInd+1
+        xml.insert(1,maingroup)
         result['arch'] = etree.tostring(xml)
         return result
     
