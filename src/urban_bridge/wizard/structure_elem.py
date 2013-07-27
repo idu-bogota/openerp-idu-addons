@@ -53,7 +53,11 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
         elem_types_id.append(context['element_type_id'])
         #2. Para cada elemento de infraestructura del combo, se obtienen la lista de atributos para construir un diccionario
         for elem_inf in struct_elem_obj.browse(cr,uid,elem_types_id):
-            xml.insert(1,etree.Element("separator",colspan="4",string=elem_inf.name))
+            maingroup = etree.Element("group",colspan="4",col="4")
+            notebook = etree.SubElement(maingroup,"notebook")
+            page_string_features = etree.SubElement(notebook,"page",string="Element Features")
+            page_phographic_registry = etree.Element("page",string="Photographic Registry")
+            photogroup = etree.SubElement(page_phographic_registry,"group",colspan="4",col="2")
             attributes = elem_inf.attributes
             for att in attributes:
                 new_id = str(elem_inf.id)+"_"+str(att.id)+"_"+str(elem_id)
@@ -73,7 +77,7 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                         'size':256,
                         'required':is_required,
                         }
-                    xml.insert(2,etree.Element("field",required=is_required,name=new_id))
+                    etree.SubElement(page_string_features,"field",required=is_required,name=new_id)
                 elif (data_type == 'selection'):
                     result['fields'][new_id] = {
                         'domain':[],
@@ -85,7 +89,7 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                         'selection':literal_eval(att.selection_text),
                         'required':is_required,
                         }
-                    xml.insert(2,etree.Element("field",required=is_required,name=new_id))
+                    etree.SubElement(page_string_features,"field",required=is_required,name=new_id)
                 elif (data_type=='binary'):
                     result['fields'][new_id] = {
                         'domain':[],
@@ -96,7 +100,8 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                         'context':{},
                         'required':is_required,
                         }
-                    xml.insert(2,etree.Element("field",widget="image",required=is_required,name=new_id,))
+                    #Agrega field al photogroup
+                    etree.SubElement(photogroup,"field",required=is_required,name=new_id,widget="image",img_width="840",img_height="600",width="840",height="600")
                 else:
                     result['fields'][new_id] = {
                         'domain':[],
@@ -108,8 +113,12 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                         'required':is_required,
                         'readonly':True,
                         }
-                    xml.insert(2,etree.Element("field",required=is_required,name=new_id,readonly="1"))
-                    #Se verifica si es requerido o no:
+                    etree.SubElement(page_string_features,"field",required=is_required,name=new_id,readonly="1")
+            #Si no hay campo tipo foto no se pone el tab 
+            if (len(photogroup) > 0):
+                notebook.insert(2,page_phographic_registry)
+            xml.insert(1,etree.Element("separator",colspan="4",string=elem_inf.name))
+            xml.insert(2,maingroup)
         result['arch'] = etree.tostring(xml)
         return result
 
