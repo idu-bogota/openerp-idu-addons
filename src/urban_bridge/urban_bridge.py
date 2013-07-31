@@ -270,6 +270,7 @@ class urban_bridge_inspection_survey(osv.osv):
         'bridge_id':fields.float('Bridge'),
         'methodology_id':fields.many2one('urban_bridge.methodology','Methodology'),
         'state':fields.selection([('draft', 'New'),('open', 'In Progress'),('cancel', 'Cancelled'),('done', 'Closed')],'State'),
+        'values':fields.one2many('urban_bridge.inspection_value','inspection_id','Values',ondelete="cascade"),
     }
 
 urban_bridge_inspection_survey()
@@ -336,5 +337,6 @@ class urban_bridge_inspection_value(osv.osv):
         'value_selection':fields.char('Selection',size=10),
         'bridge_id':fields.many2one('urban_bridge.bridge','Bridge'),
         'element_id':fields.many2one('urban_bridge.structure_element','Structure Element'),
+        'inspection_id':fields.many2one('urban_bridge.inspection_survey','Inspection',ondelete="cascade"),
         'inspect_attribute_id':fields.many2one('urban_bridge.inspection_attribute','Inspection Attribute'),
     }

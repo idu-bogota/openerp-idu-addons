@@ -31,7 +31,6 @@ class urban_bridge_wizard_inspection_survey(osv.osv_memory):
     _name="urban_bridge.wizard.inspection_survey"
     _description="Creates a survey for the Bridge"
     _columns={
-        'name':fields.char('Name',size=128),
         'bridge_id':fields.many2one('urban_bridge.bridge','Bridge')
     }
     
@@ -44,6 +43,7 @@ class urban_bridge_wizard_inspection_survey(osv.osv_memory):
         bridge_obj = self.pool.get('urban_bridge.bridge')
         methodology_id = context['methodology_id']
         bridge_id = context['bridge_id']
+        inspection_id = context['inspection_id']
         xml = etree.fromstring(result['arch'])
         #Generar un xml para insertar al final del ciclo
         maingroup = etree.Element("group",colspan="4",col="4")
@@ -54,7 +54,7 @@ class urban_bridge_wizard_inspection_survey(osv.osv_memory):
         for entity in methodology.entity_id:
             for attribute in entity.attribute_id:
                 if (attribute.is_general):
-                    new_id = str(entity.id)+"_"+str(attribute.id)
+                    new_id = str(entity.id)+"_"+str(attribute.id)+'_'+str(inspection_id)
                     elem_string = attribute.name
                     is_required="0"
                     if (attribute.is_required):
@@ -113,7 +113,7 @@ class urban_bridge_wizard_inspection_survey(osv.osv_memory):
                             this_attribute_applies = True
                     if (this_attribute_applies):
                         #xml_index=xml_index+1
-                        new_id=str(elem_if.id)+"_"+str(entity.id)+"_"+str(attribute.id)
+                        new_id=str(entity.id)+"_"+str(attribute.id)+'_'+str(inspection_id)+"_"+str(elem_if.id)
                         elem_string = attribute.name
                         is_required="0"
                         if (attribute.is_required):
@@ -159,12 +159,62 @@ class urban_bridge_wizard_inspection_survey(osv.osv_memory):
         result['arch'] = etree.tostring(xml)
         return result
     
-    #def create(self, cr, uid, vals, context=None):
-        #3. De acuerdo a los valores ingresados por el usuario se manda un vector de datos al interpretador para que muestre 
-        #el resultado del diagnostico...
+    def elem_create (self, cr, uid, ids, context=None):
+        return {'type': 'ir.actions.act_window_close'}
+    
+    def create(self, cr, uid, vals, context=None):
+        """
+        Create the wizard and set the values for structure element in EAV model 
+        """
         
-        #Registrar los valores de la Inspeccion
-        #4. El resultado del diagnostico se debe almacenar en el objeto inspection_survey para obtener la calificacion general
-        # del puente de acuerdo con la metodología seleccionada.
-
+        #El metodo escribe los valores ingresados por el usuario en la base de Datos
+        #urban_bridge_wizard_inspection_survey_id = super(urban_bridge_wizard_inspection_survey,self).create(cr, uid, {'bridge_id':context['bridge_id']}, context=context)
+        inspection_id=context['active_id']
+        inspection_survey=self.pool.get('urban_bridge.inspection_survey')
+        inspection_attribute_obj=self.pool.get('urban_bridge.inspection_attribute')
+        inspection_obj=self.pool.get('urban_bridge.inspection_value')
+        inspection=inspection_survey.browse(cr,uid,inspection_id)
+        for value_form in vals:
+            if not (str(value_form).startswith("n") or str(value_form).startswith("e")):#Values aren't name or structure_elem
+                s = value_form.split('_')
+                inspec_attribute_id=int(s[1])
+                ins_survey_vals={}
+                ins_survey_vals['inspection_id']=inspection_id
+                ins_survey_vals['bridge_id']=context['bridge_id']
+                ins_survey_vals['inspect_attribute_id']=inspec_attribute_id
+                inspection_attribute=inspection_attribute_obj.browse(cr,uid,inspec_attribute_id)
+                if (not inspection_attribute.is_general):
+                    ins_survey_vals['element_id'] = int(s[3])
+                if (inspection_attribute.data_type=='integer'):
+                    ins_survey_vals['value_integer']=vals[value_form]
+                elif (inspection_attribute.data_type=='text'):
+                    ins_survey_vals['value_text']=vals[value_form]
+                elif (inspection_attribute.data_type=='datetime'):
+                    ins_survey_vals['value_datetime']=vals[value_form]
+                elif (inspection_attribute.data_type=='float'):
+                    ins_survey_vals['value_float']=vals[value_form]
+                elif (inspection_attribute.data_type=='boolean'):
+                    ins_survey_vals['value_bool']=vals[value_form]
+                elif(inspection_attribute.data_type=='char'):
+                    ins_survey_vals['value_char']=vals[value_form]
+                elif(inspection_attribute.data_type=='date'):
+                    ins_survey_vals['value_date']=vals[value_form]
+                elif(inspection_attribute.data_type=='selection'):
+                    ins_survey_vals['value_selection']=vals[value_form]
+                elif(inspection_attribute.data_type=='binary'):
+                    ins_survey_vals['value_binary']=vals[value_form]
+                isnew=True
+                id_value=0
+                for inspection_value in inspection.values:
+                    if (int(inspection_value.inspect_attribute_id) == inspec_attribute_id):
+                        id_value=inspection_value.id
+                        isnew=False
+                        
+                if (not isnew):
+                    #Write
+                    inspection_obj.write(cr,uid,id_value,ins_survey_vals)
+                else:
+                    #Create
+                    inspection_obj.create(cr,uid,ins_survey_vals)
+        return 1
 urban_bridge_wizard_inspection_survey()

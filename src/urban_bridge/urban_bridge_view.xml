@@ -401,7 +401,7 @@ Inspection Survey
              <field name="inspection_date" />
              <field name="score" />
              <button name="%(urban_bridge.action_urban_bridge_wizard_inspection_survey)d" string="Details"
-                                type="action" icon="gtk-ok" context="{'bridge_id':bridge_id,'methodology_id':methodology_id}" />
+                                type="action" icon="gtk-ok" context="{'bridge_id':bridge_id,'methodology_id':methodology_id,'inspection_id':id}" />
 
             </form>
         </field>
