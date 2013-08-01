@@ -154,17 +154,16 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                     image =  value.value_binary
                     res.update({field:image})
             return res
-        elem_id= context['active_id']
         str_element_obj = self.pool.get('urban_bridge.structure_element')
         #str_element_value = self.pool.get('urban_bridge_structure_element_value')         
-        str_element = str_element_obj.browse(cr, uid,elem_id, context=context);
-        
+        str_element = str_element_obj.browse(cr, uid,active_id, context=context);
+        #1. Update elem_id que aparece en el wizard
         res.update({'elem_id': str_element.id})
         for value in str_element.values:
             #Llenar el valor de cada campo con lo que venga en los datos
             elem_type = str_element.element_type_id
             attribute = value.element_attribute_id
-            field_id = str(elem_type.id)+"_"+str(attribute.id)+"_"+str(elem_id)
+            field_id = str(elem_type.id)+"_"+str(attribute.id)+"_"+str(active_id)
             #Se debe verificar la definicion de tipo de dato para evitar inconsistencias o errores            
             data_type = attribute.data_type
             if (data_type=='integer'):
