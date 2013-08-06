@@ -1,6 +1,30 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <menuitem name="Orfeo" id="menu_ocs_orfeo"
+                  parent="ocs.menu_ocs" />
+        <menuitem name="Orfeo Configuración" id="menu_ocs_orfeo_settings"
+                  parent="menu_ocs_orfeo" />
+<!-- Dependencia -->
+        <record model="ir.actions.act_window" id="action_ocs_orfeo_dependencia">
+            <field name="name">orfeo dependencia</field>
+            <field name="res_model">ocs_orfeo.dependencia</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Dependencia" id="menu_ocs_orfeo_dependencia" action="action_ocs_orfeo_dependencia"
+                    parent="menu_ocs_orfeo_settings" />
+<!-- Acción Juridica -->
+        <record model="ir.actions.act_window" id="action_ocs_orfeo_accion_juridica">
+            <field name="name">orfeo Acción Juridica</field>
+            <field name="res_model">ocs_orfeo.accion_juridica</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Acción Juridica" id="menu_ocs_orfeo_accion_juridica" action="action_ocs_orfeo_accion_juridica"
+                    parent="menu_ocs_orfeo_settings" />
 <!--
 ========================================================================================
 Claims

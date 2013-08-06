@@ -1,5 +1,6 @@
 * Update: Actualizada tabla de clasificación y canal para soportar PQRs del formulario web
 * Update: Adicionado grupo ocs_webservice que permite consultar los PQRs y asignar a usuarios
+* Update: Adicionado menu items a las tablas parametricas de ocs_orfeo
 
 openerp6.1-rev2013062400
 * Fix: Corregida referencia a formulario de búsqueda de ciudadanos
