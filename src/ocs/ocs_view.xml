@@ -713,6 +713,11 @@ Claims
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Claims">
+                    <filter icon="gtk-new"
+                        string="New"
+                        domain="[('state','=','draft')]"
+                        help="New Claims"
+                    />
                     <filter icon="terp-camera_test"
                         string="In Progress"
                         domain="[('state','=','open')]"
