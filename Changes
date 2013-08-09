@@ -1,3 +1,5 @@
+* Update: Cambia el estado del mensaje a outgoing para que sea procesado por la tarea de envio de emails
+
 openerp6.1-rev2013080800
 * Update: Al recibir nueva PQR por el metodo 'new_from_data' se responde al ciudadano via email usando como template los parametros ack_message_subject y ack_message_body
 * Update: Actualizada tabla de clasificación y canal para soportar PQRs del formulario web
