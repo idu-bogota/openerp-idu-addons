@@ -548,7 +548,9 @@ class crm_claim(geo_model.GeoModel):
             self.message_append(cr, uid,
                                 [crm_claim],
                                 subject, body_text=body_text, email_to=email_to, email_from=email_from)
-
+            message_ids = self.pool.get('mail.message').search(cr, uid, [('model', '=', 'crm.claim'), ('res_id', '=', crm_claim.id)], context, limit=1);
+            #by default message_append creates the mail.message as received, needs to be outgoing to be sent
+            self.pool.get('mail.message').mark_outgoing(cr, uid, message_ids, context=None)
         except except_orm as e:
             return {'status': 'failed', 'message': e.value }
         except Exception as e:
