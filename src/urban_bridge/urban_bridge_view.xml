@@ -19,11 +19,11 @@ Bridges
             <form string="Bridge Inventory">
             <group colspan="4" col="4">
                 <group colspan="2" col="4">
-                    <field name="name"/>
+                    <field name="name" select="1"/>
                     <field name="code" select="1"/>
-                    <field name="address"/>
-                    <field name="last_address"/>
-                    <field name="category" />
+                    <field name="address" select="1"/>
+                    <field name="last_address" select="1"/>
+                    <field name="category"/>
                     <field name="structure_type" widget="selection" />
                 </group>
             </group>
@@ -269,6 +269,7 @@ Structure Element Type
              <field name="name" select="1"/>
              <field name="classification" select="1"/>
              <field name="sub_classification" select="1"/>
+             <field name="alias"/>
              <group colspan="4" col="2">
                 <field name="attributes" nolabel="1"/>
              </group>
@@ -283,6 +284,7 @@ Structure Element Type
         <field name="arch" type="xml">
             <tree string="Structure Element Type">
              <field name="name" select="1"/>
+             <field name="alias"/>
              <field name="classification" select="1"/>
              <field name="sub_classification" select="1"/>
             </tree>

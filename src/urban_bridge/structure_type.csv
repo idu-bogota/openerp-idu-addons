@@ -1,4 +1,5 @@
 "id","code","name"
+__export__.bms_structure_type_0,0,"No Definido"
 __export__.bms_structure_type_1,1,"Monolitico de Infraestructura Tipo Pendulo (Con o sin Viga Cabezal)"
 __export__.bms_structure_type_2,2,"Monolitico de Infraestructura tipo portico"
 __export__.bms_structure_type_3,3,"Monolitico de Infraestructura tipo pantalla"

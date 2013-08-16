@@ -26,9 +26,11 @@
 # CINXGLER MARIACA MINDA - Engineer of Development - Architect
 #
 ###############################################################################
-
 from osv import fields,osv
 from base_geoengine import geo_model
+from shapely.geometry import asShape
+from shapely.geometry import MultiPolygon
+from datetime import datetime
 
 class urban_bridge_bridge(geo_model.GeoModel):
     """ 
@@ -110,14 +112,54 @@ class urban_bridge_bridge(geo_model.GeoModel):
             ) as t1
             """.format(bridge_id)
             cr.execute(query)
-            area=0.0
             for row in cr.fetchall():
                 #Crear un diccionario para almacenar areas por
                 perimeter = float(row[0])
                 res[bridge.id] = perimeter
         return res
-        
-
+    
+    def web_service_save (self,cr,uid,data,context=None):
+        #1.Check Geography Type-- and translate to multipoly
+        #Geography come in geojsCheckliston
+        try :
+            jgeometry = data["shape"]
+            geography=asShape(jgeometry)
+            shape=""
+            if geography.geom_type =="Polygon":
+                mpoly=MultiPolygon([geography])
+                shape=mpoly.wkt
+            else :
+                shape=geography.wkt
+            data["shape"] = shape
+            #Check date
+            if (data.has_key("construction_date")):
+                construction_date = datetime.strptime(data["construction_date"],"%Y-%m-%d %H:%M:%S")
+                data["contruction_date"]=str(construction_date.date())
+        except Exception as e:
+            print e
+        #2. Read Category Type
+        if (data.has_key("structure_type")):
+            structure_type_ids = self.pool.get("urban_bridge.structure_type").search(cr,uid,[('code','=',data["structure_type"])])
+        if structure_type_ids.__len__() == 0:
+            return {'result':'Error, Structure Type Code Not defined!'}
+        else :
+            data["structure_type"]=structure_type_ids[0]
+        #3. Check if bridge_code Exist if does not exist then create, if exist update from code --
+        search_result_ids=[]
+        if data.has_key("code"):
+            search_result_ids = self.search(cr,uid,[('code','=',data["code"])])
+        try :
+            if search_result_ids.__len__() == 0:
+                #Create
+                id_bridge = self.create(cr,uid,data)
+                return {"result":"Insertion success ","id":id_bridge}
+            else :
+                #If Update, only update Geography
+                self.write(cr,uid,search_result_ids[0],{"shape":data["shape"]})
+                return {"result":"Geometry Update success! attributes does not modified!","id":search_result_ids[0]}
+        except Exception as e:
+            print e 
+            return {"result":"Save Failed!"}
     _name="urban_bridge.bridge"
     _columns = {
         'shape':fields.geo_multi_polygon('Shape'),
@@ -146,8 +188,14 @@ class urban_bridge_bridge(geo_model.GeoModel):
         'calc_area':fields.function(_get_area,string="Calculated Area",method=True,type="float"),
         'calc_perimeter':fields.function(_get_perimeter,string="Calculated Perimeter",method=True,type="float"),
         'elements':fields.one2many('urban_bridge.structure_element','bridge_id','Element'),
-        'survey_id':fields.one2many('urban_bridge.inspection_survey','bridge_id','Inspection Survey')
+        'survey_id':fields.one2many('urban_bridge.inspection_survey','bridge_id','Inspection Survey')        
     }
+    
+    _sql_contraints = [
+        ('cc_bridge_code_unique','unique(code)','¡Bridge Code must be unique!'),
+    ]
+
+
 urban_bridge_bridge()
 
 class urban_bridge_structure_type(osv.osv):
@@ -194,7 +242,8 @@ class urban_bridge_structure_element_type(osv.osv):
         'name':fields.char('Name',size=256,required=True),
         'classification':fields.selection([('M','Main Element'),('S','Secondary Element'),('A','Accessory Element')],'Main Classification', required=True),
         'sub_classification':fields.selection([('SS','Super Structure'),('IS','Infrastructure'),('FP','Foundation'),('SE','Structure Element'),('FE','Functional Elements'),('IN','Instrumentation')],'SubClassification',required=True),
-        'attributes':fields.one2many('urban_bridge.structure_element_attribute','element_type_id')
+        'attributes':fields.one2many('urban_bridge.structure_element_attribute','element_type_id'),
+        'alias':fields.char('Alias',size=3,required=True)
     }
 urban_bridge_structure_element_type()
 class urban_bridge_structure_element_attribute(osv.osv):
@@ -271,6 +320,7 @@ class urban_bridge_inspection_survey(osv.osv):
         'methodology_id':fields.many2one('urban_bridge.methodology','Methodology'),
         'state':fields.selection([('draft', 'New'),('open', 'In Progress'),('cancel', 'Cancelled'),('done', 'Closed')],'State'),
         'values':fields.one2many('urban_bridge.inspection_value','inspection_id','Values',ondelete="cascade"),
+        'comment':fields.text('Comment'),
     }
 
 urban_bridge_inspection_survey()

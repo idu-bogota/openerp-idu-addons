@@ -25,7 +25,7 @@
   'description': "Modulo para cargar datos GIS usados en el IDU",
   'author': 'Andres Ignacio Baez Alba',
   'website': 'http://www.idu.gov.co',
-  'depends': ['base','base_geoengine'],
+  'depends': ['base'],
   'init_xml': ['district_bogota.xml',
                'sub_district_bogota.xml',
                'neighborhood_bogota.xml',
