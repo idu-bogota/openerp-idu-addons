@@ -162,10 +162,10 @@ class urban_bridge_bridge(geo_model.GeoModel):
             return {"result":"Save Failed!"}
     _name="urban_bridge.bridge"
     _columns = {
-        'shape':fields.geo_multi_polygon('Shape'),
-        'code':fields.char('Bridge Code: ',size=128),
-        'name':fields.char('Identifier: ',size=128),
-        'category':fields.selection([('PPC','PPC'),('PPE','PPE'),('PVC','PVC'),('PVE','PVE')],'Bridge Classification'),
+        'shape':fields.geo_multi_polygon('Shape',help="Shape"),
+        'code':fields.char('Bridge Code',size=128,help="Bridge Code"),
+        'name':fields.char('Identifier',size=128,help ="Identifier"),
+        'classification':fields.selection([('PPC','PPC'),('PPE','PPE'),('PVC','PVC'),('PVE','PVE')],'Bridge Classification'),
         'structure_type':fields.many2one('urban_bridge.structure_type','Bridge Type',required=True),
         'address':fields.char('Bridge Address',size=256),
         'last_address':fields.char('Last Address',size=256),
@@ -205,7 +205,7 @@ class urban_bridge_structure_type(osv.osv):
     _name="urban_bridge.structure_type"
     _columns={
         'code':fields.integer('Code','Code - Value equivalent Domain'),
-        'name':fields.char('Name :',size=256,required=True),
+        'name':fields.char('Name',size=256,required=True),
         'description':fields.text('Description'),
         'photo':fields.binary('Photo'),
     }

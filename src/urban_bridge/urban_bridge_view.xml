@@ -23,7 +23,7 @@ Bridges
                     <field name="code" select="1"/>
                     <field name="address" select="1"/>
                     <field name="last_address" select="1"/>
-                    <field name="category"/>
+                    <field name="classification"/>
                     <field name="structure_type" widget="selection" />
                 </group>
             </group>
@@ -80,7 +80,7 @@ Bridges
         <field name="arch" type="xml">
             <tree string="Bridge Inventory">
                 <field name="code"/>
-                <field name="category"/>
+                <field name="classification"/>
                 <field name="address"/>
             </tree>
         </field>
