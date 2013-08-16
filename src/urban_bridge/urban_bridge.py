@@ -172,7 +172,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
         'construction_date':fields.date('Construction Date'),
         'length':fields.float('Total Length'),
         'width':fields.float('Total Width'),
-        'superstructure_area':fields.float('Bridge SuperStructure Area:'),
+        'superstructure_area':fields.float('Bridge Super-Structure Area'),
         'vertical_gauge':fields.float('Vertical Gauge'),
         'horizontal_gauge':fields.float('Horizontal Gauge'),
         'design_load_capacity':fields.float('Design Load Capacity'),
@@ -187,8 +187,8 @@ class urban_bridge_bridge(geo_model.GeoModel):
         'micro_seismicity':fields.function(_get_micro_seismicity,string="Micro-Seismicity",method=True,type="char"),
         'calc_area':fields.function(_get_area,string="Calculated Area",method=True,type="float"),
         'calc_perimeter':fields.function(_get_perimeter,string="Calculated Perimeter",method=True,type="float"),
-        'elements':fields.one2many('urban_bridge.structure_element','bridge_id','Element'),
-        'survey_id':fields.one2many('urban_bridge.inspection_survey','bridge_id','Inspection Survey')        
+        'elements':fields.one2many('urban_bridge.structure_element','bridge_id','Elements'),
+        'survey_id':fields.one2many('urban_bridge.inspection_survey','bridge_id','Inspection Survey')
     }
     
     _sql_contraints = [

@@ -15,6 +15,31 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
+#. module:urban_bridge
+#: model:ir.ui.menu,name:urban_bridge.menu_urban_bridge
+msgid "Bridge Management System"
+msgstr "Sistema de Administración de Puentes"
+
+#. module:urban_bridge
+#: model:ir.ui.menu,name:urban_bridge.menu_urban_bridge_inventory
+msgid "Inventory"
+msgstr "Inventario"
+
+#. module:urban_bridge
+#: model:ir.ui.menu,name:urban_bridge.menu_urban_bridge_domain
+msgid "Settings"
+msgstr "Configuracion"
+
+#. module:urban_bridge
+#: model:ir.ui.menu,name:urban_bridge.menu_urban_bridge_bridge
+msgid "Bridges"
+msgstr "Puentes"
+
+#. module:urban_bridge
+#: model:ir.actions.act_window,name:urban_bridge.action_urban_bridge_bridge
+msgid "Bridges"
+msgstr "Puentes"
+
 #. module: urban_bridge
 #: help:urban_bridge.bridge,shape:0
 msgid "Shape"
@@ -74,6 +99,118 @@ msgstr "Dirección Anterior"
 #: field:urban_bridge.bridge,construction_date:0
 msgid "Construction Date"
 msgstr "Fecha de Construcción"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,construction_date:0
+msgid "Construction Date"
+msgstr "Fecha de Construcción"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,length:0
+msgid "Total Length"
+msgstr "Longitud Total"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,width:0
+msgid "Total Width"
+msgstr "Ancho Total"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,superstructure_area:0
+msgid "Bridge Super-Structure Area"
+msgstr "Area total de la super-estructura"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,vertical_gauge:0
+msgid "Vertical Gauge"
+msgstr "Galibo Vertical"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,horizontal_gauge:0
+msgid "Horizontal Gauge"
+msgstr "Galibo Horizontal"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,design_load_capacity:0
+msgid "Design Load Capacity"
+msgstr "Capacidad de carga de diseño"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,level:0
+msgid "Bridge Level"
+msgstr "Nivel del Puente"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,structure_material:0
+msgid "Structure Materials"
+msgstr "Materiales de la Estructura"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,design_load_code:0
+msgid "Design Load Code"
+msgstr "Norma de Diseño del puente"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,photo:0
+msgid "Photo"
+msgstr "Registro fotográfico"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,geological_zone:0
+msgid "Geological Zone"
+msgstr "Zona Geológica"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,district:0
+msgid "Districts"
+msgstr "Localidades"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,sub_district:0
+msgid "Sub Districts"
+msgstr "Unidades de Planificación Zonal (UPZ)"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,cadastral_zone:0
+msgid "Cadastral Zone"
+msgstr "Sector Catastral"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,micro_seismicity:0
+msgid "Micro-Seismicity"
+msgstr "Micro-sismicidad"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,calc_area:0
+msgid "Calculated Area"
+msgstr "Area Calculada"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,calc_perimeter:0
+msgid "Calculated Perimeter"
+msgstr "Perímetro calculado"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,elements:0
+msgid "Elements"
+msgstr "Elementos"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,survey_id:0
+msgid "Inspection Survey"
+msgstr "Inspecciones"
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
