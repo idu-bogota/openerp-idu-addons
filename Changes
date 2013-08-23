@@ -1,3 +1,5 @@
+* Update: Por solicitud de OTC la localidad es obligatoria.
+
 openerp6.1-rev2013082200
 * Fix: Corregido que cuando llega un mensaje de correo para un crm.claim se cambia de estado pero no se afecta el workflow.
 
