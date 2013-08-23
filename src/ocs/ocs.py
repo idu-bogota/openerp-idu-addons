@@ -34,6 +34,7 @@ from datetime import datetime
 from datetime import timedelta
 from crm import crm
 from crm_claim import crm_claim
+import netsvc
 import re, json
 from openerp.osv.osv import except_osv
 from tools.translate import _
@@ -441,6 +442,15 @@ class crm_claim(geo_model.GeoModel):
 
     def onchange_geopoint(self, cr, uid, ids, point):
         return onchange_geopoint(cr, uid, ids, point)
+
+    def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
+        super(crm_claim,self).message_update(cr, uid, ids, msg, context=context)
+        wf_service = netsvc.LocalService("workflow") #instanciate workflow engine
+        for claim in self.browse(cr, uid, ids, context=context):
+            signal = 'cas_open' # by default a email message send workflow signal to open claim
+            if claim.state == 'done':
+                signal = 'cas_reset'#if closed the signal is to reset
+            wf_service.trg_validate(uid, 'crm.claim', claim.id, signal, cr)
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """Automatically called when new email message arrives"""
