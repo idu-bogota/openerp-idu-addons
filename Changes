@@ -1,3 +1,5 @@
+* Fix: Corregido que cuando llega un mensaje de correo para un crm.claim se cambia de estado pero no se afecta el workflow.
+
 openerp6.1-rev2013080801
 * Update: Cambia el estado del mensaje a outgoing para que sea procesado por la tarea de envio de emails
 
