@@ -32,10 +32,11 @@
                                 <field name="name"/>
                             </h1>
                         </div>
-                        <group>
-                            <group name="parent" col="4">
-                                <field name="parent_id"/>
-                            </group>
+                        <group name="parent">
+                            <field name="parent_id"/>
+                        </group>
+                        <group name="projects">
+                           <field name="project_ids"/>
                         </group>
                     </sheet>
                 </form>

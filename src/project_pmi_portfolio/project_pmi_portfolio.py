@@ -30,7 +30,7 @@ class project(osv.osv):
             'project_pmi_portfolio_project_rel',
             'project_id',
             'portfolio_id',
-            'Portfolio'),
+            'Portfolios'),
     }
 
 project()
@@ -65,6 +65,12 @@ class project_pmi_portfolio(osv.osv):
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list."),
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
+        'project_ids': fields.many2many(
+            'project.project',
+            'project_pmi_portfolio_project_rel',
+            'portfolio_id',
+            'project_id',
+            'Projects'),
     }
 
     _parent_name = "parent_id"
