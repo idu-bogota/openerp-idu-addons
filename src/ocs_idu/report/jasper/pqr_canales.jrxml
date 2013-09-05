@@ -1,0 +1,1839 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="IDU_reports" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="03dc2d70-070b-4adb-aa0a-612d4cabbd33">
+	<property name="ireport.zoom" value="2.6573415000000042"/>
+	<property name="ireport.x" value="1050"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table" hAlign="Left" vAlign="Middle" fontName="Arial">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+		<paragraph leftIndent="5" rightIndent="5"/>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF" hAlign="Left" vAlign="Middle" fontName="Arial" isBold="true">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<paragraph leftIndent="5" rightIndent="5"/>
+	</style>
+	<style name="Crosstab Data Text" backcolor="#99CCFF" hAlign="Left" vAlign="Middle" fontName="Arial">
+		<paragraph leftIndent="5" rightIndent="5"/>
+	</style>
+	<style name="Crosstab static text" mode="Opaque" forecolor="#FFFFFF" backcolor="#005FB3" hAlign="Center" vAlign="Middle" fontName="Arial" isBold="true">
+		<paragraph leftIndent="5" rightIndent="5"/>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF" hAlign="Left" vAlign="Middle" fontName="Arial">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<paragraph leftIndent="5" rightIndent="5"/>
+	</style>
+	<style name="Crosstab TD" backcolor="#FFFFFF" hAlign="Left" vAlign="Middle" fontName="Arial" isBold="false">
+		<paragraph leftIndent="5" rightIndent="5"/>
+	</style>
+	<subDataset name="TablaCanalAtencion" uuid="0e53da7e-be2c-4a29-a850-c237704a4df6">
+		<parameter name="fecha_ini" class="java.util.Date">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="fecha_fin" class="java.util.Date">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+     ch."name" AS "canal_de_atencion",
+     COUNT(c."id") AS total,
+     CAST ( COUNT(c."id") * 100::float / (SELECT COUNT(id) FROM crm_claim c WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}) AS NUMERIC(4,2) ) as porcentaje
+FROM
+     "crm_case_channel" ch INNER JOIN "crm_claim" c ON ch."id" = c."channel"
+WHERE
+     c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+GROUP BY
+    "canal_de_atencion"
+ORDER BY
+    total DESC]]>
+		</queryString>
+		<field name="canal_de_atencion" class="java.lang.String"/>
+		<field name="total" class="java.lang.Long"/>
+		<field name="porcentaje" class="java.math.BigDecimal"/>
+		<variable name="total" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{total}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<subDataset name="TipoDeRequerimiento" uuid="9ad7a7fd-0418-4b91-a8a6-5d3d315c237e">
+		<parameter name="fecha_ini" class="java.util.Date">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="fecha_fin" class="java.util.Date">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+    COUNT(c."id") AS Total,
+    t."name" AS "tipo_de_requerimiento",
+    CAST ( COUNT(c."id") * 100::float / (
+        SELECT COUNT(c."id")
+        FROM "crm_case_categ" t INNER JOIN "crm_claim" c ON t."id" = c."categ_id"
+        WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin} )
+    AS NUMERIC(4,2) ) as porcentaje
+FROM
+    "crm_case_categ" t INNER JOIN "crm_claim" c ON t."id" = c."categ_id"
+WHERE
+    c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+GROUP BY
+    "tipo_de_requerimiento"
+ORDER BY
+    Total DESC]]>
+		</queryString>
+		<field name="total" class="java.lang.Long"/>
+		<field name="tipo_de_requerimiento" class="java.lang.String"/>
+		<field name="porcentaje" class="java.math.BigDecimal"/>
+		<variable name="total" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{total}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<subDataset name="Localidad" uuid="57a277a2-ccdf-455a-a40b-6be9954b4a41">
+		<parameter name="fecha_ini" class="java.util.Date">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="fecha_fin" class="java.util.Date">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+    COALESCE(l."name",'NO REPORTA') AS localidad,
+    COUNT(c."id") AS total,
+    CAST ( COUNT(c."id") * 100::float / (
+        SELECT COUNT(c."id") FROM "crm_claim" c LEFT JOIN "ocs_district" l ON l."id" = c."district_id" WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN  $P{fecha_ini} AND $P{fecha_fin}
+    ) AS NUMERIC(4,2) ) as porcentaje
+FROM
+    "crm_claim" c
+    LEFT JOIN "ocs_district" l ON l."id" = c."district_id"
+WHERE
+    c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN  $P{fecha_ini} AND $P{fecha_fin}
+GROUP BY
+    localidad
+ORDER BY
+    Total DESC]]>
+		</queryString>
+		<field name="localidad" class="java.lang.String"/>
+		<field name="total" class="java.lang.Long"/>
+		<field name="porcentaje" class="java.math.BigDecimal"/>
+		<variable name="total" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{total}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<subDataset name="Criterio" uuid="36f26d94-96fd-425a-b76c-3f3d9ee13731">
+		<parameter name="fecha_ini" class="java.util.Date">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="fecha_fin" class="java.util.Date">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+    o."name" AS criterio,
+    COUNT(c."id") AS total,
+    CAST ( COUNT(c."id") * 100::float / (SELECT COUNT(c."id") FROM "ocs_claim_classification" o INNER JOIN "crm_claim" c ON o."id" = c."classification_id" WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN  $P{fecha_ini} AND $P{fecha_fin} ) AS NUMERIC(4,2) ) as porcentaje
+FROM
+    "ocs_claim_classification" o INNER JOIN "crm_claim" c ON o."id" = c."classification_id"
+WHERE
+    c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN  $P{fecha_ini} AND $P{fecha_fin}
+GROUP BY
+    criterio
+ORDER BY
+    total DESC]]>
+		</queryString>
+		<field name="criterio" class="java.lang.String"/>
+		<field name="total" class="java.lang.Long"/>
+		<field name="porcentaje" class="java.math.BigDecimal"/>
+		<variable name="total" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{total}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<subDataset name="FuncionarioVSCanal" uuid="f72f1526-b230-401b-b22d-fedc007518e1">
+		<parameter name="fecha_ini" class="java.util.Date">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="fecha_fin" class="java.util.Date">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+     u."name" AS "funcionario",
+     ch."name" AS "canal",
+     COUNT(c."id") AS total,
+     o.orden as "placeholder"
+FROM
+     "crm_claim" c
+     LEFT JOIN "res_users" u ON u."id" = c."user_id"
+     LEFT JOIN "crm_case_channel" ch ON ch."id" = c."channel"
+     LEFT JOIN (
+	SELECT u.id id, COUNT(c.id) as orden FROM "crm_claim" c LEFT JOIN "res_users" u ON u."id" = c."user_id"
+	WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN  $P{fecha_ini} AND $P{fecha_fin}
+	GROUP BY u.id
+	ORDER BY orden DESC
+     ) as o ON o.id = u.id
+WHERE
+    c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+GROUP BY
+    "funcionario","canal",o.orden
+ORDER BY orden DESC, funcionario ASC, total DESC]]>
+		</queryString>
+		<field name="funcionario" class="java.lang.String"/>
+		<field name="canal" class="java.lang.String"/>
+		<field name="total" class="java.lang.Long"/>
+		<field name="placeholder" class="java.lang.Long"/>
+		<group name="funcionario">
+			<groupExpression><![CDATA[$F{funcionario}]]></groupExpression>
+		</group>
+		<group name="canal">
+			<groupExpression><![CDATA[$F{canal}]]></groupExpression>
+		</group>
+	</subDataset>
+	<subDataset name="CriterioVSLocalidad" uuid="45109f62-1ca4-43a2-9f55-e88f8d1e6f48">
+		<parameter name="fecha_ini" class="java.util.Date">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="fecha_fin" class="java.util.Date">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+     o."name" AS "criterio",
+     ch."name" AS "canal",
+     COALESCE(l."name",'NO REPORTA') AS "localidad",
+     COUNT(c."id") AS total,
+     x.orden as "placeholder",
+     y.orden_canal as "placeholder_canal"
+FROM
+     "crm_claim" c
+     LEFT JOIN "ocs_claim_classification" o ON o."id" = c."classification_id"
+     LEFT JOIN "crm_case_channel" ch ON ch."id" = c."channel"
+     LEFT JOIN "ocs_district" l ON l."id" = c."district_id"
+     LEFT JOIN (
+	SELECT o.id, COUNT(c.id) as orden FROM "crm_claim" c LEFT JOIN "ocs_claim_classification" o ON o."id" = c."classification_id"
+	WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+	GROUP BY o.id
+	ORDER BY orden
+     ) x ON x.id = o.id
+     LEFT JOIN (
+	SELECT o.id as id, ch.id as ch_id, COUNT(c.id) as orden_canal
+	FROM "crm_claim" c LEFT JOIN "ocs_claim_classification" o ON o."id" = c."classification_id"
+	LEFT JOIN "crm_case_channel" ch ON ch."id" = c."channel"
+	WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+	GROUP BY o.id, ch.id
+	ORDER BY orden_canal
+     ) y ON y.id = o.id AND y.ch_id = ch.id
+
+WHERE
+    c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+GROUP BY
+    "criterio","canal","localidad",x.orden, y.orden_canal
+ORDER BY
+    x.orden DESC, y.orden_canal DESC, o.name, ch."name", total DESC]]>
+		</queryString>
+		<field name="criterio" class="java.lang.String"/>
+		<field name="canal" class="java.lang.String"/>
+		<field name="localidad" class="java.lang.String"/>
+		<field name="total" class="java.lang.Long"/>
+		<field name="placeholder" class="java.lang.Long"/>
+		<field name="placeholder_canal" class="java.lang.Long"/>
+		<group name="criterio">
+			<groupExpression><![CDATA[$F{criterio}]]></groupExpression>
+		</group>
+		<group name="canal">
+			<groupExpression><![CDATA[$F{canal}]]></groupExpression>
+		</group>
+		<group name="localidad">
+			<groupExpression><![CDATA[$F{localidad}]]></groupExpression>
+		</group>
+	</subDataset>
+	<subDataset name="CriterioVSSubcriterio" uuid="2deb5a14-6a70-45f0-9b14-45afdeb0d59a">
+		<parameter name="fecha_ini" class="java.util.Date">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="fecha_fin" class="java.util.Date">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+     o."name" AS "criterio",
+     su."name" AS "subcriterio",
+     COUNT(c."id") AS total,
+     x.orden as "placeholder"
+FROM
+     "crm_claim" c
+     LEFT JOIN "ocs_claim_classification" o ON o."id" = c."classification_id"
+     LEFT JOIN "ocs_claim_classification" su ON su."id" = c."sub_classification_id"
+     LEFT JOIN (
+	SELECT o.id as id, COUNT(c.id) as orden
+	FROM "crm_claim" c LEFT JOIN "ocs_claim_classification" o ON o."id" = c."classification_id"
+	WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+        GROUP BY o.id
+        ORDER BY orden DESC
+     ) x ON x.id = o.id
+WHERE
+    c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+GROUP BY
+    "criterio","subcriterio", x.orden
+ORDER BY
+    x.orden DESC, total DESC, o.name,su.name]]>
+		</queryString>
+		<field name="criterio" class="java.lang.String"/>
+		<field name="subcriterio" class="java.lang.String"/>
+		<field name="total" class="java.lang.Long"/>
+		<field name="placeholder" class="java.lang.Long"/>
+		<group name="criterio">
+			<groupExpression><![CDATA[$F{criterio}]]></groupExpression>
+		</group>
+		<group name="subcriterio">
+			<groupExpression><![CDATA[$F{subcriterio}]]></groupExpression>
+		</group>
+	</subDataset>
+	<subDataset name="LocalidadVSCriterio" uuid="a156c5c3-1f22-4043-aa56-04cbf3714502">
+		<parameter name="fecha_ini" class="java.util.Date">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="fecha_fin" class="java.util.Date">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+     COALESCE(l."name",'NO REPORTA') AS "localidad",
+     su."name" AS "criterio",
+     COUNT(c."id") AS total,
+     x.orden as "placeholder"
+FROM
+     "crm_claim" c
+     LEFT JOIN "ocs_district" l ON l."id" = c."district_id"
+     LEFT JOIN "ocs_claim_classification" su ON su."id" = c."sub_classification_id"
+     LEFT JOIN (
+	SELECT l.id as id, COUNT(c.id) as orden
+	FROM "crm_claim" c LEFT JOIN "ocs_district" l ON l."id" = c."district_id"
+	WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+        GROUP BY l.id
+        ORDER BY orden DESC
+     ) x ON x.id = l.id
+WHERE
+    c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+GROUP BY
+    "localidad","criterio", x.orden
+ORDER BY
+    x.orden DESC, total DESC, "localidad",su.name]]>
+		</queryString>
+		<field name="localidad" class="java.lang.String"/>
+		<field name="criterio" class="java.lang.String"/>
+		<field name="total" class="java.lang.Long"/>
+		<field name="placeholder" class="java.lang.Long"/>
+		<group name="localidad">
+			<groupExpression><![CDATA[$F{localidad}]]></groupExpression>
+		</group>
+		<group name="criterio">
+			<groupExpression><![CDATA[$F{criterio}]]></groupExpression>
+		</group>
+	</subDataset>
+	<parameter name="Fecha_Inicial" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[(new SimpleDateFormat("yyyy-MM-dd")).parse("2013-04-01")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Fecha_Final" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[(new SimpleDateFormat("yyyy-MM-dd")).parse("2013-05-01")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT COUNT(c.id) AS total
+FROM crm_claim c
+WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c.create_date BETWEEN $P{Fecha_Inicial} AND $P{Fecha_Final}]]>
+	</queryString>
+	<field name="total" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="64" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="bccba7f1-5620-4886-b7e0-62365bedcc17" x="0" y="0" width="411" height="60"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="1bcc1077-b386-49eb-976c-42b63cd935ba" x="411" y="0" width="144" height="60"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="858f4e31-a248-4c0c-b4a2-7a05a5b2f7b7" x="13" y="0" width="386" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OFICINA DE ATENCIÓN AL CIUDADANO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="aecfb86b-3f21-46e0-bdc5-ba66028dd17f" x="13" y="20" width="386" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LINEA DE ADMINISTRACIÓN DE CANALES]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="517a6b78-79a1-4457-813e-85e6ccf41fc5" x="13" y="40" width="386" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA['Resultados del  ' + new SimpleDateFormat("dd/MMM/yyyy").format($P{Fecha_Inicial}) + ' al ' + new SimpleDateFormat("dd/MMM/yyyy").format($P{Fecha_Final})]]></textFieldExpression>
+			</textField>
+			<image isLazy="true" onErrorType="Blank">
+				<reportElement uuid="48362679-29af-4d1d-9401-3200bf442674" x="449" y="3" width="85" height="50"/>
+				<imageExpression><![CDATA["repo:logo_idu_small.png"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="155" splitType="Stretch">
+			<barChart>
+				<chart isShowLegend="false" theme="ChartThemeTemplateIDU">
+					<reportElement uuid="b928caef-d52f-4500-8d17-50827ba8283a" stretchType="RelativeToTallestObject" mode="Transparent" x="207" y="0" width="348" height="139"/>
+					<chartTitle position="Top">
+						<font fontName="Arial" isBold="true"/>
+						<titleExpression><![CDATA['Total atención canales']]></titleExpression>
+					</chartTitle>
+					<chartSubtitle>
+						<font fontName="Arial" isBold="true"/>
+						<subtitleExpression><![CDATA['Del ' + new SimpleDateFormat("dd/MMM/yyyy").format($P{Fecha_Inicial})
++ ' al ' + new SimpleDateFormat("dd/MMM/yyyy").format($P{Fecha_Final})
++ "\nN = " + $F{total}]]></subtitleExpression>
+					</chartSubtitle>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<dataset>
+						<datasetRun subDataset="TablaCanalAtencion" uuid="3947659b-48b4-4132-9696-c15d10b6ca5d">
+							<datasetParameter name="fecha_ini">
+								<datasetParameterExpression><![CDATA[$P{Fecha_Inicial}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="fecha_fin">
+								<datasetParameterExpression><![CDATA[$P{Fecha_Final}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+					</dataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["Total PQRs"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{canal_de_atencion}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{porcentaje}]]></valueExpression>
+						<labelExpression><![CDATA[$F{porcentaje} + '%']]></labelExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot isShowLabels="true">
+					<plot orientation="Horizontal"/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+			<componentElement>
+				<reportElement uuid="35708e04-5a7a-4847-8ab4-52415483ba0b" key="table 1" x="0" y="0" width="196" height="139"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="TablaCanalAtencion" uuid="7b4a6a87-6184-4de7-beb0-b8f3ee47f51b">
+						<datasetParameter name="fecha_ini">
+							<datasetParameterExpression><![CDATA[$P{Fecha_Inicial}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="fecha_fin">
+							<datasetParameterExpression><![CDATA[$P{Fecha_Final}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="135" uuid="9d58d0c4-403a-485f-a642-a7b05420ea2c">
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement uuid="de9b6b7d-832d-4680-8411-351635520043" style="table_CH" mode="Opaque" x="0" y="0" width="135" height="30"/>
+								<textElement/>
+								<text><![CDATA[Canal de atención]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement uuid="6e6db171-ea38-4a42-a912-c86d36c3ecdc" style="table_CH" x="0" y="0" width="135" height="30"/>
+								<textElement textAlignment="Left"/>
+								<text><![CDATA[Total general]]></text>
+							</staticText>
+						</jr:columnFooter>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement uuid="6f62d734-e70b-4d71-bbcc-15182423450a" style="table_TD" x="0" y="0" width="135" height="20"/>
+								<textElement/>
+								<textFieldExpression><![CDATA[$F{canal_de_atencion}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="43" uuid="19d996b6-c087-450d-b21d-4b6dd05fc534">
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement uuid="2fdaf586-39ed-4a58-b2cc-aa2c270de4e6" style="table_CH" mode="Opaque" x="0" y="0" width="43" height="30"/>
+								<textElement textAlignment="Right"/>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table_CH" height="30" rowSpan="1">
+							<textField>
+								<reportElement uuid="8f3e1f61-6b7f-4680-bd94-2208e94053ff" style="table_CH" x="0" y="0" width="43" height="30"/>
+								<textElement textAlignment="Right"/>
+								<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement uuid="6889aec7-229a-4428-89f8-aa55e699972d" style="table_TD" x="0" y="0" width="43" height="20"/>
+								<textElement textAlignment="Right"/>
+								<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="142">
+			<barChart>
+				<chart isShowLegend="false" theme="ChartThemeTemplateIDU">
+					<reportElement uuid="2fb77551-8666-476d-98bc-0df21b18d6cd" stretchType="RelativeToTallestObject" mode="Opaque" x="196" y="0" width="359" height="121" backcolor="#FFFFFF"/>
+					<chartTitle>
+						<titleExpression><![CDATA['Total registros según tipo de requerimiento']]></titleExpression>
+					</chartTitle>
+					<chartSubtitle>
+						<subtitleExpression><![CDATA['Del ' + new SimpleDateFormat("dd/MMM/yyyy").format($P{Fecha_Inicial}) + ' al ' + new SimpleDateFormat("dd/MMM/yyyy").format($P{Fecha_Final})
++ "\nN = " + $F{total}]]></subtitleExpression>
+					</chartSubtitle>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<dataset>
+						<datasetRun subDataset="TipoDeRequerimiento" uuid="e658580d-fd51-4b32-88fd-d92baa5ba474">
+							<datasetParameter name="fecha_ini">
+								<datasetParameterExpression><![CDATA[$P{Fecha_Inicial}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="fecha_fin">
+								<datasetParameterExpression><![CDATA[$P{Fecha_Final}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+					</dataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["Total PQRs"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{tipo_de_requerimiento}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{porcentaje}]]></valueExpression>
+						<labelExpression><![CDATA[$F{porcentaje} + '%']]></labelExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot isShowLabels="true">
+					<plot orientation="Horizontal"/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+			<componentElement>
+				<reportElement uuid="b1bea854-37ea-4e2e-b2d5-dffa5e892957" key="table 1" style="table_TD" x="0" y="0" width="196" height="121"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="TipoDeRequerimiento" uuid="6af0b041-e906-40b0-94e8-686d0249c1c8">
+						<datasetParameter name="fecha_ini">
+							<datasetParameterExpression><![CDATA[$P{Fecha_Inicial}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="fecha_fin">
+							<datasetParameterExpression><![CDATA[$P{Fecha_Final}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="135" uuid="95fa4cb5-7c92-41f6-bfde-514310de8aa5">
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement uuid="0f2462c4-63df-4ccc-a736-42ebc7195761" style="table_CH" x="0" y="0" width="135" height="30"/>
+								<textElement/>
+								<text><![CDATA[Tipo de requerimiento]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement uuid="22988b5d-1963-4e87-ae02-5e7aba59da45" style="table_CH" x="0" y="0" width="135" height="30"/>
+								<textElement textAlignment="Left"/>
+								<text><![CDATA[Total general]]></text>
+							</staticText>
+						</jr:columnFooter>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement uuid="1d6cb2b3-ba2e-4e12-b2b4-2ef7725642aa" style="table_TD" x="0" y="0" width="135" height="20"/>
+								<textElement/>
+								<textFieldExpression><![CDATA[$F{tipo_de_requerimiento}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="44" uuid="da94bc53-c8f4-4fe7-af69-0ac12cbc2845">
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement uuid="fd2a4af2-7354-427a-846b-d94909ac0b01" style="table_CH" x="0" y="0" width="44" height="30"/>
+								<textElement textAlignment="Right"/>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table_CH" height="30" rowSpan="1">
+							<textField>
+								<reportElement uuid="082b41b6-f12d-4003-be2d-e3e4f751f50e" style="table_CH" x="0" y="0" width="44" height="30"/>
+								<textElement textAlignment="Right"/>
+								<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement uuid="8e902b08-4487-40f8-9c74-5e5eb9fff0f9" style="table_TD" x="0" y="0" width="44" height="20"/>
+								<textElement textAlignment="Right"/>
+								<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="221" splitType="Prevent">
+			<barChart>
+				<chart theme="ChartThemeTemplateIDU">
+					<reportElement uuid="0c1d43d0-7cc6-4964-bcc5-2933e07120b9" stretchType="RelativeToTallestObject" x="196" y="0" width="359" height="196"/>
+					<chartTitle>
+						<titleExpression><![CDATA['Total registros recibidos según localidad']]></titleExpression>
+					</chartTitle>
+					<chartSubtitle>
+						<subtitleExpression><![CDATA['Del ' + new SimpleDateFormat("dd/MMM/yyyy").format($P{Fecha_Inicial}) + ' al ' + new SimpleDateFormat("dd/MMM/yyyy").format($P{Fecha_Final})
++ "\nN = " + $F{total}]]></subtitleExpression>
+					</chartSubtitle>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<dataset>
+						<datasetRun subDataset="Localidad" uuid="8f94e22a-345a-4afb-8b95-46dab0a67fd5">
+							<datasetParameter name="fecha_ini">
+								<datasetParameterExpression><![CDATA[$P{Fecha_Inicial}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="fecha_fin">
+								<datasetParameterExpression><![CDATA[$P{Fecha_Final}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+					</dataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["Total PQRs"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{localidad}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{porcentaje}]]></valueExpression>
+						<labelExpression><![CDATA[$F{porcentaje} + '%']]></labelExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot isShowLabels="true">
+					<plot orientation="Horizontal"/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+			<componentElement>
+				<reportElement uuid="710feb56-dab2-4759-984b-c3fed1f429a5" key="table 1" x="0" y="0" width="207" height="196"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Localidad" uuid="902002af-b3d4-4de5-bec2-0c651a0f6060">
+						<datasetParameter name="fecha_ini">
+							<datasetParameterExpression><![CDATA[$P{Fecha_Inicial}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="fecha_fin">
+							<datasetParameterExpression><![CDATA[$P{Fecha_Final}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="136" uuid="e05e06c5-8717-4fd9-b507-3d9c0536280f">
+						<jr:columnHeader height="30" rowSpan="1">
+							<staticText>
+								<reportElement uuid="4597b8b1-d4da-4b31-b29f-34bfe2172296" style="table_CH" x="0" y="0" width="136" height="30"/>
+								<textElement/>
+								<text><![CDATA[Localidad]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter height="30" rowSpan="1">
+							<staticText>
+								<reportElement uuid="a5becfa5-ae6b-4062-960d-2d0741f103f2" style="table_CH" x="0" y="0" width="136" height="30"/>
+								<textElement textAlignment="Left"/>
+								<text><![CDATA[Total general]]></text>
+							</staticText>
+						</jr:columnFooter>
+						<jr:detailCell height="20" rowSpan="1">
+							<textField>
+								<reportElement uuid="0ebdbb3d-dade-4858-b1db-78758b4d314d" style="table_TD" x="0" y="0" width="136" height="20"/>
+								<textElement/>
+								<textFieldExpression><![CDATA[$F{localidad}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="43" uuid="0630964b-c554-4a7a-8eb3-069f36218f3a">
+						<jr:columnHeader height="30" rowSpan="1">
+							<staticText>
+								<reportElement uuid="b45c670e-ad4b-41fb-ac78-ff919e83f6cb" style="table_CH" x="0" y="0" width="43" height="30"/>
+								<textElement textAlignment="Right"/>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter height="30" rowSpan="1">
+							<textField>
+								<reportElement uuid="dccd0c51-7265-498c-8a94-bdb4443011ef" style="table_CH" x="0" y="0" width="43" height="30"/>
+								<textElement textAlignment="Right"/>
+								<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell height="20" rowSpan="1">
+							<textField>
+								<reportElement uuid="735c3a52-aeb1-42b1-9cc1-eb806e9b2f2a" style="table_TD" x="0" y="0" width="43" height="20"/>
+								<textElement textAlignment="Right"/>
+								<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="171" splitType="Prevent">
+			<barChart>
+				<chart theme="ChartThemeTemplateIDU">
+					<reportElement uuid="f106b027-d640-4def-b5b8-a5918e92dffb" stretchType="RelativeToTallestObject" x="196" y="0" width="359" height="155"/>
+					<chartTitle>
+						<titleExpression><![CDATA['Total registros recibidos según criterio']]></titleExpression>
+					</chartTitle>
+					<chartSubtitle>
+						<subtitleExpression><![CDATA['Del ' + new SimpleDateFormat("dd/MMM/yyyy").format($P{Fecha_Inicial}) + ' al ' + new SimpleDateFormat("dd/MMM/yyyy").format($P{Fecha_Final})
++ "\nN = " + $F{total}]]></subtitleExpression>
+					</chartSubtitle>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<dataset>
+						<datasetRun subDataset="Criterio" uuid="a08dad6b-61b0-45f0-bb4a-30154bc9208f">
+							<datasetParameter name="fecha_ini">
+								<datasetParameterExpression><![CDATA[$P{Fecha_Inicial}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="fecha_fin">
+								<datasetParameterExpression><![CDATA[$P{Fecha_Final}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+					</dataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["Total PQRs"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{criterio}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{porcentaje}]]></valueExpression>
+						<labelExpression><![CDATA[$F{porcentaje} + '%']]></labelExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot isShowLabels="true">
+					<plot orientation="Horizontal"/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+			<componentElement>
+				<reportElement uuid="7436e903-eb1a-4a29-8692-ae05ef067203" key="table 1" stretchType="RelativeToTallestObject" x="0" y="0" width="207" height="155" isPrintWhenDetailOverflows="true"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Criterio" uuid="8c82b51a-87ce-43f6-9a63-97fdbf3b4d36">
+						<datasetParameter name="fecha_ini">
+							<datasetParameterExpression><![CDATA[$P{Fecha_Inicial}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="fecha_fin">
+							<datasetParameterExpression><![CDATA[$P{Fecha_Final}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="135" uuid="a4acc6c1-f34b-4479-b10d-f9f5b1834d65">
+						<jr:columnHeader height="30" rowSpan="1">
+							<staticText>
+								<reportElement uuid="da3609ab-0817-4593-b5e6-98db347fded6" style="table_CH" x="0" y="0" width="135" height="30"/>
+								<textElement/>
+								<text><![CDATA[Criterio (Tipificación)]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter height="30" rowSpan="1">
+							<staticText>
+								<reportElement uuid="c3df82aa-edad-4c2d-b8cc-d9e9ea9038e4" style="table_CH" x="0" y="0" width="135" height="30"/>
+								<textElement textAlignment="Left"/>
+								<text><![CDATA[Total general]]></text>
+							</staticText>
+						</jr:columnFooter>
+						<jr:detailCell height="25" rowSpan="1">
+							<textField isStretchWithOverflow="true">
+								<reportElement uuid="88a04856-c8a0-4f71-ba37-b49d64f3860e" style="table_TD" x="0" y="0" width="135" height="25"/>
+								<box topPadding="3" bottomPadding="3"/>
+								<textElement>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{criterio}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="42" uuid="94d2becc-8a31-4b92-8c88-ede33b9b503c">
+						<jr:columnHeader height="30" rowSpan="1">
+							<staticText>
+								<reportElement uuid="358016eb-e696-46c8-88ac-cb4ee8ae34e1" style="table_CH" x="0" y="0" width="42" height="30"/>
+								<textElement textAlignment="Right"/>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter height="30" rowSpan="1">
+							<textField>
+								<reportElement uuid="2c521ce6-6fb8-4aa9-b964-236171e97757" style="table_CH" x="0" y="0" width="42" height="30"/>
+								<textElement textAlignment="Right"/>
+								<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell height="25" rowSpan="1">
+							<textField>
+								<reportElement uuid="bea0123d-7ee4-4f2b-9119-1d1a66c1384a" style="table_TD" x="0" y="0" width="42" height="25"/>
+								<box topPadding="3" bottomPadding="3"/>
+								<textElement textAlignment="Right">
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="99" splitType="Prevent">
+			<crosstab>
+				<reportElement uuid="d89d1061-85d8-4c4d-9581-1b15598147a2" x="0" y="0" width="555" height="91"/>
+				<crosstabDataset isDataPreSorted="true">
+					<dataset>
+						<datasetRun subDataset="FuncionarioVSCanal" uuid="dd80bbe5-0f53-4c71-855f-0fa9c5b05206">
+							<datasetParameter name="fecha_ini">
+								<datasetParameterExpression><![CDATA[$P{Fecha_Inicial}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="fecha_fin">
+								<datasetParameterExpression><![CDATA[$P{Fecha_Final}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+					</dataset>
+				</crosstabDataset>
+				<crosstabHeaderCell>
+					<cellContents>
+						<box>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<bottomPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<staticText>
+							<reportElement uuid="bfae433b-d9a8-4c50-a24d-ebfea4871905" style="Crosstab static text" mode="Opaque" x="0" y="0" width="261" height="30"/>
+							<box>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement>
+								<font fontName="Arial"/>
+							</textElement>
+							<text><![CDATA[FUNCIONARIO]]></text>
+						</staticText>
+						<staticText>
+							<reportElement uuid="a8b6b3da-bb46-404e-8d22-b408710242d5" style="Crosstab static text" x="261" y="0" width="197" height="30"/>
+							<box>
+								<leftPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement>
+								<font fontName="Arial"/>
+							</textElement>
+							<text><![CDATA[CANAL DE ATENCIÓN]]></text>
+						</staticText>
+					</cellContents>
+				</crosstabHeaderCell>
+				<rowGroup name="funcionario" width="261" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{funcionario}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Transparent">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement uuid="36547926-65f1-4a3a-a209-f9c208995dd5" style="Crosstab TD" mode="Opaque" x="0" y="0" width="261" height="29"/>
+								<textElement>
+									<font fontName="Arial"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{funcionario}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#005FB3" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineColor="#FFFFFF"/>
+							</box>
+							<staticText>
+								<reportElement uuid="a4c09c27-99d6-47f8-a161-f250aa43ecb5" style="Crosstab static text" mode="Transparent" x="0" y="0" width="458" height="25" forecolor="#FFFFFF"/>
+								<box>
+									<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+								</box>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="Arial" isBold="true"/>
+								</textElement>
+								<text><![CDATA[TOTAL]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="canal" width="197" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{canal}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement uuid="f83f982b-52b1-42e1-b45e-3395e1320a8d" style="Crosstab TD" mode="Opaque" x="0" y="0" width="197" height="15"/>
+								<textElement>
+									<font fontName="Arial"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{canal}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement uuid="45f177e8-5864-43dd-80df-87e035eb2e80" style="Crosstab Data Text" mode="Transparent" x="0" y="0" width="197" height="13"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="Arial" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total funcionario]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="placeholder" height="30" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{placeholder}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#FFFFFF"/>
+								<topPen lineColor="#000000"/>
+								<leftPen lineColor="#FFFFFF"/>
+								<bottomPen lineColor="#FFFFFF"/>
+								<rightPen lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement uuid="a8424e25-b653-49e3-a6a3-89a1f6306e10" style="Crosstab static text" x="0" y="0" width="51" height="30"/>
+								<box>
+									<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial"/>
+								</textElement>
+								<text><![CDATA[TOTAL]]></text>
+							</staticText>
+							<staticText>
+								<reportElement uuid="ab4561ad-0f30-4994-b25c-3fc021c13d6e" style="Crosstab static text" x="51" y="0" width="45" height="30"/>
+								<box>
+									<leftPen lineWidth="0.5"/>
+								</box>
+								<textElement>
+									<font fontName="Arial"/>
+								</textElement>
+								<text><![CDATA[%]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="totalMeasure" class="java.lang.Long" calculation="Sum">
+					<measureExpression><![CDATA[$F{total}]]></measureExpression>
+				</measure>
+				<crosstabCell width="0" height="16">
+					<cellContents>
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" height="25" rowTotalGroup="funcionario">
+					<cellContents backcolor="#005FB3" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="96" height="16" columnTotalGroup="placeholder">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement uuid="029f7a0a-c2c1-4cd9-83b9-5c3c8b76fd56" style="Crosstab TD" mode="Opaque" x="0" y="0" width="51" height="16" backcolor="#FFFFFF"/>
+							<box>
+								<leftPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement textAlignment="Right">
+								<font fontName="Arial"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{totalMeasure}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement uuid="8fb68f81-51cb-4b63-a85e-84b78dba1d4a" style="Crosstab TD" mode="Opaque" x="51" y="0" width="45" height="16" backcolor="#FFFFFF"/>
+							<box>
+								<leftPen lineWidth="0.5"/>
+							</box>
+							<textElement textAlignment="Right">
+								<font fontName="Arial"/>
+							</textElement>
+							<textFieldExpression><![CDATA[new DecimalFormat("#.##").format(new Double(($V{totalMeasure}.doubleValue()*100) / $V{totalMeasure_canal_ALL}.doubleValue()))]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="96" height="25" rowTotalGroup="funcionario" columnTotalGroup="placeholder">
+					<cellContents backcolor="#005FB3" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineColor="#FFFFFF"/>
+						</box>
+						<textField>
+							<reportElement uuid="ff0fcbb7-e258-4e74-bd3c-93dc91715440" style="Crosstab static text" x="0" y="0" width="51" height="25" forecolor="#FFFFFF"/>
+							<box>
+								<leftPen lineWidth="0.5"/>
+							</box>
+							<textElement textAlignment="Right">
+								<font fontName="Arial" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{totalMeasure}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement uuid="bbbf8ef0-4073-4cef-943b-3356d98e5100" style="Crosstab static text" mode="Transparent" x="51" y="0" width="45" height="25" forecolor="#FFFFFF"/>
+							<box>
+								<leftPen lineWidth="0.5"/>
+							</box>
+							<textElement textAlignment="Right">
+								<font fontName="Arial" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[new DecimalFormat("#.##").format(new Double(($V{totalMeasure}.doubleValue()*100) / $V{totalMeasure_funcionario_ALL}.doubleValue()))]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" height="13" rowTotalGroup="canal">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="96" height="13" rowTotalGroup="canal" columnTotalGroup="placeholder">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement uuid="12ab9a77-0307-47e8-bc08-0c7e58091561" style="Crosstab Data Text" x="0" y="0" width="51" height="13"/>
+							<textElement textAlignment="Right">
+								<font fontName="Arial" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{totalMeasure}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement uuid="d000d9fd-763c-4cea-bf89-4b4fb051cae2" style="Crosstab Data Text" x="51" y="0" width="45" height="13"/>
+							<box>
+								<leftPen lineWidth="0.5"/>
+							</box>
+							<textElement textAlignment="Right">
+								<font fontName="Arial" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[new DecimalFormat("#.##").format(new Double(($V{totalMeasure}.doubleValue()*100) / $V{totalMeasure_funcionario_ALL}.doubleValue()))]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+		<band height="108" splitType="Prevent">
+			<crosstab>
+				<reportElement uuid="ce107fac-8c90-4fce-838c-ccad766af892" style="Crosstab Data Text" x="0" y="0" width="555" height="99"/>
+				<crosstabDataset isDataPreSorted="true">
+					<dataset>
+						<datasetRun subDataset="CriterioVSLocalidad" uuid="ecc52614-85ae-4239-b6a9-1e3b6e3f4059">
+							<datasetParameter name="fecha_ini">
+								<datasetParameterExpression><![CDATA[$P{Fecha_Inicial}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="fecha_fin">
+								<datasetParameterExpression><![CDATA[$P{Fecha_Final}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+					</dataset>
+				</crosstabDataset>
+				<crosstabHeaderCell>
+					<cellContents backcolor="#FFFF00" mode="Transparent">
+						<box>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<bottomPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<staticText>
+							<reportElement uuid="1b781e47-683e-4ecb-9b5f-629b9d2d24a3" style="Crosstab static text" x="0" y="0" width="227" height="30"/>
+							<box>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement>
+								<font fontName="Arial" size="10"/>
+							</textElement>
+							<text><![CDATA[CRITERIO]]></text>
+						</staticText>
+						<staticText>
+							<reportElement uuid="485816bc-57aa-4be6-8973-f0d3edb71e17" style="Crosstab static text" x="227" y="0" width="141" height="30"/>
+							<box>
+								<leftPen lineWidth="0.5"/>
+							</box>
+							<textElement>
+								<font fontName="Arial" size="10"/>
+							</textElement>
+							<text><![CDATA[CANAL DE ATENCIÓN]]></text>
+						</staticText>
+						<staticText>
+							<reportElement uuid="a90ef298-7933-49df-b6aa-8deeb06ceda8" style="Crosstab static text" x="368" y="0" width="136" height="30"/>
+							<box>
+								<leftPen lineWidth="0.5"/>
+							</box>
+							<textElement>
+								<font fontName="Arial" size="10"/>
+							</textElement>
+							<text><![CDATA[LOCALIDAD]]></text>
+						</staticText>
+					</cellContents>
+				</crosstabHeaderCell>
+				<rowGroup name="criterio" width="227" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{criterio}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Transparent">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement uuid="49a35d5c-1117-4513-b0c4-4a9543b922cd" style="Crosstab TD" mode="Opaque" x="0" y="0" width="227" height="37"/>
+								<textElement>
+									<font fontName="Arial"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{criterio}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#005FB3" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineColor="#FFFFFF"/>
+							</box>
+							<staticText>
+								<reportElement uuid="b3ca8af5-6a8f-4c13-ad1d-f795af27babe" style="Crosstab static text" x="0" y="0" width="504" height="25" forecolor="#FFFFFF"/>
+								<box>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="Arial"/>
+								</textElement>
+								<text><![CDATA[TOTAL GENERAL]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="canal" width="141" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{canal}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Transparent">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement uuid="ed972e4c-b192-4dd1-bcf7-ecdd4e9a8b13" style="Crosstab TD" mode="Opaque" x="0" y="0" width="141" height="24"/>
+								<textElement>
+									<font fontName="Arial"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{canal}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement uuid="4f724978-0a4c-4126-b9eb-e1601e2b1008" style="Crosstab Data Text" mode="Transparent" x="0" y="0" width="277" height="13" backcolor="#CC0000"/>
+								<box>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="Arial" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total Criterio]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="localidad" width="136" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{localidad}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<textField>
+								<reportElement uuid="e6842a69-4dc5-4ce2-bdec-db12818b6442" style="Crosstab TD" mode="Opaque" x="0" y="0" width="136" height="11"/>
+								<box>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement>
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{localidad}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents mode="Transparent">
+							<box>
+								<bottomPen lineWidth="0.5"/>
+							</box>
+							<staticText>
+								<reportElement uuid="e550274d-af96-418f-8da5-e4221b967ee1" style="Crosstab Data Text" mode="Opaque" x="0" y="0" width="136" height="13" backcolor="#BFE1FF"/>
+								<box>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+								</box>
+								<textElement>
+									<font fontName="Arial" size="9" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total Canal]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="placeholder" height="30" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{placeholder}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+								<topPen lineColor="#000000"/>
+								<leftPen lineColor="#FFFFFF"/>
+								<bottomPen lineColor="#000000"/>
+								<rightPen lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement uuid="6f9aa7be-0f4e-4a2a-880f-e5f4fb522de1" style="Crosstab static text" x="0" y="0" width="50" height="30"/>
+								<box>
+									<leftPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="10"/>
+								</textElement>
+								<text><![CDATA[TOTAL]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="totalMeasure" class="java.lang.Long" calculation="Sum">
+					<measureExpression><![CDATA[$F{total}]]></measureExpression>
+				</measure>
+				<crosstabCell width="0" height="11">
+					<cellContents>
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" height="25" rowTotalGroup="criterio">
+					<cellContents backcolor="#005FB3" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="50" height="11" columnTotalGroup="placeholder">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement uuid="22be1295-bb59-47c2-ab81-0a3d575cdd8b" style="Crosstab TD" mode="Opaque" x="0" y="0" width="50" height="11"/>
+							<textElement textAlignment="Right">
+								<font fontName="Arial" size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{totalMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="50" height="25" rowTotalGroup="criterio" columnTotalGroup="placeholder">
+					<cellContents backcolor="#005FB3" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineColor="#FFFFFF"/>
+						</box>
+						<textField>
+							<reportElement uuid="9e327bce-629b-4fb7-938f-3d7557d975ad" style="Crosstab static text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.0" lineColor="#000000"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5" lineColor="#000000"/>
+								<rightPen lineWidth="0.5" lineColor="#000000"/>
+							</box>
+							<textElement textAlignment="Right">
+								<font fontName="Arial"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{totalMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" height="13" rowTotalGroup="canal">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="50" height="13" rowTotalGroup="canal" columnTotalGroup="placeholder">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.5"/>
+						</box>
+						<textField>
+							<reportElement uuid="9df1dcb0-7f20-451f-83fa-7b1397e3a932" style="Crosstab Data Text" x="0" y="0" width="50" height="13"/>
+							<box>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement textAlignment="Right">
+								<font fontName="Arial" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{totalMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" height="13" rowTotalGroup="localidad">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell width="50" height="13" rowTotalGroup="localidad" columnTotalGroup="placeholder">
+					<cellContents mode="Transparent">
+						<textField>
+							<reportElement uuid="0e27c411-4fbb-4a7e-8660-4cc45a588cdd" style="Crosstab Data Text" mode="Opaque" x="0" y="0" width="50" height="13" backcolor="#BFE1FF"/>
+							<box>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement textAlignment="Right">
+								<font fontName="Arial" size="9" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{totalMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+		<band height="101" splitType="Prevent">
+			<crosstab>
+				<reportElement uuid="dfe25b75-b537-475f-86ca-276e4b1d7b93" x="0" y="0" width="555" height="92"/>
+				<crosstabDataset isDataPreSorted="true">
+					<dataset>
+						<datasetRun subDataset="CriterioVSSubcriterio" uuid="0628bf44-c6ee-40e8-9f09-b91e25ca89e3">
+							<datasetParameter name="fecha_ini">
+								<datasetParameterExpression><![CDATA[$P{Fecha_Inicial}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="fecha_fin">
+								<datasetParameterExpression><![CDATA[$P{Fecha_Final}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+					</dataset>
+				</crosstabDataset>
+				<crosstabHeaderCell>
+					<cellContents>
+						<box>
+							<pen lineWidth="0.5"/>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<bottomPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<staticText>
+							<reportElement uuid="c73ac946-d413-42ca-ab8f-066001475ffc" style="Crosstab static text" x="0" y="0" width="248" height="30"/>
+							<box>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement>
+								<font fontName="Arial"/>
+							</textElement>
+							<text><![CDATA[CRITERIO]]></text>
+						</staticText>
+						<staticText>
+							<reportElement uuid="76009a68-5f35-40a0-9276-f68f32f27ef5" style="Crosstab static text" x="248" y="0" width="257" height="30"/>
+							<box>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement>
+								<font fontName="Arial"/>
+							</textElement>
+							<text><![CDATA[SUBCRITERIO]]></text>
+						</staticText>
+					</cellContents>
+				</crosstabHeaderCell>
+				<rowGroup name="criterio" width="248" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{criterio}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Transparent">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField isStretchWithOverflow="true">
+								<reportElement uuid="e05c66fd-4674-4289-9eb9-c89d43923196" style="Crosstab TD" x="0" y="0" width="248" height="29"/>
+								<textElement>
+									<font fontName="Arial"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{criterio}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#005FB3" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+							</box>
+							<staticText>
+								<reportElement uuid="c13e5696-3991-4d1a-8801-09307647d97b" style="Crosstab static text" x="0" y="0" width="505" height="25" forecolor="#FFFFFF"/>
+								<box>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="Arial"/>
+								</textElement>
+								<text><![CDATA[TOTAL]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="subcriterio" width="257" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{subcriterio}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Transparent">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField isStretchWithOverflow="true">
+								<reportElement uuid="33f4ca4e-f672-4b34-a368-ff3f15d8fd50" style="Crosstab TD" x="0" y="0" width="257" height="15"/>
+								<textElement>
+									<font fontName="Arial"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{subcriterio}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement uuid="3eaec5ba-e115-4bcf-878a-74c600ac2c46" style="Crosstab Data Text" mode="Transparent" x="0" y="0" width="257" height="14"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="Arial" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total criterio]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="placeholder" height="30" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{placeholder}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#BFE1FF" mode="Transparent">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0"/>
+							</box>
+							<staticText>
+								<reportElement uuid="737d6e74-5fad-4c10-b9d8-876e39e4a717" style="Crosstab static text" x="0" y="0" width="50" height="30"/>
+								<box>
+									<leftPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial"/>
+								</textElement>
+								<text><![CDATA[TOTAL]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="totalMeasure" class="java.lang.Long" calculation="Sum">
+					<measureExpression><![CDATA[$F{total}]]></measureExpression>
+				</measure>
+				<crosstabCell width="0" height="15">
+					<cellContents>
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" height="25" rowTotalGroup="criterio">
+					<cellContents backcolor="#005FB3" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="50" height="15" columnTotalGroup="placeholder">
+					<cellContents backcolor="#BFE1FF" mode="Transparent">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement uuid="bd8e2b5f-67cb-4ef6-8ced-0df560944175" style="Crosstab TD" x="0" y="0" width="50" height="15"/>
+							<textElement textAlignment="Right">
+								<font fontName="Arial"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{totalMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell height="25" rowTotalGroup="criterio" columnTotalGroup="placeholder">
+					<cellContents backcolor="#005FB3" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineColor="#FFFFFF"/>
+						</box>
+						<textField>
+							<reportElement uuid="d5fd9376-4190-4155-8629-a1c709ff6d59" style="Crosstab static text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF"/>
+							<box>
+								<leftPen lineWidth="0.5"/>
+							</box>
+							<textElement textAlignment="Right">
+								<font fontName="Arial"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{totalMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" height="14" rowTotalGroup="subcriterio">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell height="14" rowTotalGroup="subcriterio" columnTotalGroup="placeholder">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement uuid="56a3983f-2143-4c21-8477-614de749bbde" style="Crosstab Data Text" mode="Transparent" x="0" y="0" width="50" height="14"/>
+							<textElement textAlignment="Right">
+								<font fontName="Arial" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{totalMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+		<band height="100">
+			<crosstab>
+				<reportElement uuid="37eaeabd-465d-4ca6-99b4-1ba195c66237" x="0" y="0" width="555" height="89"/>
+				<crosstabDataset isDataPreSorted="true">
+					<dataset>
+						<datasetRun subDataset="LocalidadVSCriterio" uuid="cb28a94e-dd5e-4619-92d1-7b82ffa9c562">
+							<datasetParameter name="fecha_ini">
+								<datasetParameterExpression><![CDATA[$P{Fecha_Inicial}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="fecha_fin">
+								<datasetParameterExpression><![CDATA[$P{Fecha_Final}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+					</dataset>
+				</crosstabDataset>
+				<crosstabHeaderCell>
+					<cellContents>
+						<box>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<staticText>
+							<reportElement uuid="6a82a757-8a45-4045-a5d3-aa872a322836" style="Crosstab static text" x="0" y="0" width="193" height="30"/>
+							<box>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement>
+								<font fontName="Arial"/>
+							</textElement>
+							<text><![CDATA[LOCALIDAD]]></text>
+						</staticText>
+						<staticText>
+							<reportElement uuid="c32d007a-6aa5-4df2-9c5d-a7055c041477" style="Crosstab static text" x="193" y="0" width="311" height="30"/>
+							<box>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement>
+								<font fontName="Arial"/>
+							</textElement>
+							<text><![CDATA[CRITERIO]]></text>
+						</staticText>
+					</cellContents>
+				</crosstabHeaderCell>
+				<rowGroup name="localidad" width="193" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{localidad}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Transparent">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement uuid="5a758fb5-263e-4f1a-ba9b-a76f5e135599" style="Crosstab TD" x="0" y="0" width="193" height="27"/>
+								<textElement>
+									<font fontName="Arial"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{localidad}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#005FB3" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineColor="#FFFFFF"/>
+							</box>
+							<staticText>
+								<reportElement uuid="5199cf91-7e34-493f-b43f-f7d8f28d2534" style="Crosstab static text" x="0" y="0" width="504" height="25" forecolor="#FFFFFF"/>
+								<box>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="Arial"/>
+								</textElement>
+								<text><![CDATA[TOTAL]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="criterio" width="311" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{criterio}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Transparent">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField isStretchWithOverflow="true">
+								<reportElement uuid="7106b16f-1a17-4ada-9ec8-e30a5880551a" style="Crosstab TD" x="0" y="0" width="311" height="15"/>
+								<textElement>
+									<font fontName="Arial"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{criterio}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement uuid="b04e36d4-f234-44bb-959a-81ac0f9497d5" style="Crosstab Data Text" x="0" y="0" width="311" height="12"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="Arial" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total localidad]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="placeholder" height="30" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{placeholder}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#BFE1FF" mode="Transparent">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineColor="#FFFFFF"/>
+							</box>
+							<staticText>
+								<reportElement uuid="4ef93ad6-a57f-4b68-a161-d97de576f70c" style="Crosstab static text" x="0" y="0" width="50" height="30"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial"/>
+								</textElement>
+								<text><![CDATA[TOTAL]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="totalMeasure" class="java.lang.Long" calculation="Sum">
+					<measureExpression><![CDATA[$F{total}]]></measureExpression>
+				</measure>
+				<crosstabCell width="0" height="15">
+					<cellContents>
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" height="25" rowTotalGroup="localidad">
+					<cellContents backcolor="#005FB3" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="50" height="15" columnTotalGroup="placeholder">
+					<cellContents backcolor="#BFE1FF" mode="Transparent">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement uuid="8ed68223-d0ae-4098-8eea-1104b208702b" style="Crosstab TD" x="0" y="0" width="50" height="15"/>
+							<textElement textAlignment="Right">
+								<font fontName="Arial"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{totalMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="50" height="25" rowTotalGroup="localidad" columnTotalGroup="placeholder">
+					<cellContents backcolor="#005FB3" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineColor="#FFFFFF"/>
+						</box>
+						<textField>
+							<reportElement uuid="8512efaf-d48e-4b92-868c-ff8d6c8028ed" style="Crosstab static text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF"/>
+							<box>
+								<leftPen lineWidth="0.5"/>
+							</box>
+							<textElement textAlignment="Right">
+								<font fontName="Arial"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{totalMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" height="12" rowTotalGroup="criterio">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="50" height="12" rowTotalGroup="criterio" columnTotalGroup="placeholder">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement uuid="db470ff4-218e-48c9-80f5-38dca1286eda" style="Crosstab Data Text" x="0" y="0" width="50" height="12"/>
+							<textElement textAlignment="Right">
+								<font fontName="Arial" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{totalMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<textField>
+				<reportElement uuid="801fec7a-7cfd-453c-b1ab-7e5f17be3670" x="355" y="0" width="148" height="25"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA['Página ' +$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="eb6ee01e-1a9b-46f3-8abe-e10e94130183" x="503" y="0" width="52" height="25"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[' de ' +$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEE, d MMM yyyy HH:mm:ss Z">
+				<reportElement uuid="ecc252a8-5eea-45aa-ab9f-8d4201b14196" x="57" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="1ee5444a-5e78-40c9-b0ae-130702063612" x="0" y="0" width="57" height="20"/>
+				<textElement/>
+				<text><![CDATA[Generado:]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>
