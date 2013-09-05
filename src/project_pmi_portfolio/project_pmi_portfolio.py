@@ -23,6 +23,15 @@ from openerp.osv import fields, osv
 class project(osv.osv):
     _name = "project.project"
     _inherit = "project.project"
+    
+    _columns = {
+        'portfolio_ids': fields.many2many(
+            'project_pmi.portfolio',
+            'project_pmi_portfolio_project_rel',
+            'project_id',
+            'portfolio_id',
+            'Portfolio'),
+    }
 
 project()
 
@@ -54,13 +63,8 @@ class project_pmi_portfolio(osv.osv):
         'parent_id': fields.many2one('project_pmi.portfolio','Parent portfolio', select=True, ondelete='cascade'),
         'child_id': fields.one2many('project_pmi.portfolio', 'parent_id', string='Child Portfolios'),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list."),
-        'children_type': fields.selection([('portfolio','Contain portfolios only'), ('portfolio_project','Contain projects and portfolios')], 'Portfolio Children Type', required=True),
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
-    }
-
-    _defaults = {
-        'children_type' : lambda *a : 'portfolio_project',
     }
 
     _parent_name = "parent_id"
