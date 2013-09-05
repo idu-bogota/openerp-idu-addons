@@ -1,3 +1,5 @@
+* Update: Por solicitud de OTC OCS outsourced users pueden ver los PQR de todo el punto crea. Sin embargo no se permite la modificación de las PQRs de otros.
+
 openerp6.1-rev2013082300
 * Update: Por solicitud de OTC la localidad es obligatoria.
 
