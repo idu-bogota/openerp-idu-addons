@@ -36,7 +36,8 @@
                             <field name="parent_id"/>
                         </group>
                         <group name="projects">
-                           <field name="project_ids"/>
+                           <separator string="Projects" colspan="4"/>
+                           <field name="project_ids" nolabel="1"/>
                         </group>
                     </sheet>
                 </form>
