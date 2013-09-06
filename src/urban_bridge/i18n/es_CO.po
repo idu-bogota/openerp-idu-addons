@@ -41,6 +41,26 @@ msgid "Bridges"
 msgstr "Puentes"
 
 #. module: urban_bridge
+#: view:urban_bridge.bridge:0
+msgid "Geometry"
+msgstr "Geometría"
+
+#. module: urban_bridge
+#: view:urban_bridge.bridge:0
+msgid "Structure Data"
+msgstr "Datos Estructurales"
+
+#. module: urban_bridge
+#: view:urban_bridge.bridge:0
+msgid "Structure Elements"
+msgstr "Elementos de la Puente"
+
+#. module: urban_bridge
+#: view:urban_bridge.bridge:0
+msgid "Inspections"
+msgstr "Inspecciones"
+
+#. module: urban_bridge
 #: help:urban_bridge.bridge,shape:0
 msgid "Shape"
 msgstr "Geografía"
@@ -199,6 +219,7 @@ msgstr "Elementos"
 #: field:urban_bridge.bridge,survey_id:0
 msgid "Inspection Survey"
 msgstr "Inspecciones"
+
 
 
 
