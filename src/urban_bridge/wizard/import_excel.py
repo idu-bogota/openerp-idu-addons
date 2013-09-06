@@ -21,10 +21,16 @@
 #    Creado por Andres Ignacio Baez Alba
 #
 ##############################################################################
-import wizard
 
-class urban_bridge_wizard_import_excel(wizard):
+from osv import osv, fields
+
+class urban_bridge_wizard_import_excel(osv.osv_memory):
     """
     Wizard to load information from excel
     """ 
-    _name=""
+    _name="urban_bridge.wizard.import_excel"
+    _columns={
+        'srid':fields.integer('SRID'),
+        'file':fields.binary('File'),
+    }
+    
