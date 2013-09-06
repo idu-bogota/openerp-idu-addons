@@ -72,6 +72,78 @@
             parent="project.menu_project_management"
             sequence="0" />
 
+        <!-- Programs Views -->
+        <record id="project_pmi_program_tree" model="ir.ui.view">
+            <field name="name">project_pmi.program.tree</field>
+            <field name="model">project_pmi.program</field>
+            <field name="field_parent">child_id</field>
+            <field name="arch" type="xml">
+                <tree string="Program Tree">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="project_pmi_program_list" model="ir.ui.view">
+            <field name="name">project_pmi.program.list</field>
+            <field name="model">project_pmi.program</field>
+            <field name="arch" type="xml">
+                <tree string="Program List">
+                    <field name="complete_name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="project_pmi_program_form" model="ir.ui.view">
+            <field name="name">project_pmi.program.form</field>
+            <field name="model">project_pmi.program</field>
+            <field name="arch" type="xml">
+                <form string="Project Program" version="7.0">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group name="parent">
+                            <field name="parent_id"/>
+                        </group>
+                        <group name="projects">
+                           <separator string="Projects" colspan="4"/>
+                           <field name="project_ids" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="project_pmi_program_tree_action" model="ir.actions.act_window">
+            <field name="name">Program Tree</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project_pmi.program</field>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_type">tree</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="project_pmi_program_tree"/>
+        </record>
+        <menuitem
+            action="project_pmi_program_tree_action"
+            id="project_pmi_program_tree_menu"
+            parent="project.menu_project_management"
+            sequence="0" />
+
+        <record id="project_pmi_program_list_action" model="ir.actions.act_window">
+            <field name="name">Program List</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project_pmi.program</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="project_pmi_program_list"/>
+        </record>
+        <menuitem
+            action="project_pmi_program_list_action"
+            id="project_pmi_program_list_menu"
+            parent="project.menu_project_management"
+            sequence="0" />
+
         <!-- Project Views -->
         <record id="project_form" model="ir.ui.view">
             <field name="name">project_pmi_portfolio.project.form</field>
@@ -79,9 +151,12 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
 	            <page string="Team" position="before">
-	                <page string="Portfolio">
-	                    <field name="portfolio_ids" nolabel="1" />
-	                </page>
+                    <page string="Portfolio">
+                        <field name="portfolio_ids" nolabel="1" />
+                    </page>
+                    <page string="Program">
+                        <field name="program_ids" nolabel="1" />
+                    </page>
 	            </page>
             </field>
         </record>

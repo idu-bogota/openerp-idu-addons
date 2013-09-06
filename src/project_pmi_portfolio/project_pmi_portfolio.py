@@ -31,6 +31,12 @@ class project(osv.osv):
             'project_id',
             'portfolio_id',
             'Portfolios'),
+        'program_ids': fields.many2many(
+            'project_pmi.program',
+            'project_pmi_program_project_rel',
+            'project_id',
+            'program_id',
+            'Programs'),
     }
 
 project()
@@ -58,7 +64,7 @@ class project_pmi_portfolio(osv.osv):
         return dict(res)
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, select=True),
+        'name': fields.char('Name', size=255, required=True, select=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('project_pmi.portfolio','Parent portfolio', select=True, ondelete='cascade'),
         'child_id': fields.one2many('project_pmi.portfolio', 'parent_id', string='Child Portfolios'),
@@ -95,3 +101,64 @@ class project_pmi_portfolio(osv.osv):
         return [ids]
 
 project_pmi_portfolio()
+
+class project_pmi_program(osv.osv):
+    _name = "project_pmi.program"
+    _description = "Handles a program tree"
+
+    def name_get(self, cr, uid, ids, context=None):
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return []
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
+        res = []
+        for record in reads:
+            name = record['name']
+            if record['parent_id']:
+                name = record['parent_id'][1]+' / '+name
+            res.append((record['id'], name))
+        return res
+
+    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
+        return dict(res)
+
+    _columns = {
+        'name': fields.char('Name', size=255, required=True, select=True),
+        'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
+        'parent_id': fields.many2one('project_pmi.program','Parent Program', select=True, ondelete='cascade'),
+        'child_id': fields.one2many('project_pmi.program', 'parent_id', string='Child programs'),
+        'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list."),
+        'parent_left': fields.integer('Left Parent', select=1),
+        'parent_right': fields.integer('Right Parent', select=1),
+        'project_ids': fields.many2many(
+            'project.project',
+            'project_pmi_program_project_rel',
+            'program_id',
+            'project_id',
+            'Projects'),
+    }
+
+    _parent_name = "parent_id"
+    _parent_store = True
+    _parent_order = 'sequence, name'
+    _order = 'parent_left'
+
+    def _check_recursion(self, cr, uid, ids, context=None):
+        level = 100
+        while len(ids):
+            cr.execute('select distinct parent_id from project_pmi_program where id IN %s',(tuple(ids),))
+            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            if not level:
+                return False
+            level -= 1
+        return True
+
+    _constraints = [
+        (_check_recursion, 'Error ! You cannot create recursive programs.', ['parent_id'])
+    ]
+    def child_get(self, cr, uid, ids):
+        return [ids]
+
+project_pmi_program()
