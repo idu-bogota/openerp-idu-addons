@@ -2,13 +2,8 @@
 <openerp>
     <data>
         <!-- MENU DEFINITIONS -->
-        <menuitem name="Project Management Office"
-            id="base.menu_main_pmi"
-            groups="project.group_project_manager"
-            sequence="40"/>
 
-        <menuitem id="menu_project_portfolio" name="Portfolio" parent="base.menu_main_pmi" sequence="1"/>
-        <menuitem id="menu_project_project" name="Project" parent="base.menu_main_pmi" sequence="1"/>
+        <menuitem id="menu_project_portfolio" name="Portfolio" parent="base.menu_main_pm" sequence="1"/>
 
         <!-- Portfolio Views -->
         <record id="project_pmi_portfolio_tree" model="ir.ui.view">
@@ -55,7 +50,7 @@
             </field>
         </record>
         <record id="project_pmi_portfolio_tree_action" model="ir.actions.act_window">
-            <field name="name">Portfolio Tree</field>
+            <field name="name">Portfolios</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">project_pmi.portfolio</field>
             <field name="domain">[('parent_id','=',False)]</field>
@@ -81,11 +76,11 @@
         <menuitem
             action="project_pmi_portfolio_tree_action"
             id="project_pmi_portfolio_tree_menu"
-            parent="menu_project_portfolio"
+            parent="project.menu_project_management"
             sequence="0" />
 
         <record id="project_pmi_portfolio_list_action" model="ir.actions.act_window">
-            <field name="name">Portfolio List</field>
+            <field name="name">Portfolios</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">project_pmi.portfolio</field>
             <field name="view_type">form</field>
@@ -95,7 +90,7 @@
         <menuitem
             action="project_pmi_portfolio_list_action"
             id="project_pmi_portfolio_list_menu"
-            parent="menu_project_portfolio"
+            parent="base.menu_definitions"
             sequence="0" />
 
         <!-- Programs Views -->
@@ -104,7 +99,7 @@
             <field name="model">project_pmi.program</field>
             <field name="field_parent">child_id</field>
             <field name="arch" type="xml">
-                <tree string="Program Tree">
+                <tree string="Programs">
                     <field name="name"/>
                 </tree>
             </field>
@@ -128,7 +123,7 @@
             <field name="name">project_pmi.program.list</field>
             <field name="model">project_pmi.program</field>
             <field name="arch" type="xml">
-                <tree string="Program List">
+                <tree string="Program">
                     <field name="sequence" widget="handle"/>
                     <field name="complete_name"/>
                 </tree>
@@ -158,7 +153,7 @@
             </field>
         </record>
         <record id="project_pmi_program_tree_action" model="ir.actions.act_window">
-            <field name="name">Program Tree</field>
+            <field name="name">Programs</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">project_pmi.program</field>
             <field name="domain">[('parent_id','=',False)]</field>
@@ -169,11 +164,11 @@
         <menuitem
             action="project_pmi_program_tree_action"
             id="project_pmi_program_tree_menu"
-            parent="menu_project_portfolio"
+            parent="project.menu_project_management"
             sequence="0" />
 
         <record id="project_pmi_program_list_action" model="ir.actions.act_window">
-            <field name="name">Program List</field>
+            <field name="name">Programs</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">project_pmi.program</field>
             <field name="view_type">form</field>
@@ -183,7 +178,7 @@
         <menuitem
             action="project_pmi_program_list_action"
             id="project_pmi_program_list_menu"
-            parent="menu_project_portfolio"
+            parent="base.menu_definitions"
             sequence="0" />
 
         <!-- Project Views -->
@@ -217,50 +212,15 @@
             <field name="name">project.project.tree</field>
             <field name="model">project.project</field>
             <field name="field_parent">child_ids</field>
+            <field name="inherit_id" ref="project.view_project"/>
             <field name="arch" type="xml">
-                <tree fonts="bold:message_unread==True" colors="red:date and (date&lt;current_date) and (state == 'open');blue:state in ('draft','pending');grey: state in ('close','cancelled')" string="Projects">
-                    <field name="sequence" widget="handle"/>
-                    <field name="message_unread" invisible="1"/>
-                    <field name="name" string="Project Name"/>
-                    <field name="parent_id" string="Parent"/>
-                    <field name="user_id" string="Project Manager"/>
-                    <field name="date"/>
-                    <field name="progress_rate" widget="progressbar"/>
-                    <field name="state"/>
-                    <field name="portfolio_ids" invisible="1"/>
-                    <field name="program_ids" invisible="1"/>
-                </tree>
+               <field name="name" position="after">
+                   <field name="parent_id" string="Parent"/>
+                   <field name="date"/>
+                   <field name="portfolio_ids" invisible="1"/>
+                   <field name="program_ids" invisible="1"/>
+               </field>
             </field>
         </record>
-
-        <record id="project_pmi_project_action" model="ir.actions.act_window">
-            <field name="name">Projects</field>
-            <field name="res_model">project.project</field>
-            <field name="view_type">form</field>
-            <field name="domain">[]</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="project_pmi_project_list"/>
-            <field name="search_view_id" ref="project_filter"/>
-            <field name="context">{'search_default_Current': 1}</field>
-            <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                  Click to start a new project.
-                </p><p>
-                  Projects are used to organize your activities; plan
-                  tasks, track issues, invoice timesheets. You can define
-                  internal projects (R&amp;D, Improve Sales Process),
-                  private projects (My Todos) or customer ones.
-                </p><p>
-                  You will be able collaborate with internal users on
-                  projects or invite customers to share your activities.
-                </p>
-            </field>
-        </record>
-
-        <menuitem
-            action="project_pmi_project_action"
-            id="project_pmi_project_action_menu"
-            parent="menu_project_project"
-            sequence="0" />
     </data>
 </openerp>
