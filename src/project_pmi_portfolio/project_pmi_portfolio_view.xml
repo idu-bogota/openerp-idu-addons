@@ -13,6 +13,7 @@
             <field name="arch" type="xml">
                 <tree string="Porfolio Tree">
                     <field name="name"/>
+                    <field name="project_count"/>
                 </tree>
             </field>
         </record>
@@ -40,6 +41,9 @@
                         </div>
                         <group name="parent">
                             <field name="parent_id"/>
+                        </group>
+                        <group name="description">
+                            <field name="description"/>
                         </group>
                         <group name="projects">
                            <separator string="Projects" colspan="4"/>
@@ -101,6 +105,7 @@
             <field name="arch" type="xml">
                 <tree string="Programs">
                     <field name="name"/>
+                    <field name="project_count"/>
                 </tree>
             </field>
         </record>
@@ -143,6 +148,9 @@
                         </div>
                         <group name="parent">
                             <field name="parent_id"/>
+                        </group>
+                        <group name="description">
+                            <field name="description"/>
                         </group>
                         <group name="projects">
                            <separator string="Projects" colspan="4"/>

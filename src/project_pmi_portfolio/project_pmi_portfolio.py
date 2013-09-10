@@ -63,9 +63,17 @@ class project_pmi_portfolio(osv.osv):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
+    def _project_count(self, cr, uid, ids, prop, unknow_none, context=None):
+        records = self.browse(cr, uid, ids, context=context)
+        res = []
+        for record in records:
+            res.append((record.id, len(record.project_ids)))
+        return dict(res)
+
     _columns = {
         'name': fields.char('Name', size=255, required=True, select=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
+        'description': fields.text('Description',help="Description about this portfolio"),
         'parent_id': fields.many2one('project_pmi.portfolio','Parent portfolio', select=True, ondelete='cascade'),
         'child_id': fields.one2many('project_pmi.portfolio', 'parent_id', string='Child Portfolios'),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list."),
@@ -77,6 +85,7 @@ class project_pmi_portfolio(osv.osv):
             'portfolio_id',
             'project_id',
             'Projects'),
+        'project_count': fields.function(_project_count, type="integer", string='Project Count'),
     }
 
     _parent_name = "parent_id"
@@ -120,12 +129,20 @@ class project_pmi_program(osv.osv):
             res.append((record['id'], name))
         return res
 
+    def _project_count(self, cr, uid, ids, prop, unknow_none, context=None):
+        records = self.browse(cr, uid, ids, context=context)
+        res = []
+        for record in records:
+            res.append((record.id, len(record.project_ids)))
+        return dict(res)
+
     def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
     _columns = {
         'name': fields.char('Name', size=255, required=True, select=True),
+        'description': fields.text('Description',help="Description about this program"),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('project_pmi.program','Parent Program', select=True, ondelete='cascade'),
         'child_id': fields.one2many('project_pmi.program', 'parent_id', string='Child programs'),
@@ -138,6 +155,7 @@ class project_pmi_program(osv.osv):
             'program_id',
             'project_id',
             'Projects'),
+        'project_count': fields.function(_project_count, type="integer", string='Project Count'),
     }
 
     _parent_name = "parent_id"
