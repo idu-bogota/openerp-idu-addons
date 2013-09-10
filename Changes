@@ -1,3 +1,6 @@
+* Update: Permitir a los usuarios de puntos crea cambiar el dueño de una PQR de su propio punto CREA
+* Update: Permitir a los usuarios de puntos crea generar el reporte del punto crea incluyendo las PQRs de otros usuarios del mismo punto crea
+
 openerp6.1-rev2013090500
 * Update: Por solicitud de OTC OCS outsourced users pueden ver los PQR de todo el punto crea. Sin embargo no se permite la modificación de las PQRs de otros.
 
