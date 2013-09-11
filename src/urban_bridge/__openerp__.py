@@ -36,7 +36,7 @@
         "demo_xml" : [],
         "update_xml" : ['wizard/structure_elem.xml',
                         'wizard/inspection_survey.xml',
-                        'wizard/import_excel_wizard.xml',
+                        'wizard/import_elements_wizard.xml',
                         'urban_bridge_view.xml',
                         ],
         "installable": True

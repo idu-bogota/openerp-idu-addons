@@ -1,13 +1,12 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
-        <record id="view_urban_bridge_wizard_import_excel_form" model="ir.ui.view">
+        <record id="view_urban_bridge_wizard_import_elements_form" model="ir.ui.view">
             <field name="name">Structure Element</field>
-            <field name="model">urban_bridge.wizard.import_excel</field>
+            <field name="model">urban_bridge.wizard.import_elements</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Import from Excel">
+                <form string="Import from elements">
                     <field name="srid" readonly="False"/>
                     <field name="file"/>
                     <group col="4" colspan="4">
@@ -18,12 +17,12 @@
             </field>
         </record>
 
-        <record id="action_urban_bridge_wizard_import_excel" model="ir.actions.act_window">
+        <record id="action_urban_bridge_wizard_import_elements" model="ir.actions.act_window">
             <field name="name">Elements Importation</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">urban_bridge.wizard.import_excel</field>
-            <field name="src_model">urban_bridge.wizard.import_excel</field>
-            <field name="view_id" ref="view_urban_bridge_wizard_import_excel_form"/>
+            <field name="res_model">urban_bridge.wizard.import_elements</field>
+            <field name="src_model">urban_bridge.wizard.import_elements</field>
+            <field name="view_id" ref="view_urban_bridge_wizard_import_elements_form"/>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>

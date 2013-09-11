@@ -24,13 +24,13 @@
 
 from osv import osv, fields
 
-class urban_bridge_wizard_import_excel(osv.osv_memory):
+class urban_bridge_wizard_import_elements(osv.osv_memory):
     """
     Wizard to load information from excel
     """ 
-    _name="urban_bridge.wizard.import_excel"
+    _name="urban_bridge.wizard.import_elements"
     _columns={
-        'srid':fields.integer('SRID'),
+        'srid':fields.integer('Source SRID','Source Data System Reference'),
         'file':fields.binary('File'),
     }
     

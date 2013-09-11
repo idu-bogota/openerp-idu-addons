@@ -20,4 +20,4 @@
 ##############################################################################
 import structure_elem
 import inspection_survey
-import import_excel
+import import_elements

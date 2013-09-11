@@ -61,7 +61,11 @@ Bridges
                 </group>
               </page>
               <page string="Structure Elements">
+                <group colspan="4" col="2">
                     <field name="elements"/>
+                </group>
+                 <button name="%(urban_bridge.action_urban_bridge_wizard_import_elements)d" string="Import"
+                                    type="action" icon="gtk-ok" context="{'bridge_id':id}"/>
               </page>
               <page string="Inspections">
                     <field name="survey_id"/>
