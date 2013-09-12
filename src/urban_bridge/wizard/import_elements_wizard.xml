@@ -10,7 +10,7 @@
                     <field name="srid" readonly="False"/>
                     <field name="file"/>
                     <group col="4" colspan="4">
-                        <button name="elem_create" string="Create" type="object" icon="gtk-ok"/>
+                        <button name="next" string="Next" type="object" icon="gtk-ok"/>
                         <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
                     </group>
                 </form>

@@ -31,6 +31,7 @@
                      ],
         "init_xml" : ['wizard/structure_elem.xml',
                       'wizard/inspection_survey.xml',
+                      'wizard/import_elements_wizard.xml',
                       'urban_bridge_view.xml',
                       ],
         "demo_xml" : [],

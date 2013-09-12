@@ -57,7 +57,7 @@ Bridges
                     <field name="structure_material" widget="selection"/>
                 </group>
                 <group colspan="2" col="2">
-                        <field name="photo" widget='image'  img_width="840" img_height="600" width="840" height="600" nolabel="1"/>
+                        <field name="photo" widget='image' img_width="840" img_height="600" width="840" height="600" nolabel="1"/>
                 </group>
               </page>
               <page string="Structure Elements">

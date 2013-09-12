@@ -34,3 +34,10 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
         'file':fields.binary('File'),
     }
     
+    def next (self,cr,uid,ids,context=None):
+        bridges = self.browse(cr,uid,ids,context=None)
+        
+        return {'type': 'ir.actions.act_window_close'}
+     
+     
+     

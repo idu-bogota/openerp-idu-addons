@@ -41,7 +41,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
         res = {}
         for bridge in self.browse(cr, uid, ids, context = context):
             geom = bridge.shape
-            query = "SELECT name FROM base_map_district WHERE st_intersects(shape,st_geomfromtext('{0}',900913)) = true".format(geom)
+            query = "SELECT name FROM base_map_district WHERE st_intersects(shape,st_geomfromtext('{0}',4326)) = true".format(geom)
             cr.execute(query)
             districts=""
             for row in cr.fetchall():
@@ -53,7 +53,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
         res = {}
         for bridge in self.browse(cr, uid, ids, context = context):
             geom = bridge.shape
-            query = "SELECT name FROM base_map_sub_district WHERE st_intersects(shape,st_geomfromtext('{0}',900913)) = true".format(geom)
+            query = "SELECT name FROM base_map_sub_district WHERE st_intersects(shape,st_geomfromtext('{0}',4326)) = true".format(geom)
             cr.execute(query)
             sub_districts=""
             for row in cr.fetchall():
@@ -65,7 +65,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
         res = {}
         for bridge in self.browse(cr, uid, ids, context = context):
             geom = bridge.shape
-            query = "SELECT name FROM base_map_cadastral_zone WHERE st_intersects(shape,st_geomfromtext('{0}',900913)) = true".format(geom)
+            query = "SELECT name FROM base_map_cadastral_zone WHERE st_intersects(shape,st_geomfromtext('{0}',4326)) = true".format(geom)
             cr.execute(query)
             cad_zone=""
             for row in cr.fetchall():
@@ -77,7 +77,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
         res = {}
         for bridge in self.browse(cr, uid, ids, context = context):
             geom = bridge.shape
-            query = "SELECT zone_name,micr_measure1 FROM base_map_micro_seismicity WHERE st_intersects(shape,st_geomfromtext('{0}',900913)) = true".format(geom)
+            query = "SELECT zone_name,micr_measure1 FROM base_map_micro_seismicity WHERE st_intersects(shape,st_geomfromtext('{0}',4326)) = true".format(geom)
             cr.execute(query)
             micr_seism=""
             for row in cr.fetchall():
@@ -162,7 +162,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
             return {"result":"Save Failed!"}
     _name="urban_bridge.bridge"
     _columns = {
-        'shape':fields.geo_multi_polygon('Shape',help="Shape"),
+        'shape':fields.geo_multi_polygon('Shape',help="Shape",srid=4326),
         'code':fields.char('Bridge Code',size=128,help="Bridge Code"),
         'name':fields.char('Identifier',size=128,help ="Identifier"),
         'classification':fields.selection([('PPC','PPC'),('PPE','PPE'),('PVC','PVC'),('PVE','PVE')],'Bridge Classification'),
@@ -256,7 +256,7 @@ class urban_bridge_structure_element_attribute(osv.osv):
         'name':fields.char('Name',size=256,required=True),
         'is_required':fields.boolean('Is Required'),
         'is_enabled':fields.boolean('Is Enabled'),
-        'data_type':fields.selection([('integer','Integer'),('text','Text'),('datetime',' Date Time'),('date','Date'),('float','Float'),('boolean','Boolean'),('char','Char'),('selection','Selection'),('binary','Photo')],'Data Type',required=True),
+        'data_type':fields.selection([('integer','Integer'),('text','Text'),('datetime',' Date Time'),('date','Date'),('float','Float'),('boolean','Boolean'),('char','Char'),('selection','Selection'),('binary','Photo'),('geo_point','Geographic Point'),('geo_line','Geographic Line'),('geo_polygon','Geographic Polygon')],'Data Type',required=True),
         'element_type_id':fields.many2one('urban_bridge.structure_element_type','Element ID'),
         'selection_text':fields.char('Selection',size=1024,help='If Data type : selection then selection text contain the dictionary'),
     }
@@ -283,9 +283,9 @@ class urban_bridge_structure_element_value(geo_model.GeoModel):
         'value_bool':fields.boolean('Boolean'),
         'value_binary':fields.binary('Photo'),
         'value_selection':fields.char('Selection',size=10),
-        'value_point':fields.geo_multi_point('Shape Point'),
-        'value_line':fields.geo_multi_line('Shape Line'),
-        'value_polygon':fields.geo_multi_polygon('Shape Line'),
+        'value_point':fields.geo_point('Shape Point',srid=4326),
+        'value_line':fields.geo_line('Shape Line',srid=4326),
+        'value_polygon':fields.geo_polygon('Shape Line',srid=4326),
         }
 urban_bridge_structure_element_value()
 

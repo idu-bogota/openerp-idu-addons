@@ -26,6 +26,7 @@
 from osv import osv, fields
 from lxml import etree
 from ast import literal_eval
+from shapely.wkt import dumps, loads
 #from suds.client import Client
 
 class urban_bridge_wizard_structure_elem(osv.osv_memory):
@@ -102,6 +103,17 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                         }
                     #Agrega field al photogroup
                     etree.SubElement(photogroup,"field",required=is_required,name=new_id,widget="image",img_width="840",img_height="600",width="840",height="600")
+                elif ((data_type=='geo_point') or (data_type=='geo_line') or (data_type=='geo_polygon')):
+                    result['fields'][new_id] = {
+                        'domain':[],
+                        'string':elem_string,
+                        'selectable':True,
+                        'type':"text",
+                        'string':elem_string,
+                        'context':{},
+                        'required':is_required,
+                        }
+                    etree.SubElement(page_string_features,"field",required=is_required,name=new_id)
                 else:
                     result['fields'][new_id] = {
                         'domain':[],
@@ -184,7 +196,15 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                 res.update({field_id:value.value_selection})
             elif(data_type=='binary'):
                 res.update({field_id:value.value_binary})
-                
+            elif(data_type=='geo_point'):
+                if (value.value_point is not False):
+                    res.update({field_id:value.value_point.wkt})
+            elif(data_type=='geo_line'):
+                if (value.value_line is not False):
+                    res.update({field_id:value.value_line.wkt})
+            elif(data_type=='geo_polygon'):
+                if (value.value_polygon is not False):
+                    res.update({field_id:value.value_polygon.wkt})
         return res
             
         
@@ -239,6 +259,15 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                     str_elem_val_vals['value_selection']=vals[value_form]
                 elif(data_type=='binary'):
                     str_elem_val_vals['value_binary']=vals[value_form]
+                elif(data_type=='geo_point'):
+                    point = dumps(loads(vals[value_form]))
+                    str_elem_val_vals['value_point']= point
+                elif(data_type=='geo_point'):
+                    point = dumps(loads(vals[value_form]))
+                    str_elem_val_vals['value_point']= point
+                elif(data_type=='geo_polygon'):
+                    polygon = dumps(loads(vals[value_form]))
+                    str_elem_val_vals['value_polygon']= polygon
                 isnew=True
                 id_value=0 
                 for struc_elem_value in structure_elem.values:
