@@ -201,6 +201,7 @@
                 <field name="damage_width_by_citizen" />
                 <field name="damage_length_by_citizen" />
                 <field name="damage_deep_by_citizen" />
+                <field name="damage_element_by_citizen" />
             </page>
         </page>
     </field>
