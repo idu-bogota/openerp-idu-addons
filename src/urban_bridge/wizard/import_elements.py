@@ -23,7 +23,8 @@
 ##############################################################################
 
 from osv import osv, fields
-
+import xlrd
+import base64
 class urban_bridge_wizard_import_elements(osv.osv_memory):
     """
     Wizard to load information from excel
@@ -31,13 +32,21 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
     _name="urban_bridge.wizard.import_elements"
     _columns={
         'srid':fields.integer('Source SRID','Source Data System Reference'),
+        'element':fields.many2one('urban_bridge.structure_element_type','Element Type'),
         'file':fields.binary('File'),
     }
     
     def next (self,cr,uid,ids,context=None):
-        bridges = self.browse(cr,uid,ids,context=None)
-        
-        return {'type': 'ir.actions.act_window_close'}
-     
-     
-     
+        dirs=[]
+        for wizard in self.browse(cr,uid,ids,context=None):
+            #fileobj = TemporaryFile('w+')
+            #fileobj.write(base64.decodestring(wizard.file))
+            workbook = xlrd.open_workbook(file_contents=base64.decodestring(wizard.file))
+            worksheets = workbook.sheet_names()
+            for worksheet_name in worksheets:
+                dirs.append(str(worksheet_name))
+            
+            #1. Listar las hojas que se encuentran en el fichero y ponerlas en un combobox
+        return {'type': 'ir.actions.act_window_close','work_sheets':dirs}
+    
+    

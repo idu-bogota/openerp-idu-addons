@@ -211,7 +211,7 @@ class urban_bridge_wizard_inspection_survey(osv.osv_memory):
         Create the wizard and set the values for structure element in EAV model 
         """
         #El metodo escribe los valores ingresados por el usuario en la base de Datos
-        #urban_bridge_wizard_inspection_survey_id = super(urban_bridge_wizard_inspection_survey,self).create(cr, uid, {'bridge_id':context['bridge_id']}, context=context)
+        super(urban_bridge_wizard_inspection_survey,self).create(cr, uid, {'bridge_id':context['bridge_id']}, context=context)
         inspection_id=context['active_id']
         inspection_survey=self.pool.get('urban_bridge.inspection_survey')
         inspection_attribute_obj=self.pool.get('urban_bridge.inspection_attribute')

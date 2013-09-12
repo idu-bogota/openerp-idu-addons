@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Import from elements">
                     <field name="srid" readonly="False"/>
+                    <field name="element" widget="selection"/>
                     <field name="file"/>
                     <group col="4" colspan="4">
                         <button name="next" string="Next" type="object" icon="gtk-ok"/>
