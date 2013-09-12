@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- MENU DEFINITIONS -->
+        <menuitem name="Strategic Planning" id="base.menu_main_strategic_planning"/>
+        <menuitem name="Strategic Planning" id="menu_strategic_planning" parent="base.menu_main_strategic_planning"/>
+
+        <!-- Strategy Views -->
+        <record id="enterprise_strategic_planning_strategy_list" model="ir.ui.view">
+            <field name="name">enterprise_strategic_planning.strategy.list</field>
+            <field name="model">enterprise_strategic_planning.strategy</field>
+            <field name="arch" type="xml">
+                <tree string="Strategy">
+                    <field name="name"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="state"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record id="enterprise_strategic_planning_strategy_form" model="ir.ui.view">
+            <field name="name">enterprise_strategic_planning.strategy.form</field>
+            <field name="model">enterprise_strategic_planning.strategy</field>
+            <field name="arch" type="xml">
+                <form string="Strategy" version="7.0">
+	                <header>
+	                    <field name="state" widget="statusbar" statusbar_colors='{"pending":"blue"}'/>
+	                </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group name="details">
+                            <field name="start_date" />
+                            <field name="end_date" />
+                            <field name="active" invisible="1" />
+                            <field name="description"/>
+                            <field name="mission"/>
+                            <field name="vision"/>
+                        </group>
+                        <group name="Goals">
+                           <separator string="Goals" colspan="4"/>
+                           <field name="goal_ids" nolabel="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" help="Follow this Strategy to automatically track the events associated" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="enterprise_strategic_planning_strategy_list_action" model="ir.actions.act_window">
+            <field name="name">Strategies</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">enterprise_strategic_planning.strategy</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="enterprise_strategic_planning_strategy_list"/>
+        </record>
+        <menuitem
+            action="enterprise_strategic_planning_strategy_list_action"
+            id="enterprise_strategic_planning_strategy_list_menu"
+            parent="menu_strategic_planning"
+            sequence="0" />
+
+        <!-- Goal Views -->
+        <record id="enterprise_strategic_planning_goal_list" model="ir.ui.view">
+            <field name="name">enterprise_strategic_planning.goal.list</field>
+            <field name="model">enterprise_strategic_planning.goal</field>
+            <field name="arch" type="xml">
+                <tree string="Goal">
+                    <field name="name"/>
+                    <field name="due_date"/>
+                    <field name="state"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record id="enterprise_strategic_planning_goal_form" model="ir.ui.view">
+            <field name="name">enterprise_strategic_planning.goal.form</field>
+            <field name="model">enterprise_strategic_planning.goal</field>
+            <field name="arch" type="xml">
+                <form string="Goal" version="7.0">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_colors='{"pending":"blue"}'/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group name="details">
+                            <field name="strategy_id"/>
+                            <field name="active" invisible="1"/>
+                            <field name="due_date"/>
+                            <field name="description"/>
+                        </group>
+                        <group name="Objectives">
+                           <separator string="Objectives" colspan="4"/>
+                           <field name="objective_ids" nolabel="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" help="Follow this Goal to automatically track the events associated" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="enterprise_strategic_planning_goal_list_action" model="ir.actions.act_window">
+            <field name="name">Goals</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">enterprise_strategic_planning.goal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="enterprise_strategic_planning_goal_list"/>
+        </record>
+        <menuitem
+            action="enterprise_strategic_planning_goal_list_action"
+            id="enterprise_strategic_planning_goal_list_menu"
+            parent="menu_strategic_planning"
+            sequence="0" />
+
+        <!-- Objectives Views -->
+        <record id="enterprise_strategic_planning_objective_list" model="ir.ui.view">
+            <field name="name">enterprise_strategic_planning.objective.list</field>
+            <field name="model">enterprise_strategic_planning.objective</field>
+            <field name="arch" type="xml">
+                <tree string="Objective">
+                    <field name="name"/>
+                    <field name="due_date"/>
+                    <field name="state"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record id="enterprise_strategic_planning_objective_form" model="ir.ui.view">
+            <field name="name">enterprise_strategic_planning.objective.form</field>
+            <field name="model">enterprise_strategic_planning.objective</field>
+            <field name="arch" type="xml">
+                <form string="Objective" version="7.0">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_colors='{"pending":"blue"}'/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group name="details">
+                            <field name="goal_id"/>
+                            <field name="active" invisible="1"/>
+                            <field name="due_date"/>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" help="Follow this Goal to automatically track the events associated" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="enterprise_strategic_planning_objective_list_action" model="ir.actions.act_window">
+            <field name="name">Objectives</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">enterprise_strategic_planning.objective</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="enterprise_strategic_planning_objective_list"/>
+        </record>
+        <menuitem
+            action="enterprise_strategic_planning_objective_list_action"
+            id="enterprise_strategic_planning_objective_list_menu"
+            parent="menu_strategic_planning"
+            sequence="0" />
+    </data>
+</openerp>
