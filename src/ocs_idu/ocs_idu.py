@@ -263,6 +263,7 @@ class crm_claim(crm.crm_case,osv.osv):
         'damage_width_by_citizen':  fields.char('Via damage width',size=10,help='Damage width provided by the citizen',states={'done':[('readonly',True)]}),
         'damage_length_by_citizen': fields.char('Via damage length',size=10,help='Damage length provided by the citizen',states={'done':[('readonly',True)]}),
         'damage_deep_by_citizen': fields.char('Via damage deep',size=10,help='Damage size provided by the citizen',states={'done':[('readonly',True)]}),
+        'damage_element_by_citizen': fields.selection([('via', 'Via'),('anden', 'Anden'),('puente_peatonal', 'Puente Peatonal')], 'Via Element Type',help='Element type provided by the citizen'),
     }
     _constraints = [
         (_check_contract_reference,'Contract Reference format is number-year, ie. 123-2012',['contract_reference']),
