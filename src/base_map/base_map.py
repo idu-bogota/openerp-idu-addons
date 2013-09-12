@@ -35,7 +35,7 @@ class base_map_district(geo_model.GeoModel):
     _columns = {
         'name':fields.char('District Name',size=256),
         'code':fields.char('District Code',size=256),
-        'shape':fields.geo_multi_polygon('Shape'),
+        'shape':fields.geo_multi_polygon('Shape',srid=4326),
     }
 base_map_district()
 
@@ -43,7 +43,7 @@ base_map_district()
 class base_map_sub_district(geo_model.GeoModel):
     _name="base_map.sub_district"
     _columns={
-        'shape':fields.geo_multi_polygon('Shape'),
+        'shape':fields.geo_multi_polygon('Shape',srid=4326),
         'code':fields.char('Code Name',size=256),
         'name':fields.char('Name',size=256),
         'classification':fields.integer('Classification'),
@@ -57,7 +57,7 @@ class base_map_neighborhood(geo_model.GeoModel):
     _columns = {
         'code': fields.char('Neighborhood Code',size=30,help='Identify a Neighborhood Code'),
         'name': fields.char('Neighborhood Name', size = 128),
-        'shape':fields.geo_multi_polygon('Geometry'),
+        'shape':fields.geo_multi_polygon('Geometry',srid=4326),
     }
 base_map_neighborhood()
 
@@ -77,7 +77,7 @@ class base_map_cadastral_zone(geo_model.GeoModel):
         'update_2':fields.date('Third Update'),
         'update_3':fields.date('Fourth Update'),
         'zone_code':fields.char('Zone Code', size=128),
-        'shape':fields.geo_multi_polygon('Shape'),
+        'shape':fields.geo_multi_polygon('Shape',srid=4326),
     }
 base_map_cadastral_zone()
 
@@ -88,7 +88,7 @@ class base_map_micro_seismicity(geo_model.GeoModel):
         'colour':fields.char('Colour', size=128),
         'micr_measure1':fields.float('Measure 1'),
         'micr_measure2':fields.float('Measure 2'),
-        'shape':fields.geo_multi_polygon('Shape'),
+        'shape':fields.geo_multi_polygon('Shape',srid=4326),
     }
 
 class base_map_geological_zone(geo_model.GeoModel):
@@ -96,7 +96,7 @@ class base_map_geological_zone(geo_model.GeoModel):
     _columns={
         'name':fields.char('Geological Zone',size=256),
         'code':fields.char('Code',size=128),
-        'shape':fields.geo_multi_polygon('Shape'),
+        'shape':fields.geo_multi_polygon('Shape',srid=4326),
     }
 base_map_geological_zone()
 
@@ -111,7 +111,7 @@ class base_map_road_section(geo_model.GeoModel):
         'start_edge':fields.char('Start Edge',size=128),
         'end_edge':fields.char('End edge',size=128),
         'road_hierarchy':fields.many2one('base_map.road_hierarchy','Road Hierarchy'),
-        'shape':fields.geo_multi_line('Shape'),
+        'shape':fields.geo_multi_line('Shape',srid=4326),
     }
 base_map_road_section()
 
