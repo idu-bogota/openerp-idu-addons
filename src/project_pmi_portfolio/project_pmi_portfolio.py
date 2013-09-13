@@ -45,6 +45,7 @@ project()
 
 class project_pmi_portfolio(osv.osv):
     _name = "project_pmi.portfolio"
+    _inherit = ['mail.thread']
     _description = "Handles a portfolio tree"
 
     def name_get(self, cr, uid, ids, context=None):
@@ -88,9 +89,14 @@ class project_pmi_portfolio(osv.osv):
             'project_id',
             'Projects'),
         'strategic_goal_id': fields.many2one('enterprise_strategic_planning.goal','Strategic Goal'),
+        'active':fields.boolean('Active',help='Enable/Disable'),
+        'state':fields.selection([('draft', 'Draft'),('open', 'In Progress'),('cancel', 'Cancelled'),('done', 'Done'),('pending', 'Pending')],'State'),
         'project_count': fields.function(_project_count, type="integer", string='Project Count'),
     }
-
+    _defaults = {
+        'active': True,
+        'state': 'draft'
+    }
     _parent_name = "parent_id"
     _parent_store = True
     _parent_order = 'sequence, name'
@@ -116,6 +122,7 @@ project_pmi_portfolio()
 
 class project_pmi_program(osv.osv):
     _name = "project_pmi.program"
+    _inherit = ['mail.thread']
     _description = "Handles a program tree"
 
     def name_get(self, cr, uid, ids, context=None):
@@ -159,8 +166,13 @@ class project_pmi_program(osv.osv):
             'project_id',
             'Projects'),
         'project_count': fields.function(_project_count, type="integer", string='Project Count'),
+        'active':fields.boolean('Active',help='Enable/Disable'),
+        'state':fields.selection([('draft', 'Draft'),('open', 'In Progress'),('cancel', 'Cancelled'),('done', 'Done'),('pending', 'Pending')],'State'),
     }
-
+    _defaults = {
+        'active': True,
+        'state': 'draft'
+    }
     _parent_name = "parent_id"
     _parent_store = True
     _parent_order = 'sequence, name'
@@ -186,7 +198,7 @@ project_pmi_program()
 
 class enterprise_strategic_planning_goal(osv.osv):
     _name = "enterprise_strategic_planning.goal"
-    _inherit = ['enterprise_strategic_planning.goal','mail.thread']
+    _inherit = ['enterprise_strategic_planning.goal']
     _columns = {
         'portfolio_ids': fields.one2many('project_pmi.portfolio', 'strategic_goal_id', string='Related Portfolios'),
     }
@@ -195,7 +207,7 @@ enterprise_strategic_planning_goal()
 
 class enterprise_strategic_planning_objective(osv.osv):
     _name = "enterprise_strategic_planning.objective"
-    _inherit = ['enterprise_strategic_planning.objective', 'mail.thread']
+    _inherit = ['enterprise_strategic_planning.objective']
     _columns = {
         'project_ids': fields.one2many('project.project', 'strategic_objective_id', string='Related Projects'),
     }
