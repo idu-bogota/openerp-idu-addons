@@ -1,8 +1,22 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <record id="view_urban_bridge_wizard_import_elements_page_2" model="ir.ui.view">
+            <field name="name">Import Elements Page 2</field>
+            <field name="model">urban_bridge.wizard.import_elements</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Import from elements">
+                    <group col="4" colspan="4">
+                        <button name="import_elements" string="Import Elements" type="object" icon="gtk-next" context="{'current_id':id}"/>
+                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        
         <record id="view_urban_bridge_wizard_import_elements_form" model="ir.ui.view">
-            <field name="name">Structure Element</field>
+            <field name="name">Import Elements Page 1</field>
             <field name="model">urban_bridge.wizard.import_elements</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -11,7 +25,7 @@
                     <field name="element" widget="selection"/>
                     <field name="file"/>
                     <group col="4" colspan="4">
-                        <button name="next" string="Next" type="object" icon="gtk-ok"/>
+                        <button name="next" string="Next" type="object" icon="gtk-next"/>
                         <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
                     </group>
                 </form>

@@ -73,7 +73,6 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                         'string':elem_string,
                         'selectable':True,
                         'type':data_type,
-                        'string':elem_string,
                         'context':{},
                         'size':256,
                         'required':is_required,
@@ -85,7 +84,6 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                         'string':elem_string,
                         'selectable':True,
                         'type':data_type,
-                        'string':elem_string,
                         'context':{},
                         'selection':literal_eval(att.selection_text),
                         'required':is_required,
@@ -97,7 +95,6 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                         'string':elem_string,
                         'selectable':True,
                         'type':data_type,
-                        'string':elem_string,
                         'context':{},
                         'required':is_required,
                         }
@@ -109,7 +106,6 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                         'string':elem_string,
                         'selectable':True,
                         'type':"text",
-                        'string':elem_string,
                         'context':{},
                         'required':is_required,
                         }
@@ -232,7 +228,8 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
         #Se itera sobre los elementos recibidos
         #Si no existen se crean
         for value_form in vals:
-            if not (str(value_form).startswith("n") or str(value_form).startswith("e")):#Values aren't name or structure_elem
+            #Values aren't name or structure_elem
+            if not (str(value_form).startswith("n") or str(value_form).startswith("e")):
                 s = value_form.split('_')
                 struct_elem_attribute_id = int(s[1])
                 attribute = structure_elem_attribute_obj.browse(cr,uid,struct_elem_attribute_id)
