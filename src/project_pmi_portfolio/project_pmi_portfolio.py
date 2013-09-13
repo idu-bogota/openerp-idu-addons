@@ -37,6 +37,8 @@ class project(osv.osv):
             'project_id',
             'program_id',
             'Programs'),
+        # TODO: Hacer que se restrinjan el listado de objetivos al goal del portafolio
+        'strategic_objective_id': fields.many2one('enterprise_strategic_planning.objective','Strategic Objective'),
     }
 
 project()
@@ -85,6 +87,7 @@ class project_pmi_portfolio(osv.osv):
             'portfolio_id',
             'project_id',
             'Projects'),
+        'strategic_goal_id': fields.many2one('enterprise_strategic_planning.goal','Strategic Goal'),
         'project_count': fields.function(_project_count, type="integer", string='Project Count'),
     }
 
@@ -180,3 +183,19 @@ class project_pmi_program(osv.osv):
         return [ids]
 
 project_pmi_program()
+
+class enterprise_strategic_planning_goal(osv.osv):
+    _name = "enterprise_strategic_planning.goal"
+    _inherit = ['enterprise_strategic_planning.goal','mail.thread']
+    _columns = {
+        'portfolio_ids': fields.one2many('project_pmi.portfolio', 'strategic_goal_id', string='Related Portfolios'),
+    }
+
+enterprise_strategic_planning_goal()
+
+class enterprise_strategic_planning_objective(osv.osv):
+    _name = "enterprise_strategic_planning.objective"
+    _inherit = ['enterprise_strategic_planning.objective', 'mail.thread']
+    _columns = {
+        'project_ids': fields.one2many('project.project', 'strategic_objective_id', string='Related Projects'),
+    }

@@ -32,6 +32,7 @@ Elements in the module are taken from Business Motivation Model (BMM) http://www
     'depends': [
         'base_setup',
         'base_status',
+        'mail',
     ],
     'data': [
         'enterprise_strategic_planning_view.xml',

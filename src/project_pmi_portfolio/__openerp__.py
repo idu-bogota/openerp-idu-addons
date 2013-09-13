@@ -30,7 +30,7 @@ This module adds the Portfolio Management support for Projects.
     'author': 'Instituto De Desarrollo Urbano',
     'website': 'http://www.idu.gov.co',
     'depends': [
-        'project',
+        'project','enterprise_strategic_planning'
     ],
     'data': [
         'project_pmi_portfolio_view.xml',

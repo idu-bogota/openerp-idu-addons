@@ -13,6 +13,7 @@
             <field name="arch" type="xml">
                 <tree string="Porfolio Tree">
                     <field name="name"/>
+                    <field name="strategic_goal_id"/>
                     <field name="project_count"/>
                 </tree>
             </field>
@@ -24,6 +25,7 @@
                 <tree string="Porfolio List">
                     <field name="sequence" widget="handle"/>
                     <field name="complete_name"/>
+                    <field name="strategic_goal_id"/>
                 </tree>
             </field>
         </record>
@@ -43,6 +45,7 @@
                             <field name="parent_id"/>
                         </group>
                         <group name="description">
+                            <field name="strategic_goal_id"/>
                             <field name="description"/>
                         </group>
                         <group name="projects">
@@ -195,6 +198,9 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
+                <field name="user_id" position="before">
+                    <field name="strategic_objective_id"/>
+                </field>
 	            <page string="Team" position="after">
                     <page string="Portfolio">
                         <field name="portfolio_ids" nolabel="1" />
@@ -228,6 +234,34 @@
                    <field name="portfolio_ids" invisible="1"/>
                    <field name="program_ids" invisible="1"/>
                </field>
+            </field>
+        </record>
+        <!-- Strategic Planning views -->
+        <record id="enterprise_strategic_planning_goal_form" model="ir.ui.view">
+            <field name="name">enterprise_strategic_planning.goal.form</field>
+            <field name="model">enterprise_strategic_planning.goal</field>
+            <field name="inherit_id" ref="enterprise_strategic_planning.enterprise_strategic_planning_goal_form"/>
+            <field name="arch" type="xml">
+                 <group name="Objectives" position="after">
+                     <group name="Portfolios">
+	                    <separator string="Related Portfolios" colspan="4"/>
+	                    <field name="portfolio_ids" nolabel="1"/>
+	                 </group>
+                 </group>
+            </field>
+        </record>
+
+        <record id="enterprise_strategic_planning_objective_form" model="ir.ui.view">
+            <field name="name">enterprise_strategic_planning.objective.form</field>
+            <field name="model">enterprise_strategic_planning.objective</field>
+            <field name="inherit_id" ref="enterprise_strategic_planning.enterprise_strategic_planning_objective_form"/>
+            <field name="arch" type="xml">
+                <group name="details" position="after">
+                     <group name="Projects">
+                        <separator string="Related Projects" colspan="4"/>
+                        <field name="project_ids" nolabel="1"/>
+                     </group>
+                </group>
             </field>
         </record>
     </data>
