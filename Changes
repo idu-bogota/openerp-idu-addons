@@ -1,3 +1,4 @@
+* Update: en el listado de crm.claims para puntos CREA despliega name en lugar de contract
 * Fix: En el reporte crm_claim.rml la descripción de la PQR se despliega fuera de la tabla para soportar varias páginas cuando la descripción es muy larga
 * Update: Se modificaron las reglas de acceso de OCS outsourced user para que pueda leer otros usuarios de su punto crea, fallaba en la generacion del pdf del crm.claim
 * New: Se agrego el campo 'tipo de elemento' en la pestaña: "Reporte Malla Vial"
