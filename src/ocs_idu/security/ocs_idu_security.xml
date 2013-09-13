@@ -73,6 +73,7 @@
             <field name="domain_force">[('id','=',user.id)]</field>
             <!-- <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field> -->
             <field name="groups" eval="[(4, ref('group_ocs_outsourced_user'))]"/>
+            <field name="perm_read" eval="False"/>
         </record>
         <record id="ocs_idu_rule_manager_claims" model="ir.rule">
             <field name="name">Manager Claims</field>

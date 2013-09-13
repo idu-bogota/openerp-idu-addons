@@ -1,4 +1,5 @@
-* New: Se agrego el tipo de elemento en la pestaña: "Reporte Malla Vial"
+* Update: Se modificaron las reglas de acceso de OCS outsourced user para que pueda leer otros usuarios de su punto crea, fallaba en la generacion del pdf del crm.claim
+* New: Se agrego el campo 'tipo de elemento' en la pestaña: "Reporte Malla Vial"
 
 openerp6.1-rev2013090900
 * Update: Permitir a los usuarios de puntos crea cambiar el dueño de una PQR de su propio punto CREA

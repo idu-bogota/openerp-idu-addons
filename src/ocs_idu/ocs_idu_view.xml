@@ -223,7 +223,7 @@
 	                colspan="4" />
             </group>
             <group col="8" colspan="4">
-                <field name="user_id" attrs="{'readonly': [('is_editable','==',False)]}"/>
+                <field name="user_id" domain="[('id','=',uid)]" attrs="{'readonly': [('is_editable','==',False)]}"/>
                 <field name="csp_id" widget="selection" domain="[('is_outsourced','=',True),'|',('close_date','=',False),('close_date','>=','now()')]" attrs="{'readonly': [('is_editable','==',False)]}"/>
                 <field name="id" attrs="{'readonly': [('is_editable','==',False)]}"/>
                 <field name="create_date" />
