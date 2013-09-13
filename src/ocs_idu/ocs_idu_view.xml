@@ -201,6 +201,7 @@
                 <field name="damage_width_by_citizen" />
                 <field name="damage_length_by_citizen" />
                 <field name="damage_deep_by_citizen" />
+                <field name="damage_element_by_citizen" />
             </page>
         </page>
     </field>
@@ -222,7 +223,7 @@
 	                colspan="4" />
             </group>
             <group col="8" colspan="4">
-                <field name="user_id" attrs="{'readonly': [('is_editable','==',False)]}"/>
+                <field name="user_id" domain="[('id','=',uid)]" attrs="{'readonly': [('is_editable','==',False)]}"/>
                 <field name="csp_id" widget="selection" domain="[('is_outsourced','=',True),'|',('close_date','=',False),('close_date','>=','now()')]" attrs="{'readonly': [('is_editable','==',False)]}"/>
                 <field name="id" attrs="{'readonly': [('is_editable','==',False)]}"/>
                 <field name="create_date" />
@@ -402,7 +403,7 @@
             <field name="date"/>
             <field name="date_deadline" invisible ="1"/>
             <field name="csp_id"/>
-            <field name="csp_contract"/>
+            <field name="name"/>
             <field name="categ_id" string="Type" select="1"/>
             <field name="state"/>
             <button name="cas_cancel" string="Cancel" type="workflow" groups="ocs_idu.group_ocs_outsourced_manager"
