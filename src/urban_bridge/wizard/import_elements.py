@@ -32,6 +32,7 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
     """ 
     _name="urban_bridge.wizard.import_elements"
     _columns={
+        'bridge_id':fields.many2one('urban_bridge.bridge','Bridge'),
         'srid':fields.integer('Source SRID','Source Data System Reference'),
         'element':fields.many2one('urban_bridge.structure_element_type','Element Type'),
         'file':fields.binary('File'),
@@ -78,13 +79,14 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
             for col in range(ws.ncols):
                 value = ws.cell(0,col).value
                 combo_list.append((x,value))
+                x=x+1
             #2. Determinar los campos que tienen el objeto y de acuerdo a los campos definidos en el objeto se crea una
             xml=etree.fromstring(result['arch'])
             maingroup = etree.Element("group",colspan="4",col="4")
             subgroup=etree.SubElement(maingroup,"group",colspan="4",col="2")
             etree.SubElement(subgroup, "separator", string=wizard.element.name)
             #3. El campo nombre que se encuentra en el objeto structure_element
-            result['fields']["name"] = {
+            result['fields']["elem_name"] = {
                         'domain':[],
                         'string':"Name",
                         'selectable':True,
@@ -93,10 +95,10 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
                         'selection':combo_list,
                         'required':True,
                         }
-            etree.SubElement(maingroup,"field",name="name")
+            etree.SubElement(maingroup,"field",name="elem_name")
             #4. El resto de atributos que se definen para el objeto. 
             for attribute in wizard.element.attributes:
-                new_id = str(wizard.element.id)+"_"+str(attribute.id)
+                new_id = str(wizard.id)+"_"+str(wizard.element.id)+"_"+str(attribute.id)
                 result['fields'][new_id] = {
                         'domain':[],
                         'string':attribute.name,
@@ -111,20 +113,48 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
             result['arch'] = etree.tostring(xml)
         return result
     
+    
     def create(self, cr, uid, vals, context=None):
         """
         This method si called when every action at wizard
         """
-        if vals.has_key('srid'):
+        #0 El metodo se llama en cada pantallazo, en el primer pantallazo, se sube el fichero excel
+        # en el segundo pantallazo, se recibe un diccionario donde indica como interpretar el excel para subir los valores y crearlos en la grilla
+        if vals.has_key('elem_name'):
+            #1. Determinar el wizard porque si no no es posible abrir el fichero de excel
+            # como truco id del wizard esta dentro de la etiqueta dinámica de los campos
+            id_wizard = 0
+            for val in vals:
+                if (str(val) != 'elem_name'):
+                    id_wizard = int(val.split("_")[0])
+                    break 
+            #1. Abrir el fichero de excel
+            wizard = self.browse(cr,uid,id_wizard,context=None)
+            workbook = xlrd.open_workbook(file_contents=base64.decodestring(wizard.file))
+            ws = workbook.sheets()[0]
+            for row_index in range(ws.nrows):
+                #La fila 0 (1) tiene los títulos así que no nos interesa analizar
+                if row_index>0:
+                    #2.Se debe crear el elemento con el nombre que venga en la clave elem_name y el el tipo de elemento que viene en el wizard
+                     elem_name = ws.cell(row_index,int(vals['elem_name'])).value
+                     elem_type = wizard.element
+                     #3.Se genera un diccionario igualito al que se debe mandar al metodo que esta en el otro wizard y se invoca con las claves que 
+                     #que se necesitan
+            return wizard.id
+        else: 
             id_val = super(urban_bridge_wizard_import_elements,self).create(cr, uid, vals, context=context)
-        else:
-            #Abrir 
+            return id_val
+        
+        
+    def default_get(self,cr, uid, fields, context=None):
+        """
+        Fields View Get method :- generate the new view and display the survey pages of selected survey.
+        """
+        res = super(urban_bridge_wizard_import_elements, self).default_get(cr, uid, fields, context=context)
+        res['bridge_id']=context['active_id']
+        return res
 
-        
-        
-        return id_val
-    
-    
+
     def import_elements(self,cr,uid,ids,context=None):
         """
         Import

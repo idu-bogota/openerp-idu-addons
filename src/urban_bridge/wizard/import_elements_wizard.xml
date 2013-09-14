@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Import from elements">
                     <group col="4" colspan="4">
-                        <button name="import_elements" string="Import Elements" type="object" icon="gtk-next" context="{'current_id':id}"/>
+                        <button name="import_elements" string="Import Elements" type="object" icon="gtk-ok" context="{'id_wiz':id}"/>
                         <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
                     </group>
                 </form>
@@ -21,6 +21,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import from elements">
+                    <field name="bridge_id" readonly="True"/>
                     <field name="srid" readonly="False"/>
                     <field name="element" widget="selection"/>
                     <field name="file"/>
