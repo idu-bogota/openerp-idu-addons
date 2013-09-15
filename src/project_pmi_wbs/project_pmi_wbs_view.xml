@@ -5,7 +5,7 @@
 
         <menuitem id="menu_project_wbs" name="WBS" parent="base.menu_main_pm" sequence="1"/>
 
-        <!-- Portfolio Views -->
+        <!-- WBS Views -->
         <record id="project_pmi_wbs_list" model="ir.ui.view">
             <field name="name">project_pmi.wbs.list</field>
             <field name="model">project_pmi.wbs</field>
@@ -35,16 +35,23 @@
                             </h1>
                         </div>
                         <group name="description">
+                            <field name="code" readonly="1"/>
                             <field name="project_id"/>
-                            <field name="description"/>
                         </group>
                         <group name="Deliverables">
                            <separator string="WBS Deliverables Structure" colspan="4"/>
-                           <field name="deliverable_id" nolabel="1"/>
+                           <field name="deliverable_ids" nolabel="1">
+                                <tree>
+                                    <field name="complete_name"/>
+                                    <field name="weight"/>
+                                    <field name="active"/>
+                                    <field name="state"/>
+                                </tree>
+                           </field>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" help="Follow this Strategy to automatically track the events associated" groups="base.group_user"/>
+                        <field name="message_follower_ids" widget="mail_followers" help="Follow this WBS to automatically track the events associated" groups="base.group_user"/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
@@ -68,16 +75,18 @@
         <record id="project_pmi_deliverable_tree" model="ir.ui.view">
             <field name="name">project_pmi.deliverable.tree</field>
             <field name="model">project_pmi.deliverable</field>
-            <field name="field_parent">child_id</field>
+            <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree string="Deliverable">
+                <tree string="Deliverable" toolbar="1">
                     <field name="name"/>
+                    <field name="code"/>
+                    <field name="weight"/>
                     <field name="state"/>
                     <field name="active"/>
                 </tree>
             </field>
         </record>
-        <!-- Click on deliverable's tree item displays linked projects -->
+        <!-- TODO: Click on deliverable's tree item displays linked work packages -->
         <record id="project_pmi_deliverable_work_package_list" model="ir.actions.act_window">
             <field name="name">Projects</field>
             <field name="type">ir.actions.act_window</field>
@@ -98,7 +107,9 @@
             <field name="arch" type="xml">
                 <tree string="Deliverable">
                     <field name="sequence" widget="handle"/>
+                    <field name="code"/>
                     <field name="complete_name"/>
+                    <field name="weight"/>
                     <field name="state"/>
                     <field name="active"/>
                 </tree>
@@ -108,10 +119,10 @@
             <field name="name">project_pmi.deliverable.form</field>
             <field name="model">project_pmi.deliverable</field>
             <field name="arch" type="xml">
-                <form string="Deliverables" version="7.0">
-                    <header>
-                        <field name="state" widget="statusbar" statusbar_colors='{"pending":"blue"}'/>
-                    </header>
+           <form string="Deliverables" version="7.0">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_colors='{"pending":"blue"}'/>
+                </header>
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -119,19 +130,23 @@
                                 <field name="name"/>
                             </h1>
                         </div>
-                        <group name="parent">
-                            <field name="parent_id"/>
-                        </group>
-                        <group name="description">
+                        <group name="details">
+                            <field name="code" readonly="1" />
+                            <field name="parent_id" required="1" domain="[('wbs_id','=',parent.id)]"/>
+                            <field name="weight"/>
                             <field name="description"/>
                         </group>
-                        <group name="work_package">
-                           <separator string="Work Packages" colspan="4"/>
-                           <field name="work_package_ids" nolabel="1"/>
-                        </group>
+                        <notebook>
+                            <page string="Child Deliverables">
+                               <field name="child_ids" nolabel="1" />
+                            </page>
+                            <page string="Work Packages">
+                               <field name="work_package_ids" nolabel="1" />
+                            </page>
+                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" help="Follow this Strategy to automatically track the events associated" groups="base.group_user"/>
+                        <field name="message_follower_ids" widget="mail_followers" help="Follow this deliverable to automatically track the events associated" groups="base.group_user"/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
@@ -160,11 +175,49 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="project_pmi_deliverable_list"/>
         </record>
-        <menuitem
-            action="project_pmi_deliverable_list_action"
-            id="project_pmi_deliverable_list_menu"
-            parent="base.menu_definitions"
-            sequence="0" />
+
+        <!-- Work Package Views -->
+        <record id="project_pmi_work_package_list" model="ir.ui.view">
+            <field name="name">project_pmi.work_package.list</field>
+            <field name="model">project_pmi.work_package</field>
+            <field name="arch" type="xml">
+                <tree string="Work Package List">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="weight"/>
+                    <field name="state"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record id="project_pmi_work_package_form" model="ir.ui.view">
+            <field name="name">project_pmi.work_package.form</field>
+            <field name="model">project_pmi.work_package</field>
+            <field name="arch" type="xml">
+                <form string="Work Package" version="7.0">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_colors='{"pending":"blue"}'/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group name="description">
+                            <field name="code" readonly="1"/>
+                            <field name="weight"/>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" help="Follow this WBS to automatically track the events associated" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
 
         <!-- Project Views -->
         <record id="project_form" model="ir.ui.view">
@@ -172,9 +225,11 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <field name="user_id" position="before">
-                    <field name="wbs_id"/>
-                </field>
+                <page string="Team" position="after">
+                    <page string="Work Breakdown Structure">
+                        <field name="wbs_ids" nolabel="1" />
+                    </page>
+                </page>
             </field>
         </record>
     </data>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="seq_type_wbs" model="ir.sequence.type">
+            <field name="name">Work Breakdown Structure</field>
+            <field name="code">project_pmi.wbs</field>
+        </record>
+        <record id="seq_wbs" model="ir.sequence">
+            <field name="name">Work Breakdown Structure</field>
+            <field name="code">project_pmi.wbs</field>
+            <field name="prefix">WBS</field>
+            <field name="padding">6</field>
+            <field name="implementation">no_gap</field>
+        </record>
+        <record id="seq_type_wbs_deliverable" model="ir.sequence.type">
+            <field name="name">Work Breakdown Structure Deliverable</field>
+            <field name="code">project_pmi.deliverable</field>
+        </record>
+        <record id="seq_wbs_deliverable" model="ir.sequence">
+            <field name="name">Work Breakdown Structure Deliverable</field>
+            <field name="code">project_pmi.deliverable</field>
+            <field name="prefix">DEL</field>
+            <field name="padding">6</field>
+            <field name="implementation">no_gap</field>
+        </record>
+        <record id="seq_type_wbs_work_package" model="ir.sequence.type">
+            <field name="name">Work Breakdown Work Package</field>
+            <field name="code">project_pmi.work_package</field>
+        </record>
+        <record id="seq_wbs_work_package" model="ir.sequence">
+            <field name="name">Work Breakdown Structure Work Package</field>
+            <field name="code">project_pmi.work_package</field>
+            <field name="prefix">WP</field>
+            <field name="padding">6</field>
+            <field name="implementation">no_gap</field>
+        </record>
+    </data>
+</openerp>

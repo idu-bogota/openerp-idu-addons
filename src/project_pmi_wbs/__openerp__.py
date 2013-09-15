@@ -19,11 +19,11 @@
 ##############################################################################
 
 {
-    'name': 'Project Management - Portfolio Management',
+    'name': 'Project Management - Work Breakdown Structure',
     'version': '1.0',
     'category': 'Project Management',
     'description': """
-This module adds the Portfolio Management support for Projects.
+This module adds the WBS support for Projects.
 =================================================================================
 
                 """,
@@ -33,7 +33,7 @@ This module adds the Portfolio Management support for Projects.
         'project'
     ],
     'data': [
-        'project_pmi_wbs_view.xml',
+        'project_pmi_wbs_view.xml','project_pmi_wbs_sequence.xml',
     ],
     'demo': [],
     'installable': True,
