@@ -146,8 +146,10 @@ class project_pmi_work_package(osv.osv):
     _columns = {
         'code': fields.char('Code', size=20, required=True, select=True),
         'name': fields.char('Name', size=255, required=True, select=True),
-        'weight': fields.float('Weight'),
         'description': fields.text('Description'),
+        'weight': fields.float('Weight', help="Weight related to the full WBS Delivery"),
+        'quantity': fields.float('Quantity'),
+        'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True, help="Default Unit of Measure used"),
         'active':fields.boolean('Active',help='Enable/Disable'),
         'state':fields.selection([('draft', 'Draft'),('open', 'In Progress'),('cancel', 'Cancelled'),('done', 'Done'),('pending', 'Pending')],'State'),
         'deliverable_id': fields.many2one('project_pmi.deliverable','Deliverable'),

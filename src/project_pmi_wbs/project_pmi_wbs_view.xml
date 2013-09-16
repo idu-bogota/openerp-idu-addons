@@ -185,6 +185,8 @@
                     <field name="code"/>
                     <field name="name"/>
                     <field name="weight"/>
+                    <field name="quantity"/>
+                    <field name="uom_id"/>
                     <field name="state"/>
                     <field name="active"/>
                 </tree>
@@ -208,6 +210,8 @@
                         <group name="description">
                             <field name="code" readonly="1"/>
                             <field name="weight"/>
+                            <field name="quantity"/>
+                            <field name="uom_id"/>
                             <field name="description"/>
                         </group>
                     </sheet>
