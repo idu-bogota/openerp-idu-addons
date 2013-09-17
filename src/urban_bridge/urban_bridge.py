@@ -41,11 +41,12 @@ class urban_bridge_bridge(geo_model.GeoModel):
         res = {}
         for bridge in self.browse(cr, uid, ids, context = context):
             geom = bridge.shape
-            query = "SELECT name FROM base_map_district WHERE st_intersects(shape,st_geomfromtext('{0}',4326)) = true".format(geom)
-            cr.execute(query)
             districts=""
-            for row in cr.fetchall():
-                districts = row[0] + ","+districts
+            if geom != False:
+                query = "SELECT name FROM base_map_district WHERE st_intersects(shape,st_geomfromtext('{0}',4326)) = true".format(geom)
+                cr.execute(query)
+                for row in cr.fetchall():
+                    districts = row[0] + ","+districts
             res[bridge.id] = districts
         return res
     
@@ -53,35 +54,38 @@ class urban_bridge_bridge(geo_model.GeoModel):
         res = {}
         for bridge in self.browse(cr, uid, ids, context = context):
             geom = bridge.shape
-            query = "SELECT name FROM base_map_sub_district WHERE st_intersects(shape,st_geomfromtext('{0}',4326)) = true".format(geom)
-            cr.execute(query)
             sub_districts=""
-            for row in cr.fetchall():
-                sub_districts = row[0] + ","+sub_districts
+            if geom != False:
+                query = "SELECT name FROM base_map_sub_district WHERE st_intersects(shape,st_geomfromtext('{0}',4326)) = true".format(geom)
+                cr.execute(query)
+                for row in cr.fetchall():
+                    sub_districts = row[0] + ","+sub_districts
             res[bridge.id] = sub_districts
         return res
         
     def _get_cadastral_zone(self,cr,uid,ids,fieldname,arg,context=None):
         res = {}
         for bridge in self.browse(cr, uid, ids, context = context):
-            geom = bridge.shape
-            query = "SELECT name FROM base_map_cadastral_zone WHERE st_intersects(shape,st_geomfromtext('{0}',4326)) = true".format(geom)
-            cr.execute(query)
             cad_zone=""
-            for row in cr.fetchall():
-                cad_zone = row[0] + ","+cad_zone
+            geom = bridge.shape
+            if geom != False:
+                query = "SELECT name FROM base_map_cadastral_zone WHERE st_intersects(shape,st_geomfromtext('{0}',4326)) = true".format(geom)
+                cr.execute(query)
+                for row in cr.fetchall():
+                    cad_zone = row[0] + ","+cad_zone
             res[bridge.id] = cad_zone
         return res
     
     def _get_micro_seismicity(self,cr,uid,ids,fieldname,arg,context=None):
         res = {}
         for bridge in self.browse(cr, uid, ids, context = context):
-            geom = bridge.shape
-            query = "SELECT zone_name,micr_measure1 FROM base_map_micro_seismicity WHERE st_intersects(shape,st_geomfromtext('{0}',4326)) = true".format(geom)
-            cr.execute(query)
             micr_seism=""
-            for row in cr.fetchall():
-                micr_seism = row[0]+"-"+str(row[1])+","+micr_seism
+            geom = bridge.shape
+            if geom !=False:
+                query = "SELECT zone_name,micr_measure1 FROM base_map_micro_seismicity WHERE st_intersects(shape,st_geomfromtext('{0}',4326)) = true".format(geom)
+                cr.execute(query)
+                for row in cr.fetchall():
+                    micr_seism = row[0]+"-"+str(row[1])+","+micr_seism
             res[bridge.id] = micr_seism
         return res
 
@@ -91,14 +95,15 @@ class urban_bridge_bridge(geo_model.GeoModel):
             bridge_id = bridge.id
             query = """
             select st_area(pmagna) as area from (
-            select st_transform(shape,96873) as pmagna from urban_bridge_bridge where id = {0}
+            select st_transform(shape,96873) as pmagna from urban_bridge_bridge where id = %s
             ) as t1
-            """.format(bridge_id)
-            cr.execute(query)
+            """
+            cr.execute(query,str(bridge_id))
             area=0.0
             for row in cr.fetchall():
                 #Crear un diccionario para almacenar areas por
-                area = float(row[0])
+                if row[0]!=None:
+                    area = float(row[0])
                 res[bridge.id] = area
         return res
     
@@ -108,13 +113,15 @@ class urban_bridge_bridge(geo_model.GeoModel):
             bridge_id = bridge.id
             query = """
             select st_perimeter(pmagna) as area from (
-            select st_transform(shape,96873) as pmagna from urban_bridge_bridge where id = {0}
+            select st_transform(shape,96873) as pmagna from urban_bridge_bridge where id = %s
             ) as t1
-            """.format(bridge_id)
-            cr.execute(query)
+            """
+            cr.execute(query,str(bridge_id))
+            perimeter = 0.0
             for row in cr.fetchall():
                 #Crear un diccionario para almacenar areas por
-                perimeter = float(row[0])
+                if row[0]!=None:
+                    perimeter = float(row[0])
                 res[bridge.id] = perimeter
         return res
     
@@ -300,7 +307,7 @@ class urban_bridge_structure_element(osv.osv):
         'name':fields.char('Name',size=128,required=True),
         'element_type_id':fields.many2one('urban_bridge.structure_element_type','Element Type',required=True),
         'values':fields.one2many('urban_bridge.structure_element_value','element_id','Values',ondelete="cascade"),
-        'bridge_id':fields.many2one('urban_bridge.bridge','Bridge'),
+        'bridge_id':fields.many2one('urban_bridge.bridge','Bridge',ondelete="cascade"),
         }
 urban_bridge_structure_element()
 
