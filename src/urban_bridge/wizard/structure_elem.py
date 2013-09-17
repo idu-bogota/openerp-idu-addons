@@ -27,6 +27,8 @@ from osv import osv, fields
 from lxml import etree
 from ast import literal_eval
 from shapely.wkt import dumps, loads
+from openerp.osv.osv import except_osv
+from tools.translate import _
 #from suds.client import Client
 
 class urban_bridge_wizard_structure_elem(osv.osv_memory):
@@ -212,71 +214,93 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
         """
         Create the wizard and set the values for structure element in EAV model 
         """
-        if context is None: context = {}
-        #1. Se obtiene el valor de elem_id
-        elem_id = context['active_id'] 
-        context['elem_type_vals']=vals
-        
-        #2. Se crea el registro de que se hizo un inventario
-        urban_bridge_wizard_structure_elem_id = super(urban_bridge_wizard_structure_elem,self).create(cr, uid, {'elem_id': elem_id}, context=context)
-        #3. Se ejemplifica el objeto structure_elem que se invocó y se miran los valores que tiene con el fin de asignarles un valor que se va 
-        #a actualizar.
-        structure_elem_obj=self.pool.get('urban_bridge.structure_element')
-        structure_elem_value_obj=self.pool.get('urban_bridge.structure_element_value')
-        structure_elem_attribute_obj=self.pool.get('urban_bridge.structure_element_attribute')
-        structure_elem = structure_elem_obj.browse(cr,uid,elem_id)
-        #Se itera sobre los elementos recibidos
-        #Si no existen se crean
-        for value_form in vals:
-            #Values aren't name or structure_elem
-            if not (str(value_form).startswith("n") or str(value_form).startswith("e")):
-                s = value_form.split('_')
-                struct_elem_attribute_id = int(s[1])
-                attribute = structure_elem_attribute_obj.browse(cr,uid,struct_elem_attribute_id)
-                data_type = attribute.data_type
-                #4. Se arma el diccionario que se va a pasar al metodo
-                str_elem_val_vals={}
-                str_elem_val_vals['element_attribute_id']=struct_elem_attribute_id
-                str_elem_val_vals['element_id']=elem_id
-                if (data_type=='integer'):
-                    str_elem_val_vals['value_integer']=vals[value_form]
-                elif (data_type=='text'):
-                    str_elem_val_vals['value_text']=vals[value_form]
-                elif (data_type=='datetime'):
-                    str_elem_val_vals['value_datetime']=vals[value_form]
-                elif (data_type=='float'):
-                    str_elem_val_vals['value_float']=vals[value_form]
-                elif (data_type=='boolean'):
-                    str_elem_val_vals['value_bool']=vals[value_form]
-                elif(data_type=='char'):
-                    str_elem_val_vals['value_char']=vals[value_form]
-                elif(data_type=='date'):
-                    str_elem_val_vals['value_date']=vals[value_form]
-                elif(data_type=='selection'):
-                    str_elem_val_vals['value_selection']=vals[value_form]
-                elif(data_type=='binary'):
-                    str_elem_val_vals['value_binary']=vals[value_form]
-                elif(data_type=='geo_point'):
-                    point = dumps(loads(vals[value_form]))
-                    str_elem_val_vals['value_point']= point
-                elif(data_type=='geo_point'):
-                    point = dumps(loads(vals[value_form]))
-                    str_elem_val_vals['value_point']= point
-                elif(data_type=='geo_polygon'):
-                    polygon = dumps(loads(vals[value_form]))
-                    str_elem_val_vals['value_polygon']= polygon
-                isnew=True
-                id_value=0 
-                for struc_elem_value in structure_elem.values:
-                    if (int(struc_elem_value.element_attribute_id) == struct_elem_attribute_id):
-                        id_value=struc_elem_value.id
-                        isnew=False
-                if (not isnew):
-                    #Write
-                    structure_elem_value_obj.write(cr,uid,id_value,str_elem_val_vals)
-                else:
-                    #Create
-                    structure_elem_value_obj.create(cr,uid,str_elem_val_vals)
-        return urban_bridge_wizard_structure_elem_id
+        try:
+            if context is None: context = {}
+            #1. Se obtiene el valor de elem_id
+            elem_id = context['element_id'] 
+            context['elem_type_vals']=vals
+            
+            #2. Se crea el registro de que se hizo un inventario
+            urban_bridge_wizard_structure_elem_id = super(urban_bridge_wizard_structure_elem,self).create(cr, uid, {'elem_id': elem_id}, context=context)
+            #3. Se ejemplifica el objeto structure_elem que se invocó y se miran los valores que tiene con el fin de asignarles un valor que se va 
+            #a actualizar.
+            structure_elem_obj=self.pool.get('urban_bridge.structure_element')
+            structure_elem_value_obj=self.pool.get('urban_bridge.structure_element_value')
+            structure_elem_attribute_obj=self.pool.get('urban_bridge.structure_element_attribute')
+            structure_elem = structure_elem_obj.browse(cr,uid,elem_id)
+            #Se itera sobre los elementos recibidos
+            #Si no existen se crean
+            for value_form in vals:
+                #Values aren't name or structure_elem
+                if not (str(value_form).startswith("n") or str(value_form).startswith("e")):
+                    s = value_form.split('_')
+                    struct_elem_attribute_id = int(s[1])
+                    attribute = structure_elem_attribute_obj.browse(cr,uid,struct_elem_attribute_id)
+                    data_type = attribute.data_type
+                    #4. Se arma el diccionario que se va a pasar al metodo
+                    str_elem_val_vals={}
+                    str_elem_val_vals['element_attribute_id']=struct_elem_attribute_id
+                    str_elem_val_vals['element_id']=elem_id
+                    if (data_type=='integer'):
+                        str_elem_val_vals['value_integer']=vals[value_form]
+                    elif (data_type=='text'):
+                        str_elem_val_vals['value_text']=vals[value_form]
+                    elif (data_type=='datetime'):
+                        str_elem_val_vals['value_datetime']=vals[value_form]
+                    elif (data_type=='float'):
+                        str_elem_val_vals['value_float']=vals[value_form]
+                    elif (data_type=='boolean'):
+                        str_elem_val_vals['value_bool']=vals[value_form]
+                    elif(data_type=='char'):
+                        str_elem_val_vals['value_char']=vals[value_form]
+                    elif(data_type=='date'):
+                        str_elem_val_vals['value_date']=vals[value_form]
+                    elif(data_type=='selection'):
+                        str_elem_val_vals['value_selection']=vals[value_form]
+                    elif(data_type=='binary'):
+                        str_elem_val_vals['value_binary']=vals[value_form]
+                    elif(data_type=='geo_line'):
+                        if vals[value_form] is not False:
+                            try:
+                                line = dumps(loads(vals[value_form]))
+                                str_elem_val_vals['value_line']= line
+                            except Exception:
+                                raise except_osv(_('Error'), str("Line is not valid!"))
+                        else :
+                            str_elem_val_vals['value_line']= vals[value_form]
+                    elif(data_type=='geo_point'):
+                        if vals[value_form] is not False:
+                            try:
+                                point = dumps(loads(vals[value_form]))
+                                str_elem_val_vals['value_point']= point
+                            except Exception:
+                                raise except_osv(_('Error'), str("Point is not valid!"))
+                        else :
+                            str_elem_val_vals['value_point']= vals[value_form]
+                    elif(data_type=='geo_polygon'):
+                        if vals[value_form] is not False:
+                            try:
+                                polygon = dumps(loads(vals[value_form]))
+                                str_elem_val_vals['value_polygon']= polygon
+                            except Exception:
+                                raise except_osv(_('Error'), str("Polygon is not valid!"))
+                        else :
+                            str_elem_val_vals['value_polygon']= vals[value_form] 
+                    isnew=True
+                    id_value=0 
+                    for struc_elem_value in structure_elem.values:
+                        if (int(struc_elem_value.element_attribute_id) == struct_elem_attribute_id):
+                            id_value=struc_elem_value.id
+                            isnew=False
+                    if (not isnew):
+                        #Write
+                        structure_elem_value_obj.write(cr,uid,id_value,str_elem_val_vals)
+                    else:
+                        #Create
+                        structure_elem_value_obj.create(cr,uid,str_elem_val_vals)
+            return urban_bridge_wizard_structure_elem_id
+        except Exception as e:
+            raise except_osv(_('Error'), str("something is wrong : "+str(e.value)))
+            
 
 urban_bridge_wizard_structure_elem()

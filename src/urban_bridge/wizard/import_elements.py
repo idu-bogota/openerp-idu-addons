@@ -22,10 +22,13 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import osv, fields
+from openerp.osv.osv import except_osv
 from lxml import etree
 import xlrd
 import base64
+from tools.translate import _
+
 class urban_bridge_wizard_import_elements(osv.osv_memory):
     """
     Wizard to load information from excel
@@ -121,26 +124,67 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
         #0 El metodo se llama en cada pantallazo, en el primer pantallazo, se sube el fichero excel
         # en el segundo pantallazo, se recibe un diccionario donde indica como interpretar el excel para subir los valores y crearlos en la grilla
         if vals.has_key('elem_name'):
-            #1. Determinar el wizard porque si no no es posible abrir el fichero de excel
-            # como truco id del wizard esta dentro de la etiqueta dinámica de los campos
-            id_wizard = 0
-            for val in vals:
-                if (str(val) != 'elem_name'):
-                    id_wizard = int(val.split("_")[0])
-                    break 
-            #1. Abrir el fichero de excel
-            wizard = self.browse(cr,uid,id_wizard,context=None)
-            workbook = xlrd.open_workbook(file_contents=base64.decodestring(wizard.file))
-            ws = workbook.sheets()[0]
-            for row_index in range(ws.nrows):
-                #La fila 0 (1) tiene los títulos así que no nos interesa analizar
-                if row_index>0:
-                    #2.Se debe crear el elemento con el nombre que venga en la clave elem_name y el el tipo de elemento que viene en el wizard
-                     elem_name = ws.cell(row_index,int(vals['elem_name'])).value
-                     elem_type = wizard.element
-                     #3.Se genera un diccionario igualito al que se debe mandar al metodo que esta en el otro wizard y se invoca con las claves que 
-                     #que se necesitan
-            return wizard.id
+            try:
+                #1. Determinar el wizard porque si no no es posible abrir el fichero de excel
+                # como truco id del wizard esta dentro de la etiqueta dinámica de los campos
+                id_wizard = 0
+                for val in vals:
+                    if not ((str(val) == 'elem_name') or (str(val) == 'bridge_id')):
+                        id_wizard = int(val.split("_")[0])
+                        break 
+                # Objetos necesarios para hacer el cargue structure_element y value
+                structure_element_obj=self.pool.get("urban_bridge.structure_element")
+                bridge = self.pool.get('urban_bridge.bridge').browse(cr,uid,vals["bridge_id"],context)
+                #1. Abrir el fichero de excel
+                wizard = self.browse(cr,uid,id_wizard,context=None)
+                workbook = xlrd.open_workbook(file_contents=base64.decodestring(wizard.file))
+                ws = workbook.sheets()[0]
+                for row_index in range(ws.nrows):
+                    #La fila 0 (1) tiene los títulos así que no nos interesa analizar
+                    if row_index>0:
+                        #Aca en adelante ojala se pudiera hacer una transaccion con rollback, investigar!!!
+                        #2.Se debe crear el elemento con el nombre que venga en la clave elem_name y el el tipo de elemento que viene en el wizard
+                        elem_name = ws.cell(row_index,int(vals['elem_name'])).value
+                        elem_type = wizard.element
+                        id_elem = None
+                        # Se realiza búsqueda de elemento por nombre, si no existe ningun elemento de ese nombre entonces se procede a insertar
+                        # si no se trata de una actualización 
+                        for element in bridge.elements:
+                            if (element.name == elem_name):
+                                id_elem = element.id
+                        if id_elem == None:
+                                #Crear un elemento de infraestructura nuevo
+                            id_elem=structure_element_obj.create (cr,uid,
+                                                        {'bridge_id':bridge.id,
+                                                        'element_type_id':elem_type.id,
+                                                        'name':elem_name}
+                                                        )
+                        else :
+                        #Se actualiza el puente que ya esta
+                            structure_element_obj.write(cr,uid,id_elem,{
+                                                                    'bridge_id':bridge.id,
+                                                                    'element_type_id':elem_type.id,
+                                                                    'name':elem_name
+                                                                    })
+                        #A cada elemento de infraestructura creado se le deben generar los atributos y valores
+                        #Recorrer excel, armar diccionario e invocar metodo del wizard structure element.
+                        element_values = {}
+                        for att in elem_type.attributes:
+                            #Se arma un diccionario de acuerdo al protocolo del metodo create del wizard structure_elemen.py
+                            elem_key=str(elem_type.id)+"_"+str(att.id)+"_"+str(id_elem)
+                            #El valor se saca del excel asumiendo que viene
+                            #colocar aca un validador para que no vaya a generarse un error si algo pasa en esta línea de código
+                            col_index = int(vals[str(wizard.id)+"_"+str(elem_type.id)+"_"+str(att.id)])
+                            elem_value =ws.cell(row_index,col_index).value
+                            element_values[elem_key]=elem_value
+                        new_context=context
+                        new_context["element_id"]=id_elem
+                        new_context["element_type_id"]=elem_type.id
+                        wizard_structure_elem_obj=self.pool.get("urban_bridge.wizard.structure_elem")
+                        wizard_structure_elem_obj.create(cr,uid,element_values,new_context)
+                return wizard.id
+            except Exception :
+                raise except_osv(_('Wizard Load Fail'), str("field error"))
         else: 
             id_val = super(urban_bridge_wizard_import_elements,self).create(cr, uid, vals, context=context)
             return id_val

@@ -7,6 +7,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import from elements">
+                    <field name="bridge_id"/>
                     <group col="4" colspan="4">
                         <button name="import_elements" string="Import Elements" type="object" icon="gtk-ok" context="{'id_wiz':id}"/>
                         <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
