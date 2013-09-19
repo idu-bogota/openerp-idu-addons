@@ -1468,7 +1468,7 @@ WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c.create_date BETWEEN 
 							<rightPen lineWidth="0.5"/>
 						</box>
 						<staticText>
-							<reportElement uuid="c73ac946-d413-42ca-ab8f-066001475ffc" style="Crosstab static text" x="0" y="0" width="248" height="30"/>
+							<reportElement uuid="c73ac946-d413-42ca-ab8f-066001475ffc" style="Crosstab static text" x="0" y="0" width="179" height="30"/>
 							<box>
 								<rightPen lineWidth="0.5"/>
 							</box>
@@ -1478,7 +1478,7 @@ WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c.create_date BETWEEN 
 							<text><![CDATA[CRITERIO]]></text>
 						</staticText>
 						<staticText>
-							<reportElement uuid="76009a68-5f35-40a0-9276-f68f32f27ef5" style="Crosstab static text" x="248" y="0" width="257" height="30"/>
+							<reportElement uuid="76009a68-5f35-40a0-9276-f68f32f27ef5" style="Crosstab static text" x="179" y="0" width="279" height="30"/>
 							<box>
 								<rightPen lineWidth="0.5"/>
 							</box>
@@ -1489,7 +1489,7 @@ WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c.create_date BETWEEN 
 						</staticText>
 					</cellContents>
 				</crosstabHeaderCell>
-				<rowGroup name="criterio" width="248" totalPosition="End">
+				<rowGroup name="criterio" width="179" totalPosition="End">
 					<bucket class="java.lang.String">
 						<bucketExpression><![CDATA[$F{criterio}]]></bucketExpression>
 					</bucket>
@@ -1499,7 +1499,7 @@ WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c.create_date BETWEEN 
 								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textField isStretchWithOverflow="true">
-								<reportElement uuid="e05c66fd-4674-4289-9eb9-c89d43923196" style="Crosstab TD" x="0" y="0" width="248" height="29"/>
+								<reportElement uuid="e05c66fd-4674-4289-9eb9-c89d43923196" style="Crosstab TD" x="0" y="0" width="179" height="29"/>
 								<textElement>
 									<font fontName="Arial"/>
 								</textElement>
@@ -1514,7 +1514,7 @@ WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c.create_date BETWEEN 
 								<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
 							</box>
 							<staticText>
-								<reportElement uuid="c13e5696-3991-4d1a-8801-09307647d97b" style="Crosstab static text" x="0" y="0" width="505" height="25" forecolor="#FFFFFF"/>
+								<reportElement uuid="c13e5696-3991-4d1a-8801-09307647d97b" style="Crosstab static text" x="0" y="0" width="458" height="25" forecolor="#FFFFFF"/>
 								<box>
 									<rightPen lineWidth="0.5"/>
 								</box>
@@ -1526,7 +1526,7 @@ WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c.create_date BETWEEN 
 						</cellContents>
 					</crosstabTotalRowHeader>
 				</rowGroup>
-				<rowGroup name="subcriterio" width="257" totalPosition="End">
+				<rowGroup name="subcriterio" width="279" totalPosition="End">
 					<bucket class="java.lang.String">
 						<bucketExpression><![CDATA[$F{subcriterio}]]></bucketExpression>
 					</bucket>
@@ -1536,7 +1536,7 @@ WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c.create_date BETWEEN 
 								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textField isStretchWithOverflow="true">
-								<reportElement uuid="33f4ca4e-f672-4b34-a368-ff3f15d8fd50" style="Crosstab TD" x="0" y="0" width="257" height="15"/>
+								<reportElement uuid="33f4ca4e-f672-4b34-a368-ff3f15d8fd50" style="Crosstab TD" x="0" y="0" width="279" height="15"/>
 								<textElement>
 									<font fontName="Arial"/>
 								</textElement>
@@ -1550,7 +1550,7 @@ WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c.create_date BETWEEN 
 								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<staticText>
-								<reportElement uuid="3eaec5ba-e115-4bcf-878a-74c600ac2c46" style="Crosstab Data Text" mode="Transparent" x="0" y="0" width="257" height="14"/>
+								<reportElement uuid="3eaec5ba-e115-4bcf-878a-74c600ac2c46" style="Crosstab Data Text" mode="Transparent" x="0" y="0" width="279" height="14"/>
 								<textElement textAlignment="Left" verticalAlignment="Middle">
 									<font fontName="Arial" isBold="true"/>
 								</textElement>
@@ -1586,6 +1586,13 @@ WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c.create_date BETWEEN 
 								</textElement>
 								<text><![CDATA[TOTAL]]></text>
 							</staticText>
+							<staticText>
+								<reportElement uuid="746ce590-4d6d-46b1-8783-827008010a16" style="Crosstab static text" x="50" y="0" width="39" height="30"/>
+								<textElement>
+									<font size="12"/>
+								</textElement>
+								<text><![CDATA[%]]></text>
+							</staticText>
 						</cellContents>
 					</crosstabTotalColumnHeader>
 				</columnGroup>
@@ -1606,21 +1613,31 @@ WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c.create_date BETWEEN 
 						</box>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell width="50" height="15" columnTotalGroup="placeholder">
+				<crosstabCell width="89" height="15" columnTotalGroup="placeholder">
 					<cellContents backcolor="#BFE1FF" mode="Transparent">
 						<box>
 							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						</box>
 						<textField>
-							<reportElement uuid="bd8e2b5f-67cb-4ef6-8ced-0df560944175" style="Crosstab TD" x="0" y="0" width="50" height="15"/>
+							<reportElement uuid="bd8e2b5f-67cb-4ef6-8ced-0df560944175" style="Crosstab TD" stretchType="RelativeToBandHeight" x="0" y="0" width="50" height="15"/>
+							<box>
+								<rightPen lineWidth="0.5"/>
+							</box>
 							<textElement textAlignment="Right">
-								<font fontName="Arial"/>
+								<font fontName="Arial" size="10"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$V{totalMeasure}]]></textFieldExpression>
 						</textField>
+						<textField>
+							<reportElement uuid="283bf47f-c8b7-4288-a676-479cfef5b9e9" style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="50" y="0" width="39" height="15"/>
+							<textElement textAlignment="Right">
+								<font size="10"/>
+							</textElement>
+							<textFieldExpression><![CDATA[new DecimalFormat("#.##").format(new Double(($V{totalMeasure}.doubleValue()*100) / $V{totalMeasure_subcriterio_ALL}.doubleValue()))]]></textFieldExpression>
+						</textField>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell height="25" rowTotalGroup="criterio" columnTotalGroup="placeholder">
+				<crosstabCell width="89" height="25" rowTotalGroup="criterio" columnTotalGroup="placeholder">
 					<cellContents backcolor="#005FB3" mode="Opaque">
 						<box>
 							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
@@ -1636,6 +1653,14 @@ WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c.create_date BETWEEN 
 							</textElement>
 							<textFieldExpression><![CDATA[$V{totalMeasure}]]></textFieldExpression>
 						</textField>
+						<textField>
+							<reportElement uuid="5bce0908-eb49-45f3-a705-883371f299c3" style="Crosstab static text" x="50" y="0" width="39" height="25"/>
+							<box>
+								<leftPen lineWidth="0.5"/>
+							</box>
+							<textElement textAlignment="Right"/>
+							<textFieldExpression><![CDATA[new DecimalFormat("#.##").format(new Double(($V{totalMeasure}.doubleValue()*100) / $V{totalMeasure}.doubleValue()))]]></textFieldExpression>
+						</textField>
 					</cellContents>
 				</crosstabCell>
 				<crosstabCell width="0" height="14" rowTotalGroup="subcriterio">
@@ -1645,17 +1670,27 @@ WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c.create_date BETWEEN 
 						</box>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell height="14" rowTotalGroup="subcriterio" columnTotalGroup="placeholder">
+				<crosstabCell width="89" height="14" rowTotalGroup="subcriterio" columnTotalGroup="placeholder">
 					<cellContents backcolor="#BFE1FF" mode="Opaque">
 						<box>
 							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						</box>
 						<textField>
-							<reportElement uuid="56a3983f-2143-4c21-8477-614de749bbde" style="Crosstab Data Text" mode="Transparent" x="0" y="0" width="50" height="14"/>
+							<reportElement uuid="56a3983f-2143-4c21-8477-614de749bbde" style="Crosstab Data Text" stretchType="RelativeToBandHeight" mode="Transparent" x="0" y="0" width="50" height="14"/>
+							<box>
+								<rightPen lineWidth="0.5"/>
+							</box>
 							<textElement textAlignment="Right">
-								<font fontName="Arial" isBold="true"/>
+								<font fontName="Arial" size="10" isBold="true"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$V{totalMeasure}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement uuid="c9a6a306-184d-40ee-8b2f-c20647664451" style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="50" y="0" width="39" height="14"/>
+							<textElement textAlignment="Right">
+								<font size="10" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[new DecimalFormat("#.##").format(new Double(($V{totalMeasure}.doubleValue()*100) / $V{totalMeasure_criterio_ALL}.doubleValue()))]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
