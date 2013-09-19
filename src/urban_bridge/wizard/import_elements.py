@@ -112,7 +112,7 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
                         'required':True,
                         }
                 etree.SubElement(maingroup,"field",name=new_id)
-            xml.insert(0,maingroup)
+            xml.insert(1,maingroup)
             result['arch'] = etree.tostring(xml)
         return result
     
@@ -134,9 +134,11 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
                         break 
                 # Objetos necesarios para hacer el cargue structure_element y value
                 structure_element_obj=self.pool.get("urban_bridge.structure_element")
-                bridge = self.pool.get('urban_bridge.bridge').browse(cr,uid,vals["bridge_id"],context)
-                #1. Abrir el fichero de excel
                 wizard = self.browse(cr,uid,id_wizard,context=None)
+                
+                bridge = wizard.bridge_id
+                #1. Abrir el fichero de excel
+                
                 workbook = xlrd.open_workbook(file_contents=base64.decodestring(wizard.file))
                 ws = workbook.sheets()[0]
                 for row_index in range(ws.nrows):
@@ -174,9 +176,26 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
                             elem_key=str(elem_type.id)+"_"+str(att.id)+"_"+str(id_elem)
                             #El valor se saca del excel asumiendo que viene
                             #colocar aca un validador para que no vaya a generarse un error si algo pasa en esta línea de código
-                            col_index = int(vals[str(wizard.id)+"_"+str(elem_type.id)+"_"+str(att.id)])
-                            elem_value =ws.cell(row_index,col_index).value
-                            element_values[elem_key]=elem_value
+                            key_col = str(wizard.id)+"_"+str(elem_type.id)+"_"+str(att.id)
+                            if vals.has_key(key_col):
+                                col_index = int(vals[key_col])
+                                #Algo pasa cuando el atributo es seleccion, si queda por ejemplo 2.0 despues no se despliega en el combobox, 
+                                #es conveniente que al pasarlo a string no queden decimales.
+                                elem_value =ws.cell(row_index,col_index).value
+                                if (att.data_type=="selection"):
+                                    try:
+                                        #Aca el codigo es confuso y da una vuelta, la razón: el usuario puede definir en los comboboxes el tipo de 
+                                        #atributo como le de la gana si define que el valor son strings por ejemplo [('a';'Amplio'),('v','vacio')]
+                                        #Se generara un error al hacer una conversion %.0f porque va a entrar una v
+                                        #Si el usuario define el diccionario [('1','Bueno'),('2','Malo')] cuando suba el fichero del excel va a encontrar
+                                        #algo así en el valor 1.0, 2.0 3.0 y toca convertirlo a 1 2 por que si no, no va a aparecer el valor en los 
+                                        #Combo Boxes.
+                                        elem_f = float(elem_value)
+                                        elem_value = str("%.0f" % elem_f)
+                                    except Exception:
+                                        #No hacer nada
+                                        elem_value=str(elem_value)
+                                element_values[elem_key]=elem_value
                         new_context=context
                         new_context["element_id"]=id_elem
                         new_context["element_type_id"]=elem_type.id

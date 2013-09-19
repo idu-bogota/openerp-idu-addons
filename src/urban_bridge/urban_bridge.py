@@ -95,10 +95,10 @@ class urban_bridge_bridge(geo_model.GeoModel):
             bridge_id = bridge.id
             query = """
             select st_area(pmagna) as area from (
-            select st_transform(shape,96873) as pmagna from urban_bridge_bridge where id = %s
+            select st_transform(shape,96873) as pmagna from urban_bridge_bridge where id = {0}
             ) as t1
-            """
-            cr.execute(query,str(bridge_id))
+            """.format(bridge_id)
+            cr.execute(query)
             area=0.0
             for row in cr.fetchall():
                 #Crear un diccionario para almacenar areas por
@@ -113,10 +113,10 @@ class urban_bridge_bridge(geo_model.GeoModel):
             bridge_id = bridge.id
             query = """
             select st_perimeter(pmagna) as area from (
-            select st_transform(shape,96873) as pmagna from urban_bridge_bridge where id = %s
+            select st_transform(shape,96873) as pmagna from urban_bridge_bridge where id = {0}
             ) as t1
-            """
-            cr.execute(query,str(bridge_id))
+            """.format(bridge_id)
+            cr.execute(query)
             perimeter = 0.0
             for row in cr.fetchall():
                 #Crear un diccionario para almacenar areas por

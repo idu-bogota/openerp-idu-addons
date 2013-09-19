@@ -123,7 +123,7 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                         'required':is_required,
                         'readonly':True,
                         }
-                    etree.SubElement(page_string_features,"field",required=is_required,name=new_id,readonly="1")
+                    etree.SubElement(page_string_features,"field",name=new_id)
             #Si no hay campo tipo foto no se pone el tab 
             if (len(photogroup) > 0):
                 notebook.insert(2,page_phographic_registry)
