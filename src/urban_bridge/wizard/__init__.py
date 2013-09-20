@@ -21,3 +21,4 @@
 import structure_elem
 import inspection_survey
 import import_elements
+import update_bridge_shape_from_wkt

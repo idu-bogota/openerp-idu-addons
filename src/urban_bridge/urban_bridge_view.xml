@@ -41,6 +41,11 @@ Bridges
                     </group>
                     <group colspan="2" col="2">
                         <field name="shape" widget="geo_edit_map"/>
+                        <newline />
+                        <group colspan="2" col="2">
+                        <button name="%(urban_bridge.action_urban_bridge_wizard_update_shape)d" string="Update Shape from WKT"
+                                    type="action" icon="gtk-ok" context="{'bridge_id':id}"/>
+                         </group>
                     </group>
               </page>
              <page string="Structure Data">
