@@ -29,7 +29,7 @@
   'init_xml': ['district_bogota.xml',
                'sub_district_bogota.xml',
                #'neighborhood_bogota.xml',
-               #'micro_seismicity.xml',
+               'micro_seismicity.xml',
                'cadastral_zone.xml',
                'geological_zone.xml',
                #'road_hierarchy_bogota.xml',
