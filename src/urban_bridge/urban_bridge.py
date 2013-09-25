@@ -43,7 +43,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
             geom = bridge.shape
             districts=""
             if geom != False:
-                query = "SELECT name FROM base_map_district WHERE st_intersects(shape,st_geomfromtext('{0}',4326)) = true".format(geom)
+                query = "SELECT name FROM base_map_district WHERE st_intersects(shape,st_geomfromtext('{0}',900913)) = true".format(geom)
                 cr.execute(query)
                 for row in cr.fetchall():
                     districts = row[0] + ","+districts
@@ -56,7 +56,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
             geom = bridge.shape
             sub_districts=""
             if geom != False:
-                query = "SELECT name FROM base_map_sub_district WHERE st_intersects(shape,st_geomfromtext('{0}',4326)) = true".format(geom)
+                query = "SELECT name FROM base_map_sub_district WHERE st_intersects(shape,st_geomfromtext('{0}',900913)) = true".format(geom)
                 cr.execute(query)
                 for row in cr.fetchall():
                     sub_districts = row[0] + ","+sub_districts
@@ -69,7 +69,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
             cad_zone=""
             geom = bridge.shape
             if geom != False:
-                query = "SELECT name FROM base_map_cadastral_zone WHERE st_intersects(shape,st_geomfromtext('{0}',4326)) = true".format(geom)
+                query = "SELECT name FROM base_map_cadastral_zone WHERE st_intersects(shape,st_geomfromtext('{0}',900913)) = true".format(geom)
                 cr.execute(query)
                 for row in cr.fetchall():
                     cad_zone = row[0] + ","+cad_zone
@@ -82,7 +82,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
             micr_seism=""
             geom = bridge.shape
             if geom !=False:
-                query = "SELECT zone_name,micr_measure1 FROM base_map_micro_seismicity WHERE st_intersects(shape,st_geomfromtext('{0}',4326)) = true".format(geom)
+                query = "SELECT zone_name,micr_measure1 FROM base_map_micro_seismicity WHERE st_intersects(shape,st_geomfromtext('{0}',900913)) = true".format(geom)
                 cr.execute(query)
                 for row in cr.fetchall():
                     micr_seism = row[0]+"-"+str(row[1])+","+micr_seism
@@ -290,9 +290,9 @@ class urban_bridge_structure_element_value(geo_model.GeoModel):
         'value_bool':fields.boolean('Boolean'),
         'value_binary':fields.binary('Photo'),
         'value_selection':fields.char('Selection',size=10),
-        'value_point':fields.geo_point('Shape Point'),
-        'value_line':fields.geo_line('Shape Line'),
-        'value_polygon':fields.geo_polygon('Shape Polygon'),
+        'value_point':fields.geo_multi_point('Shape Point'),
+        'value_line':fields.geo_multi_line('Shape Line'),
+        'value_polygon':fields.geo_multi_polygon('Shape Polygon'),
         }
 urban_bridge_structure_element_value()
 
