@@ -169,7 +169,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
             return {"result":"Save Failed!"}
     _name="urban_bridge.bridge"
     _columns = {
-        'shape':fields.geo_multi_polygon('Shape',help="Shape",srid=4326),
+        'shape':fields.geo_multi_polygon('Shape',help="Shape"),
         'code':fields.char('Bridge Code',size=128,help="Bridge Code"),
         'name':fields.char('Identifier',size=128,help ="Identifier"),
         'classification':fields.selection([('PPC','PPC'),('PPE','PPE'),('PVC','PVC'),('PVE','PVE')],'Bridge Classification'),
@@ -290,9 +290,9 @@ class urban_bridge_structure_element_value(geo_model.GeoModel):
         'value_bool':fields.boolean('Boolean'),
         'value_binary':fields.binary('Photo'),
         'value_selection':fields.char('Selection',size=10),
-        'value_point':fields.geo_point('Shape Point',srid=4326),
-        'value_line':fields.geo_line('Shape Line',srid=4326),
-        'value_polygon':fields.geo_polygon('Shape Line',srid=4326),
+        'value_point':fields.geo_point('Shape Point'),
+        'value_line':fields.geo_line('Shape Line'),
+        'value_polygon':fields.geo_polygon('Shape Polygon'),
         }
 urban_bridge_structure_element_value()
 
