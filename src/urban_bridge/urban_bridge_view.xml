@@ -60,6 +60,7 @@ Bridges
                     <field name="design_load_capacity"/>
                     <field name="design_load_code" widget="selection"/>
                     <field name="structure_material" widget="selection"/>
+                    <field name="inventory_date"/>
                 </group>
                 <group colspan="2" col="2">
                         <field name="photo" widget='image' img_width="840" img_height="600" width="840" height="600" nolabel="1"/>
@@ -324,6 +325,8 @@ Structure Element Attribute
              <field name="data_type" select="1"/>
              <field name="is_enabled"/>
              <field name="is_required"/>
+             <field name="alias"/>
+             <field name="regex"/>
              <field name="selection_text" attrs="{'invisible':[('data_type','!=','selection')]}"/>
             </form>
         </field>

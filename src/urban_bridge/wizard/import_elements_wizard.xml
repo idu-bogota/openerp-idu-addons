@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <record id="view_urban_bridge_wizard_import_elements_page_2" model="ir.ui.view">
-            <field name="name">Import Elements Page 2</field>
+        <record id="view_urban_bridge_wizard_import_elements_page_3" model="ir.ui.view">
+            <field name="name">Import Elements Select Fields</field>
             <field name="model">urban_bridge.wizard.import_elements</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -16,8 +16,24 @@
             </field>
         </record>
         
+        <record id="view_urban_bridge_wizard_import_elements_page_2" model="ir.ui.view">
+            <field name="name">Import Elements - Select WorkSheet</field>
+            <field name="model">urban_bridge.wizard.import_elements</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Import from elements">
+                    <field name="bridge_id" readonly="True"/>
+                    <group col="4" colspan="4">
+                        <button name="next_2" string="Next" type="object" icon="gtk-next"/>
+                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        
+        
         <record id="view_urban_bridge_wizard_import_elements_form" model="ir.ui.view">
-            <field name="name">Import Elements Page 1</field>
+            <field name="name">Import Elements Page Load XLS</field>
             <field name="model">urban_bridge.wizard.import_elements</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -27,7 +43,7 @@
                     <field name="element" widget="selection"/>
                     <field name="file"/>
                     <group col="4" colspan="4">
-                        <button name="next" string="Next" type="object" icon="gtk-next"/>
+                        <button name="next_1" string="Next" type="object" icon="gtk-next"/>
                         <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
                     </group>
                 </form>

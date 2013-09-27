@@ -220,7 +220,10 @@ msgstr "Elementos"
 msgid "Inspection Survey"
 msgstr "Inspecciones"
 
-
+#. module: urban_bridge
+#: field:urban_bridge.bridge,inventory_date:0
+msgid "Inventory Date"
+msgstr "Fecha de Inventario"
 
 
 

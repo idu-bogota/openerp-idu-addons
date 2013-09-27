@@ -177,6 +177,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
         'address':fields.char('Bridge Address',size=256),
         'last_address':fields.char('Last Address',size=256),
         'construction_date':fields.date('Construction Date'),
+        'inventory_date':fields.date('Inventory Date'),
         'length':fields.float('Total Length'),
         'width':fields.float('Total Width'),
         'superstructure_area':fields.float('Bridge Super-Structure Area'),
@@ -250,7 +251,7 @@ class urban_bridge_structure_element_type(osv.osv):
         'classification':fields.selection([('M','Main Element'),('S','Secondary Element'),('A','Accessory Element')],'Main Classification', required=True),
         'sub_classification':fields.selection([('SS','Super Structure'),('IS','Infrastructure'),('FP','Foundation'),('SE','Structure Element'),('FE','Functional Elements'),('IN','Instrumentation')],'SubClassification',required=True),
         'attributes':fields.one2many('urban_bridge.structure_element_attribute','element_type_id'),
-        'alias':fields.char('Alias',size=3,required=True)
+        'alias':fields.char('Alias',size=13,required=True)
     }
 urban_bridge_structure_element_type()
 class urban_bridge_structure_element_attribute(osv.osv):
@@ -266,11 +267,14 @@ class urban_bridge_structure_element_attribute(osv.osv):
         'data_type':fields.selection([('integer','Integer'),('text','Text'),('datetime',' Date Time'),('date','Date'),('float','Float'),('boolean','Boolean'),('char','Char'),('selection','Selection'),('binary','Photo'),('geo_point','Geographic Point'),('geo_line','Geographic Line'),('geo_polygon','Geographic Polygon')],'Data Type',required=True),
         'element_type_id':fields.many2one('urban_bridge.structure_element_type','Element ID'),
         'selection_text':fields.char('Selection',size=1024,help='If Data type : selection then selection text contain the dictionary'),
+        'alias':fields.char('Alias',size=13, required=True),
+        'regex':fields.text('Validation Regular Expression'),
     }
     _defaults={
         'is_required': lambda *args: True,
         'is_enabled': lambda *args: True,
     }
+    
     
 urban_bridge_structure_element_attribute()
 class urban_bridge_structure_element_value(geo_model.GeoModel):

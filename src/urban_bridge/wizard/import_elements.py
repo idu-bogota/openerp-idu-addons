@@ -37,14 +37,30 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
     _columns={
         'bridge_id':fields.many2one('urban_bridge.bridge','Bridge'),
         'srid':fields.integer('Source SRID','Source Data System Reference'),
+        'worksheet':fields.integer('Worksheet'),
         'element':fields.many2one('urban_bridge.structure_element_type','Element Type'),
         'file':fields.binary('File'),
     }
-
-    def next (self,cr,uid,ids,context=None):
+    #Va a la pagina 2 del wizard
+    def next_1 (self,cr,uid,ids,context=None):
         search_obj = self.pool.get('ir.ui.view')
         search_id = search_obj.search(cr,uid,[('model','=','urban_bridge.wizard.import_elements'),\
-                                              ('name','=','Import Elements Page 2')])
+                                              ('name','=','Import Elements - Select WorkSheet')])
+        context["current_ids"]=ids[0]
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'urban_bridge.wizard.import_elements',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'view_id': search_id[0],
+            'context': context
+            }
+    #Va a la página 3 del wizard
+    def next_2 (self,cr,uid,ids,context=None):
+        search_obj = self.pool.get('ir.ui.view')
+        search_id = search_obj.search(cr,uid,[('model','=','urban_bridge.wizard.import_elements'),\
+                                              ('name','=','Import Elements Select Fields')])
         context["current_ids"]=ids[0]
         return {
             'view_type': 'form',
@@ -65,17 +81,50 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
         result = super(urban_bridge_wizard_import_elements, self).fields_view_get(cr, uid, view_id, \
                                         view_type, context, toolbar,submenu)
         search_obj = self.pool.get('ir.ui.view')
-        search_id = search_obj.search(cr,uid,[('model','=','urban_bridge.wizard.import_elements'),\
-                                              ('name','=','Import Elements Page 2')])
-        if (view_id == search_id[0]):
+        #Se selecciona la hoja desde donde se van a importar los datos
+        #Pagina 2 del Asistente -- arma combobox para seleccionar la hoja de vida
+        v_select_worksheet = search_obj.search(cr,uid,[('model','=','urban_bridge.wizard.import_elements'),\
+                                              ('name','=','Import Elements - Select WorkSheet')])
+        v_select_fields = search_obj.search(cr,uid,[('model','=','urban_bridge.wizard.import_elements'),\
+                                              ('name','=','Import Elements Select Fields')])
+        if (view_id == v_select_worksheet[0]):
+            current_id = context["current_ids"]
+            wizard = self.browse(cr,uid,current_id,context=None)
+            try :
+                workbook = xlrd.open_workbook(file_contents=base64.decodestring(wizard.file))
+                worksheets = workbook.sheet_names()
+                x = 0
+                combo_vals = []
+                for worksheet_name in worksheets:
+                    combo_vals.append((str(x),str(worksheet_name)))
+                    x = x+1
+                result['fields']["cmb_worksheet"] = {
+                        'domain':[],
+                        'string':"Name",
+                        'selectable':True,
+                        'type':"selection",
+                        'context':{},
+                        'selection':combo_vals,
+                        'required':True,
+                        }
+                xml=etree.fromstring(result['arch'])
+                field = etree.Element("field",name="cmb_worksheet")
+                xml.insert(2,field)
+                result['fields']['worksheet']['selection']=combo_vals
+                result['arch'] = etree.tostring(xml)
+            except Exception :
+                raise except_osv(_('Error reading excel'), str("Excel file version must be Office 2003-2007"))
+                
+        #Pagina 3 del Asistente -- arma el formulario que se despliega cuando se van a jalar los datos desde el excel
+        elif (view_id == v_select_fields[0]):
             current_id = context["current_ids"]
             wizard = self.browse(cr,uid,current_id,context=None)
             #1. Armar un diccionario que va a funcionar en los comboboxes
             workbook = xlrd.open_workbook(file_contents=base64.decodestring(wizard.file))
-            worksheets = workbook.sheet_names()
-            if worksheets.__len__()>1:
-                raise Exception('File has more than one worksheet, please delete unused worksheets and try execute wizard again!')
-            ws = workbook.sheets()[0]
+            #worksheets = workbook.sheet_names()
+            #if worksheets.__len__()>1:
+            #    raise except_osv(_('File has more than one worksheet, please delete unused worksheets and try execute wizard again!'), str("Excel File error"))
+            ws = workbook.sheets()[wizard.worsheet]
             x = 0
             combo_list = []
             #Columnas que se van a mostrar
@@ -204,6 +253,8 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
                 return wizard.id
             except Exception :
                 raise except_osv(_('Wizard Load Fail'), str("field error"))
+        elif: 
+            
         else: 
             id_val = super(urban_bridge_wizard_import_elements,self).create(cr, uid, vals, context=context)
             return id_val
