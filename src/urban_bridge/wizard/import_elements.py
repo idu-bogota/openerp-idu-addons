@@ -82,7 +82,7 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
                                         view_type, context, toolbar,submenu)
         search_obj = self.pool.get('ir.ui.view')
         #Se selecciona la hoja desde donde se van a importar los datos
-        #Pagina 2 del Asistente -- arma combobox para seleccionar la hoja de vida
+        #Pagina 2 del Asistente -- arma combobox para seleccionar la hoja de cálculo
         v_select_worksheet = search_obj.search(cr,uid,[('model','=','urban_bridge.wizard.import_elements'),\
                                               ('name','=','Import Elements - Select WorkSheet')])
         v_select_fields = search_obj.search(cr,uid,[('model','=','urban_bridge.wizard.import_elements'),\
@@ -96,7 +96,7 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
                 x = 0
                 combo_vals = []
                 for worksheet_name in worksheets:
-                    combo_vals.append((str(x),str(worksheet_name)))
+                    combo_vals.append(((str(x)+"_"+str(wizard.id)),str(worksheet_name)))
                     x = x+1
                 result['fields']["cmb_worksheet"] = {
                         'domain':[],
@@ -109,8 +109,7 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
                         }
                 xml=etree.fromstring(result['arch'])
                 field = etree.Element("field",name="cmb_worksheet")
-                xml.insert(2,field)
-                result['fields']['worksheet']['selection']=combo_vals
+                xml.insert(1,field)
                 result['arch'] = etree.tostring(xml)
             except Exception :
                 raise except_osv(_('Error reading excel'), str("Excel file version must be Office 2003-2007"))
@@ -124,7 +123,7 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
             #worksheets = workbook.sheet_names()
             #if worksheets.__len__()>1:
             #    raise except_osv(_('File has more than one worksheet, please delete unused worksheets and try execute wizard again!'), str("Excel File error"))
-            ws = workbook.sheets()[wizard.worsheet]
+            ws = workbook.sheets()[wizard.worksheet]
             x = 0
             combo_list = []
             #Columnas que se van a mostrar
@@ -189,7 +188,7 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
                 #1. Abrir el fichero de excel
                 
                 workbook = xlrd.open_workbook(file_contents=base64.decodestring(wizard.file))
-                ws = workbook.sheets()[0]
+                ws = workbook.sheets()[wizard.worksheet]
                 for row_index in range(ws.nrows):
                     #La fila 0 (1) tiene los títulos así que no nos interesa analizar
                     if row_index>0:
@@ -253,8 +252,13 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
                 return wizard.id
             except Exception :
                 raise except_osv(_('Wizard Load Fail'), str("field error"))
-        elif: 
-            
+        #Este if entra luego de que se pulsa next en el segundo pantallazo del wizard cuando escoje la hoja de trabajo
+        elif vals.has_key('cmb_worksheet'):
+            id_wizard = int(vals['cmb_worksheet'].split("_")[1])
+            worksheet_index = int(vals['cmb_worksheet'].split("_")[0])
+            wizard = self.pool.get("urban_bridge.wizard.import_elements")
+            wizard.write(cr,uid,id_wizard,{'worksheet':worksheet_index})
+            return id_wizard
         else: 
             id_val = super(urban_bridge_wizard_import_elements,self).create(cr, uid, vals, context=context)
             return id_val
