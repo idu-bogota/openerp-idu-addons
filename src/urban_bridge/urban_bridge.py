@@ -31,6 +31,8 @@ from base_geoengine import geo_model
 from shapely.geometry import asShape
 from shapely.geometry import MultiPolygon
 from datetime import datetime
+import logging
+_logger = logging.getLogger(__name__)
 
 class urban_bridge_bridge(geo_model.GeoModel):
     """ 
@@ -39,90 +41,116 @@ class urban_bridge_bridge(geo_model.GeoModel):
 
     def _get_district(self,cr,uid,ids,fieldname,arg,context=None):
         res = {}
+        #Este bloque try es porque a veces los datos vienen con inconsistencia topológica y se pretende evitar que deje de funcionar
+        #la página cuando se manda el query, en ves de eso mejor que siga funcionando y deje un log de eventos
         for bridge in self.browse(cr, uid, ids, context = context):
-            geom = bridge.shape
-            districts=""
-            if geom != False:
-                query = "SELECT name FROM base_map_district WHERE st_intersects(shape,st_geomfromtext('{0}',900913)) = true".format(geom)
-                cr.execute(query)
-                for row in cr.fetchall():
-                    districts = row[0] + ","+districts
-            res[bridge.id] = districts
+            try:
+                geom = bridge.shape
+                districts=""
+                if geom != False:
+                    query = "SELECT name FROM base_map_district WHERE st_intersects(shape,st_geomfromtext('{0}',900913)) = true".format(geom)
+                    cr.execute(query)
+                    for row in cr.fetchall():
+                        districts = row[0]+","+districts
+                res[bridge.id] = districts
+            except Exception as e:
+                _logger.debug("Geoprocessing error: {0}".format(e))
+                res[bridge.id] = ""
         return res
     
     def _get_sub_district(self,cr,uid,ids,fieldname,arg,context=None):
         res = {}
         for bridge in self.browse(cr, uid, ids, context = context):
-            geom = bridge.shape
-            sub_districts=""
-            if geom != False:
-                query = "SELECT name FROM base_map_sub_district WHERE st_intersects(shape,st_geomfromtext('{0}',900913)) = true".format(geom)
-                cr.execute(query)
-                for row in cr.fetchall():
-                    sub_districts = row[0] + ","+sub_districts
-            res[bridge.id] = sub_districts
+            try:
+                geom = bridge.shape
+                sub_districts=""
+                if geom != False:
+                    query = "SELECT name FROM base_map_sub_district WHERE st_intersects(shape,st_geomfromtext('{0}',900913)) = true".format(geom)
+                    cr.execute(query)
+                    for row in cr.fetchall():
+                        sub_districts = row[0]+","+sub_districts
+                res[bridge.id] = sub_districts
+            except Exception as ex:
+                _logger.debug("Geoprocessing error: {0}".format(ex))
+                res[bridge.id] = ""
         return res
-        
+
     def _get_cadastral_zone(self,cr,uid,ids,fieldname,arg,context=None):
         res = {}
         for bridge in self.browse(cr, uid, ids, context = context):
-            cad_zone=""
-            geom = bridge.shape
-            if geom != False:
-                query = "SELECT name FROM base_map_cadastral_zone WHERE st_intersects(shape,st_geomfromtext('{0}',900913)) = true".format(geom)
-                cr.execute(query)
-                for row in cr.fetchall():
-                    cad_zone = row[0] + ","+cad_zone
-            res[bridge.id] = cad_zone
+            try:
+                cad_zone=""
+                geom = bridge.shape
+                if (geom != False):
+                    query = "SELECT name FROM base_map_cadastral_zone WHERE st_intersects(shape,st_geomfromtext('{0}',900913)) = true".format(geom)
+                    cr.execute(query)
+                    for row in cr.fetchall():
+                        cad_zone = row[0]+","+cad_zone
+                    res[bridge.id] = cad_zone
+            except Exception as e:
+                _logger.debug("Geoprocessing error: {0}".format(e))
+                res[bridge.id] = ""
         return res
-    
+
     def _get_micro_seismicity(self,cr,uid,ids,fieldname,arg,context=None):
         res = {}
         for bridge in self.browse(cr, uid, ids, context = context):
-            micr_seism=""
-            geom = bridge.shape
-            if geom !=False:
-                query = "SELECT zone_name,micr_measure1 FROM base_map_micro_seismicity WHERE st_intersects(shape,st_geomfromtext('{0}',900913)) = true".format(geom)
-                cr.execute(query)
-                for row in cr.fetchall():
-                    micr_seism = row[0]+"-"+str(row[1])+","+micr_seism
-            res[bridge.id] = micr_seism
+            try:
+                micr_seism=""
+                geom = bridge.shape
+                if geom !=False:
+                    query = "SELECT zone_name,micr_measure1 FROM base_map_micro_seismicity WHERE st_intersects(shape,st_geomfromtext('{0}',900913)) = true".format(geom)
+                    cr.execute(query)
+                    for row in cr.fetchall():
+                        micr_seism = row[0]+"-"+str(row[1])+","+micr_seism
+                    res[bridge.id] = micr_seism
+            except Exception as ex:
+                _logger.debug("Geoprocessing error: {0}".format(ex))
+                res[bridge.id] = ""
         return res
 
     def _get_area(self,cr,uid,ids,fieldname,arg,context=None):
         res = {}
         for bridge in self.browse(cr, uid, ids, context = context):
-            bridge_id = bridge.id
-            query = """
-            select st_area(pmagna) as area from (
-            select st_transform(shape,96873) as pmagna from urban_bridge_bridge where id = {0}
-            ) as t1
-            """.format(bridge_id)
-            cr.execute(query)
-            area=0.0
-            for row in cr.fetchall():
-                #Crear un diccionario para almacenar areas por
-                if row[0]!=None:
-                    area = float(row[0])
+            try:            
+                bridge_id = bridge.id
+                query = """
+                select st_area(pmagna) as area from (
+                select st_transform(shape,96873) as pmagna from urban_bridge_bridge where id = {0}
+                ) as t1
+                """.format(bridge_id)
+                cr.execute(query)
+                area=0.0
+                for row in cr.fetchall():
+                    #Crear un diccionario para almacenar areas por
+                    if row[0]!=None:
+                        area = float(row[0])
                 res[bridge.id] = area
+            except Exception as e:
+                _logger.debug("Geoprocessing error: {0}".format(e))
+                res[bridge.id] = ""
         return res
     
     def _get_perimeter(self,cr,uid,ids,fieldname,arg,context=None):
         res = {}
         for bridge in self.browse(cr, uid, ids, context = context):
-            bridge_id = bridge.id
-            query = """
-            select st_perimeter(pmagna) as area from (
-            select st_transform(shape,96873) as pmagna from urban_bridge_bridge where id = {0}
-            ) as t1
-            """.format(bridge_id)
-            cr.execute(query)
-            perimeter = 0.0
-            for row in cr.fetchall():
-                #Crear un diccionario para almacenar areas por
-                if row[0]!=None:
-                    perimeter = float(row[0])
+            try:
+                bridge_id = bridge.id
+                query = """
+                select st_perimeter(pmagna) as area from (
+                select st_transform(shape,96873) as pmagna from urban_bridge_bridge where id = {0}
+                ) as t1
+                """.format(bridge_id)
+                cr.execute(query)
+                perimeter = 0.0
+                for row in cr.fetchall():
+                    #Crear un diccionario para almacenar areas por
+                    if row[0]!=None:
+                        perimeter = float(row[0])
                 res[bridge.id] = perimeter
+            except Exception as e:
+                _logger.debug("Geoprocessing error: {0}".format(e))
+                res[bridge.id] = ""
         return res
     
     def web_service_save (self,cr,uid,data,context=None):
