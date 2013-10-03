@@ -532,6 +532,13 @@ class crm_claim(geo_model.GeoModel):
                 attachment_name = data['attachment_name']
                 del data['attachment']
                 del data['attachment_name']
+            if 'geo_point' in data:
+                try:
+                    geo_data = onchange_geopoint(cr, uid, None, data['geo_point'])
+                    data['district_id'] = geo_data['value']['district_id']
+                    data['neighborhood_id'] = geo_data['value']['neighborhood_id']
+                except Exception as e:
+                    pass
             #external app can state the acknowledge email subject and body to be sent to the partner.address.id
             if 'ack_message_subject' in data:
                 subject = data['ack_message_subject']
