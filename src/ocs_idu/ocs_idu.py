@@ -259,11 +259,16 @@ class crm_claim(crm.crm_case,osv.osv):
         'is_editable':fields.function(_check_is_editable,type='boolean',string='Check if current user can edit the data',method=True),
         'csp_contract':fields.function(_get_csp_contract,type='string',string='Contract',method=True),
         'contract_reference': fields.char('Contract Reference',size=9,help='Construction contract number number-year',states={'done':[('readonly',True)]}),
-        'damage_type_by_citizen': fields.selection([('fisura', 'Fisura'),('hueco', 'Hueco'),('hundimiento', 'Hundimiento')], 'Via Damage Type',help='Damage type provided by the citizen'),
+        'damage_type_by_citizen': fields.selection([('via-fisura', 'Via fisura'),('via-hueco', 'Via Hueco'),('via-hundimiento-canalizacion', 'Via hundimiento o canalización'),
+                                                    ('anden-hueco', 'Anden hueco'),('anden-desnivel', 'Anden desnivel'),('anden-accesibilidad', 'Anden accesibilidad'),
+                                                    ('cicloruta-hueco', 'Cicloruta hueco'),('cicloruta-obstruccion', 'cicloruta obstrucción'),('cicloruta-segnal', 'Cicloruta señalización'),
+                                                    ('puente-peatonal-grieta', 'Puente peatonal grieta'),('puente-peatonal-laminas', 'Puente peatonal láminas'),('puente-peatonal-accesibilidad', 'Puente peatonal accesibilidad'),
+                                                   ],
+                                                   'Via Damage Type', help='Damage type provided by the citizen'),
         'damage_width_by_citizen':  fields.char('Via damage width',size=10,help='Damage width provided by the citizen',states={'done':[('readonly',True)]}),
         'damage_length_by_citizen': fields.char('Via damage length',size=10,help='Damage length provided by the citizen',states={'done':[('readonly',True)]}),
         'damage_deep_by_citizen': fields.char('Via damage deep',size=10,help='Damage size provided by the citizen',states={'done':[('readonly',True)]}),
-        'damage_element_by_citizen': fields.selection([('via', 'Via'),('anden', 'Anden'),('puente_peatonal', 'Puente Peatonal')], 'Via Element Type',help='Element type provided by the citizen'),
+        'damage_element_by_citizen': fields.selection([('via', 'Via'),('anden', 'Anden'),('puente_peatonal', 'Puente Peatonal'),('cicloruta', 'Cicloruta')], 'Via Element Type',help='Element type provided by the citizen'),
     }
     _constraints = [
         (_check_contract_reference,'Contract Reference format is number-year, ie. 123-2012',['contract_reference']),
