@@ -443,6 +443,35 @@ class ocs_tract(osv.osv):
     _rec_name = 'full_name'
 ocs_tract()
 
+class ocs_claim_damage(osv.osv):
+    """This handles damages reported by the citizen and its technical details and status"""
+    _name="ocs.claim_damage"
+    _columns={
+      'id':fields.integer('ID',readonly=True),
+      'crm_claim_id': fields.many2one('crm.claim', 'CRM Claim', readonly=True),
+      'res_user_id': fields.many2one('res.users', 'Responsible', readonly=True, states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+      'classification_id': fields.many2one('ocs.claim_damage_classification', 'Damage Classification'),
+      'description': fields.text('Description', required=True, readonly=True, states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+    }
+    constraints = [
+        (osv.osv._check_recursion,'Error ! You cannot create recursive Claim Solution Classification',['parent_id'])
+    ]
+ocs_claim_damage()
+
+class ocs_claim_damage_classification(osv.osv):
+    """This field contains internal classification for claim's solution """
+    _name="ocs.claim_damage_classification"
+    _columns={
+      'id':fields.integer('ID',readonly=True),
+      'code':fields.char('Code',size=6),
+      'name':fields.char('Name',size=128),
+      'active':fields.boolean('Active'),
+      'parent_id':fields.many2one('ocs.claim_damage_classification','Parent')
+    }
+    constraints = [
+        (osv.osv._check_recursion,'Error ! You cannot create recursive Classification',['parent_id'])
+    ]
+ocs_claim_damage_classification()
 
 def geocode_address(self, cr, uid, ids, addr):
     res = {'value':{'geo_point':False}}

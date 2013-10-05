@@ -729,7 +729,6 @@ class crm_claim(geo_model.GeoModel):
     ]
 crm_claim()
 
-
 def date_by_adding_business_days(from_date, add_days):
     business_days_to_add = add_days
     current_date = from_date
