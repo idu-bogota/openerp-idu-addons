@@ -1,3 +1,6 @@
+openerp6.1-rev2013100900
+* Fix: Gestor social no podia ver la solución de una PQR
+
 openerp6.1-rev2013091300
 * Update: en el listado de crm.claims para puntos CREA despliega name en lugar de contract
 * Fix: En el reporte crm_claim.rml la descripción de la PQR se despliega fuera de la tabla para soportar varias páginas cuando la descripción es muy larga
