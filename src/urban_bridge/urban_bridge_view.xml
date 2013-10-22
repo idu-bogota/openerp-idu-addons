@@ -323,11 +323,14 @@ Structure Element Attribute
             <form string="Structure Element Attribute">
              <field name="name" select="1"/>
              <field name="data_type" select="1"/>
+             <field name="alias"/>
+             <field name="selection_text" attrs="{'invisible':[('data_type','!=','selection')]}"/>
              <field name="is_enabled"/>
              <field name="is_required"/>
-             <field name="alias"/>
+                <group colspan="4" col="2">
              <field name="regex"/>
-             <field name="selection_text" attrs="{'invisible':[('data_type','!=','selection')]}"/>
+             </group>
+             
             </form>
         </field>
 </record>

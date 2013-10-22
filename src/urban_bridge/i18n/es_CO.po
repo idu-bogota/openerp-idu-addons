@@ -53,7 +53,7 @@ msgstr "Datos Estructurales"
 #. module: urban_bridge
 #: view:urban_bridge.bridge:0
 msgid "Structure Elements"
-msgstr "Elementos de la Puente"
+msgstr "Elementos del Puente"
 
 #. module: urban_bridge
 #: view:urban_bridge.bridge:0
