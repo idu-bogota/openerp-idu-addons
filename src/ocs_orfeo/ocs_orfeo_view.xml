@@ -105,6 +105,23 @@ Categ
                     </field>
                 </field>
             </record>
+<!--
+========================================================================================
+res.users
+========================================================================================
+-->
+            <!-- Form View -->
+            <record model="ir.ui.view" id="view_ocs_orfeo_res_users_form_inherit">
+                <field name="name">res.users.inherit</field>
+                <field name="model">res.users</field>
+                <field name="type">form</field>
+                <field name="inherit_id" ref="base.view_users_form"/>
+                <field name="arch" type="xml">
+                    <field name="context_tz" position="after">
+                        <field name="dependencia_id" />
+                    </field>
+                </field>
+            </record>
 
     </data>
 </openerp>

@@ -27,9 +27,10 @@
         "category" : "Social Management",
         "description": """For Public Organizations, useful to receive claims from Citizens""",
         "depends" : ['ocs','ocs_orfeo','ocs_sdqs'],
-        "init_xml" : ['ocs_idu_view.xml'],
+        "init_xml" : ['wizard/classify_damage.xml','ocs_idu_view.xml'],
         "demo_xml" : [],
         "update_xml" : [
+                        'wizard/classify_damage.xml',
                         'security/ocs_idu_security.xml',
                         'security/ir.model.access.csv',
                         'ocs_idu_workflow.xml',

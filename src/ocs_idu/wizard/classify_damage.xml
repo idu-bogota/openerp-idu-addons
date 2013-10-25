@@ -1,0 +1,34 @@
+<openerp>
+  <data>
+        <record id="view_ocs_idu_wizard_classify_damage_form" model="ir.ui.view">
+            <field name="name">Clasificar daño reportado por el ciudadano</field>
+            <field name="model">ocs_idu.wizard.classify_damage</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Clasificar daño reportado por el ciudadano">
+                    <field name="dependencia_id" on_change="onchange_dependencia_id(dependencia_id)"/>
+                    <field name="res_user_id" attrs="{'invisible': [('dependencia_id','==',False)]}"/>
+                    <field name="classification_id"/>
+                    <field name="description"/>
+                    <separator colspan="4"/>
+                    <group col="4" colspan="4">
+                        <label string="" colspan="2"/>
+                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                        <button name="radicar" string="Radicar" type="object" icon="gtk-ok"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="action_ocs_idu_wizard_classify_damage" model="ir.actions.act_window">
+            <field name="name">Clasificar daño reportado por el ciudadano</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ocs_idu.wizard.classify_damage</field>
+            <field name="src_model">ocs_idu.wizard.classify_damage</field>
+            <field name="view_id" ref="view_ocs_idu_wizard_classify_damage_form"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+</data>
+</openerp>

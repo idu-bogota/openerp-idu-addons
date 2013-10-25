@@ -136,3 +136,11 @@ class crm_case_categ(osv.osv):
         'orfeo_id':fields.integer('orfeo_id'),
     }
 crm_case_categ()
+
+class res_users(osv.osv):
+    _name="res.users"
+    _inherit="res.users"
+
+    _columns = {
+        'dependencia_id':fields.many2one('ocs_orfeo.dependencia','Dependencia'),
+    }
