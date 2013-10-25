@@ -59,6 +59,10 @@ class ocs_idu_wizard_classify_damage(osv.osv_memory):
         if claim_id != None:
             res.update({'description': claim.description})
 
+        #TODO: Hacer geoprocesamiento 
+        #TODO: Crear una respuesta de acuerdo al geoprocesamiento
+        #TODO: Preseleccionar Dependencia de acuerdo al resultado del geoprocesamiento
+        #TODO: Crear wizard para aprobar respuesta propuesta por el sistema claim cambia de estado a pending y cuando se aprueba respuesta cambia a in progress, enviando email al claim.responsible
         if image_field != None:
             attachment_id = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', 'crm.claim'), ('res_id', '=', claim_id)])
             attachment = self.pool.get('ir.attachment').read(cr, uid, attachment_id, ['datas'], context = context)[0]
@@ -128,6 +132,7 @@ class ocs_idu_wizard_classify_damage(osv.osv_memory):
                 attachment = self.pool.get('ir.attachment').read(cr, uid, attachment_id, ['datas'], context = context)[0]
                 data['image'] = attachment.get('datas','')
             damage_id = damage_table.create(cr, uid, data, context)
+            #TODO: Enviar email al responsible
             claim_table.write(cr, uid, claim.id, {'damage_id': damage_id}, context=context)
 
         return {'type': 'ir.actions.act_window_close'}
