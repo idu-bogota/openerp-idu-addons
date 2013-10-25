@@ -117,8 +117,9 @@ class ocs_idu_wizard_classify_damage(osv.osv_memory):
                 'res_user_id': usuario_destino.id,
                 'dependencia_id': dependencia.id,
                 'classification_id': classification.id,
-                'description': "{0}\n\n----- Datos adicionales reportados por el ciudadano -----\nElemento afectado: {5}\nTipo de daño: {4}\nAncho: {1}\nLargo: {2}\nProfundo: {3}".format(
-                                description, claim.damage_width_by_citizen,claim.damage_length_by_citizen,claim.damage_deep_by_citizen, claim.damage_element_by_citizen, claim.damage_type_by_citizen),
+                'description': "{0}\n\n----- Datos adicionales reportados por el ciudadano -----\nElemento afectado: {4}\nTipo de daño: {5}\nAncho: {1}\nLargo: {2}\nProfundo: {3}".format(
+                                description, claim.damage_width_by_citizen,claim.damage_length_by_citizen,claim.damage_deep_by_citizen,
+                                claim.damage_element_by_citizen, claim.damage_type_by_citizen),
                 'geo_point': claim.geo_point,
                 'element':claim.damage_element_by_citizen,
             }
