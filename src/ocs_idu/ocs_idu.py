@@ -265,10 +265,11 @@ class crm_claim(crm.crm_case,osv.osv):
                                                     ('puente-peatonal-grieta', 'Puente peatonal grieta'),('puente-peatonal-laminas', 'Puente peatonal láminas'),('puente-peatonal-accesibilidad', 'Puente peatonal accesibilidad'),
                                                    ],
                                                    'Via Damage Type', help='Damage type provided by the citizen'),
-        'damage_width_by_citizen':  fields.char('Via damage width',size=10,help='Damage width provided by the citizen',states={'done':[('readonly',True)]}),
-        'damage_length_by_citizen': fields.char('Via damage length',size=10,help='Damage length provided by the citizen',states={'done':[('readonly',True)]}),
-        'damage_deep_by_citizen': fields.char('Via damage deep',size=10,help='Damage size provided by the citizen',states={'done':[('readonly',True)]}),
-        'damage_element_by_citizen': fields.selection([('via', 'Via'),('anden', 'Anden'),('puente_peatonal', 'Puente Peatonal'),('cicloruta', 'Cicloruta')], 'Via Element Type',help='Element type provided by the citizen'),
+        'damage_width_by_citizen':  fields.char('Ancho',size=10,help='Ancho del daño proveido por el ciudadano',states={'done':[('readonly',True)]}),
+        'damage_length_by_citizen': fields.char('Largo',size=10,help='Largo del daño proveido por el ciudadano',states={'done':[('readonly',True)]}),
+        'damage_deep_by_citizen': fields.char('Profundidad',size=10,help='Profundidad del daño proveido por el ciudadano',states={'done':[('readonly',True)]}),
+        'damage_element_by_citizen': fields.selection([('via', 'Via'),('anden', 'Anden'),('puente_peatonal', 'Puente Peatonal'),('cicloruta', 'Cicloruta')], 'Tipo de elemento afectado'),
+        'damage_id': fields.many2one('ocs.claim_damage', 'Damage'),
     }
     _constraints = [
         (_check_contract_reference,'Contract Reference format is number-year, ie. 123-2012',['contract_reference']),
@@ -443,19 +444,40 @@ class ocs_tract(osv.osv):
     _rec_name = 'full_name'
 ocs_tract()
 
-class ocs_claim_damage(osv.osv):
+class ocs_claim_damage(geo_model.GeoModel):
     """This handles damages reported by the citizen and its technical details and status"""
     _name="ocs.claim_damage"
+
+    def _get_name(self,cr,uid,ids,fieldname,arg,context=None):
+        res = {}
+        for item in self.browse(cr, uid, ids, context = context):
+            res[item.id] = "{0} - {1} - {2}".format(item.id, item.classification_id.name, item.dependencia_id.name)
+        return  res
+
     _columns={
       'id':fields.integer('ID',readonly=True),
-      'crm_claim_id': fields.many2one('crm.claim', 'CRM Claim', readonly=True),
+      'name':fields.function(_get_name,type='char',string='Name',method=True),
+      'image': fields.binary('Fotografía'),
+      'priority': fields.selection([('high', 'High'),('medium', 'Medium'),('low', 'Low')],'Priority'),
+      'segment_id':fields.integer('CIV'),
+      'crm_claim_id': fields.one2many('crm.claim', 'damage_id', 'CRM Claim'),
       'res_user_id': fields.many2one('res.users', 'Responsible', readonly=True, states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
       'classification_id': fields.many2one('ocs.claim_damage_classification', 'Damage Classification'),
+      'dependencia_id': fields.many2one('ocs_orfeo.dependencia', 'Damage Classification'),
       'description': fields.text('Description', required=True, readonly=True, states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
+      'geo_point': fields.geo_point('Location', readonly=True),
+      'state':fields.selection([('draft', 'New'),('verified', 'Verified'),('cancel', 'Cancelled'),('review','Review'),('rejected','Rejected'),
+                                ('done', 'Closed'),('pending', 'Pending')],'State'),
+      'element': fields.selection([('via', 'Via'),('anden', 'Anden'),('puente_peatonal', 'Puente Peatonal'),('cicloruta', 'Cicloruta')], 'Tipo de elemento afectado'),
+      'width':  fields.char('Ancho',size=10,help='Ancho en metros',states={'done':[('readonly',True)]}),
+      'length': fields.char('Largo',size=10,help='Largo en metros',states={'done':[('readonly',True)]}),
+      'deep': fields.char('Profundidad',size=10,help='Profundidad en metros',states={'done':[('readonly',True)]}),
     }
-    constraints = [
-        (osv.osv._check_recursion,'Error ! You cannot create recursive Claim Solution Classification',['parent_id'])
-    ]
+
+    _defaults = {
+        'state': 'draft'
+    }
+
 ocs_claim_damage()
 
 class ocs_claim_damage_classification(osv.osv):
