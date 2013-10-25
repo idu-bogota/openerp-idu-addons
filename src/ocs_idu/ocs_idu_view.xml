@@ -488,7 +488,16 @@
                         <field name="image" widget="image" nolabel="1" colspan="4" width="840" height="600" attrs="{'invisible': [('image','==',False)]}"/>
                     </page>
                     <page string="Claims">
-                        <field name="crm_claim_id" nolabel="1"/>
+                        <field name="crm_claim_id" nolabel="1" readonly="1">
+                            <tree>
+                                <field name="partner_address_id"/>
+                                <field name="user_id" />
+                                <field name="date"/>
+                                <field name="name"/>
+                                <field name="categ_id" string="Type" select="1"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
                     </page>
                 </notebook>
             </form>

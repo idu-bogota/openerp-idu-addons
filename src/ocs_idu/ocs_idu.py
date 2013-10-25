@@ -444,6 +444,10 @@ class ocs_tract(osv.osv):
     _rec_name = 'full_name'
 ocs_tract()
 
+#TODO: Adicionar mail_thread para manejo de observaciones
+#TODO: Adicionar workflow para manejo de estados
+#TODO: Adicionar próxima acción a realizarse
+#TODO: Adicionar fecha de seguimiento al reporte incluyendo alerta via email
 class ocs_claim_damage(geo_model.GeoModel):
     """This handles damages reported by the citizen and its technical details and status"""
     _name="ocs.claim_damage"
@@ -466,8 +470,8 @@ class ocs_claim_damage(geo_model.GeoModel):
       'dependencia_id': fields.many2one('ocs_orfeo.dependencia', 'Damage Classification'),
       'description': fields.text('Description', required=True, readonly=True, states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
       'geo_point': fields.geo_point('Location', readonly=True),
-      'state':fields.selection([('draft', 'New'),('verified', 'Verified'),('cancel', 'Cancelled'),('review','Review'),('rejected','Rejected'),
-                                ('done', 'Closed'),('pending', 'Pending')],'State'),
+      'state':fields.selection([('draft', 'New'),('review','Review'),('verified', 'Verified'),('rejected','Rejected'),('cancel', 'Cancelled'),
+                                ('done', 'Solved'),('pending', 'Pending')],'State'),
       'element': fields.selection([('via', 'Via'),('anden', 'Anden'),('puente_peatonal', 'Puente Peatonal'),('cicloruta', 'Cicloruta')], 'Tipo de elemento afectado'),
       'width':  fields.char('Ancho',size=10,help='Ancho en metros',states={'done':[('readonly',True)]}),
       'length': fields.char('Largo',size=10,help='Largo en metros',states={'done':[('readonly',True)]}),
