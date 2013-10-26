@@ -444,13 +444,13 @@ class ocs_tract(osv.osv):
     _rec_name = 'full_name'
 ocs_tract()
 
-#TODO: Adicionar mail_thread para manejo de observaciones
 #TODO: Adicionar workflow para manejo de estados
 #TODO: Adicionar próxima acción a realizarse
 #TODO: Adicionar fecha de seguimiento al reporte incluyendo alerta via email
 class ocs_claim_damage(geo_model.GeoModel):
     """This handles damages reported by the citizen and its technical details and status"""
     _name="ocs.claim_damage"
+    _inherit = ['mail.thread']
 
     def _get_name(self,cr,uid,ids,fieldname,arg,context=None):
         res = {}
@@ -476,6 +476,7 @@ class ocs_claim_damage(geo_model.GeoModel):
       'width':  fields.char('Ancho',size=10,help='Ancho en metros',states={'done':[('readonly',True)]}),
       'length': fields.char('Largo',size=10,help='Largo en metros',states={'done':[('readonly',True)]}),
       'deep': fields.char('Profundidad',size=10,help='Profundidad en metros',states={'done':[('readonly',True)]}),
+      'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
     _defaults = {
