@@ -206,7 +206,7 @@
                     type="action" icon="gtk-ok" context="{'claim_id': id}"
                     attrs="{'invisible': [('damage_id','!=',False)]}" 
                 />
-                <field name="damage_id" colspan="4" attrs="{'invisible': [('damage_id','==',False)]}"/>
+                <field name="damage_id" colspan="4" attrs="{'invisible': [('damage_id','==',False)]}" readonly="1"/>
             </page>
         </page>
     </field>
@@ -519,10 +519,22 @@
                             name="%(mail.action_email_compose_message_wizard)d"
                             icon="terp-mail-message-new" type="action"/> -->
                     </page>
+                    <page string="Follow-Up">
+                        <field name="next_action" />
+                        <field name="date" />
+                        <field name="alarm_id" />
+                    </page>
                 </notebook>
             </form>
         </field>
 </record>
+
+<!-- Requests Links -->
+<record id="req_link_claim_damage" model="res.request.link">
+    <field name="name">Claim Damage</field>
+    <field name="object">ocs.claim_damage</field>
+</record>
+
 <!-- Tree -->
 <record model="ir.ui.view" id="view_ocs_claim_damage_tree">
         <field name="name">ocs.claim_damage.tree</field>
@@ -570,12 +582,28 @@
             <field name="begin_color">#F7F80A</field>
 </record>
 
+<!-- Calendar View -->
+<record model="ir.ui.view" id="claim_damage_calendar_view">
+    <field name="name">Claim Damages</field>
+    <field name="model">ocs.claim_damage</field>
+    <field name="type">calendar</field>
+    <field name="priority" eval="2"/>
+    <field name="arch" type="xml">
+        <calendar string="Claim Damages"
+            date_start="date" color="user_id">
+            <field name="name" />
+            <field name="state" />
+            <field name="next_action" />
+        </calendar>
+    </field>
+</record>
+
 <!-- Action -->
 <record model="ir.actions.act_window" id="action_ocs_claim_damage">
         <field name="name">Damages</field>
         <field name="res_model">ocs.claim_damage</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form,geoengine</field>
+        <field name="view_mode">tree,form,calendar,geoengine</field>
 </record>
 
 <menuitem name="Damages" id="menu_ocs_damages" parent="ocs.menu_ocs" sequence="3" />
