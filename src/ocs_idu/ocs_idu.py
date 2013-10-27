@@ -445,12 +445,10 @@ class ocs_tract(osv.osv):
 ocs_tract()
 
 #TODO: Adicionar workflow para manejo de estados
-#TODO: Adicionar próxima acción a realizarse
-#TODO: Adicionar fecha de seguimiento al reporte incluyendo alerta via email
 class ocs_claim_damage(geo_model.GeoModel):
     """This handles damages reported by the citizen and its technical details and status"""
     _name="ocs.claim_damage"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread','calendar.event']
 
     def _get_name(self,cr,uid,ids,fieldname,arg,context=None):
         res = {}
@@ -477,11 +475,23 @@ class ocs_claim_damage(geo_model.GeoModel):
       'length': fields.char('Largo',size=10,help='Largo en metros',states={'done':[('readonly',True)]}),
       'deep': fields.char('Profundidad',size=10,help='Profundidad en metros',states={'done':[('readonly',True)]}),
       'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+      'next_action': fields.char('Next Action', size=200),
     }
 
     _defaults = {
         'state': 'draft'
     }
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if not context:
+            context = {}
+        result = super(ocs_claim_damage,self).write(cr, uid, ids, vals, context=context)
+        alarm_obj = self.pool.get('calendar.alarm')
+        for item in self.browse(cr, uid, ids, context = context):
+            alarm_obj.write(cr, uid, [item.base_calendar_alarm_id.id], {'state': 'run', 'action': 'email'}, context=context)
+
+        return result
+
 
 ocs_claim_damage()
 
