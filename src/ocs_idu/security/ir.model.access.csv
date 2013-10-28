@@ -67,3 +67,16 @@ access_ocs_reader_crm_case_stage,crm.user.crm.case.stage,crm.model_crm_case_stag
 access_ocs_reader_mail_message,mail.message.user.mail.message,mail.model_mail_message,ocs_idu.group_ocs_outsourced_reader,1,1,1,0
 access_ocs_reader_res_partner_category,base.user.res_partner_category,base.model_res_partner_category,ocs_idu.group_ocs_outsourced_reader,1,0,0,0
 access_ocs_reader_ocs_contract,ocs.contract,ocs_idu.model_ocs_contract,ocs_idu.group_ocs_outsourced_reader,1,0,0,0
+access_ocs_technical_district,ocs.user.district,ocs.model_ocs_district,ocs_idu.group_ocs_technical,1,0,0,0
+access_ocs_technical_subdistrict,ocs.user.sub_district,ocs.model_ocs_sub_district,ocs_idu.group_ocs_technical,1,0,0,0
+access_ocs_technical_neigborhood,ocs.user.neighborhood,ocs.model_ocs_neighborhood,ocs_idu.group_ocs_technical,1,0,0,0
+access_ocs_technical_citizen_service_point,ocs.user.citizen_service_point,ocs.model_ocs_citizen_service_point,ocs_idu.group_ocs_technical,1,0,0,0
+access_ocs_technical_res_partner_address,base.user.res_partner_address,base.model_res_partner_address,ocs_idu.group_ocs_technical,1,0,0,0
+access_ocs_technical_partner,base.user.res_partner,base.model_res_partner,ocs_idu.group_ocs_technical,1,0,0,0
+access_ocs_technical__cm_claim,crm_claim.user.crm_claim,crm_claim.model_crm_claim,ocs_idu.group_ocs_technical,1,0,0,0
+access_ocs_technical_claim_classification,ocs.user.claim_classification,ocs.model_ocs_claim_classification,ocs_idu.group_ocs_technical,1,0,0,0
+access_ocs_technical_solution_classification,ocs.user.claim_solution_classification,ocs.model_ocs_claim_solution_classification,ocs_idu.group_ocs_technical,1,0,0,0
+access_ocs_technical_channel,crm.user.crm.case.channel,crm.model_crm_case_channel,ocs_idu.group_ocs_technical,1,0,0,0
+access_ocs_technical_stage,crm.user.crm.case.stage,crm.model_crm_case_stage,ocs_idu.group_ocs_technical,1,0,0,0
+access_ocs_technical_mail_message,mail.message.user.mail.message,mail.model_mail_message,ocs_idu.group_ocs_technical,1,0,1,0
+access_ocs_technical_partner_category,base.user.res_partner_category,base.model_res_partner_category,ocs_idu.group_ocs_technical,1,0,0,0

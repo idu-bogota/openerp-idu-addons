@@ -445,6 +445,7 @@ class ocs_tract(osv.osv):
 ocs_tract()
 
 #TODO: Adicionar workflow para manejo de estados
+#TODO: Adicionar roles de acceso básicos
 class ocs_claim_damage(geo_model.GeoModel):
     """This handles damages reported by the citizen and its technical details and status"""
     _name="ocs.claim_damage"
