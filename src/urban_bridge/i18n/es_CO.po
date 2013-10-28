@@ -225,16 +225,104 @@ msgstr "Inspecciones"
 msgid "Inventory Date"
 msgstr "Fecha de Inventario"
 
+#. module:urban_bridge
+#: model:ir.ui.menu,name:urban_bridge.menu_urban_bridge_structure_type
+msgid "Structure Type"
+msgstr "Tipologia Estructural"
 
+#. module:urban_bridge
+#: model:ir.actions.act_window,name:urban_bridge.action_urban_bridge_structure_type
+msgid "Structure Type"
+msgstr "Tipología Estructural"
 
+#. module: urban_bridge  
+#: view:urban_bridge.structure_type:0
+msgid "Description"
+msgstr "Descripción"
 
+#. module: urban_bridge
+#: field:urban_bridge.structure_type,code:0
+msgid "Code"
+msgstr "Código"
 
+#. module: urban_bridge
+#: field:urban_bridge.structure_type,name:0
+msgid "Name"
+msgstr "Nombre"
 
+#. module: urban_bridge
+#: field:urban_bridge.structure_type,description:0
+msgid "Description"
+msgstr "Descripción"
 
+#. module:urban_bridge
+#: model:ir.ui.menu,name:urban_bridge.menu_urban_bridge_design_load_code
+msgid "Design Load Codes"
+msgstr "Normas de Diseño"
 
+#. module:urban_bridge
+#: model:ir.actions.act_window,name:urban_bridge.action_urban_bridge_design_load_code
+msgid "Design Load Codes"
+msgstr "Normas de Diseño"
 
+#. module: urban_bridge
+#: field:urban_bridge.design_load_code,code:0
+msgid "Code"
+msgstr "Código"
 
+#. module: urban_bridge
+#: field:urban_bridge.design_load_code,name:0
+msgid "Name"
+msgstr "Nombre"
 
+#. module:urban_bridge
+#: model:ir.ui.menu,name:urban_bridge.menu_urban_bridge_structure_material
+msgid "Structure Material"
+msgstr "Material de la Estructura"
 
+#. module:urban_bridge
+#: model:ir.actions.act_window,name:urban_bridge.action_urban_bridge_structure_material
+msgid "Structure Material"
+msgstr "Material de la Estructura"
 
+#. module: urban_bridge
+#: field:urban_bridge.structure_material,code:0
+msgid "Code"
+msgstr "Código"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_material,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module:urban_bridge
+#: model:ir.ui.menu,name:urban_bridge.menu_urban_bridge_structure_element_type
+
+msgid "Structure Element Type"
+msgstr "Tipos de Elementos del Puente"
+
+#. module:urban_bridge
+#: model:ir.actions.act_window,name:urban_bridge.action_urban_bridge_structure_element_type
+msgid "Structure Element Type"
+msgstr "Tipos de Elementos del Puente"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_type,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_type,alias:0
+msgid "Alias"
+msgstr "Alias"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_type,classification:0
+msgid "Main Classification"
+msgstr "Clasificación"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_type,sub_classification:0
+msgid "SubClassification"
+msgstr "Sub Clasificación"
 
