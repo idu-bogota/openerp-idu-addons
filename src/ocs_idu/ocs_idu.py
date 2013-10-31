@@ -489,7 +489,8 @@ class ocs_claim_damage(geo_model.GeoModel):
         result = super(ocs_claim_damage,self).write(cr, uid, ids, vals, context=context)
         alarm_obj = self.pool.get('calendar.alarm')
         for item in self.browse(cr, uid, ids, context = context):
-            alarm_obj.write(cr, uid, [item.base_calendar_alarm_id.id], {'state': 'run', 'action': 'email'}, context=context)
+            if item.base_calendar_alarm_id.id:
+                alarm_obj.write(cr, uid, [item.base_calendar_alarm_id.id], {'state': 'run', 'action': 'email'}, context=context)
 
         return result
 
