@@ -44,7 +44,7 @@ class base_map_sub_district(geo_model.GeoModel):
     _name="base_map.sub_district"
     _columns={
         'shape':fields.geo_multi_polygon('Shape'),
-        'code':fields.char('Code Name',size=256),
+        'code':fields.char('Code',size=256),
         'name':fields.char('Name',size=256),
         'classification':fields.integer('Classification'),
     }

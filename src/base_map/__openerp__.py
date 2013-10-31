@@ -43,6 +43,8 @@
         "init_xml" : ['base_map.xml'],
         "demo_xml" : [],
         "update_xml" : ['base_map.xml',
+                        'security/base_map_security.xml',
+                        'security/ir.model.access.csv',
                         ],
         "installable": True
 }

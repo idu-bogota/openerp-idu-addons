@@ -73,7 +73,7 @@ Base Map _ District
 </record>
 
 <record model="ir.actions.act_window" id="action_base_map_district">
-        <field name="name">Sub Districts</field>
+        <field name="name">Districts</field>
         <field name="res_model">base_map.district</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
@@ -302,7 +302,7 @@ Neighborhood
 </record>
 <!-- Action -->
 <record model="ir.actions.act_window" id="action_base_map_neighborhood">
-        <field name="name">Neighborhood Zone</field>
+        <field name="name">Neighborhood</field>
         <field name="res_model">base_map.neighborhood</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
