@@ -82,17 +82,20 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
                                         view_type, context, toolbar,submenu)
         search_obj = self.pool.get('ir.ui.view')
         #Se selecciona la hoja desde donde se van a importar los datos
-        #Pagina 2 del Asistente -- arma combobox para seleccionar la hoja de cálculo
+       
         v_select_worksheet = search_obj.search(cr,uid,[('model','=','urban_bridge.wizard.import_elements'),\
                                               ('name','=','Import Elements - Select WorkSheet')])
         v_select_fields = search_obj.search(cr,uid,[('model','=','urban_bridge.wizard.import_elements'),\
                                               ('name','=','Import Elements Select Fields')])
+        #Pagina 2 del Asistente -- arma combobox para seleccionar la hoja de cálculo
         if (view_id == v_select_worksheet[0]):
             current_id = context["current_ids"]
             wizard = self.browse(cr,uid,current_id,context=None)
             try :
                 workbook = xlrd.open_workbook(file_contents=base64.decodestring(wizard.file))
+                #wb = load_workbook(base64.decodestring(wizard.file))                
                 worksheets = workbook.sheet_names()
+                #worksheets = wb.get_sheet_names()
                 x = 0
                 combo_vals = []
                 for worksheet_name in worksheets:
@@ -111,8 +114,8 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
                 field = etree.Element("field",name="cmb_worksheet")
                 xml.insert(1,field)
                 result['arch'] = etree.tostring(xml)
-            except Exception :
-                raise except_osv(_('Error reading excel'), str("Excel file version must be Office 2003-2007"))
+            except Exception as e:
+                raise except_osv(_('Error reading excel'), str(e))
                 
         #Pagina 3 del Asistente -- arma el formulario que se despliega cuando se van a jalar los datos desde el excel
         elif (view_id == v_select_fields[0]):
@@ -128,7 +131,7 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
             combo_list = []
             #Columnas que se van a mostrar
             for col in range(ws.ncols):
-                value = ws.cell(0,col).value
+                value = ws.cell(1,col).value
                 combo_list.append((x,value))
                 x=x+1
             #2. Determinar los campos que tienen el objeto y de acuerdo a los campos definidos en el objeto se crea una
@@ -190,8 +193,8 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
                 workbook = xlrd.open_workbook(file_contents=base64.decodestring(wizard.file))
                 ws = workbook.sheets()[wizard.worksheet]
                 for row_index in range(ws.nrows):
-                    #La fila 0 (1) tiene los títulos así que no nos interesa analizar
-                    if row_index>0:
+                    #La fila 0 no tiene nada y la fila (1) tiene los títulos así que no nos interesa analizar
+                    if row_index>1:
                         #Aca en adelante ojala se pudiera hacer una transaccion con rollback, investigar!!!
                         #2.Se debe crear el elemento con el nombre que venga en la clave elem_name y el el tipo de elemento que viene en el wizard
                         elem_name = ws.cell(row_index,int(vals['elem_name'])).value

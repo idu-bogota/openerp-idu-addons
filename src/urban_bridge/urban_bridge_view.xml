@@ -151,7 +151,7 @@ Structure Type
             <group colspan="2" col="2">
              <field name="code" select="1"/>
              <field name="name"/>
-             <separator colspan="2" string="Description:"/>
+             <separator colspan="2" string="Description"/>
              <field name="description" nolabel="1" colspan="2"/>
             </group> 
             <group colspan="2" col="2">
@@ -217,7 +217,7 @@ Structure Design Load Code
 </record>
 <!-- Action -->
 <record model="ir.actions.act_window" id="action_urban_bridge_design_load_code">
-        <field name="name">Structure Type</field>
+        <field name="name">Design Load Codes</field>
         <field name="res_model">urban_bridge.design_load_code</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
@@ -257,15 +257,14 @@ Structure Design Load Code
 
 <!-- Action -->
 <record model="ir.actions.act_window" id="action_urban_bridge_structure_material">
-        <field name="name">Structure Type</field>
+        <field name="name">Structure Material</field>
         <field name="res_model">urban_bridge.structure_material</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
 </record>
-<!-- Menu -->
-<menuitem name="Structure Material" id="menu_urban_bridge_structure_material" 
 
-parent="menu_urban_bridge_domain" action="action_urban_bridge_structure_material" sequence="3"/>
+<!-- Menu -->
+<menuitem name="Structure Material" id="menu_urban_bridge_structure_material" parent="menu_urban_bridge_domain" action="action_urban_bridge_structure_material" sequence="3"/>
 
 <!-- ===================================================================================================
 Urban Bridge - EAV
@@ -323,11 +322,14 @@ Structure Element Attribute
             <form string="Structure Element Attribute">
              <field name="name" select="1"/>
              <field name="data_type" select="1"/>
+             <field name="alias"/>
+             <field name="selection_text" attrs="{'invisible':[('data_type','!=','selection')]}"/>
              <field name="is_enabled"/>
              <field name="is_required"/>
-             <field name="alias"/>
+                <group colspan="4" col="2">
              <field name="regex"/>
-             <field name="selection_text" attrs="{'invisible':[('data_type','!=','selection')]}"/>
+             </group>
+             
             </form>
         </field>
 </record>
