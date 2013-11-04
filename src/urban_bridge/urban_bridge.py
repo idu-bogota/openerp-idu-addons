@@ -247,7 +247,7 @@ class urban_bridge_structure_type(osv.osv):
     }
 urban_bridge_structure_type()
 
-class urban_bridge_desgin_load_code(osv.osv):
+class urban_bridge_design_load_code(osv.osv):
     """
     Design Load Code
     """
@@ -256,7 +256,7 @@ class urban_bridge_desgin_load_code(osv.osv):
         'code':fields.integer('Code','Unique Identification Code'),
         'name':fields.char('Name',size=128),
     }
-urban_bridge_desgin_load_code()
+urban_bridge_design_load_code()
 
 class urban_bridge_structure_material(osv.osv):
     """
