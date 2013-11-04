@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--=============================================================================
+                Group Definitions
+        ;=============================================================================-->
+        <record id="group_urban_bridge_user" model="res.groups">
+            <field name="name">Urban Bridge User</field>
+        </record>
+        <record id="group_urban_bridge_manager" model="res.groups">
+            <field name="name">Urban Bridge Manager</field>
+        </record>
+        <record id="group_urban_bridge_inspector" model ="res.groups">
+            <field name="name">Urban Bridge Inspector</field>
+        </record>
+        
+        <!--=============================================================================
+                Menú Access Rules
+        ;=============================================================================-->
+        <record model="ir.ui.menu" id="urban_bridge.menu_urban_bridge">
+                <field eval="[(4, ref('group_urban_bridge_user')),(4, ref('group_urban_bridge_manager')),(4, ref('group_urban_bridge_inspector'))]" name="groups_id"/>
+        </record>
+    </data>
+</openerp>

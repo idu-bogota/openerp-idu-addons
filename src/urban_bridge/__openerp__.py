@@ -29,10 +29,7 @@
         "depends" : ['base',
                      'base_geoengine',
                      ],
-        "init_xml" : ['wizard/structure_elem.xml',
-                      'wizard/inspection_survey.xml',
-                      'wizard/import_elements_wizard.xml',
-                      'wizard/update_bridge_shape_from_wkt_view.xml',
+        "init_xml" : [
                       'urban_bridge_view.xml',
                       ],
         "demo_xml" : [],
@@ -40,6 +37,7 @@
                         'wizard/inspection_survey.xml',
                         'wizard/import_elements_wizard.xml',
                         'wizard/update_bridge_shape_from_wkt_view.xml',
+                        'security/urban_bridge_security.xml',
                         'urban_bridge_view.xml',
                         ],
         "installable": True
