@@ -38,6 +38,7 @@
                         'wizard/import_elements_wizard.xml',
                         'wizard/update_bridge_shape_from_wkt_view.xml',
                         'security/urban_bridge_security.xml',
+                        'security/ir.model.access.csv',
                         'urban_bridge_view.xml',
                         ],
         "installable": True
