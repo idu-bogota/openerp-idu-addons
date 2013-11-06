@@ -27,6 +27,7 @@ sudo easy_install shapely
 
 5. El módulo urban_bridge requiere las coordenadas geográficas cartesianas para Bogotá, por tanto se agrega la línea correspondiente en el
 postgis
+En PGAdmin ejecutar la siguiente consulta:
 
 INSERT into spatial_ref_sys (srid, auth_name, auth_srid, proj4text, srtext) values ( 96873, 'sr-org', 6873, '+proj=tmerc +lat_0=4.680486111 
 +lon_0=-74.14659167000001 +k=1 +x_0=92334.879 +y_0=109320.965 +a=6380687 +b=6359293.764473119 +units=m +no_defs ', 'PROJCS["PCS_CarMAGBOG",
