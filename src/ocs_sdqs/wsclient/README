@@ -1,0 +1,128 @@
+Este módulo contiene las funciones básicas para invocar los servicios web publicados
+por el Sistema Distrital de Quejas y Soluciones de la Secretaría General de la Alcaldía Mayor de Bogotá.
+
+Debe tener preinstalado la libreria suds:
+
+    apt-get install python-suds
+
+Para correr las pruebas escritas debe ejecutar:
+
+    python -m doctest README
+    python -m doctest nombre_archivo.t
+
+>>> from wsclient import SdqsClient
+>>> import logging
+>>> url = 'http://sdqspruebas.alcaldiabogota.gov.co/sdqs-ws/radicacion?wsdl'
+>>> client = SdqsClient(url,1)
+>>> #logging.basicConfig(level=logging.DEBUG)
+>>> #logging.getLogger('suds.client').setLevel(logging.DEBUG)
+
+-------------------------------------
+Prueba de ciudadano - datos completos
+-------------------------------------
+
+>>> params = {
+...     "numeroRadicado": "ABC0001",
+...     "numeroFolios": "1",
+...     "asunto": "Prueba usuario no anonimo completo",
+...     "numeroDocumento": "10000001",
+...     "nombres": "mi nombre",
+...     "apellidos": "mi apellido",
+...     "email": "email@dominio.com",
+...     "telefonoCasa": "200000002",
+...     "telefonoOficina": "300000003",
+...     "telefonoCelular": "40000004",
+...     "direccion": "CL 32 No 54 - 54",
+...     "codigoCiudad": "11001",
+...     "codigoDepartamento": "250",
+...     "codigoPais": "1",
+...     "codigoTipoRequerimiento": "1",
+...     "clasificacionRequerimiento": {
+...     "codigoSector": [11],
+...     "codigoEntidad": [143],
+...     "codigoSubtema": [4],
+...     },
+...     "observaciones": "Esto es una prueba de registro.",
+...     "prioridad": "2",
+...     "entidadQueIngresaRequerimiento": 2972,
+...     }
+>>> r = client.registrarRequerimiento(params)
+>>> #print client.last_sent()
+>>> r['codigoError']
+0
+>>> r['codigoRequerimiento'] > 0
+True
+>>> consulta = client.consultarRequerimiento(r['codigoRequerimiento'])
+>>> consulta['codigoError']
+0
+>>> consulta_fields = ('nombres','apellidos','asunto','codigoCiudad','codigoDepartamento',
+... 'codigoPais','codigoTipoRequerimiento','entidadQueIngresaRequerimiento',
+... 'numeroDocumento','numeroFolios','numeroRadicado','observaciones', 'prioridad'
+... )
+>>> for f in consulta_fields:
+...     print "'{0}': {1}".format(f, str(consulta['requerimiento'][f]).upper() == str(params[f]).upper())
+'nombres': True
+'apellidos': True
+'asunto': True
+'codigoCiudad': True
+'codigoDepartamento': True
+'codigoPais': True
+'codigoTipoRequerimiento': True
+'entidadQueIngresaRequerimiento': True
+'numeroDocumento': True
+'numeroFolios': True
+'numeroRadicado': True
+'observaciones': True
+'prioridad': True
+
+-------------------------------------
+Prueba de ciudadano - datos parciales
+-------------------------------------
+
+>>> params = {
+...     "numeroRadicado": "ABC0001",
+...     "numeroFolios": "1",
+...     "asunto": "Prueba usuario no anonimo parciales",
+...     "nombres": "mi nombre",
+...     "apellidos": "mi apellido",
+...     "telefonoCasa": "200000002",
+...     "codigoCiudad": "11001",
+...     "codigoDepartamento": "250",
+...     "codigoPais": "1",
+...     "codigoTipoRequerimiento": "1",
+...     "clasificacionRequerimiento": {
+...     "codigoSector": [11],
+...     "codigoEntidad": [143],
+...     "codigoSubtema": [4],
+...     },
+...     "observaciones": "Esto es una prueba de registro con solo algunos datos del ciudadano.",
+...     "prioridad": "2",
+...     "entidadQueIngresaRequerimiento": 2972,
+...     }
+>>> r = client.registrarRequerimiento(params)
+>>> r['codigoError']
+0
+>>> r['codigoRequerimiento'] > 0
+True
+>>> consulta = client.consultarRequerimiento(r['codigoRequerimiento'])
+>>> consulta['codigoError']
+0
+>>> consulta_fields = ('nombres','apellidos','asunto','codigoCiudad','codigoDepartamento',
+... 'codigoPais','codigoTipoRequerimiento','entidadQueIngresaRequerimiento',
+... 'numeroFolios','numeroRadicado','observaciones', 'prioridad'
+... )
+>>> for f in consulta_fields:
+...     print "'{0}': {1}".format(f, str(consulta['requerimiento'][f]).upper() == str(params[f]).upper())
+'nombres': True
+'apellidos': True
+'asunto': True
+'codigoCiudad': True
+'codigoDepartamento': True
+'codigoPais': True
+'codigoTipoRequerimiento': True
+'entidadQueIngresaRequerimiento': True
+'numeroDocumento': True
+'numeroFolios': True
+'numeroRadicado': True
+'observaciones': True
+'prioridad': True

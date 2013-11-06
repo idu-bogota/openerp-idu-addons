@@ -1,3 +1,34 @@
+openerp6.1-rev2013100900
+* Fix: Gestor social no podia ver la solución de una PQR
+
+openerp6.1-rev2013091300
+* Update: en el listado de crm.claims para puntos CREA despliega name en lugar de contract
+* Fix: En el reporte crm_claim.rml la descripción de la PQR se despliega fuera de la tabla para soportar varias páginas cuando la descripción es muy larga
+* Update: Se modificaron las reglas de acceso de OCS outsourced user para que pueda leer otros usuarios de su punto crea, fallaba en la generacion del pdf del crm.claim
+* New: Se agrego el campo 'tipo de elemento' en la pestaña: "Reporte Malla Vial"
+
+openerp6.1-rev2013090900
+* Update: Permitir a los usuarios de puntos crea cambiar el dueño de una PQR de su propio punto CREA
+* Update: Permitir a los usuarios de puntos crea generar el reporte del punto crea incluyendo las PQRs de otros usuarios del mismo punto crea
+
+openerp6.1-rev2013090500
+* Update: Por solicitud de OTC OCS outsourced users pueden ver los PQR de todo el punto crea. Sin embargo no se permite la modificación de las PQRs de otros.
+
+openerp6.1-rev2013082300
+* Update: Por solicitud de OTC la localidad es obligatoria.
+
+openerp6.1-rev2013082200
+* Fix: Corregido que cuando llega un mensaje de correo para un crm.claim se cambia de estado pero no se afecta el workflow.
+
+openerp6.1-rev2013080801
+* Update: Cambia el estado del mensaje a outgoing para que sea procesado por la tarea de envio de emails
+
+openerp6.1-rev2013080800
+* Update: Al recibir nueva PQR por el metodo 'new_from_data' se responde al ciudadano via email usando como template los parametros ack_message_subject y ack_message_body
+* Update: Actualizada tabla de clasificación y canal para soportar PQRs del formulario web
+* Update: Adicionado grupo ocs_webservice que permite consultar los PQRs y asignar a usuarios
+* Update: Adicionado menu items a las tablas parametricas de ocs_orfeo
+
 openerp6.1-rev2013062400
 * Fix: Corregida referencia a formulario de búsqueda de ciudadanos
 

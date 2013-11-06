@@ -99,3 +99,5 @@ __export__.cso_category_97,19.3,77,Agresión física  y/o verbal de interventore
 __export__.cso_category_98,20.1,78,No pago a trabajadores o subcontratistas,__export__.cso_category_20,True,False
 __export__.cso_category_99,20.2,79,Pérdida de materiales/daño de obra,__export__.cso_category_20,True,False
 __export__.cso_category_100,20.3,80,Tráfico de influencias,__export__.cso_category_20,True,False
+__export__.cso_category_101,0,,Por clasificar,,True,False
+__export__.cso_category_102,0.1,,Formulario Web,__export__.cso_category_101,True,False

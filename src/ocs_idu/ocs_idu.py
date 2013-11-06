@@ -234,19 +234,17 @@ class crm_claim(crm.crm_case,osv.osv):
     _name="crm.claim"
     _inherit="crm.claim"
     _columns = {
+        'district_id':fields.many2one('ocs.district','District',required=True, readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'resolution': fields.text('Resolution',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)],'rejected':[('readonly',False)]},
             write = ['ocs_idu.group_ocs_outsourced_user','ocs_idu.group_ocs_outsourced_manager','ocs.group_ocs_user','ocs.group_ocs_manager'],
-            read = ['ocs_idu.group_ocs_outsourced_user','ocs_idu.group_ocs_outsourced_manager','ocs_idu.group_ocs_outsourced_reviewer','ocs.group_ocs_user','ocs.group_ocs_manager'],
             ),
         'solution_classification_id':fields.many2one('ocs.claim_solution_classification','Solution Classification',
             domain="[('parent_id','!=',False),('enabled','=',True)]",required=False,readonly=True,
             states={'draft':[('readonly',False)],'open':[('readonly',False)],'rejected':[('readonly',False)]},
             write = ['ocs_idu.group_ocs_outsourced_user','ocs_idu.group_ocs_outsourced_manager','ocs.group_ocs_user','ocs.group_ocs_manager'],
-            read = ['ocs_idu.group_ocs_outsourced_user','ocs_idu.group_ocs_outsourced_manager','ocs_idu.group_ocs_outsourced_reviewer','ocs.group_ocs_user','ocs.group_ocs_manager'],
             ),
         'partner_forwarded_id': fields.many2one('res.partner', 'Partner Forwarded',domain="[('supplier','=',True)]",readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)],'rejected':[('readonly',False)]},
             write = ['ocs_idu.group_ocs_outsourced_user','ocs_idu.group_ocs_outsourced_manager','ocs.group_ocs_user','ocs.group_ocs_manager'],
-            read = ['ocs_idu.group_ocs_outsourced_user','ocs_idu.group_ocs_outsourced_manager','ocs_idu.group_ocs_outsourced_reviewer','ocs.group_ocs_user','ocs.group_ocs_manager'],
         ),
         'priority': fields.selection([('h','High'),('n','Normal'),('l','Low')], 'Priority', required=True, readonly=True),
         'date_deadline': fields.date('Deadline',readonly=True),
@@ -262,6 +260,7 @@ class crm_claim(crm.crm_case,osv.osv):
         'damage_width_by_citizen':  fields.char('Via damage width',size=10,help='Damage width provided by the citizen',states={'done':[('readonly',True)]}),
         'damage_length_by_citizen': fields.char('Via damage length',size=10,help='Damage length provided by the citizen',states={'done':[('readonly',True)]}),
         'damage_deep_by_citizen': fields.char('Via damage deep',size=10,help='Damage size provided by the citizen',states={'done':[('readonly',True)]}),
+        'damage_element_by_citizen': fields.selection([('via', 'Via'),('anden', 'Anden'),('puente_peatonal', 'Puente Peatonal')], 'Via Element Type',help='Element type provided by the citizen'),
     }
     _constraints = [
         (_check_contract_reference,'Contract Reference format is number-year, ie. 123-2012',['contract_reference']),

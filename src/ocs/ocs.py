@@ -34,6 +34,7 @@ from datetime import datetime
 from datetime import timedelta
 from crm import crm
 from crm_claim import crm_claim
+import netsvc
 import re, json
 from openerp.osv.osv import except_osv
 from tools.translate import _
@@ -442,6 +443,15 @@ class crm_claim(geo_model.GeoModel):
     def onchange_geopoint(self, cr, uid, ids, point):
         return onchange_geopoint(cr, uid, ids, point)
 
+    def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
+        super(crm_claim,self).message_update(cr, uid, ids, msg, context=context)
+        wf_service = netsvc.LocalService("workflow") #instanciate workflow engine
+        for claim in self.browse(cr, uid, ids, context=context):
+            signal = 'cas_open' # by default a email message send workflow signal to open claim
+            if claim.state == 'done':
+                signal = 'cas_reset'#if closed the signal is to reset
+            wf_service.trg_validate(uid, 'crm.claim', claim.id, signal, cr)
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """Automatically called when new email message arrives"""
         subject = msg.get('subject')
@@ -506,8 +516,11 @@ class crm_claim(geo_model.GeoModel):
         Retorna {'status': 'success|failed', 'message':'error message','result': {'id': claim.id }}
         """
         result = {'status': 'success', 'result': {}}
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         attachment = None
         attachment_name = None
+        subject = _('New from external application') #email or log message
+        body_text = None #by default uses crm_claim.description on email or log message
         try:
             data = self._custom_new_from_data(cr, uid, data, context) #Hook to allow inherited classes to add further logic
             if 'partner_address_id' in data:
@@ -519,11 +532,35 @@ class crm_claim(geo_model.GeoModel):
                 attachment_name = data['attachment_name']
                 del data['attachment']
                 del data['attachment_name']
+            #external app can state the acknowledge email subject and body to be sent to the partner.address.id
+            if 'ack_message_subject' in data:
+                subject = data['ack_message_subject']
+                del data['ack_message_subject']
+            if 'ack_message_body' in data:
+                body_text = data['ack_message_body']
+                del data['ack_message_body']
             data = self._new_from_data_find_by_name(cr, uid, data, context)
             if 'sub_classification_id' in data:
                 sub_classification = self.pool.get('ocs.claim_classification').browse(cr, uid, data['sub_classification_id'],context)
                 data['classification_id'] = sub_classification.parent_id.id
             result['result']['id'] = self.create(cr, uid, data, context)
+            crm_claim = self.browse(cr, uid, result['result']['id'], context=context)
+            #Send an email to res.partner.address_id if email assigned, otherwise just log the activity in the history
+            email_to = email_from = False
+            if('partner_address_id' in data):
+                ctz = self.pool.get('res.partner.address').browse(cr, uid, data['partner_address_id'], context=context)
+                email_to = ctz.email
+                email_from = user.user_email
+                subject = subject.format(crm_claim.id) #replaces the {0} field in the subject using the crm_claim.id
+                body_text = body_text.format(crm_claim.id, crm_claim.description) #replaces the {0} field using the crm_claim.id and {1} using crm_claim.description
+
+            #append the message in the crm_claim history
+            self.message_append(cr, uid,
+                                [crm_claim],
+                                subject, body_text=body_text, email_to=email_to, email_from=email_from)
+            message_ids = self.pool.get('mail.message').search(cr, uid, [('model', '=', 'crm.claim'), ('res_id', '=', crm_claim.id)], context, limit=1);
+            #by default message_append creates the mail.message as received, needs to be outgoing to be sent
+            self.pool.get('mail.message').mark_outgoing(cr, uid, message_ids, context=None)
         except except_orm as e:
             return {'status': 'failed', 'message': e.value }
         except Exception as e:

@@ -150,9 +150,9 @@ class ocs_report(osv.osv_memory):
                 query += " AND csp.is_outsourced = FALSE"
             elif (otc_admin_outsourced):
                 query += " AND csp.is_outsourced = TRUE"
-        elif (otc_user or otc_user_outsourced):
+        elif (otc_user):
             query += " AND pqr.create_uid = {0}".format(uid)
-        elif (otc_reviewer or otc_reader):
+        elif (otc_reviewer or otc_reader or otc_user_outsourced):
             query += " AND pqr.csp_id IN ({0})".format(",".join(str(x) for x in user.get_csp_ids))
 
         cr.execute(query)
