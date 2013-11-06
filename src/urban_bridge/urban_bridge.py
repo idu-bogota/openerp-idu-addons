@@ -294,7 +294,7 @@ class urban_bridge_structure_element_attribute(osv.osv):
         'is_enabled':fields.boolean('Is Enabled'),
         'data_type':fields.selection([('integer','Integer'),('text','Text'),('datetime',' Date Time'),('date','Date'),('float','Float'),('boolean','Boolean'),('char','Char'),('selection','Selection'),('binary','Photo'),('geo_point','Geographic Point'),('geo_line','Geographic Line'),('geo_polygon','Geographic Polygon')],'Data Type',required=True),
         'element_type_id':fields.many2one('urban_bridge.structure_element_type','Element ID'),
-        'selection_text':fields.char('Selection',size=1024,help='If Data type : selection then selection text contain the dictionary'),
+        'selection_text':fields.char('Selection',size=1024,help="If data type is selection, then this field contain an array like this: [('1','Bad'),('2','Good'),('3','Very Good')]')",),
         'alias':fields.char('Alias',size=13, required=True),
         'regex':fields.text('Validation Regular Expression'),
     }
@@ -385,7 +385,7 @@ class urban_bridge_inspection_entity(osv.osv):
         'methodology_id':fields.many2one('urban_bridge.methodology','Methodology'),
         'expression':fields.text('Expression'),
         'attribute_id':fields.one2many('urban_bridge.inspection_attribute','inspection_entity_id','Attributes'),
-        'alias':fields.char('Alias:',size=1,required=True,help="This field is to identify the field at methodology expression"),
+        'alias':fields.char('Alias',size=1,required=True,help="This field is to identify the field at methodology expression"),
     }
 
 class urban_bridge_inspection_attribute(osv.osv):
@@ -400,9 +400,9 @@ class urban_bridge_inspection_attribute(osv.osv):
         'is_required':fields.boolean('Is Required'),
         'is_enabled':fields.boolean('Is Enabled'),
         'is_general':fields.boolean('This field applies to all the Bridge in general?'),
-        'alias':fields.char('Alias:',size=1,required=True,help="This field is to identify the field at methodology expression"),
+        'alias':fields.char('Alias',size=1,required=True,help="This field is to identify the field at methodology expression"),
         'inspection_entity_id':fields.many2one('urban_bridge.inspection_entity','Entity'),
-        'structure_element_type':fields.many2many('urban_bridge.structure_element_type','urban_bridge_struct_elem_type_insp_entity_rel','inspection_attribute_id','element_type_id','Element to Inspect:')
+        'structure_element_type':fields.many2many('urban_bridge.structure_element_type','urban_bridge_struct_elem_type_insp_entity_rel','inspection_attribute_id','element_type_id','Element to Inspect')
     }
     _defaults={
         'is_required': lambda *args: True,

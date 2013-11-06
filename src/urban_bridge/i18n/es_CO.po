@@ -326,3 +326,163 @@ msgstr "Clasificación"
 msgid "SubClassification"
 msgstr "Sub Clasificación"
 
+#. module:urban_bridge
+#: model:ir.actions.act_window,name:urban_bridge.action_urban_bridge_structure_element_attribute
+msgid "Structure Element Attribute"
+msgstr "Atributos del Elemento de la Estructura"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_attribute,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_attribute,is_required:0
+msgid "Is Required"
+msgstr "Es necesario"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_attribute,is_enabled:0
+msgid "Is Enabled"
+msgstr "Activo"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_attribute,data_type:0
+msgid "Data Type"
+msgstr "Tipo de Dato"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_attribute,element_type_id:0
+msgid "Element ID"
+msgstr "Tipo de Elemento"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_attribute,selection_text:0
+msgid "Selection"
+msgstr "Selección"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_attribute,alias:0
+msgid "Alias"
+msgstr "Alias"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_attribute,regex:0
+msgid "Validation Regular Expression"
+msgstr "Expresión Regular para Validación"
+
+#. module:urban_bridge
+#: model:ir.ui.menu,name:urban_bridge.menu_urban_bridge_methodology
+msgid "Inspection Methodology"
+msgstr "Metodologías de Inspección"
+
+#. module:urban_bridge
+#: model:ir.actions.act_window,name:urban_bridge.action_urban_bridge_methodology
+msgid "Inspection Methodology"
+msgstr "Metodologías de Inspección"
+
+#. module: urban_bridge
+#: field:urban_bridge.methodology,name:0
+msgid "Methodology Name"
+msgstr "Nombre de la Metodología"
+
+#. module: urban_bridge
+#: field:urban_bridge.methodology,expression:0
+msgid "Expression"
+msgstr "Expresión"
+
+#. module: urban_bridge
+#: field:urban_bridge.methodology,entity_id:0
+msgid "Inspection Issues"
+msgstr "Aspectos a Inspeccionar"
+
+#. module: urban_bridge
+#: view:urban_bridge.methodology:0
+msgid "Entities"
+msgstr "Entidades"
+
+#. module:urban_bridge
+#: model:ir.actions.act_window,name:urban_bridge.action_urban_bridge_inspection_entity
+msgid "Inspection Entity"
+msgstr "Aspecto de Inspeccion"
+
+#. module: urban_bridge
+#: view:urban_bridge.urban_bridge.inspection_entity:0
+msgid "Inspection Entity"
+msgstr "Aspectos de Inspección"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_entity,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_entity,methodology_id:0
+msgid "Methodology"
+msgstr "Metodología"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_entity,expression:0
+msgid "Expression"
+msgstr "Expresión"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_entity,attribute_id:0
+msgid "Attributes"
+msgstr "Atributos"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_entity,alias:0
+msgid "Alias"
+msgstr "Alias"
+
+#. module: urban_bridge
+#: view:urban_bridge.inspection_entity:0
+msgid "Inspection Attributes"
+msgstr "Atributos de los Elementos de Inspeccion"
+
+#. module:urban_bridge
+#: model:ir.actions.act_window,name:urban_bridge.action_urban_bridge_inspection_attribute
+msgid "Inspection Attributes"
+msgstr "Atributos de los Elementos de Inspección"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_attribute,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_attribute,data_type:0
+msgid "Data Type"
+msgstr "Tipo de Dato"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_attribute,is_required:0
+msgid "Is Required"
+msgstr "Es requerido"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_attribute,is_enabled:0
+msgid "Is Enabled"
+msgstr "Activo"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_attribute,is_general:0
+msgid "This field applies to all the Bridge in general?"
+msgstr "Aplica al puente en General?"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_attribute,alias:0
+msgid "Alias"
+msgstr "Alias"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_attribute,inspection_entity_id:0
+msgid "Entity"
+msgstr "Entidad"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_attribute,structure_element_type:0
+msgid "Element to Inspect"
+msgstr "Elementos a inspeccionar"
+

@@ -587,7 +587,7 @@ Inspection Methodology
 </record>
 <!-- Action -->
 <record model="ir.actions.act_window" id="action_urban_bridge_inspection_attribute">
-        <field name="name">Inspection Attribute</field>
+        <field name="name">Inspection Attributes</field>
         <field name="res_model">urban_bridge.inspection_attribute</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
