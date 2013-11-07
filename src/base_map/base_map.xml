@@ -1,0 +1,580 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+<menuitem name="Base Maps" id="base_map_main"/>
+<menuitem name="Administrative Layers" id="base_map_administrative" parent="base_map_main"/>
+<menuitem name="Environmental Layers" id="base_map_environmental" parent="base_map_main"/>
+<menuitem name="Transportation Layers" id="base_map_transportation" parent="base_map_main"/>
+<menuitem name="Settings" id="base_map_settings" parent="base_map_main"/>
+
+<!-- ================================================================================
+Base Map _ District
+===================================================================================== -->
+
+
+<!-- Geoengine View -->
+<record  model="ir.ui.view" id="ir_ui_view_base_map_district_OSM" >
+            <field name="name">base_map.district.geo_view</field>
+            <field name="arch"><![CDATA[
+                <form >
+                    <field name="code"/>
+                    <field name="name"/>
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">base_map.district</field>
+</record>
+
+<!-- Geoengine Base Raster -->
+<record model="geoengine.raster.layer" id="geoengine_raster_layer_base_map_district">
+            <field name="raster_type">osm</field>
+            <field name="name">District OSM</field>
+            <field name="view_id" ref="ir_ui_view_base_map_district_OSM"/>
+            <field eval="0" name="overlay"/>
+</record>
+
+<!-- Geoengine Vector Layer -->
+
+<record  model="geoengine.vector.layer" id="geoengine_vector_layer_base_map_district_plain">
+            <field name="geo_field_id" ref="base_map.field_base_map_district_shape"/>
+            <field name="name">District</field>
+            <field name="view_id" ref="ir_ui_view_base_map_district_OSM"/>
+            <field name="geo_repr">basic</field>
+            <field name="attribute_field_id" ref="base_map.field_base_map_district_code"/>
+            <field name="begin_color">#FF680A</field>
+</record>
+<!-- Form View -->
+<record model="ir.ui.view" id="view_base_map_district_form">
+        <field name="name">base_map.district.form</field>
+        <field name="model">base_map.district</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Districts">
+                <field name="code"/>
+                <field name="name" select="1"/>
+                <group colspan="4" col="2">
+                    <field name="shape" widget="geo_edit_map" readonly="True"/>
+                </group>
+            </form>
+        </field>
+</record>
+
+<!-- Tree View -->
+<record model="ir.ui.view" id="view_base_map_district_tree">
+        <field name="name">base_map.district.tree</field>
+        <field name="model">base_map.district</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Districts">
+                <field name="code"/>
+                <field name="name"/>
+            </tree>
+        </field>
+</record>
+
+<record model="ir.actions.act_window" id="action_base_map_district">
+        <field name="name">Districts</field>
+        <field name="res_model">base_map.district</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+<menuitem name="Districts" id="base_map_district" parent="base_map_administrative" action="action_base_map_district" sequence="1"/>
+
+<!-- =================================================================================
+Sub Districts
+==================================================================================== -->
+<!-- Geoengine View -->
+<record  model="ir.ui.view" id="ir_ui_view_base_map_sub_district_OSM" >
+            <field name="name">base_map.sub_district.geo_view</field>
+            <field name="arch"><![CDATA[
+                <form >
+                    <field name="code"/>
+                    <field name="name"/>
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">base_map.sub_district</field>
+</record>
+
+<!-- Geoengine Base Raster -->
+<record model="geoengine.raster.layer" id="geoengine_raster_layer_base_map_sub_district">
+            <field name="raster_type">osm</field>
+            <field name="name">Sub District OSM</field>
+            <field name="view_id" ref="ir_ui_view_base_map_sub_district_OSM"/>
+            <field eval="0" name="overlay"/>
+</record>
+
+<!-- Geoengine Vector Layer -->
+
+<record  model="geoengine.vector.layer" id="geoengine_vector_layer_base_map_sub_district_plain">
+            <field name="geo_field_id" ref="base_map.field_base_map_sub_district_shape"/>
+            <field name="name">Sub District</field>
+            <field name="view_id" ref="ir_ui_view_base_map_sub_district_OSM"/>
+            <field name="geo_repr">basic</field>
+            <field name="attribute_field_id" ref="base_map.field_base_map_sub_district_code"/>
+            <field name="begin_color">#FF680A</field>
+</record>
+
+
+<!-- Form -->
+<record model="ir.ui.view" id="view_base_map_sub_district_form">
+        <field name="name">base_map.sub_district.form</field>
+        <field name="model">base_map.sub_district</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Sub Districts">
+                <field name="code"/>
+                <field name="name" select="1"/>
+                <field name="classification"/>
+                <group colspan="4" col="2">
+                    <field name="shape" widget="geo_edit_map" readonly="True"/>
+                </group>
+            </form>
+        </field>
+</record>
+
+
+<!-- Tree View -->
+<record model="ir.ui.view" id="view_base_map_sub_district_tree">
+        <field name="name">base_map.sub_district.tree</field>
+        <field name="model">base_map.sub_district</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Sub Districts">
+                <field name="code"/>
+                <field name="name"/>
+            </tree>
+        </field>
+</record>
+
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_base_map_sub_district">
+        <field name="name">Sub Districts</field>
+        <field name="res_model">base_map.sub_district</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+<!-- Menu -->
+<menuitem name="Sub Districts" id="base_map_sub_district" parent="base_map_administrative" action="action_base_map_sub_district" sequence="2"/>
+
+<!--==============================================================================================
+ Cadastral Zone
+=================================================================================================== -->
+<!-- Geoengine View -->
+<record  model="ir.ui.view" id="ir_ui_view_base_map_cadastral_zone_OSM" >
+            <field name="name">base_map.cadastral_zone.geo_view</field>
+            <field name="arch"><![CDATA[
+                <form >
+                    <field name="code"/>
+                    <field name="name"/>
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">base_map.cadastral_zone</field>
+</record>
+
+<!-- Geoengine Base Raster -->
+<record model="geoengine.raster.layer" id="geoengine_raster_layer_base_map_cadastral_zone">
+            <field name="raster_type">osm</field>
+            <field name="name">Cadastral Zone OSM</field>
+            <field name="view_id" ref="ir_ui_view_base_map_cadastral_zone_OSM"/>
+            <field eval="0" name="overlay"/>
+</record>
+
+<!-- Geoengine Vector Layer -->
+
+<record  model="geoengine.vector.layer" id="geoengine_vector_layer_base_map_cadastral_zone_plain">
+            <field name="geo_field_id" ref="base_map.field_base_map_cadastral_zone_shape"/>
+            <field name="name">Cadastral Zone</field>
+            <field name="view_id" ref="ir_ui_view_base_map_cadastral_zone_OSM"/>
+            <field name="geo_repr">basic</field>
+            <field name="attribute_field_id" ref="base_map.field_base_map_cadastral_zone_code"/>
+            <field name="begin_color">#FF680A</field>
+</record>
+
+
+
+<!-- Form View -->
+<record model="ir.ui.view" id="view_base_map_cadastral_zone_form">
+        <field name="name">base_map.cadastral_zone.form</field>
+        <field name="model">base_map.cadastral_zone</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Cadastral Zone">
+                <field name="code"/>
+                <field name="name" select="1"/>
+                <field name="start_date"/>
+                <field name="update_0"/>
+                <field name="update_1"/>
+                <field name="update_2"/>
+                <field name="update_3"/>
+                <field name="zone_code"/>
+                <group colspan="4" col="2">
+                    <field name="shape" widget="geo_edit_map" readonly="True"/>
+                </group>
+            </form>
+        </field>
+</record>
+<!-- Tree View -->
+<record model="ir.ui.view" id="view_base_map_cadastral_zone_tree">
+        <field name="name">base_map.cadastral_zone.tree</field>
+        <field name="model">base_map.cadastral_zone</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Cadastral Zone">
+                <field name="code"/>
+                <field name="name"/>
+            </tree>
+        </field>
+</record>
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_base_map_cadastral_zone">
+        <field name="name">Cadastral Zone</field>
+        <field name="res_model">base_map.cadastral_zone</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+<menuitem name="Cadastral Zone" id="base_map_cadastral_zone" parent="base_map_administrative" action="action_base_map_cadastral_zone" sequence="3"/>
+
+<!-- =====================================================================================================================
+Neighborhood
+========================================================================================================================== -->
+
+<!-- Geoengine View -->
+<record  model="ir.ui.view" id="ir_ui_view_base_map_neighborhood_OSM" >
+            <field name="name">base_map.neighborhood.geo_view</field>
+            <field name="arch"><![CDATA[
+                <form >
+                    <field name="code"/>
+                    <field name="name"/>
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">base_map.neighborhood</field>
+</record>
+
+<!-- Geoengine Base Raster -->
+<record model="geoengine.raster.layer" id="geoengine_raster_layer_base_map_neighborhood">
+            <field name="raster_type">osm</field>
+            <field name="name">Neighborhood OSM</field>
+            <field name="view_id" ref="ir_ui_view_base_map_neighborhood_OSM"/>
+            <field eval="0" name="overlay"/>
+</record>
+
+<!-- Geoengine Vector Layer -->
+
+<record  model="geoengine.vector.layer" id="geoengine_vector_layer_base_map_neighborhood_plain">
+            <field name="geo_field_id" ref="base_map.field_base_map_neighborhood_shape"/>
+            <field name="name">Neighborhood</field>
+            <field name="view_id" ref="ir_ui_view_base_map_neighborhood_OSM"/>
+            <field name="geo_repr">basic</field>
+            <field name="attribute_field_id" ref="base_map.field_base_map_neighborhood_code"/>
+            <field name="begin_color">#FF680A</field>
+</record>
+
+<!-- Form -->
+<record model="ir.ui.view" id="view_base_map_neighborhood_form">
+        <field name="name">base_map.neighborhood.form</field>
+        <field name="model">base_map.neighborhood</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Neighborhood">
+                <field name="code"/>
+                <field name="name" search="True"/>
+                <group colspan="4" col="2">
+                    <field name="shape" widget="geo_edit_map" readonly="True"/>
+                </group>
+            </form>
+        </field>
+</record>
+
+<!-- Tree -->
+<record model="ir.ui.view" id="view_base_map_neighborhood_tree">
+        <field name="name">base_map.neighborhood.tree</field>
+        <field name="model">base_map.neighborhood</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Neighborhood">
+                <field name="code"/>
+                <field name="name"/>
+            </tree>
+        </field>
+</record>
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_base_map_neighborhood">
+        <field name="name">Neighborhood</field>
+        <field name="res_model">base_map.neighborhood</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+<menuitem name="Neighborhood" id="base_map_neighborhood" parent="base_map_administrative" action="action_base_map_neighborhood" sequence="4"/>
+<!--============================================================================================================================
+Micro Seismicity
+================================================================================================================================ 
+ -->
+ 
+ <!-- Geoengine View -->
+<record  model="ir.ui.view" id="ir_ui_view_base_map_micro_seismicity_OSM" >
+            <field name="name">base_map.micro_seismicity.geo_view</field>
+            <field name="arch"><![CDATA[
+                <form >
+                    <field name="zone_name"/>
+                    <field name="colour"/>
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">base_map.micro_seismicity</field>
+</record>
+
+<!-- Geoengine Base Raster -->
+<record model="geoengine.raster.layer" id="geoengine_raster_layer_base_map_micro_seismicity">
+            <field name="raster_type">osm</field>
+            <field name="name">Micro Seismicity OSM</field>
+            <field name="view_id" ref="ir_ui_view_base_map_micro_seismicity_OSM"/>
+            <field eval="0" name="overlay"/>
+</record>
+
+<!-- Geoengine Vector Layer -->
+
+<record  model="geoengine.vector.layer" id="geoengine_vector_layer_base_map_micro_seismicity_plain">
+            <field name="geo_field_id" ref="base_map.field_base_map_micro_seismicity_shape"/>
+            <field name="name">Micro Seismicity</field>
+            <field name="view_id" ref="ir_ui_view_base_map_micro_seismicity_OSM"/>
+            <field name="geo_repr">basic</field>
+            <field name="attribute_field_id" ref="base_map.field_base_map_micro_seismicity_zone_name"/>
+            <field name="begin_color">#FF680A</field>
+</record>
+
+<!-- Form -->
+<record model="ir.ui.view" id="view_base_map_micro_seismicity_form">
+        <field name="name">base_map.micro_seismicity.form</field>
+        <field name="model">base_map.micro_seismicity</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Micro-Seismicity">
+                <field name="zone_name"/>
+                <field name="colour"/>
+                <field name ="micr_measure1"/>
+                <field name ="micr_measure2"/>
+                <group colspan="4" col="2">
+                    <field name="shape" widget="geo_edit_map" readonly="True"/>
+                </group>
+                </form>
+        </field>
+</record>
+
+<!-- Tree -->
+<record model="ir.ui.view" id="view_base_map_micro_seismicity_tree">
+        <field name="name">base_map.micro_seismicity.tree</field>
+        <field name="model">base_map.micro_seismicity</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Micro-Seismicity">
+                <field name="zone_name"/>
+                <field name="colour"/>
+            </tree>
+        </field>
+</record>
+
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_base_map_micro_seismicity">
+        <field name="name">Micro-Seismicity</field>
+        <field name="res_model">base_map.micro_seismicity</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+<!-- Menu -->
+<menuitem name="Micro-Seismicity" id="base_map_micro_seismicity" parent="base_map_environmental" action="action_base_map_micro_seismicity" sequence="1"/>
+
+<!--============================================================================================================================== 
+Geological Zone
+ ===============================================================================================================================-->
+ 
+ <!-- Geoengine View -->
+
+<record  model="ir.ui.view" id="ir_ui_view_base_map_geological_zone_OSM" >
+            <field name="name">base_map.geological_zone.geo_view</field>
+            <field name="arch"><![CDATA[
+                <form >
+                    <field name="code"/>
+                    <field name="name"/>
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">base_map.geological_zone</field>
+</record>
+
+<!-- Geoengine Base Raster -->
+<record model="geoengine.raster.layer" id="geoengine_raster_layer_base_map_geological_zone">
+            <field name="raster_type">osm</field>
+            <field name="name">Geological Zone OSM</field>
+            <field name="view_id" ref="ir_ui_view_base_map_geological_zone_OSM"/>
+            <field eval="0" name="overlay"/>
+</record>
+
+<!-- Geoengine Vector Layer -->
+
+<record  model="geoengine.vector.layer" id="geoengine_vector_layer_base_map_geological_zone_plain">
+            <field name="geo_field_id" ref="base_map.field_base_map_geological_zone_shape"/>
+            <field name="name">Geological Zone</field>
+            <field name="view_id" ref="ir_ui_view_base_map_geological_zone_OSM"/>
+            <field name="geo_repr">basic</field>
+            <field name="attribute_field_id" ref="base_map.field_base_map_geological_zone_code"/>
+            <field name="begin_color">#FF680A</field>
+</record>
+ 
+<!-- Form -->
+<record model="ir.ui.view" id="view_base_geological_zone_form">
+        <field name="name">base_map.geological_zone.form</field>
+        <field name="model">base_map.geological_zone</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Geological Zone">
+                <field name="code"/>
+                <field name="name"/>
+                <group colspan="4" col="2">
+                    <field name="shape" widget="geo_edit_map" readonly="True"/>
+                </group>
+            </form>
+        </field>
+</record>
+
+<!-- Tree -->
+<record model="ir.ui.view" id="view_base_map_geological_zone_tree">
+        <field name="name">base_map.geological_zone.tree</field>
+        <field name="model">base_map.geological_zone</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Geological Zone">
+                <field name="code"/>
+                <field name="name"/>
+            </tree>
+        </field>
+</record>
+
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_base_map_geological_zone">
+        <field name="name">Geological Zone</field>
+        <field name="res_model">base_map.geological_zone</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+<menuitem name="Geological Zone" id="base_map_geological_zone" parent="base_map_environmental" action="action_base_map_geological_zone" sequence="1"/>
+<!-- =========================================================================================================
+Road Section
+============================================================================================================== -->
+<!-- Geoengine View -->
+
+<record  model="ir.ui.view" id="ir_ui_view_base_map_road_section_OSM" >
+            <field name="name">base_map.road_section.geo_view</field>
+            <field name="arch"><![CDATA[
+                <form >
+                    <field name="name"/>
+                    <field name="rsic"/>
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">base_map.road_section</field>
+</record>
+
+<record model="geoengine.raster.layer" id="geoengine_raster_layer_base_map_road_section">
+            <field name="raster_type">osm</field>
+            <field name="name">Road Section OSM</field>
+            <field name="view_id" ref="ir_ui_view_base_map_road_section_OSM"/>
+            <field eval="0" name="overlay"/>
+</record>
+
+<record  model="geoengine.vector.layer" id="geoengine_vector_layer_base_map_road_section_plain">
+            <field name="geo_field_id" ref="base_map.field_base_map_road_section_shape"/>
+            <field name="name">Road Section</field>
+            <field name="view_id" ref="ir_ui_view_base_map_road_section_OSM"/>
+            <field name="geo_repr">basic</field>
+            <field name="attribute_field_id" ref="base_map.field_base_map_road_section_rsic"/>
+            <field name="begin_color">#FFFF0A</field>
+</record>
+
+<!-- Form View -->
+<record model="ir.ui.view" id="view_base_map_road_section_form">
+        <field name="name">base_map.road_section.form</field>
+        <field name="model">base_map.road_section</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Geological Zone">
+                <field name="rsic" select="1"/>
+                <field name="name"/>
+                <field name="start_edge"/>
+                <field name="end_edge"/>
+                <field name="road_hierarchy" widget="selection"/>
+                <group colspan="4" col="4">
+                    <notebook>
+                        <page string="Geometry">
+                            <group col="2" colspan="4">
+                                <field name="shape" widget="geo_edit_map" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </group>
+            </form>
+        </field>
+</record>
+<!-- Tree View -->
+<record model="ir.ui.view" id="view_base_map_road_section_tree">
+        <field name="name">base_map.road_section.tree</field>
+        <field name="model">base_map.road_section</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Road Section">
+                <field name="rsic"/>
+                <field name="name"/>
+            </tree>
+        </field>
+</record>
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_base_map_road_section">
+        <field name="name">Road Section</field>
+        <field name="res_model">base_map.road_section</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,geoengine</field>
+</record>
+
+<!-- Menu Item -->
+<menuitem name="Road Section" id="menu_base_map_road_section" parent="base_map_transportation" action="action_base_map_road_section" sequence="1"/>
+
+<!-- ======================================================================================================== 
+Road Section Hierarchy
+ ============================================================================================================-->
+<!-- Form View -->
+<record model="ir.ui.view" id="view_base_map_road_hierarchy_form">
+        <field name="name">base_map.road_hierarchy.form</field>
+        <field name="model">base_map.road_hierarchy</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Road Hierarchy">
+                <field name="code"/>
+                <field name="name"/>
+            </form>
+        </field>
+</record>
+<!-- Tree View -->
+<record model="ir.ui.view" id="view_base_map_road_hierarchy_tree">
+        <field name="name">base_map.road_hierarchy.tree</field>
+        <field name="model">base_map.road_hierarchy</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Road Hierarchy">
+                <field name="code"/>
+                <field name="name"/>
+            </tree>
+        </field>
+</record>
+<!-- Action -->
+<record model="ir.actions.act_window" id="action_base_map_road_hierarchy">
+        <field name="name">Road Hierarchy</field>
+        <field name="res_model">base_map.road_hierarchy</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+</record>
+<!-- Menu Item -->
+<menuitem name="Road Hierarchy" id="menu_base_map_road_hierarchy" parent="base_map_settings" action="action_base_map_road_hierarchy"/>
+</data>
+</openerp>

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+
+<!-- Form View -->
+            <record model="ir.ui.view" id="view_urban_bridge_bridge_form_inherit">
+                <field name="name">urban_bridge.bridge.form.inherit</field>
+                <field name="model">urban_bridge.bridge</field>
+                <field name="type">form</field>
+                <field name="inherit_id" ref="urban_bridge.view_urban_bridge_bridge_form"/>
+                <field name="arch" type="xml">
+                    <field name="name" position="after">
+                        <field name="civ"/>
+                    </field>
+                </field>
+            </record>
+
+</data>
+</openerp>

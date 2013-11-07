@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+<data>
+    <record model='base_map.road_hierarchy' id='base_map.road_hierarchy_1'>
+        <field name='code'>1</field>
+        <field name='name'>Arterial</field>
+    </record>
+    <record model='base_map.road_hierarchy' id='base_map.road_hierarchy_2'>
+        <field name='code'>2</field>
+        <field name='name'>Intermedia (Rta A)</field>
+    </record>
+    <record model='base_map.road_hierarchy' id='base_map.road_hierarchy_3'>
+        <field name='code'>3</field>
+        <field name='name'>Rural</field>
+    </record>
+    <record model='base_map.road_hierarchy' id='base_map.road_hierarchy_4'>
+        <field name='code'>4</field>
+        <field name='name'>Expansion</field>
+    </record>
+    <record model='base_map.road_hierarchy' id='base_map.road_hierarchy_5'>
+        <field name='code'>5</field>
+        <field name='name'>Arterial (Rta A)</field>
+    </record>
+    <record model='base_map.road_hierarchy' id='base_map.road_hierarchy_6'>
+        <field name='code'>6</field>
+        <field name='name'>Local</field>
+    </record>
+    <record model='base_map.road_hierarchy' id='base_map.road_hierarchy_7'>
+        <field name='code'>7</field>
+        <field name='name'>Fuera DC</field>
+    </record>
+    <record model='base_map.road_hierarchy' id='base_map.road_hierarchy_8'>
+        <field name='code'>8</field>
+        <field name='name'>Intermedia (CML)</field>
+    </record>
+</data>
+</openerp>

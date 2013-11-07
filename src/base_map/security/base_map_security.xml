@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--=============================================================================
+                Group Definitions
+        ;=============================================================================-->
+        <record id="group_base_map_reader" model="res.groups">
+            <field name="name">Base Map Reader</field>
+        </record>
+        <record id="group_base_map_manager" model="res.groups">
+            <field name="name">Base Map Manager</field>
+        </record>
+        
+        <!--=============================================================================
+                Menú Access Rules
+        ;=============================================================================-->
+        
+        
+        <record model="ir.ui.menu" id="base_map.base_map_main">
+                <field eval="[(4, ref('group_base_map_manager')),(4, ref('group_base_map_reader'))]" name="groups_id"/>
+        </record>
+    </data>
+</openerp>
