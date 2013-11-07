@@ -1,0 +1,488 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* urban_bridge
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.1-20121005-233110\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-08-15 17:44+0000\n"
+"PO-Revision-Date: 2012-08-15 17:44+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module:urban_bridge
+#: model:ir.ui.menu,name:urban_bridge.menu_urban_bridge
+msgid "Bridge Management System"
+msgstr "Sistema de Administración de Puentes"
+
+#. module:urban_bridge
+#: model:ir.ui.menu,name:urban_bridge.menu_urban_bridge_inventory
+msgid "Inventory"
+msgstr "Inventario"
+
+#. module:urban_bridge
+#: model:ir.ui.menu,name:urban_bridge.menu_urban_bridge_domain
+msgid "Settings"
+msgstr "Configuracion"
+
+#. module:urban_bridge
+#: model:ir.ui.menu,name:urban_bridge.menu_urban_bridge_bridge
+msgid "Bridges"
+msgstr "Puentes"
+
+#. module:urban_bridge
+#: model:ir.actions.act_window,name:urban_bridge.action_urban_bridge_bridge
+msgid "Bridges"
+msgstr "Puentes"
+
+#. module: urban_bridge
+#: view:urban_bridge.bridge:0
+msgid "Geometry"
+msgstr "Geometría"
+
+#. module: urban_bridge
+#: view:urban_bridge.bridge:0
+msgid "Structure Data"
+msgstr "Datos Estructurales"
+
+#. module: urban_bridge
+#: view:urban_bridge.bridge:0
+msgid "Structure Elements"
+msgstr "Elementos del Puente"
+
+#. module: urban_bridge
+#: view:urban_bridge.bridge:0
+msgid "Inspections"
+msgstr "Inspecciones"
+
+#. module: urban_bridge
+#: help:urban_bridge.bridge,shape:0
+msgid "Shape"
+msgstr "Geografía"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,shape:0
+msgid "Shape"
+msgstr "Geografía"
+
+#. module: urban_bridge
+#: help:urban_bridge.bridge,code:0
+msgid "Bridge Code"
+msgstr "Codigo de Puente"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,code:0
+msgid "Bridge Code"
+msgstr "Codigo de Puente"
+
+#. module: urban_bridge
+#: help:urban_bridge.bridge,name:0
+msgid "Identifier"
+msgstr "Identificador"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,name:0
+msgid "Identifier"
+msgstr "Identificador"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,classification:0
+msgid "Bridge Classification"
+msgstr "Clasificación general del puente"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,structure_type:0
+msgid "Bridge Type"
+msgstr "Tipología Estructural"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,structure_type:0
+msgid "Bridge Type"
+msgstr "Tipología Estructural"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,address:0
+msgid "Bridge Address"
+msgstr "Dirección"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,last_address:0
+msgid "Last Address"
+msgstr "Dirección Anterior"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,construction_date:0
+msgid "Construction Date"
+msgstr "Fecha de Construcción"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,construction_date:0
+msgid "Construction Date"
+msgstr "Fecha de Construcción"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,length:0
+msgid "Total Length"
+msgstr "Longitud Total"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,width:0
+msgid "Total Width"
+msgstr "Ancho Total"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,superstructure_area:0
+msgid "Bridge Super-Structure Area"
+msgstr "Area total de la super-estructura"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,vertical_gauge:0
+msgid "Vertical Gauge"
+msgstr "Galibo Vertical"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,horizontal_gauge:0
+msgid "Horizontal Gauge"
+msgstr "Galibo Horizontal"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,design_load_capacity:0
+msgid "Design Load Capacity"
+msgstr "Capacidad de carga de diseño"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,level:0
+msgid "Bridge Level"
+msgstr "Nivel del Puente"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,structure_material:0
+msgid "Structure Materials"
+msgstr "Materiales de la Estructura"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,design_load_code:0
+msgid "Design Load Code"
+msgstr "Norma de Diseño del puente"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,photo:0
+msgid "Photo"
+msgstr "Registro fotográfico"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,geological_zone:0
+msgid "Geological Zone"
+msgstr "Zona Geológica"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,district:0
+msgid "Districts"
+msgstr "Localidades"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,sub_district:0
+msgid "Sub Districts"
+msgstr "Unidades de Planificación Zonal (UPZ)"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,cadastral_zone:0
+msgid "Cadastral Zone"
+msgstr "Sector Catastral"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,micro_seismicity:0
+msgid "Micro-Seismicity"
+msgstr "Micro-sismicidad"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,calc_area:0
+msgid "Calculated Area"
+msgstr "Area Calculada"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,calc_perimeter:0
+msgid "Calculated Perimeter"
+msgstr "Perímetro calculado"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,elements:0
+msgid "Elements"
+msgstr "Elementos"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,survey_id:0
+msgid "Inspection Survey"
+msgstr "Inspecciones"
+
+#. module: urban_bridge
+#: field:urban_bridge.bridge,inventory_date:0
+msgid "Inventory Date"
+msgstr "Fecha de Inventario"
+
+#. module:urban_bridge
+#: model:ir.ui.menu,name:urban_bridge.menu_urban_bridge_structure_type
+msgid "Structure Type"
+msgstr "Tipologia Estructural"
+
+#. module:urban_bridge
+#: model:ir.actions.act_window,name:urban_bridge.action_urban_bridge_structure_type
+msgid "Structure Type"
+msgstr "Tipología Estructural"
+
+#. module: urban_bridge  
+#: view:urban_bridge.structure_type:0
+msgid "Description"
+msgstr "Descripción"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_type,code:0
+msgid "Code"
+msgstr "Código"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_type,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_type,description:0
+msgid "Description"
+msgstr "Descripción"
+
+#. module:urban_bridge
+#: model:ir.ui.menu,name:urban_bridge.menu_urban_bridge_design_load_code
+msgid "Design Load Codes"
+msgstr "Normas de Diseño"
+
+#. module:urban_bridge
+#: model:ir.actions.act_window,name:urban_bridge.action_urban_bridge_design_load_code
+msgid "Design Load Codes"
+msgstr "Normas de Diseño"
+
+#. module: urban_bridge
+#: field:urban_bridge.design_load_code,code:0
+msgid "Code"
+msgstr "Código"
+
+#. module: urban_bridge
+#: field:urban_bridge.design_load_code,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module:urban_bridge
+#: model:ir.ui.menu,name:urban_bridge.menu_urban_bridge_structure_material
+msgid "Structure Material"
+msgstr "Material de la Estructura"
+
+#. module:urban_bridge
+#: model:ir.actions.act_window,name:urban_bridge.action_urban_bridge_structure_material
+msgid "Structure Material"
+msgstr "Material de la Estructura"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_material,code:0
+msgid "Code"
+msgstr "Código"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_material,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module:urban_bridge
+#: model:ir.ui.menu,name:urban_bridge.menu_urban_bridge_structure_element_type
+
+msgid "Structure Element Type"
+msgstr "Tipos de Elementos del Puente"
+
+#. module:urban_bridge
+#: model:ir.actions.act_window,name:urban_bridge.action_urban_bridge_structure_element_type
+msgid "Structure Element Type"
+msgstr "Tipos de Elementos del Puente"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_type,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_type,alias:0
+msgid "Alias"
+msgstr "Alias"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_type,classification:0
+msgid "Main Classification"
+msgstr "Clasificación"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_type,sub_classification:0
+msgid "SubClassification"
+msgstr "Sub Clasificación"
+
+#. module:urban_bridge
+#: model:ir.actions.act_window,name:urban_bridge.action_urban_bridge_structure_element_attribute
+msgid "Structure Element Attribute"
+msgstr "Atributos del Elemento de la Estructura"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_attribute,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_attribute,is_required:0
+msgid "Is Required"
+msgstr "Es necesario"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_attribute,is_enabled:0
+msgid "Is Enabled"
+msgstr "Activo"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_attribute,data_type:0
+msgid "Data Type"
+msgstr "Tipo de Dato"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_attribute,element_type_id:0
+msgid "Element ID"
+msgstr "Tipo de Elemento"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_attribute,selection_text:0
+msgid "Selection"
+msgstr "Selección"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_attribute,alias:0
+msgid "Alias"
+msgstr "Alias"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element_attribute,regex:0
+msgid "Validation Regular Expression"
+msgstr "Expresión Regular para Validación"
+
+#. module:urban_bridge
+#: model:ir.ui.menu,name:urban_bridge.menu_urban_bridge_methodology
+msgid "Inspection Methodology"
+msgstr "Metodologías de Inspección"
+
+#. module:urban_bridge
+#: model:ir.actions.act_window,name:urban_bridge.action_urban_bridge_methodology
+msgid "Inspection Methodology"
+msgstr "Metodologías de Inspección"
+
+#. module: urban_bridge
+#: field:urban_bridge.methodology,name:0
+msgid "Methodology Name"
+msgstr "Nombre de la Metodología"
+
+#. module: urban_bridge
+#: field:urban_bridge.methodology,expression:0
+msgid "Expression"
+msgstr "Expresión"
+
+#. module: urban_bridge
+#: field:urban_bridge.methodology,entity_id:0
+msgid "Inspection Issues"
+msgstr "Aspectos a Inspeccionar"
+
+#. module: urban_bridge
+#: view:urban_bridge.methodology:0
+msgid "Entities"
+msgstr "Entidades"
+
+#. module:urban_bridge
+#: model:ir.actions.act_window,name:urban_bridge.action_urban_bridge_inspection_entity
+msgid "Inspection Entity"
+msgstr "Aspecto de Inspeccion"
+
+#. module: urban_bridge
+#: view:urban_bridge.urban_bridge.inspection_entity:0
+msgid "Inspection Entity"
+msgstr "Aspectos de Inspección"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_entity,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_entity,methodology_id:0
+msgid "Methodology"
+msgstr "Metodología"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_entity,expression:0
+msgid "Expression"
+msgstr "Expresión"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_entity,attribute_id:0
+msgid "Attributes"
+msgstr "Atributos"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_entity,alias:0
+msgid "Alias"
+msgstr "Alias"
+
+#. module: urban_bridge
+#: view:urban_bridge.inspection_entity:0
+msgid "Inspection Attributes"
+msgstr "Atributos de los Elementos de Inspeccion"
+
+#. module:urban_bridge
+#: model:ir.actions.act_window,name:urban_bridge.action_urban_bridge_inspection_attribute
+msgid "Inspection Attributes"
+msgstr "Atributos de los Elementos de Inspección"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_attribute,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_attribute,data_type:0
+msgid "Data Type"
+msgstr "Tipo de Dato"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_attribute,is_required:0
+msgid "Is Required"
+msgstr "Es requerido"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_attribute,is_enabled:0
+msgid "Is Enabled"
+msgstr "Activo"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_attribute,is_general:0
+msgid "This field applies to all the Bridge in general?"
+msgstr "Aplica al puente en General?"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_attribute,alias:0
+msgid "Alias"
+msgstr "Alias"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_attribute,inspection_entity_id:0
+msgid "Entity"
+msgstr "Entidad"
+
+#. module: urban_bridge
+#: field:urban_bridge.inspection_attribute,structure_element_type:0
+msgid "Element to Inspect"
+msgstr "Elementos a inspeccionar"
+

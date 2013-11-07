@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>        
+<openerp>        
+<data>
+    <record model='base_map.geological_zone' id='base_map.geological_zone_1'>
+        <field name='code'>1</field>
+        <field name='name'>[01] Rellenos de Basura</field>
+    </record>
+    <record model='base_map.geological_zone' id='base_map.geological_zone_2'>
+        <field name='code'>12</field>
+        <field name='name'>[12] Roca</field>
+    </record>
+    <record model='base_map.geological_zone' id='base_map.geological_zone_3'>
+        <field name='code'>3</field>
+        <field name='name'>[03] Suelo Residual</field>
+    </record>
+    <record model='base_map.geological_zone' id='base_map.geological_zone_4'>
+        <field name='code'>4</field>
+        <field name='name'>[04] Rondas de Ríos y Humedales</field>
+    </record>
+    <record model='base_map.geological_zone' id='base_map.geological_zone_5'>
+        <field name='code'>2</field>
+        <field name='name'>[02] Rellenos de Excavación</field>
+    </record>
+    <record model='base_map.geological_zone' id='base_map.geological_zone_6'>
+        <field name='code'>6</field>
+        <field name='name'>[06] Piedemonte</field>
+    </record>
+    <record model='base_map.geological_zone' id='base_map.geological_zone_7'>
+        <field name='code'>8</field>
+        <field name='name'>[08] Suelos Duros</field>
+    </record>
+    <record model='base_map.geological_zone' id='base_map.geological_zone_8'>
+        <field name='code'>9</field>
+        <field name='name'>[09] Arcilla Blanda</field>
+    </record>
+    <record model='base_map.geological_zone' id='base_map.geological_zone_9'>
+        <field name='code'>9A</field>
+        <field name='name'>[9A] Transición entre Zonas 2y 4</field>
+    </record>
+    <record model='base_map.geological_zone' id='base_map.geological_zone_10'>
+        <field name='code'>9B</field>
+        <field name='name'>[9B] Transición entre Zonas 2 y 6</field>
+    </record>
+    <record model='base_map.geological_zone' id='base_map.geological_zone_11'>
+        <field name='code'>9C</field>
+        <field name='name'>[9C] Transición entre Zonas 4 y 6</field>
+    </record>
+    <record model='base_map.geological_zone' id='base_map.geological_zone_12'>
+        <field name='code'>9D</field>
+        <field name='name'>[9D] Transición entre Zonas 4 y 7</field>
+    </record>
+    <record model='base_map.geological_zone' id='base_map.geological_zone_13'>
+        <field name='code'>9E</field>
+        <field name='name'>[9E] Transición entre Zonas 5 y 7</field>
+    </record>
+    <record model='base_map.geological_zone' id='base_map.geological_zone_14'>
+        <field name='code'>9</field>
+        <field name='name'>[9F] Transición entre Zonas 5 y 8</field>
+    </record>
+    <record model='base_map.geological_zone' id='base_map.geological_zone_15'>
+        <field name='code'>9G</field>
+        <field name='name'>[9G] Transición entre Zonas 6 y 7</field>
+    </record>
+</data>
+</openerp>
