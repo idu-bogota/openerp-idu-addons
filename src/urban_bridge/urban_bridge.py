@@ -38,7 +38,8 @@ class urban_bridge_bridge(geo_model.GeoModel):
     """ 
     Bridge Infraestructure Data
     """
-
+    
+    
     def _get_district(self,cr,uid,ids,fieldname,arg,context=None):
         res = {}
         #Este bloque try es porque a veces los datos vienen con inconsistencia topológica y se pretende evitar que deje de funcionar
@@ -108,7 +109,8 @@ class urban_bridge_bridge(geo_model.GeoModel):
                 _logger.debug("Geoprocessing error: {0}".format(ex))
                 res[bridge.id] = ""
         return res
-
+    
+    #TODO Se debe cambiar el sistema de referencia de Bogotá 96873 por un parámetro de configuración 
     def _get_area(self,cr,uid,ids,fieldname,arg,context=None):
         res = {}
         for bridge in self.browse(cr, uid, ids, context = context):
@@ -200,7 +202,8 @@ class urban_bridge_bridge(geo_model.GeoModel):
         'shape':fields.geo_multi_polygon('Shape',help="Shape"),
         'code':fields.char('Bridge Code',size=128,help="Bridge Code"),
         'name':fields.char('Identifier',size=128,help ="Identifier"),
-        'classification':fields.selection([('PPC','PPC'),('PPE','PPE'),('PVC','PVC'),('PVE','PVE')],'Bridge Classification'),
+        #TODO: Cambiar esto para que tenga mejor semántica (PPE) Esto se podría cambiar por una relacion one2many
+        'classification':fields.selection([('PPC','PPC'),('PPE','PPE'),('PVC','PVC'),('PVE','PVE')],'Bridge Classification'), 
         'structure_type':fields.many2one('urban_bridge.structure_type','Bridge Type',required=True),
         'address':fields.char('Bridge Address',size=256),
         'last_address':fields.char('Last Address',size=256),
@@ -224,7 +227,9 @@ class urban_bridge_bridge(geo_model.GeoModel):
         'calc_area':fields.function(_get_area,string="Calculated Area",method=True,type="float"),
         'calc_perimeter':fields.function(_get_perimeter,string="Calculated Perimeter",method=True,type="float"),
         'elements':fields.one2many('urban_bridge.structure_element','bridge_id','Elements'),
-        'survey_id':fields.one2many('urban_bridge.inspection_survey','bridge_id','Inspection Survey')
+        'survey_id':fields.one2many('urban_bridge.inspection_survey','bridge_id','Inspection Survey'),
+        #TODO: Se debe aprovechar este campo para poner lógica de negocio y un campo adicional para guardar histórico de cuando pasó de un estado a otro
+        'state':fields.selection([('d','Draft'),('n','New')]),
     }
     
     _sql_contraints = [
