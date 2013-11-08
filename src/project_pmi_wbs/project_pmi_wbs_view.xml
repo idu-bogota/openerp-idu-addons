@@ -77,7 +77,7 @@
             <field name="model">project_pmi.deliverable</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree string="Deliverable" toolbar="1">
+                <tree string="WBS Tree" toolbar="1">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="weight"/>
@@ -86,26 +86,11 @@
                 </tree>
             </field>
         </record>
-        <!-- TODO: Click on deliverable's tree item displays linked work packages -->
-        <record id="project_pmi_deliverable_work_package_list" model="ir.actions.act_window">
-            <field name="name">Projects</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">project_pmi.work_package</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'wbs_ids':active_id, 'search_default_wbs_ids':active_id}</field>
-        </record>
-        <record id="project_pmi_deliverable_open" model="ir.values">
-            <field eval="'tree_but_open'" name="key2"/>
-            <field eval="'project_pmi.deliverable'" name="model"/>
-            <field name="name">Deliverables</field>
-            <field eval="'ir.actions.act_window,%d'%project_pmi_deliverable_work_package_list" name="value"/>
-        </record>
         <record id="project_pmi_deliverable_list" model="ir.ui.view">
             <field name="name">project_pmi.deliverable.list</field>
             <field name="model">project_pmi.deliverable</field>
             <field name="arch" type="xml">
-                <tree string="Deliverable">
+                <tree string="WBS List">
                     <field name="sequence" widget="handle"/>
                     <field name="code"/>
                     <field name="complete_name"/>
@@ -119,11 +104,11 @@
             <field name="name">project_pmi.deliverable.form</field>
             <field name="model">project_pmi.deliverable</field>
             <field name="arch" type="xml">
-           <form string="Deliverables" version="7.0">
+           <form string="WBS item" version="7.0">
                 <header>
-                    <field name="state" widget="statusbar" statusbar_colors='{"pending":"blue"}'/>
+                    <field name="state" widget="statusbar" clickable="True"/>
                 </header>
-                    <sheet>
+                    <sheet string="Deliverable">
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
@@ -132,18 +117,21 @@
                         </div>
                         <group name="details">
                             <field name="code" readonly="1" />
-                            <field name="parent_id" required="1" domain="[('wbs_id','=',parent.id)]"/>
+                            <field name="type" />
+                            <field name="parent_id" domain="[('wbs_id','=',parent.id)]"/>
                             <field name="weight"/>
                             <field name="description"/>
                         </group>
-                        <notebook>
-                            <page string="Child Deliverables">
-                               <field name="child_ids" nolabel="1" />
-                            </page>
-                            <page string="Work Packages">
-                               <field name="work_package_ids" nolabel="1" />
-                            </page>
-                        </notebook>
+                        <group name="work_package" string="Work Package" attrs="{'invisible': [('type','!=','work_package')]}">
+                            <field name="quantity"/>
+                            <field name="uom_id"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="date_deadline"/>
+                        </group>
+                        <group string="Child Deliverables" attrs="{'invisible': [('type','!=','deliverable')]}">
+                           <field name="child_ids" nolabel="1" />
+                        </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" help="Follow this deliverable to automatically track the events associated" groups="base.group_user"/>
@@ -152,76 +140,98 @@
                 </form>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="project_pmi_deliverable_kanban">
+            <field name="name">project_pmi.deliverable.kanban</field>
+            <field name="model">project_pmi.deliverable</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="state" >
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="sequence"/>
+                    <field name="state" groups="base.group_no_one"/>
+                    <field name="color"/>
+                    <field name="parent_id"/>
+                    <field name="date_deadline"/>
+                    <field name="message_summary"/>
+                    <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
+                                <span class="oe_e">í</span>
+                                <ul class="oe_dropdown_menu">
+                                    <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
+                                    <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
+                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                </ul>
+                            </div>
+
+                            <div class="oe_kanban_content">
+                                <div><b><field name="name"/></b></div>
+                                <div>
+                                    <field name="parent_id"/><br/>
+                                    <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                    <span t-attf-class="#{red || ''}"><i><field name="date_deadline"/></i></span>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <span>Hola</span>
+                                </div>
+                                <div class="oe_kanban_footer_left">
+                                    <span>Hola1</span>
+                                </div>
+                                <div class="oe_kanban_footer_left" style="margin-top:5px;">
+                                    <t t-raw="record.message_summary.raw_value"/>
+                                </div>
+                            </div>
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                    </templates>
+                </kanban>
+            </field>
+         </record>
+
+        <record id="project_pmi_deliverable_gantt" model="ir.ui.view">
+            <field name="name">project_pmi.deliverable.gantt</field>
+            <field name="model">project_pmi.deliverable</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <gantt date_start="date_start" date_stop="date_deadline" string="Deliverables" default_group_by="parent_id">
+                </gantt>
+            </field>
+        </record>
+
         <record id="project_pmi_deliverable_tree_action" model="ir.actions.act_window">
-            <field name="name">Deliverable</field>
+            <field name="name">project_pmi.deliverable.tree</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">project_pmi.deliverable</field>
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">kanban,gantt,tree</field>
             <field name="view_id" ref="project_pmi_deliverable_tree"/>
         </record>
         <menuitem
             action="project_pmi_deliverable_tree_action"
             id="project_pmi_deliverable_tree_menu"
             parent="project.menu_project_management"
+            name="WBS Tree"
             sequence="0" />
 
         <record id="project_pmi_deliverable_list_action" model="ir.actions.act_window">
-            <field name="name">Deliverable</field>
+            <field name="name">Deliverables</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">project_pmi.deliverable</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">kanban,gantt,tree,form</field>
             <field name="view_id" ref="project_pmi_deliverable_list"/>
         </record>
 
-        <!-- Work Package Views -->
-        <record id="project_pmi_work_package_list" model="ir.ui.view">
-            <field name="name">project_pmi.work_package.list</field>
-            <field name="model">project_pmi.work_package</field>
-            <field name="arch" type="xml">
-                <tree string="Work Package List">
-                    <field name="code"/>
-                    <field name="name"/>
-                    <field name="weight"/>
-                    <field name="quantity"/>
-                    <field name="uom_id"/>
-                    <field name="state"/>
-                    <field name="active"/>
-                </tree>
-            </field>
-        </record>
-        <record id="project_pmi_work_package_form" model="ir.ui.view">
-            <field name="name">project_pmi.work_package.form</field>
-            <field name="model">project_pmi.work_package</field>
-            <field name="arch" type="xml">
-                <form string="Work Package" version="7.0">
-                    <header>
-                        <field name="state" widget="statusbar" statusbar_colors='{"pending":"blue"}'/>
-                    </header>
-                    <sheet>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1>
-                                <field name="name"/>
-                            </h1>
-                        </div>
-                        <group name="description">
-                            <field name="code" readonly="1"/>
-                            <field name="weight"/>
-                            <field name="quantity"/>
-                            <field name="uom_id"/>
-                            <field name="description"/>
-                        </group>
-                    </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" help="Follow this WBS to automatically track the events associated" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </div>
-                </form>
-            </field>
-        </record>
+        <menuitem
+            action="project_pmi_deliverable_list_action"
+            id="project_pmi_deliverable_list_menu"
+            name="WBS List"
+            parent="project.menu_project_management"
+            sequence="0" />
 
         <!-- Project Views -->
         <record id="project_form" model="ir.ui.view">
