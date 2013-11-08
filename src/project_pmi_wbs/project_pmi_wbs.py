@@ -67,6 +67,7 @@ class project_pmi_wbs(osv.osv):
         values = {
               'wbs_id': wbs_id,
               'name': vals['name'],
+              'type': 'deliverable',
         }
         deliverable_pool.create(cr, uid, values, context)
         return wbs_id

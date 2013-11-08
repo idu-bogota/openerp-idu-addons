@@ -196,8 +196,21 @@
             <field name="model">project_pmi.deliverable</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <gantt date_start="date_start" date_stop="date_deadline" string="Deliverables" default_group_by="parent_id">
+                <gantt date_start="date_start" date_stop="date_deadline" string="Deliverables" default_group_by="parent_id" mode="year">
                 </gantt>
+            </field>
+        </record>
+        <record id="project_pmi_deliverable_calendar" model="ir.ui.view">
+            <field name="name">project_pmi.deliverable.calendar</field>
+            <field name="model">project_pmi.deliverable</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <calendar color="parent_id" date_start="date_start"  date_stop="date_deadline" string="Deliverable">
+                    <field name="parent_id"/>
+                    <field name="name"/>
+                    <field name="quantity"/>
+                    <field name="uom_id"/>
+                </calendar>
             </field>
         </record>
 
@@ -207,7 +220,7 @@
             <field name="res_model">project_pmi.deliverable</field>
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
-            <field name="view_mode">kanban,gantt,tree</field>
+            <field name="view_mode">tree</field>
             <field name="view_id" ref="project_pmi_deliverable_tree"/>
         </record>
         <menuitem
@@ -222,7 +235,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">project_pmi.deliverable</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban,gantt,tree,form</field>
+            <field name="view_mode">gantt,calendar,tree,form</field>
             <field name="view_id" ref="project_pmi_deliverable_list"/>
         </record>
 
