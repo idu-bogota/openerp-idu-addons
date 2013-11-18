@@ -1,0 +1,10 @@
+id,active,description,parent_left,name,parent_id/id,parent_right,sequence,state,strategic_goal_id/id
+__export__.project_pmi_portfolio_1,True,,1,Por Proyecto de Inversión,,10,,Draft,
+__export__.project_pmi_portfolio_3,True,,2, 762 -Atención integral del riesgo al Sistema de Movilidad y Espacio Público frente a la ocurrencia de eventos de emergencia y catastróficos ,__export__.project_pmi_portfolio_1,3,,Draft,
+__export__.project_pmi_portfolio_4,True,,4, 809 - Desarrollo y Sostenibilidad de la Infraestructura para la movilidad ,__export__.project_pmi_portfolio_1,5,,Draft,
+__export__.project_pmi_portfolio_5,True,,6, 810 - Desarrollo y conservación del espacio público y la red de ciclorutas ,__export__.project_pmi_portfolio_1,7,,Draft,
+__export__.project_pmi_portfolio_2,True,,8,543 - Infraestructura para el SITP,__export__.project_pmi_portfolio_1,9,,Draft,
+__export__.project_pmi_portfolio_6,True,,11,Por Plan de Desarrollo,,18,,Draft,
+__export__.project_pmi_portfolio_9,True,,12,2004 - 2008 Bogotá Sin Indiferencia,__export__.project_pmi_portfolio_6,13,,Draft,
+__export__.project_pmi_portfolio_8,True,,14,2008 - 2012 Bogotá Positiva,__export__.project_pmi_portfolio_6,15,,Draft,
+__export__.project_pmi_portfolio_7,True,,16,2012 - 2016 Bogotá Humana,__export__.project_pmi_portfolio_6,17,,Draft,
