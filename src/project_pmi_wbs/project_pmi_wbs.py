@@ -25,54 +25,22 @@ class project(osv.osv):
     _inherit = "project.project"
     
     _columns = {
-        'wbs_ids': fields.one2many('project_pmi.wbs', 'project_id', string='Work Breakdown Structure'),
+        'wbs_ids': fields.one2many('project_pmi.wbs_item', 'project_id', string='Work Breakdown Structure'),
     }
 
     def create(self, cr, uid, vals, context=None):
         if context is None: context = {}
         project_id = super(project, self).create(cr, uid, vals, context)
-        wbs_pool = self.pool.get('project_pmi.wbs')
+        wbs_pool = self.pool.get('project_pmi.wbs_item')
         values = {
               'project_id': project_id,
               'name': vals['name'],
+              'type': 'deliverable',
         }
         wbs_pool.create(cr, uid, values, context)
         return project_id
 
 project()
-
-#TODO: Eliminar este objeto y dejar solo uno
-class project_pmi_wbs(osv.osv):
-    _name = "project_pmi.wbs"
-    _inherit = ['mail.thread']
-    _description = "Defines the Work Breakdown Structure and management methods"
-    _columns = {
-        'code': fields.char('Code', size=20, required=True, select=True),
-        'name': fields.char('Name', size=255, required=True, select=True),
-        'project_id': fields.many2one('project.project','Project'),
-        'deliverable_ids': fields.one2many('project_pmi.deliverable', 'wbs_id', string='WBS Deliverables Structure'),
-        'active':fields.boolean('Active', help='Enable/Disable'),
-        'state':fields.selection([('draft', 'Draft'),('open', 'In Progress'),('cancel', 'Cancelled'),('done', 'Done'),('pending', 'Pending')],'State'),
-    }
-    _defaults = {
-        'active': True,
-        'state': 'draft',
-        'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'project_pmi.wbs')
-    }
-
-    def create(self, cr, uid, vals, context=None):
-        if context is None: context = {}
-        wbs_id = super(project_pmi_wbs, self).create(cr, uid, vals, context)
-        deliverable_pool = self.pool.get('project_pmi.deliverable')
-        values = {
-              'wbs_id': wbs_id,
-              'name': vals['name'],
-              'type': 'deliverable',
-        }
-        deliverable_pool.create(cr, uid, values, context)
-        return wbs_id
-
-project_pmi_wbs()
 
 #TODO: Adicionar vista Gantt a WBS
 #TODO: Validar que un work package no tenga child_ids
@@ -80,8 +48,8 @@ project_pmi_wbs()
 #TODO: Validar que los pesos de un mismo nivel den el 100%
 #TODO: Adicionar vista kamban para los work_packages y adicionar link en la vista kanban de proyectos 
 #TODO: Relacionar Tareas con Work Packages
-class project_pmi_deliverable(osv.osv):
-    _name = "project_pmi.deliverable"
+class project_pmi_wbs_item(osv.osv):
+    _name = "project_pmi.wbs_item"
     _inherit = ['mail.thread']
     _description = "Defines a deliverables tree that belongs to a WBS"
 
@@ -109,7 +77,7 @@ class project_pmi_deliverable(osv.osv):
         return dict(res)
 
     _columns = {
-        'wbs_id': fields.many2one('project_pmi.wbs','WBS'),
+        'project_id': fields.many2one('project.project','Project'),
         'code': fields.char('Code', size=20, required=True, select=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'name': fields.char('Name', size=255, required=True, select=True),
@@ -120,8 +88,8 @@ class project_pmi_deliverable(osv.osv):
         'state':fields.selection([('draft', 'Draft'),('open', 'In Progress'),('cancel', 'Cancelled'),('done', 'Done'),('pending', 'Pending')],'State'),
         'quantity': fields.float('Quantity'),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', help="Default Unit of Measure used"),
-        'parent_id': fields.many2one('project_pmi.deliverable','Parent Deliverable', select=True, ondelete='cascade'),
-        'child_ids': fields.one2many('project_pmi.deliverable', 'parent_id', string='Child Deliverables'),
+        'parent_id': fields.many2one('project_pmi.wbs_item','Parent Deliverable', select=True, ondelete='cascade'),
+        'child_ids': fields.one2many('project_pmi.wbs_item', 'parent_id', string='Child Deliverables'),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list."),
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
@@ -133,13 +101,13 @@ class project_pmi_deliverable(osv.osv):
     _defaults = {
         'active': True,
         'state': 'draft',
-        'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'project_pmi.deliverable')
+        'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'project_pmi.wbs')
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from project_pmi_deliverable where id IN %s',(tuple(ids),))
+            cr.execute('select distinct parent_id from project_pmi_wbs_item where id IN %s',(tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -152,4 +120,4 @@ class project_pmi_deliverable(osv.osv):
     def child_get(self, cr, uid, ids):
         return [ids]
 
-project_pmi_deliverable()
+project_pmi_wbs_item()

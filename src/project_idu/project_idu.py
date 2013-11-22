@@ -23,12 +23,23 @@ from openerp.osv import fields, osv
 class project(osv.osv):
     _name = "project.project"
     _inherit = "project.project"
-    
+
     _columns = {
+        'etapa_id': fields.many2one('project_idu.etapa','Etapa', select=True),
         #Punto de inversion
         #Centro de costo
         #Fuente de Financiacion
-        #
+        #contrato_proyecto
+        #contrato_interventoria
+    }
+
+project()
+
+class project_idu_etapa(osv.osv):
+    _name = "project_idu.etapa"
+
+    _columns = {
+        'name': fields.char('Name', size=255, required=True, select=True),
     }
 
 project()

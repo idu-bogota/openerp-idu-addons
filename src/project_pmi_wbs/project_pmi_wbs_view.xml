@@ -6,75 +6,9 @@
         <menuitem id="menu_project_wbs" name="WBS" parent="base.menu_main_pm" sequence="1"/>
 
         <!-- WBS Views -->
-        <record id="project_pmi_wbs_list" model="ir.ui.view">
-            <field name="name">project_pmi.wbs.list</field>
-            <field name="model">project_pmi.wbs</field>
-            <field name="arch" type="xml">
-                <tree string="Work Breakdown Structure List">
-                    <field name="code"/>
-                    <field name="name"/>
-                    <field name="project_id"/>
-                    <field name="state"/>
-                    <field name="active"/>
-                </tree>
-            </field>
-        </record>
-        <record id="project_pmi_wbs_form" model="ir.ui.view">
-            <field name="name">project_pmi.wbs.form</field>
-            <field name="model">project_pmi.wbs</field>
-            <field name="arch" type="xml">
-                <form string="Work Breakdown Structure" version="7.0">
-                    <header>
-                        <field name="state" widget="statusbar" statusbar_colors='{"pending":"blue"}'/>
-                    </header>
-                    <sheet>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1>
-                                <field name="name"/>
-                            </h1>
-                        </div>
-                        <group name="description">
-                            <field name="code" readonly="1"/>
-                            <field name="project_id"/>
-                        </group>
-                        <group name="Deliverables">
-                           <separator string="WBS Deliverables Structure" colspan="4"/>
-                           <field name="deliverable_ids" nolabel="1">
-                                <tree>
-                                    <field name="complete_name"/>
-                                    <field name="weight"/>
-                                    <field name="active"/>
-                                    <field name="state"/>
-                                </tree>
-                           </field>
-                        </group>
-                    </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" help="Follow this WBS to automatically track the events associated" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </div>
-                </form>
-            </field>
-        </record>
-        <record id="project_pmi_wbs_list_action" model="ir.actions.act_window">
-            <field name="name">WBS</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">project_pmi.wbs</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="project_pmi_wbs_list"/>
-        </record>
-        <menuitem
-            action="project_pmi_wbs_list_action"
-            id="project_pmi_wbs_list_menu"
-            parent="base.menu_definitions"
-            sequence="0" />
-
-        <!-- Deliverables Views -->
         <record id="project_pmi_deliverable_tree" model="ir.ui.view">
-            <field name="name">project_pmi.deliverable.tree</field>
-            <field name="model">project_pmi.deliverable</field>
+            <field name="name">project_pmi.wbs_item.tree</field>
+            <field name="model">project_pmi.wbs_item</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="WBS Tree" toolbar="1">
@@ -87,8 +21,8 @@
             </field>
         </record>
         <record id="project_pmi_deliverable_list" model="ir.ui.view">
-            <field name="name">project_pmi.deliverable.list</field>
-            <field name="model">project_pmi.deliverable</field>
+            <field name="name">project_pmi.wbs_item.list</field>
+            <field name="model">project_pmi.wbs_item</field>
             <field name="arch" type="xml">
                 <tree string="WBS List">
                     <field name="sequence" widget="handle"/>
@@ -101,8 +35,8 @@
             </field>
         </record>
         <record id="project_pmi_deliverable_form" model="ir.ui.view">
-            <field name="name">project_pmi.deliverable.form</field>
-            <field name="model">project_pmi.deliverable</field>
+            <field name="name">project_pmi.wbs_item.form</field>
+            <field name="model">project_pmi.wbs_item</field>
             <field name="arch" type="xml">
            <form string="WBS item" version="7.0">
                 <header>
@@ -118,7 +52,7 @@
                         <group name="details">
                             <field name="code" readonly="1" />
                             <field name="type" />
-                            <field name="parent_id" domain="[('wbs_id','=',parent.id)]"/>
+                            <field name="parent_id" />
                             <field name="weight"/>
                             <field name="description"/>
                         </group>
@@ -142,8 +76,8 @@
         </record>
 
         <record model="ir.ui.view" id="project_pmi_deliverable_kanban">
-            <field name="name">project_pmi.deliverable.kanban</field>
-            <field name="model">project_pmi.deliverable</field>
+            <field name="name">project_pmi.wbs_item.kanban</field>
+            <field name="model">project_pmi.wbs_item</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="state" >
                     <field name="name"/>
@@ -192,8 +126,8 @@
          </record>
 
         <record id="project_pmi_deliverable_gantt" model="ir.ui.view">
-            <field name="name">project_pmi.deliverable.gantt</field>
-            <field name="model">project_pmi.deliverable</field>
+            <field name="name">project_pmi.wbs_item.gantt</field>
+            <field name="model">project_pmi.wbs_item</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <gantt date_start="date_start" date_stop="date_deadline" string="Deliverables" default_group_by="parent_id" mode="year">
@@ -201,12 +135,11 @@
             </field>
         </record>
         <record id="project_pmi_deliverable_calendar" model="ir.ui.view">
-            <field name="name">project_pmi.deliverable.calendar</field>
-            <field name="model">project_pmi.deliverable</field>
+            <field name="name">project_pmi.wbs_item.calendar</field>
+            <field name="model">project_pmi.wbs_item</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar color="parent_id" date_start="date_start"  date_stop="date_deadline" string="Deliverable">
-                    <field name="parent_id"/>
                     <field name="name"/>
                     <field name="quantity"/>
                     <field name="uom_id"/>
@@ -215,9 +148,9 @@
         </record>
 
         <record id="project_pmi_deliverable_tree_action" model="ir.actions.act_window">
-            <field name="name">project_pmi.deliverable.tree</field>
+            <field name="name">project_pmi.wbs_item.tree</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">project_pmi.deliverable</field>
+            <field name="res_model">project_pmi.wbs_item</field>
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_mode">tree</field>
@@ -233,7 +166,7 @@
         <record id="project_pmi_deliverable_list_action" model="ir.actions.act_window">
             <field name="name">Deliverables</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">project_pmi.deliverable</field>
+            <field name="res_model">project_pmi.wbs_item</field>
             <field name="view_type">form</field>
             <field name="view_mode">gantt,calendar,tree,form</field>
             <field name="view_id" ref="project_pmi_deliverable_list"/>
