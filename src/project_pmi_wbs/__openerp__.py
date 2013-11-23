@@ -33,7 +33,10 @@ This module adds the WBS support for Projects.
         'project'
     ],
     'data': [
-        'project_pmi_wbs_view.xml','project_pmi_wbs_sequence.xml',
+        'project_pmi_wbs_view.xml',
+        'project_pmi_wbs_sequence.xml',
+        'security/security.xml',
+        'security/ir.model.access.csv',
     ],
     'demo': [],
     'installable': True,

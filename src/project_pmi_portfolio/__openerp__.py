@@ -34,6 +34,8 @@ This module adds the Portfolio Management support for Projects.
     ],
     'data': [
         'project_pmi_portfolio_view.xml',
+        'security/ir.model.access.csv',
+        'security/security.xml',
     ],
     'demo': [],
     'installable': True,

@@ -36,6 +36,7 @@ Elements in the module are taken from Business Motivation Model (BMM) http://www
     ],
     'data': [
         'enterprise_strategic_planning_view.xml',
+        'security/ir.model.access.csv',
     ],
     'demo': [],
     'installable': True,

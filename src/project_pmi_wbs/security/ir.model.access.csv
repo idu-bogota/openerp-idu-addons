@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+manager_project_pmi_wbs_item,project_pmi_wbs.wbs_item,project_pmi_wbs.model_project_pmi_wbs_item,project.group_project_user,1,0,0,0
+user_project_pmi_wbs_item,project_pmi_wbs.wbs_item,project_pmi_wbs.model_project_pmi_wbs_item,project.group_project_manager,1,1,1,1

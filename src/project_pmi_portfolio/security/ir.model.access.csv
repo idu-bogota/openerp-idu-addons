@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+manager_project_pmi_portfolio,project_pmi_portfolio.portfolio,project_pmi_portfolio.model_project_pmi_portfolio,project.group_project_user,1,0,0,0
+user_project_pmi_portfolio,project_pmi_portfolio.portfolio,project_pmi_portfolio.model_project_pmi_portfolio,project.group_project_manager,1,1,1,1
+user_project_pmi_program,project_pmi_portfolio.program,project_pmi_portfolio.model_project_pmi_program,project.group_project_user,1,0,0,0
+manager_project_pmi_program,project_pmi_portfolio.program,project_pmi_portfolio.model_project_pmi_program,project.group_project_manager,1,1,1,1

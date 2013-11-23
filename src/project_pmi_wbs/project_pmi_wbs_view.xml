@@ -3,7 +3,7 @@
     <data>
         <!-- MENU DEFINITIONS -->
 
-        <menuitem id="menu_project_wbs" name="WBS" parent="base.menu_main_pm" sequence="1"/>
+        <menuitem id="menu_project_wbs" name="WBS" parent="base.menu_main_pm" sequence="1" groups="project.group_project_manager,project.group_project_user"/>
 
         <!-- WBS Views -->
         <record id="project_pmi_deliverable_tree" model="ir.ui.view">
@@ -161,6 +161,7 @@
             id="project_pmi_deliverable_tree_menu"
             parent="project.menu_project_management"
             name="WBS Tree"
+            groups="project.group_project_manager,project.group_project_user"
             sequence="0" />
 
         <record id="project_pmi_deliverable_list_action" model="ir.actions.act_window">
@@ -177,6 +178,7 @@
             id="project_pmi_deliverable_list_menu"
             name="WBS List"
             parent="project.menu_project_management"
+            groups="project.group_project_manager,project.group_project_user"
             sequence="0" />
 
         <!-- Project Views -->

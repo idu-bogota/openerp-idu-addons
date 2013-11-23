@@ -3,7 +3,7 @@
     <data>
         <!-- MENU DEFINITIONS -->
 
-        <menuitem id="menu_project_portfolio" name="Portfolio" parent="base.menu_main_pm" sequence="1"/>
+        <menuitem id="menu_project_portfolio" name="Portfolio" parent="base.menu_main_pm" sequence="1" groups="project.group_project_manager,project.group_project_user"/>
 
         <!-- Portfolio Views -->
         <record id="project_pmi_portfolio_tree" model="ir.ui.view">
@@ -96,6 +96,7 @@
             action="project_pmi_portfolio_tree_action"
             id="project_pmi_portfolio_tree_menu"
             parent="project.menu_project_management"
+            groups="project.group_project_manager,project.group_project_user"
             sequence="0" />
 
         <record id="project_pmi_portfolio_list_action" model="ir.actions.act_window">
@@ -110,6 +111,7 @@
             action="project_pmi_portfolio_list_action"
             id="project_pmi_portfolio_list_menu"
             parent="base.menu_definitions"
+            groups="project.group_project_manager,project.group_project_user"
             sequence="0" />
 
         <!-- Programs Views -->
@@ -200,6 +202,7 @@
             action="project_pmi_program_tree_action"
             id="project_pmi_program_tree_menu"
             parent="project.menu_project_management"
+            groups="project.group_project_manager,project.group_project_user"
             sequence="0" />
 
         <record id="project_pmi_program_list_action" model="ir.actions.act_window">
@@ -214,6 +217,7 @@
             action="project_pmi_program_list_action"
             id="project_pmi_program_list_menu"
             parent="base.menu_definitions"
+            groups="project.group_project_manager,project.group_project_user"
             sequence="0" />
 
         <!-- Project Views -->

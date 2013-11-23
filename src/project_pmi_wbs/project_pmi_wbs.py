@@ -51,7 +51,7 @@ project()
 class project_pmi_wbs_item(osv.osv):
     _name = "project_pmi.wbs_item"
     _inherit = ['mail.thread']
-    _description = "Defines a deliverables tree that belongs to a WBS"
+    _description = "WBS item part of WBS tree"
 
     _parent_name = "parent_id"
     _parent_store = True
