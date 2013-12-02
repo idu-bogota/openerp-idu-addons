@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+    <record id="view_task_gtd_search" model="ir.ui.view">
+        <field name="name">project.task.gtd.search</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_gtd.view_task_gtd_search"/>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+           <search string="My Tasks" >
+                <group string="Group By" position="after">
+                    <filter string="Time Box" name="timebox_id" help="Group by time box" domain="[]" context="{'group_by':'timebox_id'}"/>
+                    <filter string="Context" name="context_id" help="Group by context" domain="[]" context="{'group_by':'context_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="view_task_search_form" model="ir.ui.view">
+        <field name="name">project.task.search.form</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_search_form"/>
+        <field name="arch" type="xml">
+           <search string="Tasks">
+                <group expand="0" string="Get Things Done..." position="after" >
+                    <filter string="Time Box" name="timebox_id" help="Group by time box" domain="[]" context="{'group_by':'timebox_id'}"/>
+                    <filter string="Context" name="context_id" help="Group by context" domain="[]" context="{'group_by':'context_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    </data>
+</openerp>
