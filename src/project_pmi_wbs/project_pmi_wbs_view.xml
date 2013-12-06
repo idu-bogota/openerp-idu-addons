@@ -6,12 +6,36 @@
         <menuitem id="menu_project_wbs" name="WBS" parent="base.menu_main_pm" sequence="1" groups="project.group_project_manager,project.group_project_user"/>
 
         <!-- WBS Views -->
+        <record id="project_pmi_deliverable_search" model="ir.ui.view">
+            <field name="name">project_pmi.wbs_item.search</field>
+            <field name="model">project_pmi.wbs_item</field>
+            <field name="arch" type="xml">
+               <search string="WBS Items">
+                    <field name="name" string="WBS Name"/>
+                    <separator/>
+                    <filter name="deliverable" string="Deliverables" domain="[('type','=','deliverable')]" help="Deliverables" icon="terp-check"/>
+                    <filter name="workpackage" string="Work Packages" domain="[('type','=','work_package')]" help="Work Packages" icon="terp-check"/>
+                    <separator/>
+                    <filter name="My project" string="Project" domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-check"/>
+                    <field name="project_id"/>
+                    <separator/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="Deadline" icon="terp-gnome-cpu-frequency-applet+" domain="[]" context="{'group_by':'date_deadline'}"/>
+                        <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}" groups="base.group_no_one"/>
+                        <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}" groups="base.group_no_one"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="project_pmi_deliverable_tree" model="ir.ui.view">
             <field name="name">project_pmi.wbs_item.tree</field>
             <field name="model">project_pmi.wbs_item</field>
             <field name="field_parent">child_ids</field>
+            <field name="search_view_id" ref="project_pmi_deliverable_search"/>
             <field name="arch" type="xml">
-                <tree string="WBS Tree" toolbar="1">
+                <tree string="WBS Tree">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="weight"/>
@@ -23,6 +47,7 @@
         <record id="project_pmi_deliverable_list" model="ir.ui.view">
             <field name="name">project_pmi.wbs_item.list</field>
             <field name="model">project_pmi.wbs_item</field>
+            <field name="search_view_id" ref="project_pmi_deliverable_search"/>
             <field name="arch" type="xml">
                 <tree string="WBS List">
                     <field name="sequence" widget="handle"/>
@@ -51,6 +76,7 @@
                         </div>
                         <group name="details">
                             <field name="code" readonly="1" />
+                            <field name="project_id"/>
                             <field name="type" />
                             <field name="parent_id" />
                             <field name="weight"/>
@@ -64,7 +90,7 @@
                             <field name="date_deadline"/>
                         </group>
                         <group string="Child Deliverables" attrs="{'invisible': [('type','!=','deliverable')]}">
-                           <field name="child_ids" nolabel="1" />
+                           <field name="child_ids" nolabel="1" context="{'project_id':project_id,'parent_id':parent_id}"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -169,7 +195,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">project_pmi.wbs_item</field>
             <field name="view_type">form</field>
-            <field name="view_mode">gantt,calendar,tree,form</field>
+            <field name="view_mode">tree,form,gantt,calendar</field>
             <field name="view_id" ref="project_pmi_deliverable_list"/>
         </record>
 
@@ -181,17 +207,45 @@
             groups="project.group_project_manager,project.group_project_user"
             sequence="0" />
 
+        <record id="project_pmi_deliverable_by_project_action" model="ir.actions.act_window">
+            <field name="name">Deliverables</field>
+            <field name="res_model">project_pmi.wbs_item</field>
+            <field name="view_mode">tree,form,gantt,calendar</field>
+            <field name="context">{'search_default_project_id': [active_id], 'default_project_id': active_id, 'active_test': False}</field>
+            <field name="search_view_id" ref="project_pmi_deliverable_search" />
+            <field name="view_type">form</field>
+        </record>
+
         <!-- Project Views -->
         <record id="project_form" model="ir.ui.view">
             <field name="name">project_pmi_wbs.project.form</field>
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
+                <button string="Documents" position="after">
+                    <button name="%(project_pmi_wbs.project_pmi_wbs_wizard_create_wbs_action)d"
+                        string="Create WBS" type="action"
+                    />
+                </button>
                 <page string="Team" position="after">
                     <page string="Work Breakdown Structure">
-                        <field name="wbs_ids" nolabel="1" />
+                        <field name="wbs_ids" nolabel="1"  context="{'project_id':active_id}"/>
                     </page>
                 </page>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_project_kanban">
+            <field name="name">project_pmi_wbs.project.kanban</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="arch" type="xml">
+              <xpath expr="//div[@class='oe_kanban_project_list']" position="before">
+                <div class="oe_kanban_project_list">
+                    <a name="%(project_pmi_deliverable_by_project_action)d" type="action" style="margin-right: 10px">
+                        <span>WBS</span>
+                    </a>
+                </div>
+              </xpath>
             </field>
         </record>
     </data>

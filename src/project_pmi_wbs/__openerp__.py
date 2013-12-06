@@ -33,6 +33,7 @@ This module adds the WBS support for Projects.
         'project'
     ],
     'data': [
+        'wizard/create_wbs.xml',
         'project_pmi_wbs_view.xml',
         'project_pmi_wbs_sequence.xml',
         'security/security.xml',

@@ -28,18 +28,6 @@ class project(osv.osv):
         'wbs_ids': fields.one2many('project_pmi.wbs_item', 'project_id', string='Work Breakdown Structure'),
     }
 
-    def create(self, cr, uid, vals, context=None):
-        if context is None: context = {}
-        project_id = super(project, self).create(cr, uid, vals, context)
-        wbs_pool = self.pool.get('project_pmi.wbs_item')
-        values = {
-              'project_id': project_id,
-              'name': vals['name'],
-              'type': 'deliverable',
-        }
-        wbs_pool.create(cr, uid, values, context)
-        return project_id
-
 project()
 
 #TODO: Adicionar vista Gantt a WBS
@@ -78,6 +66,7 @@ class project_pmi_wbs_item(osv.osv):
 
     _columns = {
         'project_id': fields.many2one('project.project','Project'),
+        'is_root_node': fields.boolean('Is a root node for the project WBS',help='Any project with a WBS can have several WBS Items, but one active WBS item as root node'),
         'code': fields.char('Code', size=20, required=True, select=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'name': fields.char('Name', size=255, required=True, select=True),
@@ -85,7 +74,7 @@ class project_pmi_wbs_item(osv.osv):
         'weight': fields.float('Weight'),
         'description': fields.text('Description'),
         'active':fields.boolean('Active',help='Enable/Disable'),
-        'state':fields.selection([('draft', 'Draft'),('open', 'In Progress'),('cancel', 'Cancelled'),('done', 'Done'),('pending', 'Pending')],'State'),
+        'state':fields.selection([('draft', 'Draft'),('open', 'In Progress'),('cancel', 'Cancelled'),('done', 'Done'),('pending', 'Pending'),('template', 'Template')],'State'),
         'quantity': fields.float('Quantity'),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', help="Default Unit of Measure used"),
         'parent_id': fields.many2one('project_pmi.wbs_item','Parent Deliverable', select=True, ondelete='cascade'),
@@ -101,7 +90,8 @@ class project_pmi_wbs_item(osv.osv):
     _defaults = {
         'active': True,
         'state': 'draft',
-        'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'project_pmi.wbs')
+        'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'project_pmi.wbs'),
+        'project_id' : lambda self, cr, uid, context : context['project_id'] if context and 'project_id' in context else None #Set by default the project given in the context
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):
