@@ -27,7 +27,8 @@ class project_pmi_wbs_wizard_create_wbs(osv.osv_memory):
     _columns = {
         'name': fields.char('Name', size=128, required=True),
         'project_id':fields.many2one('project.project', 'Project', required=True, domain="[('state', 'in', ['draft','open','pending'])]"),
-        'parent_project_id': fields.integer(string="Parent Project ID", required=False), 
+        'parent_project_id': fields.integer(string="Parent Project ID", required=False),
+        'parent_project_wbs_count': fields.integer(string="Parent Project WBS count", required=False),
         'parent_wbs_id': fields.many2one('project_pmi.wbs_item', 'WBS Parent', required=False),
         'wbs_template_id': fields.many2one('project_pmi.wbs_item', 'WBS template', required=False, domain="[('state', '=', 'template')]"),
         'link_to_parent': fields.boolean("Link new WBS to parent's project WBS?"),
@@ -41,7 +42,8 @@ class project_pmi_wbs_wizard_create_wbs(osv.osv_memory):
         if 'active_id' in context:
             project = self.pool.get('project.project').browse(cr, uid, context['active_id'], context)
             parent_id = project._get_project_and_parents()[0]
-            res.update({'project_id': project.id, 'name': project.name, 'parent_project_id': parent_id})
+            parent = self.pool.get('project.project').browse(cr, uid, parent_id, context)
+            res.update({'project_id': project.id, 'name': project.name, 'parent_project_id': parent_id, 'parent_project_wbs_count': len(parent.wbs_ids)})
 
         return res
 
