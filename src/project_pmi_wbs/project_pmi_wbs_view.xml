@@ -38,9 +38,11 @@
                 <tree string="WBS Tree">
                     <field name="name"/>
                     <field name="code"/>
+                    <field name="type"/>
                     <field name="weight"/>
                     <field name="state"/>
                     <field name="active"/>
+                    <field name="progress_rate"/>
                 </tree>
             </field>
         </record>
@@ -53,7 +55,9 @@
                     <field name="sequence" widget="handle"/>
                     <field name="code"/>
                     <field name="complete_name"/>
+                    <field name="type"/>
                     <field name="weight"/>
+                    <field name="progress_rate" widget="progressbar"/>
                     <field name="state"/>
                     <field name="active"/>
                 </tree>
@@ -81,6 +85,7 @@
                             <field name="parent_id" />
                             <field name="weight"/>
                             <field name="description"/>
+                            <field name="progress_rate" widget="progressbar"/>
                         </group>
                         <group name="work_package" string="Work Package" attrs="{'invisible': [('type','!=','work_package')]}">
                             <field name="quantity"/>
@@ -88,6 +93,14 @@
                             <field name="date_start"/>
                             <field name="date_end"/>
                             <field name="date_deadline"/>
+                            <field name="work_record_ids" groups="project.group_tasks_work_on_tasks">
+                                <tree string="Work Package Work" editable="top">
+                                    <field name="name"/>
+                                    <field name="quantity" widget="float" sum="Spent Hours"/>
+                                    <field name="date" readonly="1"/>
+                                    <field name="user_id"/>
+                                </tree>
+                            </field>
                         </group>
                         <group string="Child Deliverables" attrs="{'invisible': [('type','!=','deliverable')]}">
                            <field name="child_ids" nolabel="1" context="{'project_id':project_id,'parent_id':parent_id}"/>
@@ -213,6 +226,7 @@
             <field name="view_mode">tree,form,gantt,calendar</field>
             <field name="context">{'search_default_project_id': [active_id], 'default_project_id': active_id, 'active_test': False}</field>
             <field name="search_view_id" ref="project_pmi_deliverable_search" />
+            <field name="view_id" ref="project_pmi_deliverable_list"/>
             <field name="view_type">form</field>
         </record>
 
@@ -223,15 +237,16 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
                 <button string="Documents" position="after">
+                    <field name="wbs_items_count" invisible="1" />
                     <button name="%(project_pmi_wbs.project_pmi_wbs_wizard_create_wbs_action)d"
                         string="Create WBS" type="action"
+                        attrs="{'invisible': [('wbs_items_count','>=',1)]}"
+                    />
+                    <button name="%(project_pmi_deliverable_by_project_action)d"
+                        string="WBS" type="action"
+                        attrs="{'invisible': [('wbs_items_count','&lt;',1)]}"
                     />
                 </button>
-                <page string="Team" position="after">
-                    <page string="Work Breakdown Structure">
-                        <field name="wbs_ids" nolabel="1"  context="{'project_id':active_id}"/>
-                    </page>
-                </page>
             </field>
         </record>
         <record model="ir.ui.view" id="view_project_kanban">
@@ -239,13 +254,20 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.view_project_kanban"/>
             <field name="arch" type="xml">
+            <kanban>
+              <field name="wbs_items_count" />
+            </kanban>
               <xpath expr="//div[@class='oe_kanban_project_list']" position="before">
                 <div class="oe_kanban_project_list">
-                    <a name="%(project_pmi_deliverable_by_project_action)d" type="action" style="margin-right: 10px">
+                    <a t-if="record.wbs_items_count.raw_value gt 0" name="%(project_pmi_deliverable_by_project_action)d" type="action" style="margin-right: 10px">
                         <span>WBS</span>
+                    </a>
+                    <a t-if="record.wbs_items_count.raw_value lt 1" name="%(project_pmi_wbs.project_pmi_wbs_wizard_create_wbs_action)d" type="action" style="margin-right: 10px">
+                        Create WBS
                     </a>
                 </div>
               </xpath>
+
             </field>
         </record>
     </data>
