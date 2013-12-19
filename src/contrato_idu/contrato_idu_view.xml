@@ -40,6 +40,13 @@
                             <field name="state_siac"/>
                             <field name="active"/>
                         </group>
+                        <notebook>
+                            <page string="Proyectos" name="proyectos">
+                                <separator string="Proyectos Relacionados" colspan="4"/>
+                                <field name="project_ids" nolabel="1" attrs="{'invisible': [('type', '!=', 'obra')]}"/>
+                                <field name="project_interventoria_ids" nolabel="1" attrs="{'invisible': [('type', '!=', 'interventoria')]}"/>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>

@@ -41,6 +41,9 @@ class contrato_idu(osv.osv):
         'state':fields.selection([('draft', 'Draft'),('open', 'In Progress'),('cancel', 'Cancelled'),('done', 'Done'),('pending', 'Pending')],'State', required=True),
         'state_siac':fields.selection([('ninguno', 'No Creado')],'Estado SIAC'),
         'active':fields.boolean('Activo'),
+        #TODO: Solo projects_ids y que sea funcional indicando los proyectos, o colocar relacion many2many con proyectos
+        'project_ids': fields.one2many('project.project', 'contrato_id', string='Proyectos'),
+        'project_interventoria_ids': fields.one2many('project.project', 'contrato_interventoria_id', string='Proyectos'),
     }
 
     _defaults = {
