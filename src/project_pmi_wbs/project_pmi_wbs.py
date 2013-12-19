@@ -88,7 +88,9 @@ class project_pmi_wbs_item(osv.osv):
             item_ids = self.pool.get('project_pmi.wbs_work_record').search(cr, uid, [('wbs_item_id', '=', id)], context=context)
             for item in self.pool.get('project_pmi.wbs_work_record').browse(cr, uid, item_ids, context):
                 total_work += item.quantity
-            res[id]['progress_rate'] = round(100.0 * total_work / wbs_item.quantity, 2)
+            if wbs_item.quantity:
+                res[id]['progress_rate'] = round(100.0 * total_work / wbs_item.quantity, 2)
+
         return res
 
     _columns = {
