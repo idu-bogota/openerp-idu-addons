@@ -29,11 +29,30 @@ class project(osv.osv):
         #Punto de inversion
         #Centro de costo
         #Fuente de Financiacion
-        #contrato_proyecto
-        #contrato_interventoria
+        'contrato_id': fields.many2one('contrato_idu.contrato','Contrato', select=True, ondelete='cascade',
+            domain="[('type','=','obra')]"),
+        'contrato_interventoria_id': fields.many2one('contrato_idu.contrato','Contrato de Interventoria', select=True, 
+            domain="[('type','=','interventoria')]",
+            ondelete='cascade'),
     }
 
 project()
+
+class task(osv.osv):
+    _name = "project.task"
+    _inherit = "project.task"
+
+    _columns = {
+        'etapa_id': fields.related(
+            'project_id',
+            'etapa_id',
+            type="many2one",
+            relation="project_idu.etapa",
+            string="Etapa del Proyecto",
+            store=True)
+    }
+
+task()
 
 class project_idu_etapa(osv.osv):
     _name = "project_idu.etapa"
@@ -42,4 +61,4 @@ class project_idu_etapa(osv.osv):
         'name': fields.char('Name', size=255, required=True, select=True),
     }
 
-project()
+project_idu_etapa()

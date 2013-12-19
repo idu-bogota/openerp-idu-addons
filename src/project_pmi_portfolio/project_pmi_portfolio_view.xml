@@ -226,15 +226,13 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <field name="user_id" position="before">
-                    <field name="strategic_objective_id"/>
-                </field>
 	            <page string="Team" position="after">
-                    <page string="Portfolio">
-                        <field name="portfolio_ids" nolabel="1" />
-                    </page>
-                    <page string="Program">
-                        <field name="program_ids" nolabel="1" />
+                    <page string="Portfolio and programs">
+                        <group>
+                            <field name="strategic_objective_id"/>
+                            <field name="portfolio_ids" />
+                            <field name="program_ids" />
+                        </group>
                     </page>
                 </page>
             </field>
