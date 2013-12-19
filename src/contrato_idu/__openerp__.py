@@ -29,7 +29,7 @@ Este módulo es un proxy para acceder a la información contractual disponible e
     'author': 'Instituto De Desarrollo Urbano',
     'website': 'http://www.idu.gov.co',
     'depends': [
-        'base'
+        'base','project'
     ],
     'data': [
         'contrato_idu_view.xml',
