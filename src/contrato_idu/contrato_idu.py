@@ -50,3 +50,20 @@ class contrato_idu(osv.osv):
         'active': True,
         'state': 'draft'
     }
+
+class project(osv.osv):
+    _name = "project.project"
+    _inherit = "project.project"
+
+    _columns = {
+        #Punto de inversion
+        #Centro de costo
+        #Fuente de Financiacion
+        'contrato_id': fields.many2one('contrato_idu.contrato','Contrato', select=True, ondelete='cascade',
+            domain="[('type','=','obra')]"),
+        'contrato_interventoria_id': fields.many2one('contrato_idu.contrato','Contrato de Interventoria', select=True, 
+            domain="[('type','=','interventoria')]",
+            ondelete='cascade'),
+    }
+
+project()

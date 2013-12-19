@@ -59,11 +59,41 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="contrato_idu_contrato_list"/>
         </record>
-        
+
         <menuitem
             action="contrato_idu_contrato_list_action"
             id="contrato_idu_contrato_list_menu"
             parent="menu_contrato_idu"
             sequence="0" />
+
+        <!-- Proyectos -->
+        <record id="project_form" model="ir.ui.view">
+            <field name="name">project_idu.project.form</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <page string="Team" position="after">
+                    <page string="Contratos">
+                        <group>
+                            <field name="contrato_id"/>
+                            <field name="contrato_interventoria_id" />
+                        </group>
+                    </page>
+                </page>
+            </field>
+        </record>
+
+        <record id="project_filter" model="ir.ui.view">
+            <field name="name">project_idu.project.filter</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_project_filter"/>
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="contrato_id" string="Contrato" />
+                    <field name="contrato_interventoria_id" string="Contrato de Interventoria" />
+                </field>
+            </field>
+        </record>
+
     </data>
 </openerp>

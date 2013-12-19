@@ -7,14 +7,6 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <page string="Team" position="after">
-                    <page string="Contratos">
-                        <group>
-                            <field name="contrato_id"/>
-                            <field name="contrato_interventoria_id" />
-                        </group>
-                    </page>
-                </page>
                 <xpath expr="//group/group[2]" position="replace" /><!-- Elimina el texto referencia al partner y a la cuenta analítica -->
             </field>
         </record>
@@ -26,10 +18,6 @@
                 <filter name="Parent" position="after">
                     <filter string="Etapa" name="Etapa" icon="terp-personal" domain="[]" context="{'group_by':'etapa_id'}"/>
                 </filter>
-                <field name="user_id" position="after">
-                    <field name="contrato_id" string="Contrato" />
-                    <field name="contrato_interventoria_id" string="Contrato de Interventoria" />
-                </field>
             </field>
         </record>
     </data>
