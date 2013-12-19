@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <menuitem name="Contratación" id="base.menu_main_contrato_idu"/>
+        <menuitem name="Contratos" id="menu_contrato_idu" parent="base.menu_main_contrato_idu"/>
+
+        <!-- Contratos -->
+        <record id="contrato_idu_contrato_list" model="ir.ui.view">
+            <field name="name">contrato_idu.contrato.list</field>
+            <field name="model">contrato_idu.contrato</field>
+            <field name="arch" type="xml">
+                <tree string="Contrato">
+                    <field name="code"/>
+                    <field name="type"/>
+                    <field name="state"/>
+                    <field name="state_siac"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record id="contrato_idu_contrato_form" model="ir.ui.view">
+            <field name="name">contrato_idu.contrato.form</field>
+            <field name="model">contrato_idu.contrato</field>
+            <field name="arch" type="xml">
+                <form string="Contrato" version="7.0">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_colors='{"pending":"blue"}'/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1" />
+                            </h1>
+                        </div>
+                        <group name="detalles">
+                            <field name="code"/>
+                            <field name="type"/>
+                            <field name="description"/>
+                            <field name="state"/>
+                            <field name="state_siac"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="contrato_idu_contrato_list_action" model="ir.actions.act_window">
+            <field name="name">Contrato</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">contrato_idu.contrato</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="contrato_idu_contrato_list"/>
+        </record>
+        
+        <menuitem
+            action="contrato_idu_contrato_list_action"
+            id="contrato_idu_contrato_list_menu"
+            parent="menu_contrato_idu"
+            sequence="0" />
+    </data>
+</openerp>

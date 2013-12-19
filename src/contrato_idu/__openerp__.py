@@ -19,20 +19,20 @@
 ##############################################################################
 
 {
-    'name': 'Project Management IDU',
+    'name': 'Gestión de Contratos del IDU',
     'version': '1.0',
-    'category': 'Project Management',
+    'category': 'Contract Management',
     'description': """
-This module customize project management for IDU
+Este módulo es un proxy para acceder a la información contractual disponible en el sistema SIAC
 ================================================
                 """,
     'author': 'Instituto De Desarrollo Urbano',
     'website': 'http://www.idu.gov.co',
     'depends': [
-        'project_pmi_portfolio','project_pmi_wbs','contrato_idu'
+        'base'
     ],
     'data': [
-        'project_idu_view.xml',
+        'contrato_idu_view.xml',
     ],
     'demo': [],
     'installable': True,

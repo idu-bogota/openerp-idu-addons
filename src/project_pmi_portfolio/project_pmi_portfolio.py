@@ -100,7 +100,7 @@ class project_pmi_portfolio(osv.osv):
     _parent_name = "parent_id"
     _parent_store = True
     _parent_order = 'sequence, name'
-    _order = 'parent_left'
+    _order = 'parent_right DESC'
 
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
@@ -176,7 +176,7 @@ class project_pmi_program(osv.osv):
     _parent_name = "parent_id"
     _parent_store = True
     _parent_order = 'sequence, name'
-    _order = 'parent_left'
+    _order = 'parent_right DESC'
 
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
