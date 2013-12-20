@@ -15,6 +15,173 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "element_type_id"
+msgstr "tipo_elemento"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "values"
+msgstr "valores"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "bridge_id"
+msgstr "id_puente"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "code"
+msgstr "codigo"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "civ"
+msgstr "civ"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "name"
+msgstr "nombre"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "classification"
+msgstr "clasgeneral"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "shape"
+msgstr "geom"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "structure_type"
+msgstr "tipoestructural"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "address"
+msgstr "direccion"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "last_address"
+msgstr "direccionant"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "construction_date"
+msgstr "fechaconstruc"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "inventory_date"
+msgstr "fechainvent"
+
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "length"
+msgstr "longitud"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "width"
+msgstr "ancho"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "superstructure_area"
+msgstr "areasuperestr"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "superstructure_area"
+msgstr "areasuperestr"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "vertical_gauge"
+msgstr "galibo"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "horizontal_gauge"
+msgstr "galibohor"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "design_load_capacity"
+msgstr "capcargadis"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "level"
+msgstr "nivel"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "structure_material"
+msgstr "materialestruct"
+
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "design_load_code"
+msgstr "normadis"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "photo"
+msgstr "foto"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "geological_zone"
+msgstr "zonageol"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "district"
+msgstr "localidad"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "sub_district"
+msgstr "upz"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "cadastral_zone"
+msgstr "sectorcat"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "micro_seismicity"
+msgstr "microsismicidad"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "calc_area"
+msgstr "areacalc"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "calc_perimeter"
+msgstr "perimetrocalc"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "elements"
+msgstr "elementos"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
+msgid "survey_id"
+msgstr "inspeccion"
+
 #. module:urban_bridge
 #: model:ir.ui.menu,name:urban_bridge.menu_urban_bridge
 msgid "Bridge Management System"
@@ -99,7 +266,6 @@ msgstr "Clasificación general del puente"
 #: field:urban_bridge.bridge,structure_type:0
 msgid "Bridge Type"
 msgstr "Tipología Estructural"
-
 #. module: urban_bridge
 #: field:urban_bridge.bridge,structure_type:0
 msgid "Bridge Type"

@@ -31,6 +31,7 @@ from base_geoengine import geo_model
 from shapely.geometry import asShape
 from shapely.geometry import MultiPolygon
 from datetime import datetime
+from tools.translate import _
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -195,6 +196,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
         except Exception as e:
             print e 
             return {"result":"Save Failed!"}
+
     _name="urban_bridge.bridge"
     _columns = {
         'shape':fields.geo_multi_polygon('Shape',help="Shape"),
