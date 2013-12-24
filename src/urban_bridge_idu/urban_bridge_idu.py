@@ -60,7 +60,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
                 raise Exception("Campo :'"+field+"' no se encuentra definido en fichero de traduccion es_CO.po, verifique que se encuentre el campo en el fichero\
                 y actualice el módulo")
             if (tipo_dato=="selection"):
-                puente[field] = {'nom_pres':nombre_presentacion,"tipo_dato":tipo_dato,"nombre":campo,"selection":fields[field]["selection"]}
+                puente[field] = {'nom_pres':nombre_presentacion,"tipo_dato":tipo_dato,"nombre":campo,"selection":str(fields[field]["selection"])}
             #Convertir los elementos many 2 one en un dominio tipo selection
             elif (tipo_dato == "many2one"):
                 objeto_rel = self.pool.get(fields[field]["relation"])
@@ -69,7 +69,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
                     campos_seleccion = []
                     for code_value_obj in objeto_rel.browse(cr,uid,objetos_rel_ids):
                         campos_seleccion.append((str(code_value_obj.code),str(code_value_obj.name)))
-                    puente[field] = {'nom_pres':nombre_presentacion,"tipo_dato":"selection","nombre":campo,"selection":campos_seleccion}
+                    puente[field] = {'nom_pres':nombre_presentacion,"tipo_dato":"selection","nombre":campo,"selection":str(campos_seleccion)}
                 except Exception as e:
                     print str(e)
                 
