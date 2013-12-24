@@ -110,7 +110,6 @@
                             </field>
                         </group>
                         <group string="Child Deliverables" attrs="{'invisible': [('type','!=','deliverable')]}">
-                           <field name="planned_quantity" readonly="1"/>
                            <field name="child_ids" nolabel="1" context="{'project_id':project_id,'parent_id':parent_id}"/>
                         </group>
                     </sheet>
