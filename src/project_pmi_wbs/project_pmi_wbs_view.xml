@@ -210,6 +210,22 @@
             groups="project.group_project_manager,project.group_project_user"
             sequence="0" />
 
+        <record id="project_pmi_deliverable_action" model="ir.actions.act_window">
+            <field name="name">Deliverables</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project_pmi.wbs_item</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,gantt,calendar,kanban</field>
+            <field name="domain">['|',('id','=',active_id),('id','child_of',active_id)]</field>
+            <field name="view_id" ref="project_pmi_deliverable_list"/>
+        </record>
+        <record id="ir_deliverable_tree_open" model="ir.values">
+            <field eval="'tree_but_open'" name="key2"/>
+            <field eval="'project_pmi.wbs_item'" name="model"/>
+            <field name="name">WBS Items</field>
+            <field eval="'ir.actions.act_window,%d'%project_pmi_deliverable_action" name="value"/>
+        </record>
+
         <record id="project_pmi_deliverable_list_action" model="ir.actions.act_window">
             <field name="name">Deliverables</field>
             <field name="type">ir.actions.act_window</field>
@@ -218,7 +234,6 @@
             <field name="view_mode">tree,form,gantt,calendar</field>
             <field name="view_id" ref="project_pmi_deliverable_list"/>
         </record>
-
         <menuitem
             action="project_pmi_deliverable_list_action"
             id="project_pmi_deliverable_list_menu"
