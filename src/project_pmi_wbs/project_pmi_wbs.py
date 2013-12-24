@@ -77,21 +77,77 @@ class project_pmi_wbs_item(osv.osv):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
-    #FIXME: No hacer queries en loop para evitar problemas de rendimiento
+    #TODO: Adicionar los pesos para el calculo del avance
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
+        child_parent = self._get_wbs_item_and_children(cr, uid, ids, context)
+        # compute planned_hours, total_hours, effective_hours specific to each project
+        cr.execute("""
+            SELECT
+                wbs_item.id, COALESCE(wbs_item.quantity, 0.0), COALESCE(SUM(wr.quantity), 0.0)
+            FROM
+                project_pmi_wbs_item wbs_item
+                LEFT JOIN project_pmi_wbs_work_record wr ON wr.wbs_item_id = wbs_item.id
+            WHERE
+                wbs_item.id IN %s AND state <> 'cancelled' AND state <> 'template'
+            GROUP BY wbs_item.id
+        """, (tuple(child_parent.keys()),))
+        # aggregate results into res
+        res = dict([(id, {'planned_quantity':0.0,'effective_quantity':0.0}) for id in ids])
+        for id, planned, effective in cr.fetchall():
+            # add the values specific to id to all parent wbs_items of id in the result
+            while id:
+                if id in ids:
+                    res[id]['planned_quantity'] += planned
+                    res[id]['effective_quantity'] += effective
+                id = child_parent[id]
         # compute progress rates
-        res = {}
         for id in ids:
-            res[id] = {}
-            total_work = 0
-            wbs_item = self.pool.get('project_pmi.wbs_item').browse(cr, uid, id, context=context)
-            item_ids = self.pool.get('project_pmi.wbs_work_record').search(cr, uid, [('wbs_item_id', '=', id)], context=context)
-            for item in self.pool.get('project_pmi.wbs_work_record').browse(cr, uid, item_ids, context):
-                total_work += item.quantity
-            if wbs_item.quantity:
-                res[id]['progress_rate'] = round(100.0 * total_work / wbs_item.quantity, 2)
-
+            if res[id]['planned_quantity']:
+                res[id]['progress_rate'] = round(100.0 * res[id]['effective_quantity'] / res[id]['planned_quantity'], 2)
+            else:
+                res[id]['progress_rate'] = 0.0
         return res
+
+    def _get_wbs_item_and_children(self, cr, uid, ids, context=None):
+        """ retrieve all children wbs items of wbs_item ids;
+            return a dictionary mapping each wbs_item to its parent wbs_item (or None)
+        """
+        res = dict.fromkeys(ids, None)
+        while ids:
+            cr.execute("""
+                SELECT wbs_item.id, parent.id
+                FROM project_pmi_wbs_item wbs_item
+                LEFT JOIN project_pmi_wbs_item parent ON wbs_item.parent_id = parent.id
+                WHERE wbs_item.parent_id IN %s
+                """, (tuple(ids),))
+            dic = dict(cr.fetchall())
+            res.update(dic)
+            ids = dic.keys()
+        return res
+
+    def _get_wbs_item_from_work_records(self, cr, uid, work_record_ids, context=None):
+        """
+        Returns IDs of current and parent wbs_item, to be used to update the progres_rate using updated work_records
+        """
+        work_records = self.pool.get('project_pmi.wbs_work_record').browse(cr, uid, work_record_ids, context=context)
+        wbs_item_ids = [wr.wbs_item_id.id for wr in work_records if wr.wbs_item_id]
+        return self.pool.get('project_pmi.wbs_item')._get_wbs_item_and_parents(cr, uid, wbs_item_ids, context)
+
+    def _get_wbs_item_and_parents(self, cr, uid, ids, context=None):
+        """
+        Returns IDs of current and parent wbs_item, to be used to update the progres_rate
+        """
+        res = set(ids)
+        while ids:
+            cr.execute("""
+                SELECT DISTINCT parent.id
+                FROM project_pmi_wbs_item wbs_item
+                LEFT JOIN project_pmi_wbs_item parent ON wbs_item.parent_id = parent.id
+                WHERE wbs_item.id IN %s
+                """, (tuple(ids),))
+            ids = [t[0] for t in cr.fetchall()]
+            res.update(ids)
+        return list(res)
 
     _columns = {
         'project_id': fields.many2one('project.project','Project'),
@@ -103,7 +159,7 @@ class project_pmi_wbs_item(osv.osv):
         'weight': fields.float('Weight'),
         'description': fields.text('Description'),
         'active':fields.boolean('Active',help='Enable/Disable'),
-        'state':fields.selection([('draft', 'Draft'),('open', 'In Progress'),('cancel', 'Cancelled'),('done', 'Done'),('pending', 'Pending'),('template', 'Template')],'State'),
+        'state':fields.selection([('draft', 'Draft'),('open', 'In Progress'),('cancelled', 'Cancelled'),('done', 'Done'),('pending', 'Pending'),('template', 'Template')],'State'),
         'quantity': fields.float('Quantity'),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', help="Default Unit of Measure used"),
         'parent_id': fields.many2one('project_pmi.wbs_item','Parent Deliverable', select=True, ondelete='cascade'),
@@ -115,8 +171,24 @@ class project_pmi_wbs_item(osv.osv):
         'date_deadline': fields.date('Deadline',select=True),
         'date_start': fields.date('Starting Date',select=True),
         'date_end': fields.date('Ending Date',select=True),
-        'progress_rate': fields.function(_progress_rate, multi="progress", string='Progress', type='float', group_operator="avg", 
-             help="Percent of progress according to the total of work recorded.", store=True),
+        'planned_quantity': fields.function(_progress_rate, multi="progress", string='Planned Quantity', type='float', group_operator="avg",
+             help="Total work quantity planned", store = {
+                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity'], 10),
+                'project_pmi.wbs_work_record': (_get_wbs_item_from_work_records, ['wbs_item_id', 'quantity'], 20),
+            }
+         ),
+        'effective_quantity': fields.function(_progress_rate, multi="progress", string='Effective Quantity', type='float', group_operator="avg",
+             help="Percent of progress according to the total of work recorded.", store = {
+                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity'], 10),
+                'project_pmi.wbs_work_record': (_get_wbs_item_from_work_records, ['wbs_item_id', 'quantity'], 20),
+            }
+         ),
+        'progress_rate': fields.function(_progress_rate, multi="progress", string='Progress', type='float', group_operator="avg",
+             help="Percent of progress according to the total of work recorded.", store = {
+                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity'], 10),
+                'project_pmi.wbs_work_record': (_get_wbs_item_from_work_records, ['wbs_item_id', 'quantity'], 20),
+            }
+         ),
         'work_record_ids': fields.one2many('project_pmi.wbs_work_record', 'wbs_item_id', 'Work done'),
     }
     _defaults = {

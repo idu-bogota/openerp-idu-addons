@@ -42,6 +42,8 @@
                     <field name="weight"/>
                     <field name="state"/>
                     <field name="active"/>
+                    <field name="effective_quantity"/>
+                    <field name="planned_quantity"/>
                     <field name="progress_rate"/>
                 </tree>
             </field>
@@ -57,6 +59,9 @@
                     <field name="complete_name"/>
                     <field name="type"/>
                     <field name="weight"/>
+                    <field name="effective_quantity"/>
+                    <field name="planned_quantity"/>
+                    <field name="progress_rate"/>
                     <field name="progress_rate" widget="progressbar"/>
                     <field name="state"/>
                     <field name="active"/>
@@ -85,6 +90,8 @@
                             <field name="parent_id" />
                             <field name="weight"/>
                             <field name="description"/>
+                            <field name="planned_quantity" readonly="1" attrs="{'invisible': [('type','!=','deliverable')]}"/>
+                            <field name="effective_quantity" readonly="1" attrs="{'invisible': [('type','!=','deliverable')]}"/>
                             <field name="progress_rate" widget="progressbar"/>
                         </group>
                         <group name="work_package" string="Work Package" attrs="{'invisible': [('type','!=','work_package')]}">
@@ -103,6 +110,7 @@
                             </field>
                         </group>
                         <group string="Child Deliverables" attrs="{'invisible': [('type','!=','deliverable')]}">
+                           <field name="planned_quantity" readonly="1"/>
                            <field name="child_ids" nolabel="1" context="{'project_id':project_id,'parent_id':parent_id}"/>
                         </group>
                     </sheet>
