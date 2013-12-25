@@ -238,7 +238,7 @@
             action="project_pmi_deliverable_list_action"
             id="project_pmi_deliverable_list_menu"
             name="WBS List"
-            parent="project.menu_project_management"
+            parent="base.menu_definitions"
             groups="project.group_project_manager,project.group_project_user"
             sequence="0" />
 
