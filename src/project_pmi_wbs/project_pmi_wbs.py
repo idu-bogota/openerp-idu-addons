@@ -20,6 +20,7 @@
 
 from openerp.osv import fields, osv
 import time
+import datetime
 
 class project(osv.osv):
     _name = "project.project"
@@ -149,6 +150,32 @@ class project_pmi_wbs_item(osv.osv):
             res.update(ids)
         return list(res)
 
+    def _date_evaluation(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = {}
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return res
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        reads = self.read(cr, uid, ids, ['date_deadline','date_end'], context=context)
+        res = {}
+        for record in reads:
+            is_late = False
+            is_not_finished = False
+            is_on_time = False
+            if record['date_deadline']:
+                today = datetime.datetime.now().date()
+                date_deadline = datetime.datetime.strptime(record['date_deadline'], '%Y-%m-%d').date()
+                if record['date_end']:
+                    date_end = datetime.datetime.strptime(record['date_end'], '%Y-%m-%d').date()
+                    if date_end <= date_deadline:
+                        is_on_time = True
+                    elif date_end > date_deadline:
+                        is_late = True
+                elif today >= date_deadline:
+                    is_not_finished = True
+            res[record['id']] = { 'is_late': is_late, 'is_on_time': is_on_time, 'is_not_finished': is_not_finished}
+        return res
+
     _columns = {
         'project_id': fields.many2one('project.project','Project'),
         'is_root_node': fields.boolean('Is a root node for the project WBS',help='Any project with a WBS can have several WBS Items, but one active WBS item as root node'),
@@ -171,6 +198,15 @@ class project_pmi_wbs_item(osv.osv):
         'date_deadline': fields.date('Deadline',select=True),
         'date_start': fields.date('Starting Date',select=True),
         'date_end': fields.date('Ending Date',select=True),
+        'is_late': fields.function(_date_evaluation, type="boolean", multi="semaphore", string='Has finished late?',store = {
+                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['date_end','date_deadline'], 10),
+        }),
+        'is_not_finished': fields.function(_date_evaluation, type="boolean", multi="semaphore", string='Has not finished and due date has expired?',store = {
+                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['date_end','date_deadline'], 10),
+        }),
+        'is_on_time': fields.function(_date_evaluation, type="boolean", multi="semaphore", string='Has finished late?',store = {
+                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['date_end','date_deadline'], 10),
+        }),
         'planned_quantity': fields.function(_progress_rate, multi="progress", string='Planned Quantity', type='float', group_operator="avg",
              help="Total work quantity planned", store = {
                 'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity'], 10),

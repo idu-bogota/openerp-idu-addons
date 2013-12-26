@@ -35,16 +35,21 @@
             <field name="field_parent">child_ids</field>
             <field name="search_view_id" ref="project_pmi_deliverable_search"/>
             <field name="arch" type="xml">
-                <tree string="WBS Tree">
+                <tree string="WBS Tree" colors="orange:is_late==True;green:is_on_time==True;red:is_not_finished==True">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="type"/>
                     <field name="weight"/>
+                    <field name="date_deadline"/>
+                    <field name="date_end"/>
                     <field name="state"/>
                     <field name="active"/>
                     <field name="effective_quantity"/>
                     <field name="planned_quantity"/>
                     <field name="progress_rate"/>
+                    <field name="is_late" invisible="1"/>
+                    <field name="is_on_time" invisible="1"/>
+                    <field name="is_not_finished" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -53,18 +58,23 @@
             <field name="model">project_pmi.wbs_item</field>
             <field name="search_view_id" ref="project_pmi_deliverable_search"/>
             <field name="arch" type="xml">
-                <tree string="WBS List">
+                <tree string="WBS List" colors="orange:is_late==True;green:is_on_time==True;red:is_not_finished==True">
                     <field name="sequence" widget="handle"/>
                     <field name="code"/>
                     <field name="complete_name"/>
                     <field name="type"/>
                     <field name="weight"/>
+                    <field name="date_deadline"/>
+                    <field name="date_end"/>
                     <field name="effective_quantity"/>
                     <field name="planned_quantity"/>
                     <field name="progress_rate"/>
                     <field name="progress_rate" widget="progressbar"/>
                     <field name="state"/>
                     <field name="active"/>
+                    <field name="is_late" invisible="1"/>
+                    <field name="is_on_time" invisible="1"/>
+                    <field name="is_not_finished" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -97,9 +107,9 @@
                         <group name="work_package" string="Work Package" attrs="{'invisible': [('type','!=','work_package')]}">
                             <field name="quantity"/>
                             <field name="uom_id"/>
+                            <field name="date_deadline"/>
                             <field name="date_start"/>
                             <field name="date_end"/>
-                            <field name="date_deadline"/>
                             <field name="work_record_ids" groups="project.group_tasks_work_on_tasks">
                                 <tree string="Work Package Work" editable="top">
                                     <field name="name"/>
@@ -185,7 +195,7 @@
             <field name="model">project_pmi.wbs_item</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="parent_id" date_start="date_start"  date_stop="date_deadline" string="Deliverable">
+                <calendar color="parent_id" date_start="date_deadline" string="Deliverable">
                     <field name="name"/>
                     <field name="quantity"/>
                     <field name="uom_id"/>
