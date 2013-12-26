@@ -16,6 +16,7 @@
                 </form>
             </field>
         </record>
+        
         <record id="action_ocs_sdqs_wizard_consultar" model="ir.actions.act_window">
             <field name="name">consultar PQR en SDQS</field>
             <field name="type">ir.actions.act_window</field>
@@ -26,6 +27,8 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
+        
+        <menuitem name="SDQS" id="menu_ocs_wizard_SDQS" action="action_ocs_sdqs_wizard_consultar" parent ="ocs.menu_ocs_issue"/>
 
 </data>
 </openerp>

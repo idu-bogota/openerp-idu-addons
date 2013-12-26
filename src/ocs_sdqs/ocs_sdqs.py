@@ -26,10 +26,9 @@
 # CINXGLER MARIACA MINDA - Engineer of Development - Architect
 #
 ###############################################################################
-
-from osv import fields,osv
 from crm import crm
 from crm_claim import crm_claim
+from osv import fields,osv
 
 class crm_claim(osv.osv):
     _name = "crm.claim"
@@ -40,3 +39,12 @@ class crm_claim(osv.osv):
     }
 crm_claim()
 
+
+class crm_case_categ(osv.osv):
+    "This class enable/Disable Categories according current politics"
+    _name="crm.case.categ"
+    _inherit="crm.case.categ"
+    _columns={        
+        'sdqs_req_type':fields.integer('sdqs_req_type',help='SDQS request type'),
+    }
+crm_case_categ()

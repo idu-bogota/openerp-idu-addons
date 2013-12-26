@@ -36,7 +36,7 @@
         "init_xml" : ['ocs_view.xml'],
         "demo_xml" : [],
         "update_xml" : ['security/ocs_security.xml',
-                        'security/ir.model.access.csv',
+                        'security/ir.model.access.csv',                        
                         'ocs_view.xml',
                         'ocs_workflow.xml',
                         ],

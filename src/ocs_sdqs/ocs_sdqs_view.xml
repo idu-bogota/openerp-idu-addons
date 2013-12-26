@@ -34,5 +34,34 @@ Claims
                     </page>
                 </field>
             </record>
+            
+            
+        
+        <!-- Form View -->
+            <record model="ir.ui.view" id="view_ocs_sdqs_case_categ_inherit">
+                <field name="name">crm.case.categ.form.inherit</field>
+                <field name="model">crm.case.categ</field>
+                <field name="type">form</field>
+                <field name="inherit_id" ref="ocs.view_ocs_crm_case_channel_form_inherit"/>
+                <field name="arch" type="xml">
+                    <field name ="active" position="after">
+                    	<field name="sdqs_req_type"/>
+                    </field>
+                </field>
+            </record>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     </data>
 </openerp>
