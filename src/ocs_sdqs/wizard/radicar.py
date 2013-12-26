@@ -28,26 +28,26 @@
 ###############################################################################
 
 from osv import osv, fields
-from suds.client import Client
+from ocs_sdqs.wsclient.wsclient import SdqsClient
 
 class ocs_sdqs_wizard_radicar(osv.osv_memory):
     _name = 'ocs_sdqs.wizard.radicar'
-    _description = 'Radica la PQR EN (SDQS)'    
+    _description = 'Radica la PQR EN (SDQS)'
 
     _columns = {
         'description': fields.text('Description', help='Texto a ser radicado', required=True),
         'folios':fields.integer('folios', help='Numero de folios', required=True),
     }
-    
+
     def default_get(self, cr, uid, fields, context=None):
         claim = self.pool.get('crm.claim').browse(cr, uid, context['active_id'], context=None);
         res = super(ocs_sdqs_wizard_radicar, self).default_get(cr, uid, fields, context=context)
         res.update({'description': claim.description })
         return res
-    
+
     def radicar(self, cr, uid, ids, context=None):
         wsdl_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'sdqs.ws.url', default='', context=context)
-        #client = Client(wsdl_url)
+        client = SdqsClient(wsdl_url,1)
 
         current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         claim_ids = context and context.get('active_ids', False)
@@ -58,14 +58,14 @@ class ocs_sdqs_wizard_radicar(osv.osv_memory):
         asunto = form_object.description.strip()
         if(len(asunto) > 300):
             raise osv.except_osv('Error de validación','El texto a ser radicado es demasiado largo, por favor resumalo')
-                 
+
         for claim in claim_table.browse(cr, uid, claim_ids, context=context):
             if claim.sdqs_id != u'0' and claim.sdqs_id != False:
                 raise osv.except_osv('Error!', 'La PQR ya tiene un número de rádicado')
             
             ciudadano = claim.partner_address_id
             categoria = claim.categ_id
-            
+
             if ciudadano:
                 if ciudadano.document_number:
                     numeroDocumento = ciudadano.document_number
@@ -74,19 +74,19 @@ class ocs_sdqs_wizard_radicar(osv.osv_memory):
                 if ciudadano.name:
                     nombreCiudadano = ciudadano.name
                 else:
-                    nombreCiudadano = " "
+                    nombreCiudadano = ""
                 if ciudadano.last_name:
                     apellidoCiudadano = ciudadano.last_name
                 else:
-                    apellidoCiudadano = " "
+                    apellidoCiudadano = ""
                 if ciudadano.email:
                     correoCiudadano = ciudadano.email
                 else:
-                    correoCiudadano = "nn@nn.com"
+                    correoCiudadano = ""
                 if ciudadano.phone:
                     telefonoCiudadano = ciudadano.phone
                 else:
-                    telefonoCiudadano = "000000"
+                    telefonoCiudadano = ""
             if form_object:
                 if form_object.folios:
                     foliosSDQS = form_object.folios
@@ -96,22 +96,22 @@ class ocs_sdqs_wizard_radicar(osv.osv_memory):
                     descripcionSDQS = form_object.description
                 else:
                     descripcionSDQS = "Sin descripcion"
-            
+
             if claim:
                 if claim.claim_address:
                     direccionReclamo = claim.claim_address
-                else:    
+                else:
                     direccionReclamo = "Sin direccion"
                 if claim.id:
                     numeroRadicado = claim.id
-                else:              
-                    numeroRadicado = 0      
-            
+                else:
+                    numeroRadicado = 0
+
             if categoria:
                 codigoTipoRequerimiento = categoria.sdqs_req_type 
             else:
                 codigoTipoRequerimiento = 1
-            
+
             params = {
             "numeroRadicado": numeroRadicado,
             "numeroFolios": foliosSDQS,        
@@ -128,28 +128,27 @@ class ocs_sdqs_wizard_radicar(osv.osv_memory):
             "codigoDepartamento": "250",
             "codigoPais": "1",
             "codigoTipoRequerimiento": codigoTipoRequerimiento,
-            "clasificacionRequerimiento": {
-            "codigoSector": [11],
-            "codigoEntidad": [143],
-            "goSubtema": [4],
-            },
+            #===================================================================
+            # "clasificacionRequerimiento": {
+            # "codigoSector": [11],
+            # "codigoEntidad": [143],
+            # "codigoSubtema": [4],
+            # },
+            #===================================================================
             "observaciones": descripcionSDQS,
             "prioridad": "2",
             "entidadQueIngresaRequerimiento": 2972,
             }
-                                  
-            #try:              
-            #    result = client.registrarRequerimiento(params)
-            #    if result['codigoRequerimiento'] > 0:
-            #        claim_table.write(cr, uid, claim.id, {'sdqs_id': result['codigoRequerimiento']}, context=context)    
-            #    else:
-            #        raise osv.except_osv('Error retornado por el sistema SDQS', result['codigoError'])                
-            #except Exception as e:
-            #    raise osv.except_osv('Error al consultar servicio web SDQS', str(e))
+
+            try:
+                result = client.registrarRequerimiento(params)
+                if result['codigoRequerimiento'] > 0:
+                    claim_table.write(cr, uid, claim.id, {'sdqs_id': result['codigoRequerimiento']}, context=context)
+                else:
+                    raise osv.except_osv('Error retornado por el sistema SDQS', result['codigoError'])
+            except Exception as e:
+                raise osv.except_osv('Error al consultar servicio web SDQS', str(e))
 
         return {'type': 'ir.actions.act_window_close'}
 
-
-
 ocs_sdqs_wizard_radicar()
-    
