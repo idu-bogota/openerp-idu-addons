@@ -6,10 +6,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="consultar PQR">
-                    <field name="request_number"/>
-                    <separator colspan="1"/>
-                    <group col="1" colspan="1">
-                        <label string="" colspan="2"/>
+                	<group col="4" colspan="1">
+                	 	<field name="request_number"/>
+                	</group>                   
+                    <group col="4" colspan="4">
+                    	<separator colspan="4"/>
                         <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
                         <button name="consultar" string="consultar" type="object" icon="gtk-ok"/>
                     </group>

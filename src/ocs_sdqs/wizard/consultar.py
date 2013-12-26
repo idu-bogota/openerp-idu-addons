@@ -1,4 +1,31 @@
 # -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+# INSTITUTO DE DESARROLLO URBANO - BOGOTA (COLOMBIA)
+#
+# Customization developed by:
+# GUSTAVO ADOLFO VELEZ - CIO
+# JULIAN ANDRES FERNANDEZ - Engineer of Development
+# CINXGLER MARIACA MINDA - Engineer of Development - Architect
+#
+###############################################################################
 
 from osv import osv, fields
 from suds.client import Client
@@ -8,7 +35,7 @@ class ocs_sdqs_wizard_consultar(osv.osv_memory):
     _description = 'consulta la PQR EN (SDQS)'    
 
     _columns = {
-        'request_number': fields.text('Number', help='Numero del requerimiento SDQS', required=True),
+        'request_number': fields.integer('Number', help='Numero del requerimiento SDQS', required=True),
     }
     
     def consultar(self, cr, uid, ids, context=None):

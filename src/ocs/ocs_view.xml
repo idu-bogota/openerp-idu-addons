@@ -32,7 +32,7 @@ CRM CASE CHANNEL
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
 </record>
-<menuitem name="Case Channels" id="menu_ocs_settcrm_claim.crm_case_claims_form_viewings_crm_case_channels" action="action_ocs_crm_case_channel" parent="menu_ocs_settings"/>
+<menuitem name="Case Channels" id="menu_ocs_settings_crm_case_channels" action="action_ocs_crm_case_channel" parent="menu_ocs_settings"/>
 
 <!--===============================================================================================
 Case Categories

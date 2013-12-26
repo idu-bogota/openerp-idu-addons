@@ -26,10 +26,6 @@ Claims
                                 type="action" icon="gtk-ok"
                                 attrs="{'invisible': [('sdqs_id','!=',False)]}"
                             />
-                             <button name="%(ocs_sdqs.action_ocs_sdqs_wizard_consultar)d" string="Consultar"
-                                type="action" icon="gtk-ok"
-                                attrs="{'invisible': [('sdqs_id','!=',False)]}"
-                            />
                         </page>
                     </page>
                 </field>
