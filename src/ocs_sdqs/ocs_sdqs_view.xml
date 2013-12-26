@@ -1,12 +1,17 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+    
+        <menuitem name="sdqs" id="menu_ocs_sdqs"
+                  parent="ocs.menu_ocs" />
+        <menuitem name="sdqs Configuración" id="menu_ocs_sdqs_settings"
+                  parent="menu_ocs_sdqs" />
+    
 <!--
 ========================================================================================
 Claims
 ========================================================================================
 -->
-
             <!-- Form View -->
             <record model="ir.ui.view" id="view_ocs_sdqs_claim_form_inherit">
                 <field name="name">crm.claim.form.inherit</field>
@@ -16,7 +21,15 @@ Claims
                 <field name="arch" type="xml">
                     <page string="Follow Up" position="after">
                         <page string="SQDS">
-                            <field name="sdqs_id" select ="0"/>
+                            <field name="sdqs_id" select ="0" readonly="1" />                          
+                            <button name="%(ocs_sdqs.action_ocs_sdqs_wizard_radicar)d" string="Radicar"
+                                type="action" icon="gtk-ok"
+                                attrs="{'invisible': [('sdqs_id','!=',False)]}"
+                            />
+                             <button name="%(ocs_sdqs.action_ocs_sdqs_wizard_consultar)d" string="Consultar"
+                                type="action" icon="gtk-ok"
+                                attrs="{'invisible': [('sdqs_id','!=',False)]}"
+                            />
                         </page>
                     </page>
                 </field>

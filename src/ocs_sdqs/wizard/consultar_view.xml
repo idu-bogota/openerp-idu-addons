@@ -1,0 +1,31 @@
+<openerp>
+  <data>
+        <record id="view_ocs_sdqs_wizard_consultar_form" model="ir.ui.view">
+            <field name="name">consultar PQR en SDQS</field>
+            <field name="model">ocs_sdqs.wizard.consultar</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="consultar PQR">
+                    <field name="request_number"/>
+                    <separator colspan="1"/>
+                    <group col="1" colspan="1">
+                        <label string="" colspan="2"/>
+                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                        <button name="consultar" string="consultar" type="object" icon="gtk-ok"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="action_ocs_sdqs_wizard_consultar" model="ir.actions.act_window">
+            <field name="name">consultar PQR en SDQS</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ocs_sdqs.wizard.consultar</field>
+            <field name="src_model">ocs_sdqs.wizard.consultar</field>
+            <field name="view_id" ref="view_ocs_sdqs_wizard_consultar_form"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+</data>
+</openerp>

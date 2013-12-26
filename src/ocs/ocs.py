@@ -346,6 +346,7 @@ class crm_case_categ(osv.osv):
     _inherit="crm.case.categ"
     _columns={
         'active':fields.boolean('Active',help='Enable/Disable Case Category'),
+        'sdqs_req_type':fields.integer('sdqs_req_type',help='SDQS request type'),
     }
 
 

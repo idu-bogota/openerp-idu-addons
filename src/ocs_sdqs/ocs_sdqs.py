@@ -39,3 +39,4 @@ class crm_claim(osv.osv):
         'sdqs_id':fields.char('SDQS ID',size=128,help='Sistema Distrital de Quejas y Soluciones de la Alcaldía de Bogotá D.C. Número de radicado',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
     }
 crm_claim()
+

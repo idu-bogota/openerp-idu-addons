@@ -30,7 +30,7 @@ Prueba de ciudadano - datos completos
 ...     "apellidos": "mi apellido",
 ...     "email": "email@dominio.com",
 ...     "telefonoCasa": "200000002",
-...     "telefonoOficina": "300000003",
+...     "telefonoOficina": "0000000000",
 ...     "telefonoCelular": "40000004",
 ...     "direccion": "CL 32 No 54 - 54",
 ...     "codigoCiudad": "11001",

@@ -1,0 +1,32 @@
+<openerp>
+  <data>
+        <record id="view_ocs_sdqs_wizard_radicar_form" model="ir.ui.view">
+            <field name="name">Radicar PQR en SDQS</field>
+            <field name="model">ocs_sdqs.wizard.radicar</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Radicar PQR">
+                    <field name="description"/>
+                    <field name="folios" />
+                    <separator colspan="4"/>
+                    <group col="4" colspan="4">
+                        <label string="" colspan="2"/>
+                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                        <button name="radicar" string="Radicar" type="object" icon="gtk-ok"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="action_ocs_sdqs_wizard_radicar" model="ir.actions.act_window">
+            <field name="name">Radicar PQR en SDQS</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ocs_sdqs.wizard.radicar</field>
+            <field name="src_model">ocs_sdqs.wizard.radicar</field>
+            <field name="view_id" ref="view_ocs_sdqs_wizard_radicar_form"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+</data>
+</openerp>

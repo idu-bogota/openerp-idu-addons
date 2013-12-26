@@ -25,14 +25,16 @@
         "author" : "Angel María Fonseca, Andres Ignacio Baez Alba and Cinxgler Mariaca Minda",
         "website" : "www.idu.gov.co",
         "category" : "Social Management",
-        "description": """For Public Organizations, useful to receive claims from Citizens and create a document in the Bogotá D.C. Claim System - http://alcasdqs.bogota.gov.co/sdqs/""",
+        "description": """For Public Organizati'ocs_orfeo_view.xml',ons, useful to receive claims from Citizens and create a document in the Bogotá D.C. Claim System - http://alcasdqs.bogota.gov.co/sdqs/""",
         "depends" : ['base',
                      'ocs',
                     ],
         "init_xml" : [],
         "demo_xml" : [],
         "update_xml" : [
-                        'ocs_sdqs_view.xml',
+                        'wizard/radicar_view.xml',
+                        'wizard/consultar_view.xml',
+                        'ocs_sdqs_view.xml'                        
                        ],
         "installable": True
 }

@@ -21,6 +21,7 @@ CRM CASE CHANNEL
         <field name="arch" type="xml">
             <field name="section_id" position="after">
                 <field name="active" select ="1"/>
+                <field name="sdqs_req_type"/>
             </field>
         </field>
 </record>
