@@ -239,7 +239,10 @@ class project_pmi_wbs_item(osv.osv):
     def _check_weight(self, cr, uid, ids, context=None):
         is_valid_data = True
         for obj in self.browse(cr,uid,ids,context=None):
-            if obj.weight <= 0 or obj.weight > 100:
+            if obj.state == 'draft' and (obj.weight < 0 or obj.weight > 100):
+                is_valid_data = False
+                continue
+            if obj.state != 'draft' and (obj.weight <= 0 or obj.weight > 100):
                 is_valid_data = False
                 continue
             if obj.parent_id:
@@ -255,7 +258,7 @@ class project_pmi_wbs_item(osv.osv):
 
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive deliverable.', ['parent_id']),
-        (_check_weight, 'Error ! Weight must be between 1 and 100 or must be 100 if is a root deliverable.', ['weight']),
+        (_check_weight, 'Error ! Weight must be between 1 and 100 or must be 100 if it\'s a root deliverable.', ['weight','state']),
     ]
 
     def child_get(self, cr, uid, ids):
