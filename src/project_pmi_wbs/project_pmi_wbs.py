@@ -150,7 +150,7 @@ class project_pmi_wbs_item(osv.osv):
             res.update(ids)
         return list(res)
 
-    def _date_evaluation(self, cr, uid, ids, prop, unknow_none, context=None):
+    def _opportunity_evaluation(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
         if isinstance(ids, (list, tuple)) and not len(ids):
             return res
@@ -159,21 +159,19 @@ class project_pmi_wbs_item(osv.osv):
         reads = self.read(cr, uid, ids, ['date_deadline','date_end'], context=context)
         res = {}
         for record in reads:
-            is_late = False
-            is_not_finished = False
-            is_on_time = False
+            opportunity = '';
             if record['date_deadline']:
                 today = datetime.datetime.now().date()
                 date_deadline = datetime.datetime.strptime(record['date_deadline'], '%Y-%m-%d').date()
                 if record['date_end']:
                     date_end = datetime.datetime.strptime(record['date_end'], '%Y-%m-%d').date()
                     if date_end <= date_deadline:
-                        is_on_time = True
+                        opportunity = 'is_on_time'
                     elif date_end > date_deadline:
-                        is_late = True
+                        opportunity = 'is_late'
                 elif today >= date_deadline:
-                    is_not_finished = True
-            res[record['id']] = { 'is_late': is_late, 'is_on_time': is_on_time, 'is_not_finished': is_not_finished}
+                    opportunity = 'is_not_finished'
+            res[record['id']] = opportunity
         return res
 
     _columns = {
@@ -198,13 +196,7 @@ class project_pmi_wbs_item(osv.osv):
         'date_deadline': fields.date('Deadline',select=True),
         'date_start': fields.date('Starting Date',select=True),
         'date_end': fields.date('Ending Date',select=True),
-        'is_late': fields.function(_date_evaluation, type="boolean", multi="semaphore", string='Has finished late?',store = {
-                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['date_end','date_deadline'], 10),
-        }),
-        'is_not_finished': fields.function(_date_evaluation, type="boolean", multi="semaphore", string='Has not finished and due date has expired?',store = {
-                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['date_end','date_deadline'], 10),
-        }),
-        'is_on_time': fields.function(_date_evaluation, type="boolean", multi="semaphore", string='Has finished late?',store = {
+        'opportunity_evaluation': fields.function(_opportunity_evaluation, type="char", translate=True, string='is late, on time, not finished?',store = {
                 'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['date_end','date_deadline'], 10),
         }),
         'planned_quantity': fields.function(_progress_rate, multi="progress", string='Planned Quantity', type='float', group_operator="avg",
@@ -244,9 +236,28 @@ class project_pmi_wbs_item(osv.osv):
             level -= 1
         return True
 
+    def _check_weight(self, cr, uid, ids, context=None):
+        is_valid_data = True
+        for obj in self.browse(cr,uid,ids,context=None):
+            if obj.weight <= 0 or obj.weight > 100:
+                is_valid_data = False
+                continue
+            if obj.parent_id:
+                weight = 0
+                for sibling in obj.parent_id.child_ids:
+                    weight += sibling.weight
+                if weight > 100:
+                    is_valid_data = False
+            elif obj.weight != 100:
+                is_valid_data = False
+
+        return is_valid_data
+
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive deliverable.', ['parent_id'])
+        (_check_recursion, 'Error ! You cannot create recursive deliverable.', ['parent_id']),
+        (_check_weight, 'Error ! Weight must be between 1 and 100 or must be 100 if is a root deliverable.', ['weight']),
     ]
+
     def child_get(self, cr, uid, ids):
         return [ids]
 
