@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-manager_project_pmi_wbs_item,project_pmi_wbs.wbs_item,project_pmi_wbs.model_project_pmi_wbs_item,project.group_project_user,1,0,0,0
-user_project_pmi_wbs_item,project_pmi_wbs.wbs_item,project_pmi_wbs.model_project_pmi_wbs_item,project.group_project_manager,1,1,1,1
+user_project_pmi_wbs_item,project_pmi_wbs.wbs_item,project_pmi_wbs.model_project_pmi_wbs_item,project.group_project_user,1,0,0,0
+manager_project_pmi_wbs_item,project_pmi_wbs.wbs_item,project_pmi_wbs.model_project_pmi_wbs_item,project.group_project_manager,1,1,1,1
+user_project_pmi_wbs_item_work_record,project_pmi_wbs.wbs_work_record,project_pmi_wbs.model_project_pmi_wbs_work_record,project.group_project_user,1,0,0,0
+manager_project_pmi_wbs_item_work_record,project_pmi_wbs.wbs_work_record,project_pmi_wbs.model_project_pmi_wbs_work_record,project.group_project_manager,1,1,1,1
