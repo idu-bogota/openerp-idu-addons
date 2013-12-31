@@ -116,6 +116,16 @@ class urban_bridge_bridge(geo_model.GeoModel):
             res[objeto]=objeto_dict
         return res
     
+    def get_data_module(self,cr,uid,context=None):
+        """
+        Web Service que devuelve todos los datos de los puentes junto con los elementos de infraestructura
+        """
+        res = {}
+        bridge_obj = self.pool.get('urban_bridge.bridge')
+        bridge_ids = bridge_obj.search([('id','>','0')])
+        
+        return res
+    
 
     _name="urban_bridge.bridge"
     _inherit="urban_bridge.bridge"
