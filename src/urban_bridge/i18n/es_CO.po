@@ -652,3 +652,23 @@ msgstr "Entidad"
 msgid "Element to Inspect"
 msgstr "Elementos a inspeccionar"
 
+#. module: urban_bridge
+#: field:urban_bridge.structure_element,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element,element_type_id:0
+msgid "Element Type"
+msgstr "Tipo de Elemento"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element,values:0
+msgid "Values"
+msgstr "Valores"
+
+#. module: urban_bridge
+#: field:urban_bridge.structure_element,bridge_id:0
+msgid "Bridge"
+msgstr "ID Puente"
+
