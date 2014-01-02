@@ -39,7 +39,7 @@ class project(osv.osv):
 
     _columns = {
         'wbs_ids': fields.one2many('project_pmi.wbs_item', 'project_id', string='Work Breakdown Structure'),
-        'wbs_items_count': fields.function(_wbs_item_count, type='integer', string="WBS items count", store=True),
+        'wbs_items_count': fields.function(_wbs_item_count, type='integer', string="WBS items count"),
     }
 
 project()
@@ -78,7 +78,6 @@ class project_pmi_wbs_item(osv.osv):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
-    #TODO: Adicionar los pesos para el calculo del avance
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
         child_parent = self._get_wbs_item_and_children(cr, uid, ids, context)
         # compute planned_hours, total_hours, effective_hours specific to each project
@@ -181,7 +180,6 @@ class project_pmi_wbs_item(osv.osv):
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'name': fields.char('Name', size=255, required=True, select=True),
         'type': fields.selection([('work_package', 'Work Package'),('deliverable', 'Deliverable')],'Deliverable Type', required=True),
-        'weight': fields.float('Weight'),
         'description': fields.text('Description'),
         'active':fields.boolean('Active',help='Enable/Disable'),
         'state':fields.selection([('draft', 'Draft'),('open', 'In Progress'),('cancelled', 'Cancelled'),('done', 'Done'),('pending', 'Pending'),('template', 'Template')],'State'),
@@ -236,29 +234,8 @@ class project_pmi_wbs_item(osv.osv):
             level -= 1
         return True
 
-    def _check_weight(self, cr, uid, ids, context=None):
-        is_valid_data = True
-        for obj in self.browse(cr,uid,ids,context=None):
-            if obj.state == 'draft' and (obj.weight < 0 or obj.weight > 100):
-                is_valid_data = False
-                continue
-            if obj.state != 'draft' and (obj.weight <= 0 or obj.weight > 100):
-                is_valid_data = False
-                continue
-            if obj.parent_id:
-                weight = 0
-                for sibling in obj.parent_id.child_ids:
-                    weight += sibling.weight
-                if weight > 100:
-                    is_valid_data = False
-            elif obj.weight != 100:
-                is_valid_data = False
-
-        return is_valid_data
-
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive deliverable.', ['parent_id']),
-        (_check_weight, 'Error ! Weight must be between 1 and 100 or must be 100 if it\'s a root deliverable.', ['weight','state']),
     ]
 
     def child_get(self, cr, uid, ids):

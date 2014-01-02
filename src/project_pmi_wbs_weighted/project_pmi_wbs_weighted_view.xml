@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="project_pmi_deliverable_tree" model="ir.ui.view">
+            <field name="name">project_pmi.wbs_item.tree</field>
+            <field name="model">project_pmi.wbs_item</field>
+            <field name="inherit_id" ref="project_pmi_wbs.project_pmi_deliverable_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="weight"/>
+                </field>
+            </field>
+        </record>
+        <record id="project_pmi_deliverable_list" model="ir.ui.view">
+            <field name="name">project_pmi.wbs_item.list</field>
+            <field name="model">project_pmi.wbs_item</field>
+            <field name="inherit_id" ref="project_pmi_wbs.project_pmi_deliverable_list"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="weight"/>
+                </field>
+            </field>
+        </record>
+        <record id="project_pmi_deliverable_form" model="ir.ui.view">
+            <field name="name">project_pmi.wbs_item.form</field>
+            <field name="model">project_pmi.wbs_item</field>
+            <field name="inherit_id" ref="project_pmi_wbs.project_pmi_deliverable_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="weight"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
