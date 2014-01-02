@@ -46,10 +46,9 @@ project()
 
 #TODO: Adicionar vista Gantt a WBS
 #TODO: Validar que un work package no tenga child_ids
-#TODO: Validar work_package tiene unidad de medida
-#TODO: Validar que los pesos de un mismo nivel den el 100%
-#TODO: Adicionar vista kamban para los work_packages y adicionar link en la vista kanban de proyectos 
+#TODO: Validar work_package tiene unidad de medida 
 #TODO: Relacionar Tareas con Work Packages
+#TODO: Validar que no se sobrepase del 100% en work records
 class project_pmi_wbs_item(osv.osv):
     _name = "project_pmi.wbs_item"
     _inherit = ['mail.thread']
@@ -149,30 +148,6 @@ class project_pmi_wbs_item(osv.osv):
             res.update(ids)
         return list(res)
 
-    def _opportunity_evaluation(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = {}
-        if isinstance(ids, (list, tuple)) and not len(ids):
-            return res
-        if isinstance(ids, (long, int)):
-            ids = [ids]
-        reads = self.read(cr, uid, ids, ['date_deadline','date_end'], context=context)
-        res = {}
-        for record in reads:
-            opportunity = '';
-            if record['date_deadline']:
-                today = datetime.datetime.now().date()
-                date_deadline = datetime.datetime.strptime(record['date_deadline'], '%Y-%m-%d').date()
-                if record['date_end']:
-                    date_end = datetime.datetime.strptime(record['date_end'], '%Y-%m-%d').date()
-                    if date_end <= date_deadline:
-                        opportunity = 'is_on_time'
-                    elif date_end > date_deadline:
-                        opportunity = 'is_late'
-                elif today >= date_deadline:
-                    opportunity = 'is_not_finished'
-            res[record['id']] = opportunity
-        return res
-
     _columns = {
         'project_id': fields.many2one('project.project','Project'),
         'is_root_node': fields.boolean('Is a root node for the project WBS',help='Any project with a WBS can have several WBS Items, but one active WBS item as root node'),
@@ -194,9 +169,6 @@ class project_pmi_wbs_item(osv.osv):
         'date_deadline': fields.date('Deadline',select=True),
         'date_start': fields.date('Starting Date',select=True),
         'date_end': fields.date('Ending Date',select=True),
-        'opportunity_evaluation': fields.function(_opportunity_evaluation, type="char", translate=True, string='is late, on time, not finished?',store = {
-                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['date_end','date_deadline'], 10),
-        }),
         'planned_quantity': fields.function(_progress_rate, multi="progress", string='Planned Quantity', type='float', group_operator="avg",
              help="Total work quantity planned", store = {
                 'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity'], 10),

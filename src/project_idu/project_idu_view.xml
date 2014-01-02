@@ -20,5 +20,31 @@
                 </filter>
             </field>
         </record>
+        <record id="project_pmi_deliverable_tree" model="ir.ui.view">
+            <field name="name">project_pmi.wbs_item.tree</field>
+            <field name="model">project_pmi.wbs_item</field>
+            <field name="inherit_id" ref="project_pmi_wbs.project_pmi_deliverable_tree"/>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                    <field name="opportunity_evaluation" invisible="1"/>
+                </field>
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="colors">orange:opportunity_evaluation=='is_late';green:opportunity_evaluation=='is_on_time';red:opportunity_evaluation=='is_not_finished'</attribute>
+                </xpath>
+            </field>
+        </record>
+        <record id="project_pmi_deliverable_list" model="ir.ui.view">
+            <field name="name">project_pmi.wbs_item.list</field>
+            <field name="model">project_pmi.wbs_item</field>
+            <field name="inherit_id" ref="project_pmi_wbs.project_pmi_deliverable_list"/>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                    <field name="opportunity_evaluation" invisible="1"/>
+                </field>
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="colors">orange:opportunity_evaluation=='is_late';green:opportunity_evaluation=='is_on_time';red:opportunity_evaluation=='is_not_finished'</attribute>
+                </xpath>
+            </field>
+        </record>
     </data>
 </openerp>

@@ -35,7 +35,7 @@
             <field name="field_parent">child_ids</field>
             <field name="search_view_id" ref="project_pmi_deliverable_search"/>
             <field name="arch" type="xml">
-                <tree string="WBS Tree" colors="orange:opportunity_evaluation=='is_late';green:opportunity_evaluation=='is_on_time';red:opportunity_evaluation=='is_not_finished'">
+                <tree string="WBS Tree">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="type"/>
@@ -46,7 +46,6 @@
                     <field name="effective_quantity"/>
                     <field name="planned_quantity"/>
                     <field name="progress_rate"/>
-                    <field name="opportunity_evaluation" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -55,7 +54,7 @@
             <field name="model">project_pmi.wbs_item</field>
             <field name="search_view_id" ref="project_pmi_deliverable_search"/>
             <field name="arch" type="xml">
-                <tree string="WBS List" colors="orange:opportunity_evaluation=='is_late';green:opportunity_evaluation=='is_on_time';red:opportunity_evaluation=='is_not_finished'">
+                <tree string="WBS List">
                     <field name="sequence" widget="handle"/>
                     <field name="code"/>
                     <field name="complete_name"/>
@@ -68,7 +67,6 @@
                     <field name="progress_rate" widget="progressbar"/>
                     <field name="state"/>
                     <field name="active"/>
-                    <field name="opportunity_evaluation" invisible="1"/>
                 </tree>
             </field>
         </record>

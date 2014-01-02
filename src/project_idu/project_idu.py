@@ -19,6 +19,8 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+import time
+import datetime
 
 class project(osv.osv):
     _name = "project.project"
@@ -57,3 +59,42 @@ class project_idu_etapa(osv.osv):
     }
 
 project_idu_etapa()
+
+class project_pmi_wbs_item(osv.osv):
+    _name = "project_pmi.wbs_item"
+    _inherit = "project_pmi.wbs_item"
+
+    def _get_wbs_item_and_parents(self, cr, uid, ids, context=None):
+        return super(project_pmi_wbs_item, self)._get_wbs_item_and_parents(cr, uid, ids, context=context)
+
+    def _opportunity_evaluation(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = {}
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return res
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        reads = self.read(cr, uid, ids, ['date_deadline','date_end'], context=context)
+        res = {}
+        for record in reads:
+            opportunity = '';
+            if record['date_deadline']:
+                today = datetime.datetime.now().date()
+                date_deadline = datetime.datetime.strptime(record['date_deadline'], '%Y-%m-%d').date()
+                if record['date_end']:
+                    date_end = datetime.datetime.strptime(record['date_end'], '%Y-%m-%d').date()
+                    if date_end <= date_deadline:
+                        opportunity = 'is_on_time'
+                    elif date_end > date_deadline:
+                        opportunity = 'is_late'
+                elif today >= date_deadline:
+                    opportunity = 'is_not_finished'
+            res[record['id']] = opportunity
+        return res
+
+    _columns = {
+        'opportunity_evaluation': fields.function(_opportunity_evaluation, type="char", translate=True, string='is late, on time, not finished?',store = {
+                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['date_end','date_deadline'], 10),
+        }),
+    }
+
+project_pmi_wbs_item()
