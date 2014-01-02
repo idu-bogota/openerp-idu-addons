@@ -12,7 +12,7 @@
                         <field name="parent_project_wbs_count" invisible="1" colspan="4"/>
                         <field name="parent_project_id" colspan="4" invisible="1"/>
                         <field name="link_to_parent" colspan="4" attrs="{'invisible': [('parent_project_wbs_count','&lt;',1)]}"/>
-                        <field name="parent_wbs_id" colspan="4" attrs="{'invisible': [('link_to_parent','=',False)]}" domain="[('project_id', '=', parent_project_id)]"/>
+                        <field name="parent_wbs_id" colspan="4" attrs="{'invisible': [('link_to_parent','=',False)]}" domain="[('project_id', '=', parent_project_id),('type', '=', 'deliverable')]"/>
                         <field name="wbs_template_id" colspan="4"/>
                     </group>
                     <footer>
