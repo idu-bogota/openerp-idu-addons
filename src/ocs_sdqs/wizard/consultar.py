@@ -43,19 +43,35 @@ class ocs_sdqs_wizard_consultar(osv.osv_memory):
         client = SdqsClient(wsdl_url,1)
         form_object_id = ids and ids[0] or False
         form_object = self.browse(cr, uid, form_object_id, context=context)
-        claim_table = self.pool.get('crm.claim')
+        
         try:
             consulta = client.consultarRequerimiento(form_object.request_number)
             print consulta
             if consulta['codigoError'] > 0:
                 raise osv.except_osv('Error!', 'Error del servicio SDQS:')
             else:
-                consulta_fields = ('nombres','apellidos','asunto','codigoCiudad','codigoDepartamento',
-                                   'codigoPais','codigoTipoRequerimiento','entidadQueIngresaRequerimiento',
-                                   'numeroDocumento','numeroFolios','numeroRadicado','observaciones', 'prioridad'
-                                   )
-                for f in consulta_fields:
-                    claim_table.write(cr, uid, claim_table.id, {f: "test"}, context=context)
+                if consulta['requerimiento']['apellidos']:
+                    last_name = consulta['requerimiento']['apellidos']
+                if consulta['requerimiento']['asunto']:
+                    description = consulta['requerimiento']['asunto']
+                if consulta['requerimiento']['nombres']:
+                    name = consulta['requerimiento']['nombres']
+                if consulta['requerimiento']['numeroDocumento']:
+                    document_number = consulta['requerimiento']['numeroDocumento']
+                if consulta['requerimiento']['email']:
+                    email = consulta['requerimiento']['email']
+                if consulta['requerimiento']['numeroRadicado']:
+                    num_rad = consulta['requerimiento']['numeroRadicado']
+                consulta_fields = {'partner_address_id':{'name':name,'last_name':last_name,'document_number':document_number,'email':email},
+                                   'classification_id':106,
+                                   'categ_id':1,
+                                   'channel':7,#SDQS
+                                   'sub_classification_id':108,
+                                   'csp_id':1,#Calle 22
+                                   'state':'pending',
+                                   'description':description,
+                                   }
+                claim_id = self.pool.get('crm.claim').new_from_data(cr, uid, consulta_fields, context=None)
         except Exception as e:
             raise osv.except_osv('Error al consultar servicio web SDQS', str(e))
 

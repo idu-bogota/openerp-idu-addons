@@ -548,20 +548,21 @@ class crm_claim(geo_model.GeoModel):
             crm_claim = self.browse(cr, uid, result['result']['id'], context=context)
             #Send an email to res.partner.address_id if email assigned, otherwise just log the activity in the history
             email_to = email_from = False
-            if('partner_address_id' in data):
-                ctz = self.pool.get('res.partner.address').browse(cr, uid, data['partner_address_id'], context=context)
-                email_to = ctz.email
-                email_from = user.user_email
-                subject = subject.format(crm_claim.id) #replaces the {0} field in the subject using the crm_claim.id
-                body_text = body_text.format(crm_claim.id, crm_claim.description) #replaces the {0} field using the crm_claim.id and {1} using crm_claim.description
+            if body_text:
+                if('partner_address_id' in data):
+                    ctz = self.pool.get('res.partner.address').browse(cr, uid, data['partner_address_id'], context=context)
+                    email_to = ctz.email
+                    email_from = user.user_email
+                    subject = subject.format(crm_claim.id) #replaces the {0} field in the subject using the crm_claim.id
+                    body_text = body_text.format(crm_claim.id, crm_claim.description) #replaces the {0} field using the crm_claim.id and {1} using crm_claim.description
 
-            #append the message in the crm_claim history
-            self.message_append(cr, uid,
-                                [crm_claim],
-                                subject, body_text=body_text, email_to=email_to, email_from=email_from)
-            message_ids = self.pool.get('mail.message').search(cr, uid, [('model', '=', 'crm.claim'), ('res_id', '=', crm_claim.id)], context, limit=1);
-            #by default message_append creates the mail.message as received, needs to be outgoing to be sent
-            self.pool.get('mail.message').mark_outgoing(cr, uid, message_ids, context=None)
+                #append the message in the crm_claim history
+                self.message_append(cr, uid,
+                                    [crm_claim],
+                                    subject, body_text=body_text, email_to=email_to, email_from=email_from)
+                message_ids = self.pool.get('mail.message').search(cr, uid, [('model', '=', 'crm.claim'), ('res_id', '=', crm_claim.id)], context, limit=1);
+                #by default message_append creates the mail.message as received, needs to be outgoing to be sent
+                self.pool.get('mail.message').mark_outgoing(cr, uid, message_ids, context=None)
         except except_orm as e:
             return {'status': 'failed', 'message': e.value }
         except Exception as e:
