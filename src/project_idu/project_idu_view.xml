@@ -46,5 +46,116 @@
                 </xpath>
             </field>
         </record>
+        <!-- Task Views -->
+        <record id="view_task_form2" model="ir.ui.view">
+            <field name="name">project.task.form</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <field name="categ_ids" position="replace">
+                    <field name="clasificacion" />
+                </field>
+            </field>
+        </record>
+        <!-- Tipificación de tareas views -->
+        <record id="project_idu_tarea_tipificacion_search" model="ir.ui.view">
+            <field name="name">project_idu.tarea_tipificacion.search</field>
+            <field name="model">project_idu.tarea_tipificacion</field>
+            <field name="arch" type="xml">
+               <search string="Tipificación">
+                    <field name="name"/>
+                    <separator/>
+                    <filter name="activo" string="Activo" domain="[('active','=',True)]" icon="terp-check"/>
+                    <filter name="inactivo" string="Inactivo" domain="[('active','=',False)]" icon="terp-check"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="project_idu_tarea_tipificacion_tree" model="ir.ui.view">
+            <field name="name">project_idu.tarea_tipificacion.tree</field>
+            <field name="model">project_idu.tarea_tipificacion</field>
+            <field name="field_parent">child_ids</field>
+            <field name="search_view_id" ref="project_idu_tarea_tipificacion_search"/>
+            <field name="arch" type="xml">
+                <tree string="Tipificación de actividades">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="project_idu_tarea_tipificacion_list" model="ir.ui.view">
+            <field name="name">project_idu.tarea_tipificacion.list</field>
+            <field name="model">project_idu.tarea_tipificacion</field>
+            <field name="search_view_id" ref="project_idu_tarea_tipificacion_search"/>
+            <field name="arch" type="xml">
+                <tree string="Tipificación de actividades">
+                    <field name="sequence" widget="handle"/>
+                    <field name="complete_name"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record id="project_idu_tarea_tipificacion_form" model="ir.ui.view">
+            <field name="name">project_idu.tarea_tipificacion.form</field>
+            <field name="model">project_idu.tarea_tipificacion</field>
+            <field name="arch" type="xml">
+           <form string="Tipificación de actividades" version="7.0">
+                    <sheet string="Tipificación">
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group name="detalles">
+                            <field name="active" />
+                            <field name="parent_id" />
+                            <field name="child_ids" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="project_idu_tarea_tipificacion_tree_action" model="ir.actions.act_window">
+            <field name="name">project_idu.tarea_tipificacion.tree</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project_idu.tarea_tipificacion</field>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_type">tree</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="project_idu_tarea_tipificacion_tree"/>
+        </record>
+        <menuitem
+            action="project_idu_tarea_tipificacion_tree_action"
+            id="project_idu_tarea_tipificacion_tree_menu"
+            parent="base.menu_definitions"
+            name="Clasificación de tareas"
+            groups="project.group_project_manager"
+            sequence="0" />
+
+        <record id="project_idu_tarea_tipificacion_action" model="ir.actions.act_window">
+            <field name="name">Deliverables</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project_idu.tarea_tipificacion</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,gantt,calendar,kanban</field>
+            <field name="domain">['|',('id','=',active_id),('id','child_of',active_id)]</field>
+            <field name="view_id" ref="project_idu_tarea_tipificacion_list"/>
+        </record>
+        <record id="ir_deliverable_tree_open" model="ir.values">
+            <field eval="'tree_but_open'" name="key2"/>
+            <field eval="'project_idu.tarea_tipificacion'" name="model"/>
+            <field name="name">Tipificación de actividades</field>
+            <field eval="'ir.actions.act_window,%d'%project_idu_tarea_tipificacion_action" name="value"/>
+        </record>
+
+        <record id="project_idu_tarea_tipificacion_list_action" model="ir.actions.act_window">
+            <field name="name">Deliverables</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project_idu.tarea_tipificacion</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,gantt,calendar</field>
+            <field name="view_id" ref="project_idu_tarea_tipificacion_list"/>
+        </record>
     </data>
 </openerp>

@@ -40,6 +40,7 @@ class task(osv.osv):
     _inherit = "project.task"
 
     _columns = {
+        'clasificacion': fields.many2one('project_idu.tarea_tipificacion','Clasificación', select=True),
         'etapa_id': fields.related(
             'project_id',
             'etapa_id',
@@ -47,6 +48,10 @@ class task(osv.osv):
             relation="project_idu.etapa",
             string="Etapa del Proyecto",
             store=True)
+    }
+
+    _defaults = {
+        'project_id' : lambda self, cr, uid, context : context['project_id'] if context and 'project_id' in context else None #Set by default the project given in the context
     }
 
 task()
@@ -59,6 +64,64 @@ class project_idu_etapa(osv.osv):
     }
 
 project_idu_etapa()
+
+#TODO: De acuerdo a la etapa del proyecto desplegar la tipificación correspondiente de actividades
+class project_idu_tarea_tipificacion(osv.osv):
+    _name = "project_idu.tarea_tipificacion"
+    _description = "Clasificación de las tareas dentro de los proyectos"
+
+    _parent_name = "parent_id"
+    _parent_store = True
+    _parent_order = 'sequence, name'
+    _order = 'parent_right DESC'
+
+    def name_get(self, cr, uid, ids, context=None):
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return []
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
+        res = []
+        for record in reads:
+            name = record['name']
+            if record['parent_id']:
+                name = record['parent_id'][1]+' / '+name
+            res.append((record['id'], name))
+        return res
+
+    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
+        return dict(res)
+
+    _columns = {
+        'name': fields.char('Nombre', size=255, required=True, select=True),
+        'complete_name': fields.function(_name_get_fnc, type="char", string='Nombre'),
+        'parent_id': fields.many2one('project_idu.tarea_tipificacion','Clasificación padre', select=True, ondelete='cascade'),
+        'child_ids': fields.one2many('project_idu.tarea_tipificacion', 'parent_id', string='Clasificaciones hijas'),
+        'sequence': fields.integer('Sequence', select=True, help="Secuencia para el ordenamiento en las listas"),
+        'parent_left': fields.integer('Left Parent', select=1),
+        'parent_right': fields.integer('Right Parent', select=1),
+        'active':fields.boolean('Active',help='Activo/Inactivo'),
+    }
+    _defaults = {
+        'active': True,
+    }
+
+    def _check_recursion(self, cr, uid, ids, context=None):
+        level = 100
+        while len(ids):
+            cr.execute('select distinct parent_id from project_idu_tarea_tipificacion where id IN %s',(tuple(ids),))
+            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            if not level:
+                return False
+            level -= 1
+        return True
+
+    _constraints = [
+        (_check_recursion, 'Error ! No puede crear clasificaciones recursivas.', ['parent_id']),
+    ]
+
+project_idu_tarea_tipificacion()
 
 class project_pmi_wbs_item(osv.osv):
     _name = "project_pmi.wbs_item"
@@ -98,3 +161,46 @@ class project_pmi_wbs_item(osv.osv):
     }
 
 project_pmi_wbs_item()
+
+#===============================================================================
+# ACTIVIDADES
+# -----------
+# 
+# Contratista:
+#     * Crea actividad de tipo reunión de inicio
+#     * Ingresa la deadline
+#     * Ingresa acta de la reunión
+#         * Ingresa el número de personas convocadas y listado
+#         * Ingresa el número de personas que asistieron y listado
+#     * Ingresa documentos de soporte
+#     * Agrega compromisos como actividad hija (tipo de actividad compromiso)
+# 
+# Interventor:
+#     * Revisa actividad
+#     * Aprueba o Rechaza
+# 
+# Coordinador Social IDU:
+#     * Revisa actividad y da comentarios
+#     * Genera estadísticas
+# 
+# Elementos a inventariar
+# - Tipo
+#     * Actas de vecindad
+#     * Actas de compromiso
+#     * Puntos Satelite
+#     * Comite CREA
+# - Descripción
+# - Estado (pendiente, live, done)
+# - Imágen
+# - Adjuntos
+# - Ubicación (opcional)
+# - Afectado por Tarea many2many
+# 
+#
+#TODO: Crear árbol de tipo de actividades con validación para cierre
+#TODO: Crear boton para manejar adjuntos desde la actividad
+#TODO: Crear clasificación de adjuntos
+#TODO: Crear elementos a inventariar
+#TODO: Crear grupos para roles de usuario con acl y reglas de dominio para acceso a proyecto y modificación
+#TODO: Crear workflow en la actividad para aprobación de actividades
+#TODO: Crear vistas con indicadores de gestión social
