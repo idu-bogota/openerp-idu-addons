@@ -24,7 +24,7 @@ class plan_contratacion_idu_plan(osv.osv):
     _name = "plan_contratacion_idu.plan"
 
     _columns = {
-        'name':fields.function(_get_name,type='char',string='Contrato',method=True),
+        'name': fields.char('Nombre', size=255, required=True, select=True),
         'state':fields.selection([('draft', 'Draft'),('open', 'In Progress'),('cancel', 'Cancelled'),('done', 'Done'),('pending', 'Pending')],'State', required=True),
         'active':fields.boolean('Activo'),
     }

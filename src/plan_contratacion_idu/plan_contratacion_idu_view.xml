@@ -22,12 +22,12 @@
                 <form string="Plan de contratación" version="7.0">
                     <sheet>
                         <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
                             <h1>
-                                <field name="name" readonly="1" />
+                                <field name="name"/>
                             </h1>
                         </div>
                         <group name="detalles">
-                            <field name="description"/>
                             <field name="state"/>
                             <field name="active"/>
                         </group>
