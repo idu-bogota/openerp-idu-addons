@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <menuitem name="Plan de Contratacion" id="menu_plan_contratacion" parent="base.menu_main_contrato_idu"/>
+
+        <!-- Plan de contratacion -->
+        <record id="plan_contratacion_idu_list" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.plan.list</field>
+            <field name="model">plan_contratacion_idu.plan</field>
+            <field name="arch" type="xml">
+                <tree string="Plan de contratación">
+                    <field name="name"/>
+                    <field name="state"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record id="plan_contratacion_idu_form" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.plan.form</field>
+            <field name="model">plan_contratacion_idu.plan</field>
+            <field name="arch" type="xml">
+                <form string="Plan de contratación" version="7.0">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1" />
+                            </h1>
+                        </div>
+                        <group name="detalles">
+                            <field name="description"/>
+                            <field name="state"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="plan_contratacion_idu_action" model="ir.actions.act_window">
+            <field name="name">Plan Contratación</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">plan_contratacion_idu.plan</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="plan_contratacion_idu_list"/>
+        </record>
+
+        <menuitem
+            action="plan_contratacion_idu_action"
+            id="menu_plan_contratacion_plan_list"
+            parent="menu_plan_contratacion"
+            sequence="0" />
+    </data>
+</openerp>
