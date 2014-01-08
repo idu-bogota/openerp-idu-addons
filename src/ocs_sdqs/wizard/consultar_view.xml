@@ -11,6 +11,7 @@
                 	</group>                   
                     <group col="4" colspan="4">
                     	<separator colspan="4"/>
+                    	<label string="" colspan="2"/>
                         <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
                         <button name="consultar" string="consultar" type="object" icon="gtk-ok"/>
                     </group>

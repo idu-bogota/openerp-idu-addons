@@ -21,11 +21,14 @@ Claims
                 <field name="arch" type="xml">
                     <page string="Follow Up" position="after">
                         <page string="SQDS">
-                            <field name="sdqs_id" select ="0" readonly="1" />                          
+                            <field name="sdqs_id" select ="0" readonly="1" />
+                        <group col="4" colspan="4">
                             <button name="%(ocs_sdqs.action_ocs_sdqs_wizard_radicar)d" string="Radicar"
                                 type="action" icon="gtk-ok"
                                 attrs="{'invisible': [('sdqs_id','!=',False)]}"
                             />
+                            <label string="" colspan="3"/>
+                        </group>
                         </page>
                     </page>
                 </field>

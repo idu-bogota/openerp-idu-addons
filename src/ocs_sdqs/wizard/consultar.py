@@ -72,6 +72,7 @@ class ocs_sdqs_wizard_consultar(osv.osv_memory):
                                    'description':description,
                                    }
                 claim_id = self.pool.get('crm.claim').new_from_data(cr, uid, consulta_fields, context=None)
+                #return {'value':{}, 'warning':{'title':'Mensaje','message':'PQR creada con exito'}}
         except Exception as e:
             raise osv.except_osv('Error al consultar servicio web SDQS', str(e))
 
