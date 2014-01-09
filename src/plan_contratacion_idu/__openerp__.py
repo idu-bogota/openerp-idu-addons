@@ -23,13 +23,13 @@
     'version': '1.0',
     'category': 'Contract Management',
     'description': """
-Este módulo permite hacer el registro y seguimiento al plan de contratación del IDU
-================================================
+    Este módulo permite hacer el registro y seguimiento al plan de contratación del IDU
+    ================================================
                 """,
     'author': 'Instituto De Desarrollo Urbano',
     'website': 'http://www.idu.gov.co',
     'depends': [
-        'base','contrato_idu'
+        'base','hr','contrato_idu'
     ],
     'data': [
         'plan_contratacion_idu_view.xml',

@@ -2,7 +2,6 @@
 <openerp>
     <data>
         <menuitem name="Plan de Contratacion" id="menu_plan_contratacion" parent="base.menu_main_contrato_idu"/>
-
         <!-- Plan de contratacion -->
         <record id="plan_contratacion_idu_list" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.plan.list</field>
@@ -12,6 +11,7 @@
                     <field name="name"/>
                     <field name="state"/>
                     <field name="active"/>
+                    <field name="item_ids"/>
                 </tree>
             </field>
         </record>
@@ -30,6 +30,7 @@
                         <group name="detalles">
                             <field name="state"/>
                             <field name="active"/>
+                            <field name="item_ids"/>
                         </group>
                     </sheet>
                 </form>
@@ -43,11 +44,206 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="plan_contratacion_idu_list"/>
         </record>
-
         <menuitem
             action="plan_contratacion_idu_action"
             id="menu_plan_contratacion_plan_list"
             parent="menu_plan_contratacion"
+            sequence="0"/>
+
+        <!-- Item Plan de contratacion -->
+        <record id="plan_contratacion_idu_item_list" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.item.list</field>
+            <field name="model">plan_contratacion_idu.item</field>
+            <field name="arch" type="xml">
+                <tree string="Item Plan de contratación">
+                    <field name="clasificacion_id"/>
+                    <field name="dependencia"/>
+                    <field name="description"/>
+                    <field name="fuente"/>
+                    <field name="state"/>
+                    <field name="active"/>
+                    <field name="date"/>
+                </tree>
+            </field>
+        </record>
+        <record id="plan_contratacion_idu_item_form" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.item.form</field>
+            <field name="model">plan_contratacion_idu.item</field>
+            <field name="arch" type="xml">
+                <form string="Item plan de contratación" version="7.0">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group name="detalles">
+                            <field name="clasificacion_id"/>
+		                    <field name="dependencia"/>
+		                    <field name="description"/>
+		                    <field name="fuente"/>
+                            <field name="state"/>
+                            <field name="active"/>
+                            <field name="date"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="plan_contratacion_idu_item_action" model="ir.actions.act_window">
+            <field name="name">Item Plan Contratación</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">plan_contratacion_idu.item</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="plan_contratacion_idu_item_list"/>
+        </record>
+        <menuitem
+            action="plan_contratacion_idu_item_action"
+            id="menu_plan_contratacion_item_list"
+            parent="menu_plan_contratacion"
+        />
+
+        <!-- Clasificador de Proyectos -->
+        <record id="plan_contratacion_idu_clasificador_proyectos_search" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.clasificador_proyectos.search</field>
+            <field name="model">plan_contratacion_idu.clasificador_proyectos</field>
+            <field name="arch" type="xml">
+               <search string="Clasificador Proyectos">
+                    <field name="name"/>
+                    <separator/>
+                    <filter name="activo" string="Activo" domain="[('active','=',True)]" icon="terp-check"/>
+                    <filter name="inactivo" string="Inactivo" domain="[('active','=',False)]" icon="terp-check"/>
+                </search>
+            </field>
+        </record>
+        <record id="plan_contratacion_idu_clasificador_proyectos_tree" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.clasificador_proyectos.tree</field>
+            <field name="model">plan_contratacion_idu.clasificador_proyectos</field>
+            <field name="field_parent">child_ids</field>
+            <field name="search_view_id" ref="plan_contratacion_idu_clasificador_proyectos_search"/>
+            <field name="arch" type="xml">
+                <tree string="Clasificación de Proyectos">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="plan_contratacion_idu_clasificador_proyectos_list" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.clasificador_proyectos.list</field>
+            <field name="model">plan_contratacion_idu.clasificador_proyectos</field>
+            <field name="search_view_id" ref="plan_contratacion_idu_clasificador_proyectos_search"/>
+            <field name="arch" type="xml">
+                <tree string="Clasificación de Proyectos">
+                    <field name="sequence" widget="handle"/>
+                    <field name="complete_name"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record id="plan_contratacion_idu_clasificador_proyectos_form" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.clasificador_proyectos.form</field>
+            <field name="model">plan_contratacion_idu.clasificador_proyectos</field>
+            <field name="arch" type="xml">
+           <form string="Clasificación de Proyectos" version="7.0">
+                    <sheet string="Clasificación">
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group name="detalles">
+                            <field name="active" />
+                            <field name="parent_id" />
+                            <field name="child_ids" />
+                            <field name="item_ids" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="plan_contratacion_idu_clasificador_proyectos_tree_action" model="ir.actions.act_window">
+            <field name="name">plan_contratacion_idu.clasificador_proyectos.tree</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">plan_contratacion_idu.clasificador_proyectos</field>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_type">tree</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="plan_contratacion_idu_clasificador_proyectos_tree"/>
+        </record>
+        <menuitem
+            action="plan_contratacion_idu_clasificador_proyectos_tree_action"
+            id="plan_contratacion_idu_clasificador_proyectos_tree_menu"
+            parent="menu_plan_contratacion"
+            name="Clasificación de Proyectos"
             sequence="0" />
+        <record id="plan_contratacion_idu_clasificador_proyectos_action" model="ir.actions.act_window">
+            <field name="name">Deliverables</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">plan_contratacion_idu.clasificador_proyectos</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,gantt,calendar,kanban</field>
+            <field name="domain">['|',('id','=',active_id),('id','child_of',active_id)]</field>
+            <field name="view_id" ref="plan_contratacion_idu_clasificador_proyectos_list"/>
+        </record>
+        <record id="ir_deliverable_tree_open" model="ir.values">
+            <field eval="'tree_but_open'" name="key2"/>
+            <field eval="'plan_contratacion_idu.clasificador_proyectos'" name="model"/>
+            <field name="name">Clasificador Proyectos</field>
+            <field eval="'ir.actions.act_window,%d'%plan_contratacion_idu_clasificador_proyectos_action" name="value"/>
+        </record>
+        <record id="plan_contratacion_idu_clasificador_proyectos_list_action" model="ir.actions.act_window">
+            <field name="name">Deliverables</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">plan_contratacion_idu.clasificador_proyectos</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,gantt,calendar</field>
+            <field name="view_id" ref="plan_contratacion_idu_clasificador_proyectos_list"/>
+        </record>
+
+        <!-- Fuente de Financiacion -->
+        <record id="plan_contratacion_idu_fuente_list" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.fuente.list</field>
+            <field name="model">plan_contratacion_idu.fuente</field>
+            <field name="arch" type="xml">
+                <tree string="Fuente de Financiación">
+                    <field name="abreviado"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="plan_contratacion_idu_fuente_form" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.fuente.form</field>
+            <field name="model">plan_contratacion_idu.fuente</field>
+            <field name="arch" type="xml">
+                <form string="Fuente de Financiación" version="7.0">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="abreviado" class="oe_edit_only"/>
+                            <h1>
+                                <field name="abreviado"/>
+                            </h1>
+                        </div>
+                        <group name="detalles">
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="plan_contratacion_idu_fuente_action" model="ir.actions.act_window">
+            <field name="name">Fuente de Financiación</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">plan_contratacion_idu.fuente</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="plan_contratacion_idu_fuente_list"/>
+        </record>
+        <menuitem
+            action="plan_contratacion_idu_fuente_action"
+            id="menu_plan_contratacion_plan_fuente_list"
+            parent="menu_plan_contratacion"
+            sequence="0"/>
     </data>
 </openerp>
