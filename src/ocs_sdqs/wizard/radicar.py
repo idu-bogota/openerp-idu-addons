@@ -47,7 +47,8 @@ class ocs_sdqs_wizard_radicar(osv.osv_memory):
 
     def radicar(self, cr, uid, ids, context=None):
         wsdl_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'sdqs.ws.url', default='', context=context)
-        client = SdqsClient(wsdl_url,1)
+        sdqs_token = self.pool.get('ir.config_parameter').get_param(cr, uid, 'sdqs.token', default='', context=context)
+        client = SdqsClient(wsdl_url,sdqs_token)
 
         current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         claim_ids = context and context.get('active_ids', False)

@@ -40,7 +40,8 @@ class ocs_sdqs_wizard_consultar(osv.osv_memory):
 
     def consultar(self, cr, uid, ids, context=None):
         wsdl_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'sdqs.ws.url', default='', context=context)
-        client = SdqsClient(wsdl_url,1)
+        sdqs_token = self.pool.get('ir.config_parameter').get_param(cr, uid, 'sdqs.token', default='', context=context)
+        client = SdqsClient(wsdl_url,sdqs_token)
         form_object_id = ids and ids[0] or False
         form_object = self.browse(cr, uid, form_object_id, context=context)
         
