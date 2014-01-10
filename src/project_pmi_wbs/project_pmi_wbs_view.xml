@@ -89,18 +89,21 @@
                             <field name="code" readonly="1" />
                             <field name="project_id"/>
                             <field name="type" />
-                            <field name="parent_id" />
+                            <field name="tracking_type" attrs="{'invisible': [('type','!=','work_package')]}"/>
+                            <field name="date_deadline"/>
                             <field name="description"/>
                             <field name="planned_quantity" readonly="1" attrs="{'invisible': [('type','!=','deliverable')]}"/>
                             <field name="effective_quantity" readonly="1" attrs="{'invisible': [('type','!=','deliverable')]}"/>
                             <field name="progress_rate" widget="progressbar"/>
+                            <field name="parent_id" />
                         </group>
-                        <group name="work_package" string="Work Package" attrs="{'invisible': [('type','!=','work_package')]}">
-                            <field name="quantity"/>
-                            <field name="uom_id"/>
-                            <field name="date_deadline"/>
+                        <group name="work_package_gantt" string="Dates" attrs="{'invisible': [('type','!=','work_package')]}">
                             <field name="date_start"/>
                             <field name="date_end"/>
+                        </group>
+                        <group name="work_package_measure" string="Work" attrs="{'invisible': [('tracking_type','!=','units')]}">
+                            <field name="quantity"/>
+                            <field name="uom_id"/>
                             <field name="work_record_ids" groups="project.group_tasks_work_on_tasks">
                                 <tree string="Work Package Work" editable="top">
                                     <field name="name"/>
@@ -109,6 +112,9 @@
                                     <field name="user_id"/>
                                 </tree>
                             </field>
+                        </group>
+                        <group string="Tasks" attrs="{'invisible': [('tracking_type','!=','tasks')]}">
+                           <field name="task_ids" nolabel="1" context="{'project_id':project_id,'wbs_item_id': active_id}"/>
                         </group>
                         <group string="Child Deliverables" attrs="{'invisible': [('type','!=','deliverable')]}">
                            <field name="child_ids" nolabel="1" context="{'project_id':project_id,'parent_id':parent_id}"/>
@@ -288,6 +294,17 @@
                         Create WBS
                     </a>
                 </xpath>
+            </field>
+        </record>
+        <!-- Task Views -->
+        <record id="view_task_form2" model="ir.ui.view">
+            <field name="name">project.task.form</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <field name="date_deadline" position="before">
+                    <field name="wbs_item_id" />
+                </field>
             </field>
         </record>
     </data>

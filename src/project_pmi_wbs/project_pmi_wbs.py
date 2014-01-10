@@ -20,7 +20,6 @@
 
 from openerp.osv import fields, osv
 import time
-import datetime
 
 class project(osv.osv):
     _name = "project.project"
@@ -38,17 +37,28 @@ class project(osv.osv):
         return res
 
     _columns = {
-        'wbs_ids': fields.one2many('project_pmi.wbs_item', 'project_id', string='Work Breakdown Structure'),
+        'wbs_item_ids': fields.one2many('project_pmi.wbs_item', 'project_id', string='Work Breakdown Structure'),
         'wbs_items_count': fields.function(_wbs_item_count, type='integer', string="WBS items count"),
     }
 
 project()
+
+class task(osv.osv):
+    _name = "project.task"
+    _inherit = "project.task"
+
+    _columns = {
+        'wbs_item_id': fields.many2one('project_pmi.wbs_item', 'Work Breakdown Structure', domain="[('project_id','=',project_id),('type','=','work_package')]"),
+    }
+
+task()
 
 #TODO: Adicionar vista Gantt a WBS
 #TODO: Validar que un work package no tenga child_ids
 #TODO: Validar work_package tiene unidad de medida 
 #TODO: Relacionar Tareas con Work Packages
 #TODO: Validar que no se sobrepase del 100% en work records
+#TODO: Validar que un work_package de tipo unit no tenga task y viceversa
 class project_pmi_wbs_item(osv.osv):
     _name = "project_pmi.wbs_item"
     _inherit = ['mail.thread']
@@ -82,20 +92,34 @@ class project_pmi_wbs_item(osv.osv):
         # compute planned_hours, total_hours, effective_hours specific to each project
         cr.execute("""
             SELECT
-                wbs_item.id, COALESCE(wbs_item.quantity, 0.0), COALESCE(SUM(wr.quantity), 0.0)
+                wbs_item.id, COALESCE(wbs_item.quantity, 0.0), COALESCE(SUM(wr.quantity), 0.0), wbs_item.type, wbs_item.tracking_type, COUNT(t.id), SUM(t.progress)
             FROM
                 project_pmi_wbs_item wbs_item
                 LEFT JOIN project_pmi_wbs_work_record wr ON wr.wbs_item_id = wbs_item.id
+                LEFT JOIN project_task t ON t.wbs_item_id = wbs_item.id AND t.state <> 'cancelled'
             WHERE
-                wbs_item.id IN %s AND state <> 'cancelled' AND state <> 'template'
+                wbs_item.id IN %s AND wbs_item.state <> 'cancelled' AND wbs_item.state <> 'template'
             GROUP BY wbs_item.id
-        """, (tuple(child_parent.keys()),))
+         """, (tuple(child_parent.keys()),))
         # aggregate results into res
         res = dict([(id, {'planned_quantity':0.0,'effective_quantity':0.0}) for id in ids])
-        for id, planned, effective in cr.fetchall():
+        all_records = cr.fetchall()
+        for id, planned, effective, type, tracking_type, task_count, task_progress in all_records:
+            if id in ids:#no calculated using children values
+                res[id]['tracking_type'] = tracking_type
+                res[id]['type'] = type
+#                 if res[id]['type'] == 'work_package' and res[id]['tracking_type'] == 'tasks':
+#                     res[id]['planned_quantity'] = task_count * 100
+#                     res[id]['effective_quantity'] = task_progress
+
+#FIXME: NO FUNCIONA ni idea porque no esta sumando las task en el acumulado del padre y porque aparece 600 en lugar de 500 (5 tareas)
+        for id, planned, effective, type, tracking_type, task_count, task_progress in all_records:
             # add the values specific to id to all parent wbs_items of id in the result
             while id:
                 if id in ids:
+                    if res[id]['type'] == 'work_package' and res[id]['tracking_type'] == 'tasks':
+                        planned += task_count * 100
+                        effective += task_progress
                     res[id]['planned_quantity'] += planned
                     res[id]['effective_quantity'] += effective
                 id = child_parent[id]
@@ -132,6 +156,14 @@ class project_pmi_wbs_item(osv.osv):
         wbs_item_ids = [wr.wbs_item_id.id for wr in work_records if wr.wbs_item_id]
         return self.pool.get('project_pmi.wbs_item')._get_wbs_item_and_parents(cr, uid, wbs_item_ids, context)
 
+    def _get_wbs_item_from_tasks(self, cr, uid, task_ids, context=None):
+        """
+        Returns IDs of current and parent wbs_item, to be used to update the progres_rate using updated tasks
+        """
+        tasks = self.pool.get('project.task').browse(cr, uid, task_ids, context=context)
+        wbs_item_ids = [wr.wbs_item_id.id for wr in tasks if wr.wbs_item_id]
+        return self.pool.get('project_pmi.wbs_item')._get_wbs_item_and_parents(cr, uid, wbs_item_ids, context)
+
     def _get_wbs_item_and_parents(self, cr, uid, ids, context=None):
         """
         Returns IDs of current and parent wbs_item, to be used to update the progres_rate
@@ -155,6 +187,7 @@ class project_pmi_wbs_item(osv.osv):
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'name': fields.char('Name', size=255, required=True, select=True),
         'type': fields.selection([('work_package', 'Work Package'),('deliverable', 'Deliverable')],'Deliverable Type', required=True),
+        'tracking_type': fields.selection([('tasks', 'Tasks'),('units', 'Units')],'Tracking Type', required=False),
         'description': fields.text('Description'),
         'active':fields.boolean('Active',help='Enable/Disable'),
         'state':fields.selection([('draft', 'Draft'),('open', 'In Progress'),('cancelled', 'Cancelled'),('done', 'Done'),('pending', 'Pending'),('template', 'Template')],'State'),
@@ -173,21 +206,25 @@ class project_pmi_wbs_item(osv.osv):
              help="Total work quantity planned", store = {
                 'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity'], 10),
                 'project_pmi.wbs_work_record': (_get_wbs_item_from_work_records, ['wbs_item_id', 'quantity'], 20),
+                'project.task': (_get_wbs_item_from_tasks, ['wbs_item_id', 'work_ids', 'remaining_hours', 'planned_hours','state'], 30),
             }
          ),
         'effective_quantity': fields.function(_progress_rate, multi="progress", string='Effective Quantity', type='float', group_operator="avg",
              help="Percent of progress according to the total of work recorded.", store = {
                 'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity'], 10),
                 'project_pmi.wbs_work_record': (_get_wbs_item_from_work_records, ['wbs_item_id', 'quantity'], 20),
+                'project.task': (_get_wbs_item_from_tasks, ['wbs_item_id', 'work_ids', 'remaining_hours', 'planned_hours','state'], 30),
             }
          ),
         'progress_rate': fields.function(_progress_rate, multi="progress", string='Progress', type='float', group_operator="avg",
              help="Percent of progress according to the total of work recorded.", store = {
                 'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity'], 10),
                 'project_pmi.wbs_work_record': (_get_wbs_item_from_work_records, ['wbs_item_id', 'quantity'], 20),
+                'project.task': (_get_wbs_item_from_tasks, ['wbs_item_id', 'work_ids', 'remaining_hours', 'planned_hours','state'], 30),
             }
          ),
         'work_record_ids': fields.one2many('project_pmi.wbs_work_record', 'wbs_item_id', 'Work done'),
+        'task_ids': fields.one2many('project.task', 'wbs_item_id', 'Tasks'),
     }
     _defaults = {
         'active': True,
