@@ -152,11 +152,20 @@ class urban_bridge_bridge(geo_model.GeoModel):
                 att_name=attribute
             puente[att_name] = bridge_dict[attribute]
         res["puente"]=puente
-        #2. Mandar un diccionario por cada objeto de infraestructura 
+        #2. Mandar un diccionario por cada objeto de infraestructura
+        structure_element_obj = self.pool.get("urban_bridge.structure_element")
+         
         bridge = bridge_obj.browse(cr,uid,bridge_id)
         for element in bridge.elements:
-            elem_type = element.element_type_id.alias
             element_dict = {}
+            elem_type = element.element_type_id.alias
+            elem_base = structure_element_obj.read(cr,uid,element.id)
+            for elem_base_att in elem_base:
+                base_att = translate(cr,"addons/urban_bridge/urban_bridge.py","code","es_CO",elem_base_att)
+                if (base_att == False):
+                    base_att = elem_base_att
+                element_dict[base_att]=elem_base[elem_base_att]
+
             for values in element.values:
                 attribute = values.element_attribute_id.alias
                 data_type = values.element_attribute_id.data_type
