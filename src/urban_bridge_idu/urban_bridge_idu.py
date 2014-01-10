@@ -45,6 +45,16 @@ class urban_bridge_bridge(geo_model.GeoModel):
         {
             objeto o feature class:{campo1:{nombre:"nombre(español)", nom_pres:"Nombre de Presentación del Objeto",tipo_dato:"Tipo Dato",}, campo2:{}.....
         }
+        ejemplo:
+        {
+            puente:{id:{"nombre":"id","nom_pres":identificador,"tipo_dato":"integer"},
+                    width:{"nombre":"ancho","nom_pres":"Ancho","tipo_dato":"float"}
+            ...
+            }
+            riostra:{id:{"nombre":"id","nom_pres":identificador,"tipo_dato":"integer"},
+            }
+        }
+        
         """
         res={}
         #1. Se envian la lista de los campos que estan involucrados en el objeto puentes
@@ -116,16 +126,68 @@ class urban_bridge_bridge(geo_model.GeoModel):
             res[objeto]=objeto_dict
         return res
     
-    def get_data_module(self,cr,uid,context=None):
+    def get_data_module(self,cr,uid,bridge_id = None, context=None):
         """
         Web Service que devuelve todos los datos de los puentes junto con los elementos de infraestructura
+        Modo de trabajo:
+        
+        Consulta cada puente y llena un diccionario con cada uno de los elementos de acuerdo a los nombres 
+        que se implementaron en el método anterior
+        ejemplo:
+        {
+        puente:{id:1,galibo:2,ancho:2.5 .....},
+        riostra:{id:5,id_puente:1,ancho:2.5 .....} (depende de los datos de la base de datos)
+        }
         """
         res = {}
+        if (bridge_id == None):
+            return res
         bridge_obj = self.pool.get('urban_bridge.bridge')
-        bridge_ids = bridge_obj.search([('id','>','0')])
-        
+        bridge_dict = bridge_obj.read(cr,uid,bridge_id)
+        puente = {}
+        #1. Mandar el diccionario de valores para el objeto puente con los campos traducidos al español
+        for attribute in bridge_dict:
+            att_name = translate(cr,"addons/urban_bridge/urban_bridge.py","code","es_CO",attribute)
+            if (att_name == False):
+                att_name=attribute
+            puente[att_name] = bridge_dict[attribute]
+        res["puente"]=puente
+        #2. Mandar un diccionario por cada objeto de infraestructura 
+        bridge = bridge_obj.browse(cr,uid,bridge_id)
+        for element in bridge.elements:
+            elem_type = element.element_type_id.alias
+            element_dict = {}
+            for values in element.values:
+                attribute = values.element_attribute_id.alias
+                data_type = values.element_attribute_id.data_type
+                value=None
+                if (data_type=="integer"):
+                    value = values.value_integer
+                elif (data_type=="text"):
+                    value = values.value_text
+                elif (data_type=="datetime"):
+                    value = values.value_datetime
+                elif (data_type== "date"):
+                    value = values.value_datetime
+                elif (data_type == "float"):
+                    value = values.value_float
+                elif (data_type=="boolean"):
+                    value = values.value_boolean
+                elif (data_type == "char"):
+                    value = values.value_char
+                elif (data_type == "selection"):
+                    value = values.value_selection
+                elif (data_type == "binary"):
+                    value = values.value_photo
+                elif (data_type == "geo_point"):
+                    value = values.value_point.wkt
+                elif (data_type == "geo_polygon"):
+                    value = values.value_polygon.wkt
+                elif (data_type == "geo_line"):
+                    value = values.value_line.wkt
+                element_dict[attribute]=value
+            res[elem_type]=element_dict
         return res
-    
 
     _name="urban_bridge.bridge"
     _inherit="urban_bridge.bridge"
