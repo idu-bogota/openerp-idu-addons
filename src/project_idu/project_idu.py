@@ -42,6 +42,7 @@ class task(osv.osv):
 
     _columns = {
         'clasificacion': fields.many2one('project_idu.tarea_tipificacion','Clasificación', select=True),
+        'producto_intermedio_id': fields.many2one('project_idu.producto_intermedio','Producto intermedio afectado', select=True),
         'etapa_id': fields.related(
             'project_id',
             'etapa_id',
@@ -169,6 +170,83 @@ class project_idu_proyecto_tipificacion(osv.osv):
         level = 100
         while len(ids):
             cr.execute('select distinct parent_id from project_idu_proyecto_tipificacion where id IN %s',(tuple(ids),))
+            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            if not level:
+                return False
+            level -= 1
+        return True
+
+    _constraints = [
+        (_check_recursion, 'Error ! No puede crear clasificaciones recursivas.', ['parent_id']),
+    ]
+
+project_idu_proyecto_tipificacion()
+
+class project_idu_producto_intermedio(osv.osv):
+    _name = "project_idu.producto_intermedio"
+    _description = "Productos secundarios que no son parte del objeto contractual"
+
+    _columns = {
+        'name': fields.char('Nombre', size=255, required=True, select=True),
+        'clasificacion_id': fields.many2one('project_idu.producto_intermedio_tipificacion', 'Clasificación', help="Tipo de producto intermedio"),
+        'description': fields.text('Descripcion'),
+        'ubicacion': fields.char('Ubicación', size=255),
+        'imagen': fields.binary("Imagen", help="Imagen del producto intermedio"),
+        'active':fields.boolean('Activo',help='Activo/Inactivo'),
+        'state':fields.selection([('abierto', 'Abierto'),('cerrado', 'Cerrado'),('aplazado', 'Aplazado'),('anulado', 'Anulado')],'Estado'),
+        'task_ids': fields.one2many('project.task', 'producto_intermedio_id', string='Tareas que afectan este producto'),
+    }
+    _defaults = {
+        'active': True,
+    }
+
+project_idu_producto_intermedio()
+
+class project_idu_producto_intermedio_tipificacion(osv.osv):
+    _name = "project_idu.producto_intermedio_tipificacion"
+    _description = "Clasificación de los productos intermedios del IDU"
+
+    _parent_name = "parent_id"
+    _parent_store = True
+    _parent_order = 'sequence, name'
+    _order = 'parent_right DESC'
+
+    def name_get(self, cr, uid, ids, context=None):
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return []
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
+        res = []
+        for record in reads:
+            name = record['name']
+            if record['parent_id']:
+                name = record['parent_id'][1]+' / '+name
+            res.append((record['id'], name))
+        return res
+
+    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
+        return dict(res)
+
+    _columns = {
+        'name': fields.char('Nombre', size=255, required=True, select=True),
+        'complete_name': fields.function(_name_get_fnc, type="char", string='Nombre'),
+        'parent_id': fields.many2one('project_idu.producto_intermedio_tipificacion','Clasificación padre', select=True, ondelete='cascade'),
+        'child_ids': fields.one2many('project_idu.producto_intermedio_tipificacion', 'parent_id', string='Clasificaciones hijas'),
+        'sequence': fields.integer('Sequence', select=True, help="Secuencia para el ordenamiento en las listas"),
+        'parent_left': fields.integer('Left Parent', select=1),
+        'parent_right': fields.integer('Right Parent', select=1),
+        'active':fields.boolean('Active',help='Activo/Inactivo'),
+    }
+    _defaults = {
+        'active': True,
+    }
+
+    def _check_recursion(self, cr, uid, ids, context=None):
+        level = 100
+        while len(ids):
+            cr.execute('select distinct parent_id from project_idu_producto_intermedio_tipificacion where id IN %s',(tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
