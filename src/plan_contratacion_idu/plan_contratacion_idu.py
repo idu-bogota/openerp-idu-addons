@@ -17,8 +17,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from openerp.osv import fields, osv
+from openerp.addons.resource.faces import task as Task
 
 class plan_contratacion_idu_plan(osv.osv):
     _name = "plan_contratacion_idu.plan"
@@ -44,20 +44,24 @@ class plan_contratacion_idu_item(osv.osv):
         'fuente': fields.many2one('plan_contratacion_idu.fuente','Fuente de Financiación', select=True, ondelete='cascade'),
         'state':fields.selection([('aprobado', 'Por radicar'),('radicado', 'Radicado'),('suscrito', 'Contrato suscrito'),('ejecucion', 'En ejecución'),('ejecutado', 'Ejecutado'), ('no_realizado', 'No realizado')],'State', required=True),
         'active':fields.boolean('Activo'),
-        'date': fields.date ('Fecha Radicacion en DTPS y/o DTGC'),
+        'fecha_radicacion': fields.date ('Fecha Radicacion en DTPS y/o DTGC', required=True, select=True),
+        'fecha_crp': fields.date ('Fecha Programada CRP', required=True, select=True, help="CRP es Certificado Registro Presupuestal"),
+        'fecha_acta_inicio': fields.date ('Fecha Acta de Inicio', required=True, select=True),
         'plan_id': fields.many2one('plan_contratacion_idu.plan','Plan contractual', select=True, ondelete='cascade'),
         'clasificacion_id': fields.many2one('plan_contratacion_idu.clasificador_proyectos','Clasificación Proyecto', select=True, ondelete='cascade'),
         'presupuesto': fields.integer ('Presupuesto', required=True, select=True),
-        'unidad_mf': fields.char ('Unidad Metas Físicas', size=255),
-        'cantidad_mf': fields.integer ('Cantidad Metas Físicas'),
+        'plazo_de_ejecucion': fields.integer ('Plazo de Ejecución', required=True, select=True, help="Tiempo estimado en meses"),
+        'unidad_meta_fisica': fields.many2one('product.uom','Unidad Meta Física', select=True, ondelete='cascade'),
+        'cantidad_meta_fisica': fields.integer ('Cantidad Metas Físicas'),
         'localidad': fields.char ('Localidad', size=255),
+        'tipo_proceso': fields.selection([('nuevo', 'Contrato Nuevo'),('adicion', 'Adición'),('reconocimiento', 'Reconocimiento a Contrato'),('sentencias', 'Sentencias'),('orden', 'Orden de Servicio'), ('psp', 'PSP'), ('comisiones', 'Comisiones y Gravamen Financiero'), ('compensacion', 'Compensación Social'), ('adquisicion', 'Adquisición Predial')],'Tipo de Proceso de Selección', required=True),
+        'planificador_pagos': fields.one2many('plan_contratacion_idu.planificador_pagos','item_ids', 'Planificacion de Pagos', select=True, ondelete='cascade'),
     }
     _defaults = {
         'active': True,
-        'state': 'draft'
+        'state': 'aprobado'
     }
 plan_contratacion_idu_item()
-
 
 class plan_contratacion_idu_clasificador_proyectos(osv.osv):
     _name = "plan_contratacion_idu.clasificador_proyectos"
@@ -117,3 +121,15 @@ class plan_contratacion_idu_fuente(osv.osv):
         'name': fields.char('Nombre', size=255, required=True, select=True),
     }
 plan_contratacion_idu_fuente()
+
+class plan_contratacion_idu_planificador_pagos(osv.osv):
+    _name = "plan_contratacion_idu.planificador_pagos"
+    _columns = {
+        'presupuesto': fields.float ('Presupuesto', required=True, select=True),
+        'month': fields.selection([(1,'January'), (2,'February'), (3,'March'), (4,'April'),
+            (5,'May'), (6,'June'), (7,'July'), (8,'August'), (9,'September'),
+            (10,'October'), (11,'November'), (12,'December')], 'Month', required=True),
+        'price': fields.integer('Valor', required=True, select=True),
+        'item_ids': fields.many2one('plan_contratacion_idu.item','Item Plan de Contratacion', select=True, ondelete='cascade'),
+    }
+plan_contratacion_idu_planificador_pagos()

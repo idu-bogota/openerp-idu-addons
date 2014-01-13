@@ -30,8 +30,8 @@
                         <group name="detalles">
                             <field name="state"/>
                             <field name="active"/>
-                            <field name="item_ids"/>
                         </group>
+                        <field name="item_ids"/>
                     </sheet>
                 </form>
             </field>
@@ -49,7 +49,6 @@
             id="menu_plan_contratacion_plan_list"
             parent="menu_plan_contratacion"
             sequence="0"/>
-
         <!-- Item Plan de contratacion -->
         <record id="plan_contratacion_idu_item_list" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.item.list</field>
@@ -58,11 +57,14 @@
                 <tree string="Item Plan de contratación">
                     <field name="clasificacion_id"/>
                     <field name="dependencia"/>
-                    <field name="description"/>
                     <field name="fuente"/>
+                    <field name="plazo_de_ejecucion"/>
                     <field name="state"/>
                     <field name="active"/>
-                    <field name="date"/>
+                    <field name="fecha_radicacion"/>
+                    <field name="fecha_crp"/>
+                    <field name="fecha_acta_inicio"/>
+                    <field name="tipo_proceso"/>
                 </tree>
             </field>
         </record>
@@ -71,6 +73,9 @@
             <field name="model">plan_contratacion_idu.item</field>
             <field name="arch" type="xml">
                 <form string="Item plan de contratación" version="7.0">
+                    <header>
+                        <field name="state" widget="statusbar" clickabe= 'True' statusbar_colors='{"pending":"blue"}'/>
+                    </header>
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -78,15 +83,47 @@
                                 <field name="name"/>
                             </h1>
                         </div>
-                        <group name="detalles">
+                        <group>
                             <field name="clasificacion_id"/>
-		                    <field name="dependencia"/>
-		                    <field name="description"/>
-		                    <field name="fuente"/>
+                            <field name="fuente"/>
+                            <field name="plazo_de_ejecucion"/>
+                            <field name="unidad_meta_fisica"/>
+                            <field name="cantidad_meta_fisica"/>
                             <field name="state"/>
                             <field name="active"/>
-                            <field name="date"/>
+                            <field name="tipo_proceso"/>
                         </group>
+                        <notebook colspan="5">
+                            <page string="Detalles">
+                                <group name="detalles">
+                                    <field name="dependencia"/>
+                                    <field name="description"/>
+                                </group>
+                            </page>
+                            <page string="Planificación de Fechas">
+                                <group name="fechas" string="Fechas Planificadas">
+                                    <separator colspan="2"/>
+                                    <field name="fecha_radicacion"/>
+                                    <field name="fecha_crp"/>
+                                    <field name="fecha_acta_inicio"/>
+                                 </group>
+                                 <group col="2" colspan="2" string="Ejecución de Fechas">
+                                    <separator colspan="2"/>
+                                    <field name="fecha_radicacion"/>
+                                    <field name="fecha_crp"/>
+                                    <field name="fecha_acta_inicio"/>
+                                    <!-- <button name="funciontareas" type="object" string="Ingresar Avance"></button> -->
+                                </group>
+                            </page>
+                            <page string="Planficación de Pagos">
+                                <field name="planificador_pagos"/>
+                            </page>
+                            <page string="Pagos Realizados">
+                                <group col="2" colspan="1" name="pagos">
+                                    <separator colspan="2"/>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -104,7 +141,6 @@
             id="menu_plan_contratacion_item_list"
             parent="menu_plan_contratacion"
         />
-
         <!-- Clasificador de Proyectos -->
         <record id="plan_contratacion_idu_clasificador_proyectos_search" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.clasificador_proyectos.search</field>
@@ -201,7 +237,6 @@
             <field name="view_mode">tree,form,gantt,calendar</field>
             <field name="view_id" ref="plan_contratacion_idu_clasificador_proyectos_list"/>
         </record>
-
         <!-- Fuente de Financiacion -->
         <record id="plan_contratacion_idu_fuente_list" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.fuente.list</field>
@@ -245,5 +280,37 @@
             id="menu_plan_contratacion_plan_fuente_list"
             parent="menu_plan_contratacion"
             sequence="0"/>
+        <!-- Programacion de Pagos -->
+        <record id="plan_contratacion_idu_planificador_pagos_list" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.planificador_pagos.list</field>
+            <field name="model">plan_contratacion_idu.planificador_pagos</field>
+            <field name="arch" type="xml">
+                <tree string="Planificación de Pagos">
+                 <!--     <field name="item_ids"/> -->
+                    <field name="month"/>
+                    <field name="price"/>
+                </tree>
+            </field>
+        </record>
+        <record id="plan_contratacion_idu_planificador_pagos_form" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.planificador_pagos.form</field>
+            <field name="model">plan_contratacion_idu.planificador_pagos</field>
+            <field name="arch" type="xml">
+                <form string="Planificación de Pagos" version="7.0">
+                    <sheet>
+                        <field name="month"/>
+                        <field name="price"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="plan_contratacion_idu_planificador_pagos_action" model="ir.actions.act_window">
+            <field name="name">Planificación de Pagos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">plan_contratacion_idu.planificador_pagos</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="plan_contratacion_idu_planificador_pagos_list"/>
+        </record>
     </data>
 </openerp>
