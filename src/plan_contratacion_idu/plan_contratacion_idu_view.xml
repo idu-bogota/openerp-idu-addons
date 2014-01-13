@@ -116,7 +116,24 @@
                                 </group>
                             </page>
                             <page string="Planficación de Pagos">
-                                <field name="planificador_pagos"/>
+                                <group>
+                                    <field name="presupuesto" />
+                                </group>
+                                <field name="plan_pagos_item_ids" on_change="onchange_plan_pagos_item_ids(plan_pagos_item_ids)" nolabel="1">
+                                    <tree string="Plan de pagos" editable="bottom">
+                                        <field name="mes"/>
+                                        <field name="valor" widget="monetary"/>
+                                    </tree>
+                                </field>
+                                <group>
+                                    <group class="oe_subtotal_footer oe_right">
+                                        <div class="oe_subtotal_footer_separator">
+                                            <field name="presupuesto_rezago"/>
+                                        </div>
+                                        <field name="total_pagos_programados" class="oe_subtotal_footer_separator" nolabel="1" readonly="1"/>
+                                    </group>
+                                </group>
+
                             </page>
                             <page string="Pagos Realizados">
                                 <group col="2" colspan="1" name="pagos">
@@ -281,36 +298,36 @@
             parent="menu_plan_contratacion"
             sequence="0"/>
         <!-- Programacion de Pagos -->
-        <record id="plan_contratacion_idu_planificador_pagos_list" model="ir.ui.view">
-            <field name="name">plan_contratacion_idu.planificador_pagos.list</field>
-            <field name="model">plan_contratacion_idu.planificador_pagos</field>
-            <field name="arch" type="xml">
+        <record id="plan_contratacion_idu_plan_pagos_item_list" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.plan_pagos_item.list</field>
+            <field name="model">plan_contratacion_idu.plan_pagos_item</field>
+            <field name="arch" type="xml" >
                 <tree string="Planificación de Pagos">
                  <!--     <field name="item_ids"/> -->
-                    <field name="month"/>
-                    <field name="price"/>
+                    <field name="mes"/>
+                    <field name="valor"/>
                 </tree>
             </field>
         </record>
-        <record id="plan_contratacion_idu_planificador_pagos_form" model="ir.ui.view">
-            <field name="name">plan_contratacion_idu.planificador_pagos.form</field>
-            <field name="model">plan_contratacion_idu.planificador_pagos</field>
+        <record id="plan_contratacion_idu_plan_pagos_item_form" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.plan_pagos_item.form</field>
+            <field name="model">plan_contratacion_idu.plan_pagos_item</field>
             <field name="arch" type="xml">
                 <form string="Planificación de Pagos" version="7.0">
                     <sheet>
-                        <field name="month"/>
-                        <field name="price"/>
+                        <field name="mes"/>
+                        <field name="valor"/>
                     </sheet>
                 </form>
             </field>
         </record>
-        <record id="plan_contratacion_idu_planificador_pagos_action" model="ir.actions.act_window">
+        <record id="plan_contratacion_idu_plan_pagos_item_action" model="ir.actions.act_window">
             <field name="name">Planificación de Pagos</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">plan_contratacion_idu.planificador_pagos</field>
+            <field name="res_model">plan_contratacion_idu.plan_pagos_item</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="plan_contratacion_idu_planificador_pagos_list"/>
+            <field name="view_id" ref="plan_contratacion_idu_plan_pagos_item_list"/>
         </record>
     </data>
 </openerp>

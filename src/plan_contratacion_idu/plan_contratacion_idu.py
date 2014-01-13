@@ -18,7 +18,7 @@
 #
 ##############################################################################
 from openerp.osv import fields, osv
-from openerp.addons.resource.faces import task as Task
+import openerp.addons.decimal_precision as dp
 
 class plan_contratacion_idu_plan(osv.osv):
     _name = "plan_contratacion_idu.plan"
@@ -37,6 +37,32 @@ plan_contratacion_idu_plan()
 
 class plan_contratacion_idu_item(osv.osv):
     _name = "plan_contratacion_idu.item"
+
+    def _total_pagos_programados(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return res
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        records = self.browse(cr, uid, ids, context=context)
+        res = {}
+        for record in records:
+            sumatoria = 0
+            res[record['id']] = {}
+            for pago in record.plan_pagos_item_ids:
+                sumatoria += pago.valor
+            res[record['id']]['total_pagos_programados'] = sumatoria
+            res[record['id']]['presupuesto_rezago'] = record.presupuesto - sumatoria
+        return res
+
+    def _get_plan_item_from_pago_records(self, cr, uid, pago_ids, context=None):
+        """
+        Retorna los IDs del plan_item a ser recalculados cuando cambia un pago_item
+        """
+        pago_records = self.pool.get('plan_contratacion_idu.plan_pagos_item').browse(cr, uid, pago_ids, context=context)
+        plan_item_ids = [pago.plan_contratacion_item_id.id for pago in pago_records if pago.plan_contratacion_item_id]
+        return plan_item_ids
+
     _columns = {
         'dependencia': fields.many2one('hr.department','Dependencia', select=True, ondelete='cascade'),
         'description': fields.text('Objeto Contractual'),
@@ -55,12 +81,42 @@ class plan_contratacion_idu_item(osv.osv):
         'cantidad_meta_fisica': fields.integer ('Cantidad Metas Físicas'),
         'localidad': fields.char ('Localidad', size=255),
         'tipo_proceso': fields.selection([('nuevo', 'Contrato Nuevo'),('adicion', 'Adición'),('reconocimiento', 'Reconocimiento a Contrato'),('sentencias', 'Sentencias'),('orden', 'Orden de Servicio'), ('psp', 'PSP'), ('comisiones', 'Comisiones y Gravamen Financiero'), ('compensacion', 'Compensación Social'), ('adquisicion', 'Adquisición Predial')],'Tipo de Proceso de Selección', required=True),
-        'planificador_pagos': fields.one2many('plan_contratacion_idu.planificador_pagos','item_ids', 'Planificacion de Pagos', select=True, ondelete='cascade'),
+        'plan_pagos_item_ids': fields.one2many('plan_contratacion_idu.plan_pagos_item','plan_contratacion_item_id', 'Planificacion de Pagos', select=True, ondelete='cascade'),
+        'total_pagos_programados': fields.function(_total_pagos_programados, type='float', multi="presupuesto", string='Total pagos programados', digits_compute=dp.get_precision('Account'),
+             store={
+                'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_item_ids', 'presupuesto'], 10),
+                'plan_contratacion_idu.plan_pagos_item': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
+            }),
+        'presupuesto_rezago': fields.function(_total_pagos_programados, type='float', multi="presupuesto", string='Total pagos programados', digits_compute=dp.get_precision('Account'),
+             store={
+                'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_item_ids', 'presupuesto'], 10),
+                'plan_contratacion_idu.plan_pagos_item': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
+            }),
     }
+
     _defaults = {
         'active': True,
         'state': 'aprobado'
     }
+
+    def onchange_plan_pagos_item_ids(self, cr, uid, ids, pagos_ids, context=None):
+        context = context or {}
+        pagos_pool = self.pool.get('plan_contratacion_idu.plan_pagos_item')
+        if not pagos_ids:
+            pagos_ids = []
+        sumatoria = 0
+        pagos_ids = resolve_o2m_operations(cr, uid, pagos_pool, pagos_ids, ['valor'], context)
+        plan_item = self.read(cr, uid, ids[0], ['presupuesto'], context=context)
+        for pago in pagos_ids:
+            sumatoria += pago.get('valor',0.0)
+        res = {
+            'total_pagos_programados': sumatoria,
+            'presupuesto_rezago': plan_item['presupuesto'] - sumatoria,
+        }
+        return {
+            'value': res
+        }
+
 plan_contratacion_idu_item()
 
 class plan_contratacion_idu_clasificador_proyectos(osv.osv):
@@ -70,6 +126,7 @@ class plan_contratacion_idu_clasificador_proyectos(osv.osv):
     _parent_store = True
     _parent_order = 'sequence, name'
     _order = 'parent_right DESC'
+
     def name_get(self, cr, uid, ids, context=None):
         if isinstance(ids, (list, tuple)) and not len(ids):
             return []
@@ -83,9 +140,11 @@ class plan_contratacion_idu_clasificador_proyectos(osv.osv):
                 name = record['parent_id'][1]+' / '+name
             res.append((record['id'], name))
         return res
+
     def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
+
     _columns = {
         'name': fields.char('Nombre', size=255, required=True, select=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Nombre'),
@@ -97,9 +156,11 @@ class plan_contratacion_idu_clasificador_proyectos(osv.osv):
         'active':fields.boolean('Active',help='Activo/Inactivo'),
         'item_ids': fields.one2many('plan_contratacion_idu.item', 'clasificacion_id', 'Items Plan de Contratacion'),
     }
+
     _defaults = {
         'active': True,
     }
+
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
@@ -112,7 +173,9 @@ class plan_contratacion_idu_clasificador_proyectos(osv.osv):
     _constraints = [
         (_check_recursion, 'Error ! No puede crear clasificaciones recursivas.', ['parent_id']),
     ]
+
 plan_contratacion_idu_clasificador_proyectos()
+
 
 class plan_contratacion_idu_fuente(osv.osv):
     _name = "plan_contratacion_idu.fuente"
@@ -122,14 +185,33 @@ class plan_contratacion_idu_fuente(osv.osv):
     }
 plan_contratacion_idu_fuente()
 
-class plan_contratacion_idu_planificador_pagos(osv.osv):
-    _name = "plan_contratacion_idu.planificador_pagos"
+class plan_contratacion_idu_plan_pagos_item(osv.osv):
+    _name = "plan_contratacion_idu.plan_pagos_item"
     _columns = {
-        'presupuesto': fields.float ('Presupuesto', required=True, select=True),
-        'month': fields.selection([(1,'January'), (2,'February'), (3,'March'), (4,'April'),
+        'mes': fields.selection([(1,'January'), (2,'February'), (3,'March'), (4,'April'),
             (5,'May'), (6,'June'), (7,'July'), (8,'August'), (9,'September'),
             (10,'October'), (11,'November'), (12,'December')], 'Month', required=True),
-        'price': fields.integer('Valor', required=True, select=True),
-        'item_ids': fields.many2one('plan_contratacion_idu.item','Item Plan de Contratacion', select=True, ondelete='cascade'),
+        'valor': fields.integer('Valor', required=True, select=True),
+        'plan_contratacion_item_id': fields.many2one('plan_contratacion_idu.item','Item Plan de Contratacion', select=True, ondelete='cascade'),
     }
-plan_contratacion_idu_planificador_pagos()
+
+plan_contratacion_idu_plan_pagos_item()
+
+def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
+    results = []
+    for operation in operations:
+        result = None
+        if not isinstance(operation, (list, tuple)):
+            result = target_osv.read(cr, uid, operation, fields, context=context)
+        elif operation[0] == 0:
+            # may be necessary to check if all the fields are here and get the default values?
+            result = operation[2]
+        elif operation[0] == 1:
+            result = target_osv.read(cr, uid, operation[1], fields, context=context)
+            if not result: result = {}
+            result.update(operation[2])
+        elif operation[0] == 4:
+            result = target_osv.read(cr, uid, operation[1], fields, context=context)
+        if result != None:
+            results.append(result)
+    return results
