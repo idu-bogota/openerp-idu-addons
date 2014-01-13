@@ -53,11 +53,9 @@ class task(osv.osv):
 
 task()
 
-#TODO: Adicionar vista Gantt a WBS
 #TODO: Validar que un work package no tenga child_ids
 #TODO: Validar work_package tiene unidad de medida 
-#TODO: Relacionar Tareas con Work Packages
-#TODO: Validar que no se sobrepase del 100% en work records
+#TODO: Validar que no se sobrepase del 100% en work records, solo se llega al 100% cuando el edt item esta en estado terminado
 #TODO: Validar que un work_package de tipo unit no tenga task y viceversa
 class project_pmi_wbs_item(osv.osv):
     _name = "project_pmi.wbs_item"
@@ -102,34 +100,44 @@ class project_pmi_wbs_item(osv.osv):
             GROUP BY wbs_item.id
          """, (tuple(child_parent.keys()),))
         # aggregate results into res
-        res = dict([(id, {'planned_quantity':0.0,'effective_quantity':0.0}) for id in ids])
+        res = dict([(id, {'progress_rate':0.0,'planned_quantity':0.0,'effective_quantity':0.0}) for id in child_parent])
         all_records = cr.fetchall()
         for id, planned, effective, type, tracking_type, task_count, task_progress in all_records:
-            if id in ids:#no calculated using children values
-                res[id]['tracking_type'] = tracking_type
-                res[id]['type'] = type
-#                 if res[id]['type'] == 'work_package' and res[id]['tracking_type'] == 'tasks':
-#                     res[id]['planned_quantity'] = task_count * 100
-#                     res[id]['effective_quantity'] = task_progress
+            #no calculated using children values
+            res[id]['tracking_type'] = tracking_type
+            res[id]['type'] = type   
 
-#FIXME: NO FUNCIONA ni idea porque no esta sumando las task en el acumulado del padre y porque aparece 600 en lugar de 500 (5 tareas)
         for id, planned, effective, type, tracking_type, task_count, task_progress in all_records:
             # add the values specific to id to all parent wbs_items of id in the result
             while id:
-                if id in ids:
-                    if res[id]['type'] == 'work_package' and res[id]['tracking_type'] == 'tasks':
-                        planned += task_count * 100
-                        effective += task_progress
-                    res[id]['planned_quantity'] += planned
-                    res[id]['effective_quantity'] += effective
+                if res[id]['type'] == 'work_package' and res[id]['tracking_type'] == 'tasks':
+                    planned += task_count * 100
+                    effective += task_progress
+                res[id]['planned_quantity'] += planned
+                res[id]['effective_quantity'] += effective
                 id = child_parent[id]
         # compute progress rates
-        for id in ids:
-            if res[id]['planned_quantity']:
-                res[id]['progress_rate'] = round(100.0 * res[id]['effective_quantity'] / res[id]['planned_quantity'], 2)
-            else:
-                res[id]['progress_rate'] = 0.0
+        for id in sorted(child_parent.keys(), reverse=True):
+            progress = 0.0
+            value = 1
+            while id:
+                if res[id]['planned_quantity'] and res[id]['type'] == 'work_package':
+                    progress = round(100.0 * res[id]['effective_quantity'] / res[id]['planned_quantity'], 2)
+                    res[id]['progress_rate'] = progress
+                else:
+                    value *= self._get_Values_Dictionary(child_parent,id)
+                    res[id]['progress_rate'] += progress / value
+                id = child_parent[id]
         return res
+
+    def _get_Values_Dictionary(self,my_dictionary,my_value):
+        number = 0
+        for key,value in my_dictionary.items():
+            if value == my_value:
+                number +=1
+        if number == 0:
+            number = 1
+        return number
 
     def _get_wbs_item_and_children(self, cr, uid, ids, context=None):
         """ retrieve all children wbs items of wbs_item ids;
