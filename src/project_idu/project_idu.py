@@ -230,6 +230,8 @@ class project_idu_producto_intermedio(osv.osv):
         'imagen': fields.binary("Imagen", help="Imagen del producto intermedio"),
         'active':fields.boolean('Activo',help='Activo/Inactivo'),
         'state':fields.selection([('abierto', 'Abierto'),('cerrado', 'Cerrado'),('aplazado', 'Aplazado'),('anulado', 'Anulado')],'Estado'),
+        'fecha_inicio': fields.date('Fecha de inicio/apertura'),
+        'fecha_cierre': fields.date('Fecha de cierre'),
         'task_ids': fields.one2many('project.task', 'producto_intermedio_id', string='Tareas que afectan este producto'),
         'project_id': fields.many2one('project.project','Proyecto', select=True, ondelete='cascade'),
     }
@@ -238,6 +240,49 @@ class project_idu_producto_intermedio(osv.osv):
         'state': 'abierto',
         'project_id' : lambda self, cr, uid, context : context['project_id'] if context and 'project_id' in context else None #Set by default the project given in the context
     }
+
+    def _check_fecha_inicio(self, cr, uid, ids, context = None):
+        """
+        Constraint:
+        Revisar que cuando pase a estado abierto tenga una fecha de inicio
+        """
+        is_valid = False
+        for record in self.browse(cr, uid, ids, context):
+            if record.state == 'abierto' and not record.fecha_inicio:
+                is_valid = False
+            else:
+                is_valid = True
+        return is_valid
+
+    def _check_fecha_cierre(self, cr, uid, ids, context = None):
+        """
+        Constraint:
+        Revisar que cuando pase a estado cerrado tenga una fecha de cierre
+        """
+        is_valid = False
+        for record in self.browse(cr, uid, ids, context):
+            if record.state == 'cerrado' and (not record.fecha_cierre or not record.fecha_inicio):
+                is_valid = False
+            else:
+                is_valid = True
+        return is_valid
+
+    def _check_fechas(self, cr, uid, ids, context=None):
+        if context == None:
+            context = {}
+        record = self.browse(cr, uid, ids[0], context=context)
+        start = record.fecha_inicio or False
+        end = record.fecha_cierre or False
+        if start and end :
+            if start > end:
+                return False
+        return True
+
+    _constraints = [
+        (_check_fecha_inicio,'Requiere colocar una fecha de inicio',['state']),
+        (_check_fecha_cierre,'Requiere colocar una fecha de cierre posterior a la fecha de inicio',['state']),
+        (_check_fechas,'La fecha de cierre debe ser posterior a la fecha de inicio',['fecha_inicio','fecha_cierre']),
+    ]
 
 project_idu_producto_intermedio()
 

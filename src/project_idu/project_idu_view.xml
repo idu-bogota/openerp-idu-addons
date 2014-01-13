@@ -427,6 +427,8 @@
                             <field name="clasificacion_id"/>
                             <field name="description"/>
                             <field name="ubicacion"/>
+                            <field name="fecha_inicio"/>
+                            <field name="fecha_cierre"/>
                         </group>
                         <group name="tareas" string="Tareas relacionadas">
                             <field name="task_ids" nolabel="1" context="{'project_id':project_id,'producto_intermedio_id':active_id}"/>
