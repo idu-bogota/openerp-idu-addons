@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
-                    <field name="clasificacion"/>
+                    <field name="clasificacion_id"/>
                 </field>
                 <xpath expr="//group/group[2]" position="replace" /><!-- Elimina el texto referencia al partner y a la cuenta analítica -->
             </field>
@@ -56,7 +56,10 @@
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
                 <field name="categ_ids" position="replace">
-                    <field name="clasificacion" />
+                    <field name="clasificacion_id" />
+                    <field name="participacion_ciudadana" readonly="1" />
+                    <field name="numero_convocados" attrs="{'invisible': [('participacion_ciudadana','=',False)],'required': [('participacion_ciudadana','=',True)]}"/>
+                    <field name="numero_asistentes" attrs="{'invisible': [('participacion_ciudadana','=',False)],'required': [('participacion_ciudadana','=',True)]}"/>
                     <field name="producto_intermedio_id" />
                 </field>
             </field>
@@ -71,6 +74,7 @@
                     <separator/>
                     <filter name="activo" string="Activo" domain="[('active','=',True)]" icon="terp-check"/>
                     <filter name="inactivo" string="Inactivo" domain="[('active','=',False)]" icon="terp-check"/>
+                    <filter name="participacion_ciudadana" string="Participacion Ciudadana" domain="[('participacion_ciudadana','=',True)]" icon="terp-check"/>
                 </search>
             </field>
         </record>
@@ -83,6 +87,7 @@
             <field name="arch" type="xml">
                 <tree string="Tipificación de actividades">
                     <field name="name"/>
+                    <field name="participacion_ciudadana"/>
                 </tree>
             </field>
         </record>
@@ -94,6 +99,7 @@
                 <tree string="Tipificación de actividades">
                     <field name="sequence" widget="handle"/>
                     <field name="complete_name"/>
+                    <field name="participacion_ciudadana"/>
                     <field name="active"/>
                 </tree>
             </field>
@@ -111,6 +117,7 @@
                             </h1>
                         </div>
                         <group name="detalles">
+                            <field name="participacion_ciudadana"/>
                             <field name="active" />
                             <field name="parent_id" />
                             <field name="child_ids" />
@@ -138,7 +145,7 @@
             sequence="0" />
 
         <record id="project_idu_tarea_tipificacion_action" model="ir.actions.act_window">
-            <field name="name">Deliverables</field>
+            <field name="name">Tipificación de tareas</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">project_idu.tarea_tipificacion</field>
             <field name="view_type">form</field>
@@ -146,15 +153,14 @@
             <field name="domain">['|',('id','=',active_id),('id','child_of',active_id)]</field>
             <field name="view_id" ref="project_idu_tarea_tipificacion_list"/>
         </record>
-        <record id="ir_deliverable_tree_open" model="ir.values">
+        <record id="ir_tarea_tipificacion_tree_open" model="ir.values">
             <field eval="'tree_but_open'" name="key2"/>
             <field eval="'project_idu.tarea_tipificacion'" name="model"/>
             <field name="name">Tipificación de actividades</field>
             <field eval="'ir.actions.act_window,%d'%project_idu_tarea_tipificacion_action" name="value"/>
         </record>
-
         <record id="project_idu_tarea_tipificacion_list_action" model="ir.actions.act_window">
-            <field name="name">Deliverables</field>
+            <field name="name">Tipificación de tareas</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">project_idu.tarea_tipificacion</field>
             <field name="view_type">form</field>
@@ -239,7 +245,7 @@
             sequence="0" />
 
         <record id="project_idu_proyecto_tipificacion_action" model="ir.actions.act_window">
-            <field name="name">Deliverables</field>
+            <field name="name">Tipificación de proyectos</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">project_idu.proyecto_tipificacion</field>
             <field name="view_type">form</field>
@@ -247,7 +253,7 @@
             <field name="domain">['|',('id','=',active_id),('id','child_of',active_id)]</field>
             <field name="view_id" ref="project_idu_proyecto_tipificacion_list"/>
         </record>
-        <record id="ir_deliverable_tree_open" model="ir.values">
+        <record id="ir_proyecto_tipificacion_tree_open" model="ir.values">
             <field eval="'tree_but_open'" name="key2"/>
             <field eval="'project_idu.proyecto_tipificacion'" name="model"/>
             <field name="name">Tipificación de proyectos</field>
@@ -255,7 +261,7 @@
         </record>
 
         <record id="project_idu_proyecto_tipificacion_list_action" model="ir.actions.act_window">
-            <field name="name">Deliverables</field>
+            <field name="name">Tipificación de proyectos</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">project_idu.proyecto_tipificacion</field>
             <field name="view_type">form</field>
@@ -348,7 +354,7 @@
             <field name="domain">['|',('id','=',active_id),('id','child_of',active_id)]</field>
             <field name="view_id" ref="project_idu_producto_intermedio_tipificacion_list"/>
         </record>
-        <record id="ir_deliverable_tree_open" model="ir.values">
+        <record id="ir_producto_intermedio_tipificacion_tree_open" model="ir.values">
             <field eval="'tree_but_open'" name="key2"/>
             <field eval="'project_idu.producto_intermedio_tipificacion'" name="model"/>
             <field name="name">Tipificación de productos intermedios</field>
@@ -365,15 +371,39 @@
         </record>
 
         <!-- Producto intermedio -->
+        <record id="project_idu_producto_intermedio_search" model="ir.ui.view">
+            <field name="name">project_idu.producto_intermedio.search</field>
+            <field name="model">project_idu.producto_intermedio</field>
+            <field name="arch" type="xml">
+                <search string="Producto intermedio">
+                    <field name="name"/>
+                    <separator/>
+                    <filter name="activo" string="Activo" domain="[('active','=',True)]" icon="terp-check"/>
+                    <filter name="inactivo" string="Inactivo" domain="[('active','=',False)]" icon="terp-check"/>
+                    <separator/>
+                    <filter name="My project" string="Mis proyectos" domain="[('project_id.user_id','=',uid)]" help="Mis proyectos" icon="terp-check"/>
+                    <field name="project_id"/>
+                    <separator/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Proyecto" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="Clasificación" name="group_clasificacion_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'clasificacion_id'}"/>
+                        <filter string="Estado" name="group_state_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="project_idu_producto_intermedio_list" model="ir.ui.view">
             <field name="name">project_idu.producto_intermedio.list</field>
             <field name="model">project_idu.producto_intermedio</field>
+            <field name="search_view_id" ref="project_idu_producto_intermedio_search"/>
             <field name="arch" type="xml">
                 <tree string="Producto intermedio">
                     <field name="name"/>
                     <field name="state"/>
                     <field name="active"/>
                     <field name="clasificacion_id"/>
+                    <field name="project_id"/>
                 </tree>
             </field>
         </record>
@@ -391,6 +421,7 @@
                             </h1>
                         </div>
                         <group name="detalles">
+                            <field name="project_id" />
                             <field name="state"/>
                             <field name="active"/>
                             <field name="clasificacion_id"/>
@@ -398,7 +429,7 @@
                             <field name="ubicacion"/>
                         </group>
                         <group name="tareas" string="Tareas relacionadas">
-                            <field name="task_ids" nolabel="1"/>
+                            <field name="task_ids" nolabel="1" context="{'project_id':project_id,'producto_intermedio_id':active_id}"/>
                         </group>
                     </sheet>
                 </form>

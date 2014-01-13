@@ -49,6 +49,7 @@ project()
 #TODO: Validar work_package tiene unidad de medida 
 #TODO: Relacionar Tareas con Work Packages
 #TODO: Validar que no se sobrepase del 100% en work records
+#TODO: Cuando un proyecto termina el EDT debe cambiar a estado terminado y no ser listado en el árbol para disminuir la cantidad de elementos a desplegarse
 class project_pmi_wbs_item(osv.osv):
     _name = "project_pmi.wbs_item"
     _inherit = ['mail.thread']
