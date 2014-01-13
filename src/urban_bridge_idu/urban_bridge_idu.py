@@ -125,7 +125,8 @@ class urban_bridge_bridge(geo_model.GeoModel):
             #Agregar campo al diccionario
             res[objeto]=objeto_dict
         return res
-    
+
+
     def get_data_module(self,cr,uid,bridge_id = None, context=None):
         """
         Web Service que devuelve todos los datos de los puentes junto con los elementos de infraestructura
@@ -135,7 +136,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
         que se implementaron en el método anterior
         ejemplo:
         {
-        puente:{id:1,galibo:2,ancho:2.5 .....},
+        puente:{fields:('','','','',....),values:('','','','',.....)},
         riostra:{id:5,id_puente:1,ancho:2.5 .....} (depende de los datos de la base de datos)
         }
         """
@@ -146,7 +147,10 @@ class urban_bridge_bridge(geo_model.GeoModel):
         bridge_dict = bridge_obj.read(cr,uid,bridge_id)
         puente = {}
         #1. Mandar el diccionario de valores para el objeto puente con los campos traducidos al español
+        puente_fields=()
+        vuente_values=()
         for attribute in bridge_dict:
+            puente_fields.append()
             att_name = translate(cr,"addons/urban_bridge/urban_bridge.py","code","es_CO",attribute)
             if (att_name == False):
                 att_name=attribute
@@ -154,10 +158,10 @@ class urban_bridge_bridge(geo_model.GeoModel):
         res["puente"]=puente
         #2. Mandar un diccionario por cada objeto de infraestructura
         structure_element_obj = self.pool.get("urban_bridge.structure_element")
-         
         bridge = bridge_obj.browse(cr,uid,bridge_id)
         for element in bridge.elements:
             element_dict = {}
+            #2.1 Primero los atributos generales correspondientes al elemento de infraestructura. 
             elem_type = element.element_type_id.alias
             elem_base = structure_element_obj.read(cr,uid,element.id)
             for elem_base_att in elem_base:
@@ -189,14 +193,16 @@ class urban_bridge_bridge(geo_model.GeoModel):
                 elif (data_type == "binary"):
                     value = values.value_photo
                 elif (data_type == "geo_point"):
-                    value = values.value_point.wkt
+                    #TODO: Conversion entre el tipo de coordenadas de almacenamiento y el tipo de coordenadas local.
+                    value = values.value_point
                 elif (data_type == "geo_polygon"):
-                    value = values.value_polygon.wkt
+                    value = values.value_polygon
                 elif (data_type == "geo_line"):
-                    value = values.value_line.wkt
+                    value = values.value_line
                 element_dict[attribute]=value
             res[elem_type]=element_dict
         return res
+
 
     _name="urban_bridge.bridge"
     _inherit="urban_bridge.bridge"
