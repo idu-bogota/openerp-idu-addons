@@ -53,7 +53,6 @@ class task(osv.osv):
 
 task()
 
-#TODO: Validar que no se sobrepase del 100% en work records, solo se llega al 100% cuando el edt item esta en estado terminado
 #TODO: Validar que un work_package de tipo unit no tenga task y viceversa
 class project_pmi_wbs_item(osv.osv):
     _name = "project_pmi.wbs_item"
@@ -88,7 +87,7 @@ class project_pmi_wbs_item(osv.osv):
         # compute planned_hours, total_hours, effective_hours specific to each project
         cr.execute("""
             SELECT
-                wbs_item.id, COALESCE(wbs_item.quantity, 0.0), COALESCE(SUM(wr.quantity), 0.0), wbs_item.type, wbs_item.tracking_type, COUNT(t.id), SUM(t.progress)
+                wbs_item.id, COALESCE(wbs_item.quantity, 0.0), COALESCE(SUM(wr.quantity), 0.0), wbs_item.type, wbs_item.tracking_type, COUNT(t.id), SUM(t.progress),wbs_item.state
             FROM
                 project_pmi_wbs_item wbs_item
                 LEFT JOIN project_pmi_wbs_work_record wr ON wr.wbs_item_id = wbs_item.id
@@ -98,14 +97,15 @@ class project_pmi_wbs_item(osv.osv):
             GROUP BY wbs_item.id
          """, (tuple(child_parent.keys()),))
         # aggregate results into res
-        res = dict([(id, {'progress_rate':0.0,'planned_quantity':0.0,'effective_quantity':0.0}) for id in child_parent])
+        res = dict([(id, {'progress_rate':0.0,'planned_quantity':0.0,'effective_quantity':0.0,'excess_progress':0.0}) for id in child_parent])
         all_records = cr.fetchall()
-        for id, planned, effective, type, tracking_type, task_count, task_progress in all_records:
+        for id, planned, effective, type, tracking_type, task_count, task_progress, state in all_records:
             #no calculated using children values
             res[id]['tracking_type'] = tracking_type
-            res[id]['type'] = type   
+            res[id]['type'] = type
+            res[id]['state'] = state
 
-        for id, planned, effective, type, tracking_type, task_count, task_progress in all_records:
+        for id, planned, effective, type, tracking_type, task_count, task_progress,state in all_records:
             # add the values specific to id to all parent wbs_items of id in the result
             while id:
                 if res[id]['type'] == 'work_package' and res[id]['tracking_type'] == 'tasks':
@@ -121,7 +121,15 @@ class project_pmi_wbs_item(osv.osv):
             while id:
                 if res[id]['planned_quantity'] and res[id]['type'] == 'work_package':
                     progress = round(100.0 * res[id]['effective_quantity'] / res[id]['planned_quantity'], 2)
-                    res[id]['progress_rate'] = progress
+                    if progress > 99.99:
+                        res[id]['excess_progress'] = progress - 99.99
+                        progress = 99.99
+                        if res[id]['state'] == 'done':
+                            res[id]['progress_rate'] = 100.0
+                        else:
+                            res[id]['progress_rate'] = progress
+                    else:
+                        res[id]['progress_rate'] = progress
                 else:
                     number = self._get_Values_Dictionary(child_parent,id)
                     if number > 0:
@@ -208,6 +216,13 @@ class project_pmi_wbs_item(osv.osv):
         'date_deadline': fields.date('Deadline',select=True),
         'date_start': fields.date('Starting Date',select=True),
         'date_end': fields.date('Ending Date',select=True),
+        'excess_progress': fields.function(_progress_rate, multi="progress", string='Excess Progress', type='float', group_operator="avg",
+             help="Total work quantity planned", store = {
+                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity'], 10),
+                'project_pmi.wbs_work_record': (_get_wbs_item_from_work_records, ['wbs_item_id', 'quantity'], 20),
+                'project.task': (_get_wbs_item_from_tasks, ['wbs_item_id', 'work_ids', 'remaining_hours', 'planned_hours','state'], 30),
+            }
+         ),
         'planned_quantity': fields.function(_progress_rate, multi="progress", string='Planned Quantity', type='float', group_operator="avg",
              help="Total work quantity planned", store = {
                 'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity'], 10),
@@ -259,7 +274,7 @@ class project_pmi_wbs_item(osv.osv):
         return isValid
 
     def _check_unity_measure_work_package(self,cr,uid,ids,context=None):
-        type = self.read(cr, uid, ids, ['type','tracking_type','uom_id'], context=context)
+        type = self.read(cr, uid, ids, ['type','tracking_type','uom_id','progress'], context=context)
         if type[0]['type'] == 'work_package':
             if type[0]['tracking_type'] == 'units':
                 if not type[0]['uom_id']:
