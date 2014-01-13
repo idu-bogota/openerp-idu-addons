@@ -53,8 +53,6 @@ class task(osv.osv):
 
 task()
 
-#TODO: Validar que un work package no tenga child_ids
-#TODO: Validar work_package tiene unidad de medida 
 #TODO: Validar que no se sobrepase del 100% en work records, solo se llega al 100% cuando el edt item esta en estado terminado
 #TODO: Validar que un work_package de tipo unit no tenga task y viceversa
 class project_pmi_wbs_item(osv.osv):
@@ -260,9 +258,18 @@ class project_pmi_wbs_item(osv.osv):
                 isValid = False
         return isValid
 
+    def _check_unity_measure_work_package(self,cr,uid,ids,context=None):
+        type = self.read(cr, uid, ids, ['type','tracking_type','uom_id'], context=context)
+        if type[0]['type'] == 'work_package':
+            if type[0]['tracking_type'] == 'units':
+                if not type[0]['uom_id']:
+                    return False
+        return True
+
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive deliverable.', ['parent_id']),
         (_check_no_childs, 'Error ! You cannot have childs.', ['parent_id']),
+        (_check_unity_measure_work_package, 'Error ! You have to select unity of measure.', ['parent_id']),
     ]
 
     def child_get(self, cr, uid, ids):
