@@ -72,7 +72,7 @@ class project_pmi_wbs_item(osv.osv):
             return []
         if isinstance(ids, (long, int)):
             ids = [ids]
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
+        reads = self.read(cr, uid, ids, ['name','parent_id','type'], context=context)
         res = []
         for record in reads:
             name = record['name']
@@ -125,7 +125,9 @@ class project_pmi_wbs_item(osv.osv):
                     progress = round(100.0 * res[id]['effective_quantity'] / res[id]['planned_quantity'], 2)
                     res[id]['progress_rate'] = progress
                 else:
-                    value *= self._get_Values_Dictionary(child_parent,id)
+                    number = self._get_Values_Dictionary(child_parent,id)
+                    if number > 0:
+                        value *= number
                     res[id]['progress_rate'] += progress / value
                 id = child_parent[id]
         return res
@@ -135,8 +137,6 @@ class project_pmi_wbs_item(osv.osv):
         for key,value in my_dictionary.items():
             if value == my_value:
                 number +=1
-        if number == 0:
-            number = 1
         return number
 
     def _get_wbs_item_and_children(self, cr, uid, ids, context=None):
@@ -251,8 +251,18 @@ class project_pmi_wbs_item(osv.osv):
             level -= 1
         return True
 
+    def _check_no_childs(self,cr,uid,ids,context=None):
+        isValid = True
+        type = self.read(cr, uid, ids, ['type'], context=context)
+        child_parent = self._get_wbs_item_and_children(cr, uid, ids, context)
+        if self._get_Values_Dictionary(child_parent, ids[0]) > 0:
+            if type[0]['type'] == 'work_package':
+                isValid = False
+        return isValid
+
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive deliverable.', ['parent_id']),
+        (_check_no_childs, 'Error ! You cannot have childs.', ['parent_id']),
     ]
 
     def child_get(self, cr, uid, ids):
