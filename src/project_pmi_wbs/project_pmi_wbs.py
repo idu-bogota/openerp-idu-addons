@@ -99,9 +99,10 @@ class project_pmi_wbs_item(osv.osv):
         res = dict([(id, {'progress_rate':0.0,'planned_quantity':0.0,'effective_quantity':0.0,'excess_progress':0.0}) for id in child_parent])
         all_records = cr.fetchall()
 
-        for id, planned, effective, type, tracking_type, task_count, task_progress,state in all_records:
+        for id, planned, effective, type, tracking_type, task_count, task_progress, state in all_records:
             res[id]['type'] = type
             res[id]['state'] = state
+            task_progress = task_progress or 0
             # add the values specific to id to all parent wbs_items of id in the result
             if res[id]['type'] == 'work_package' and tracking_type == 'tasks':
                 planned += task_count * 100
@@ -213,28 +214,28 @@ class project_pmi_wbs_item(osv.osv):
         'date_end': fields.date('Ending Date'),
         'excess_progress': fields.function(_progress_rate, multi="progress", string='Excess Progress', type='float', group_operator="avg",
              help="Total work quantity planned", store = {
-                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity'], 10),
+                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity','state'], 10),
                 'project_pmi.wbs_work_record': (_get_wbs_item_from_work_records, ['wbs_item_id', 'quantity'], 20),
                 'project.task': (_get_wbs_item_from_tasks, ['wbs_item_id', 'work_ids', 'remaining_hours', 'planned_hours','state'], 30),
             }
          ),
         'planned_quantity': fields.function(_progress_rate, multi="progress", string='Planned Quantity', type='float', group_operator="avg",
              help="Total work quantity planned", store = {
-                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity'], 10),
+                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity','state'], 10),
                 'project_pmi.wbs_work_record': (_get_wbs_item_from_work_records, ['wbs_item_id', 'quantity'], 20),
                 'project.task': (_get_wbs_item_from_tasks, ['wbs_item_id', 'work_ids', 'remaining_hours', 'planned_hours','state'], 30),
             }
          ),
         'effective_quantity': fields.function(_progress_rate, multi="progress", string='Effective Quantity', type='float', group_operator="avg",
              help="Percent of progress according to the total of work recorded.", store = {
-                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity'], 10),
+                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity','state'], 10),
                 'project_pmi.wbs_work_record': (_get_wbs_item_from_work_records, ['wbs_item_id', 'quantity'], 20),
                 'project.task': (_get_wbs_item_from_tasks, ['wbs_item_id', 'work_ids', 'remaining_hours', 'planned_hours','state'], 30),
             }
          ),
         'progress_rate': fields.function(_progress_rate, multi="progress", string='Progress', type='float', group_operator="avg",
              help="Percent of progress according to the total of work recorded.", store = {
-                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity'], 10),
+                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity','state'], 10),
                 'project_pmi.wbs_work_record': (_get_wbs_item_from_work_records, ['wbs_item_id', 'quantity'], 20),
                 'project.task': (_get_wbs_item_from_tasks, ['wbs_item_id', 'work_ids', 'remaining_hours', 'planned_hours','state'], 30),
             }
@@ -269,7 +270,7 @@ class project_pmi_wbs_item(osv.osv):
                     isValid = False
         return isValid
 
-    def _check_unity_measure_work_package(self,cr,uid,ids,context=None):
+    def _check_unit_measure_work_package(self,cr,uid,ids,context=None):
         type = self.read(cr, uid, ids, ['type','tracking_type','uom_id','progress'], context=context)
         for record in type:
             if record['type'] == 'work_package':
@@ -278,7 +279,7 @@ class project_pmi_wbs_item(osv.osv):
                         return False
         return True
   
-    def _check_work_unity_no_task(self,cr,uid,ids,context=None):
+    def _check_work_unit_no_task(self,cr,uid,ids,context=None):
         type = self.read(cr, uid, ids, ['type','tracking_type','uom_id','progress'], context=context)
         for record in type:
             if record['type'] == 'work_package':
@@ -296,9 +297,9 @@ class project_pmi_wbs_item(osv.osv):
 
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive deliverable.', ['parent_id']),
-        (_check_no_childs, 'Error ! You cannot have childs.', ['parent_id']),
-        (_check_unity_measure_work_package, 'Error ! Please select unity of measure.', ['parent_id']),
-        (_check_work_unity_no_task, 'Error ! You cannot change tracking type.', ['parent_id']),
+        (_check_no_childs, 'Error ! You cannot have childs.', ['type']),
+        (_check_unit_measure_work_package, 'Error ! Please select unit of measure.', ['tracking_type']),
+        (_check_work_unit_no_task, 'Error ! You cannot change tracking type.', ['tracking_type']),
     ]
 
     def child_get(self, cr, uid, ids):

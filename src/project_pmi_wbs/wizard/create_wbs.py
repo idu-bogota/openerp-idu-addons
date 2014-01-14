@@ -43,7 +43,7 @@ class project_pmi_wbs_wizard_create_wbs(osv.osv_memory):
             project = self.pool.get('project.project').browse(cr, uid, context['active_id'], context)
             parent_id = project._get_project_and_parents()[0]
             parent = self.pool.get('project.project').browse(cr, uid, parent_id, context)
-            res.update({'project_id': project.id, 'name': project.name, 'parent_project_id': parent_id, 'parent_project_wbs_count': len(parent.wbs_ids)})
+            res.update({'project_id': project.id, 'name': project.name, 'parent_project_id': parent_id, 'parent_project_wbs_count': len(parent.wbs_item_ids)})
 
         return res
 
