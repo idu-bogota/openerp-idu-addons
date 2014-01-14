@@ -109,11 +109,7 @@
                                  </group>
                                  <group col="2" colspan="2" string="Ejecución de Fechas">
                                     <separator colspan="2"/>
-                                    <field name="fecha_radicacion"/>
-                                    <field name="fecha_crp"/>
-                                    <field name="fecha_acta_inicio"/>
-                                    <!-- <button name="funciontareas" type="object" string="Ingresar Avance"></button> -->
-                                </group>
+                                 </group>
                             </page>
                             <page string="Planficación de Pagos">
                                 <group>
@@ -126,14 +122,15 @@
                                     </tree>
                                 </field>
                                 <group>
-                                    <group class="oe_subtotal_footer oe_right">
-                                        <div class="oe_subtotal_footer_separator">
-                                            <field name="presupuesto_rezago"/>
-                                        </div>
-                                        <field name="total_pagos_programados" class="oe_subtotal_footer_separator" nolabel="1" readonly="1"/>
-                                    </group>
-                                </group>
-
+                                     <group class="oe_subtotal_footer oe_right" name="total_pagos_programado_item">>
+                                         <field name="total_pagos_programados" widget="monetary" readonly="1"/>
+                                         <label for="presupuesto_rezago"/>
+                                            <div>
+                                                <field name="presupuesto_rezago" string="Rezago" widget="monetary" readonly="1"/>
+                                            </div>
+                                            <field name="total_programado_rezago" widget="monetary" class="oe_subtotal_footer_separator"/>
+                                     </group>
+                               </group>
                             </page>
                             <page string="Pagos Realizados">
                                 <group col="2" colspan="1" name="pagos">

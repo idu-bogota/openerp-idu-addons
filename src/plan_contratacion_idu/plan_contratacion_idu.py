@@ -53,6 +53,7 @@ class plan_contratacion_idu_item(osv.osv):
                 sumatoria += pago.valor
             res[record['id']]['total_pagos_programados'] = sumatoria
             res[record['id']]['presupuesto_rezago'] = record.presupuesto - sumatoria
+            res[record['id']]['total_programado_rezago'] = sumatoria + record.presupuesto_rezago
         return res
 
     def _get_plan_item_from_pago_records(self, cr, uid, pago_ids, context=None):
@@ -87,7 +88,12 @@ class plan_contratacion_idu_item(osv.osv):
                 'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_item_ids', 'presupuesto'], 10),
                 'plan_contratacion_idu.plan_pagos_item': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
             }),
-        'presupuesto_rezago': fields.function(_total_pagos_programados, type='float', multi="presupuesto", string='Total pagos programados', digits_compute=dp.get_precision('Account'),
+        'presupuesto_rezago': fields.function(_total_pagos_programados, type='float', multi="presupuesto", string='Rezago', digits_compute=dp.get_precision('Account'),
+             store={
+                'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_item_ids', 'presupuesto'], 10),
+                'plan_contratacion_idu.plan_pagos_item': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
+            }),
+        'total_programado_rezago': fields.function(_total_pagos_programados, type='float', multi="presupuesto", string='Total', digits_compute=dp.get_precision('Account'),
              store={
                 'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_item_ids', 'presupuesto'], 10),
                 'plan_contratacion_idu.plan_pagos_item': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
@@ -105,14 +111,19 @@ class plan_contratacion_idu_item(osv.osv):
         if not pagos_ids:
             pagos_ids = []
         sumatoria = 0
-        pagos_ids = resolve_o2m_operations(cr, uid, pagos_pool, pagos_ids, ['valor'], context)
-        plan_item = self.read(cr, uid, ids[0], ['presupuesto'], context=context)
-        for pago in pagos_ids:
-            sumatoria += pago.get('valor',0.0)
         res = {
-            'total_pagos_programados': sumatoria,
-            'presupuesto_rezago': plan_item['presupuesto'] - sumatoria,
+                'total_pagos_programados': 0,
+                'presupuesto_rezago': 0,
         }
+        pagos_ids = resolve_o2m_operations(cr, uid, pagos_pool, pagos_ids, ['valor'], context)
+        if ids:
+            plan_item = self.read(cr, uid, ids[0], ['presupuesto'], context=context)
+            for pago in pagos_ids:
+                sumatoria += pago.get('valor',0.0)
+            res = {
+                'total_pagos_programados': sumatoria,
+                'presupuesto_rezago': plan_item['presupuesto'] - sumatoria,
+            }
         return {
             'value': res
         }
@@ -188,12 +199,16 @@ plan_contratacion_idu_fuente()
 class plan_contratacion_idu_plan_pagos_item(osv.osv):
     _name = "plan_contratacion_idu.plan_pagos_item"
     _columns = {
-        'mes': fields.selection([(1,'January'), (2,'February'), (3,'March'), (4,'April'),
-            (5,'May'), (6,'June'), (7,'July'), (8,'August'), (9,'September'),
-            (10,'October'), (11,'November'), (12,'December')], 'Month', required=True),
+        'mes': fields.selection([(1,'Enero'), (2,'Febrero'), (3,'Marzo'), (4,'Abril'),
+            (5,'Mayo'), (6,'Junio'), (7,'Julio'), (8,'Agosto'), (9,'Septiembre'),
+            (10,'Octubre'), (11,'Noviembre'), (12,'Diciembre')], 'Mes', required=True),
         'valor': fields.integer('Valor', required=True, select=True),
         'plan_contratacion_item_id': fields.many2one('plan_contratacion_idu.item','Item Plan de Contratacion', select=True, ondelete='cascade'),
     }
+
+    _sql_constraints =[
+        ('unique_mes','unique(mes,plan_contratacion_item_id)','El mes debe ser único')
+    ]
 
 plan_contratacion_idu_plan_pagos_item()
 
