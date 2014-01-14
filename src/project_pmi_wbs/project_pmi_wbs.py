@@ -264,31 +264,34 @@ class project_pmi_wbs_item(osv.osv):
         type = self.read(cr, uid, ids, ['type'], context=context)
         child_parent = self._get_wbs_item_and_children(cr, uid, ids, context)
         if self._get_Values_Dictionary(child_parent, ids[0]) > 0:
-            if type[0]['type'] == 'work_package':
-                isValid = False
+            for record in type:
+                if record['type'] == 'work_package':
+                    isValid = False
         return isValid
 
     def _check_unity_measure_work_package(self,cr,uid,ids,context=None):
         type = self.read(cr, uid, ids, ['type','tracking_type','uom_id','progress'], context=context)
-        if type[0]['type'] == 'work_package':
-            if type[0]['tracking_type'] == 'units':
-                if not type[0]['uom_id']:
-                    return False
+        for record in type:
+            if record['type'] == 'work_package':
+                if record['tracking_type'] == 'units':
+                    if not record['uom_id']:
+                        return False
         return True
   
     def _check_work_unity_no_task(self,cr,uid,ids,context=None):
         type = self.read(cr, uid, ids, ['type','tracking_type','uom_id','progress'], context=context)
-        if type[0]['type'] == 'work_package':
-            if type[0]['tracking_type'] == 'units':
-                cr.execute('select count(*) from project_task where wbs_item_id IN %s',(tuple(ids),))
-                for row in cr.fetchall():
-                    if (row[0] > 0):
-                        return False
-            if type[0]['tracking_type'] == 'tasks':
-                cr.execute('select count(*) from project_pmi_wbs_work_record where wbs_item_id IN %s',(tuple(ids),))
-                for row in cr.fetchall():
-                    if row[0] > 0:
-                        return False
+        for record in type:
+            if record['type'] == 'work_package':
+                if record['tracking_type'] == 'units':
+                    cr.execute('select count(*) from project_task where wbs_item_id IN %s',(tuple(ids),))
+                    for row in cr.fetchall():
+                        if (row[0] > 0):
+                            return False
+                if record['tracking_type'] == 'tasks':
+                    cr.execute('select count(*) from project_pmi_wbs_work_record where wbs_item_id IN %s',(tuple(ids),))
+                    for row in cr.fetchall():
+                        if row[0] > 0:
+                            return False
         return True
 
     _constraints = [
