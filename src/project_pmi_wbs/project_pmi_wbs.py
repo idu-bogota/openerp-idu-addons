@@ -53,7 +53,6 @@ class task(osv.osv):
 
 task()
 
-#TODO: Validar que un work_package de tipo unit no tenga task y viceversa
 class project_pmi_wbs_item(osv.osv):
     _name = "project_pmi.wbs_item"
     _inherit = ['mail.thread']
@@ -99,21 +98,17 @@ class project_pmi_wbs_item(osv.osv):
         # aggregate results into res
         res = dict([(id, {'progress_rate':0.0,'planned_quantity':0.0,'effective_quantity':0.0,'excess_progress':0.0}) for id in child_parent])
         all_records = cr.fetchall()
-        for id, planned, effective, type, tracking_type, task_count, task_progress, state in all_records:
-            #no calculated using children values
-            res[id]['tracking_type'] = tracking_type
-            res[id]['type'] = type
-            res[id]['state'] = state
 
         for id, planned, effective, type, tracking_type, task_count, task_progress,state in all_records:
+            res[id]['type'] = type
+            res[id]['state'] = state
             # add the values specific to id to all parent wbs_items of id in the result
-            while id:
-                if res[id]['type'] == 'work_package' and res[id]['tracking_type'] == 'tasks':
-                    planned += task_count * 100
-                    effective += task_progress
-                res[id]['planned_quantity'] += planned
-                res[id]['effective_quantity'] += effective
-                id = child_parent[id]
+            if res[id]['type'] == 'work_package' and tracking_type == 'tasks':
+                planned += task_count * 100
+                effective += task_progress
+            res[id]['planned_quantity'] += planned
+            res[id]['effective_quantity'] += effective
+
         # compute progress rates
         for id in sorted(child_parent.keys(), reverse=True):
             progress = 0.0
@@ -280,11 +275,27 @@ class project_pmi_wbs_item(osv.osv):
                 if not type[0]['uom_id']:
                     return False
         return True
+  
+    def _check_work_unity_no_task(self,cr,uid,ids,context=None):
+        type = self.read(cr, uid, ids, ['type','tracking_type','uom_id','progress'], context=context)
+        if type[0]['type'] == 'work_package':
+            if type[0]['tracking_type'] == 'units':
+                cr.execute('select count(*) from project_task where wbs_item_id IN %s',(tuple(ids),))
+                for row in cr.fetchall():
+                    if (row[0] > 0):
+                        return False
+            if type[0]['tracking_type'] == 'tasks':
+                cr.execute('select count(*) from project_pmi_wbs_work_record where wbs_item_id IN %s',(tuple(ids),))
+                for row in cr.fetchall():
+                    if row[0] > 0:
+                        return False
+        return True
 
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive deliverable.', ['parent_id']),
         (_check_no_childs, 'Error ! You cannot have childs.', ['parent_id']),
-        (_check_unity_measure_work_package, 'Error ! You have to select unity of measure.', ['parent_id']),
+        (_check_unity_measure_work_package, 'Error ! Please select unity of measure.', ['parent_id']),
+        (_check_work_unity_no_task, 'Error ! You cannot change tracking type.', ['parent_id']),
     ]
 
     def child_get(self, cr, uid, ids):
