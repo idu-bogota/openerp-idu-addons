@@ -136,8 +136,8 @@ class urban_bridge_bridge(geo_model.GeoModel):
         que se implementaron en el método anterior
         ejemplo:
         {
-        puente:{fields:('','','','',....),values:('','','','',.....)},
-        riostra:{id:5,id_puente:1,ancho:2.5 .....} (depende de los datos de la base de datos)
+        puente:[{id:1,galibo:2,ancho:2.5 .....},],
+        riostra:[{id:5,id_puente:1,ancho:2.5 .....},{id:7,id_puente_1,ancho:2.8... (depende de los datos de la base de datos)
         }
         """
         res = {}
@@ -145,17 +145,35 @@ class urban_bridge_bridge(geo_model.GeoModel):
             return res
         bridge_obj = self.pool.get('urban_bridge.bridge')
         bridge_dict = bridge_obj.read(cr,uid,bridge_id)
+        spatial_reference = self.pool.get('ir.config_parameter').get_param(cr, uid, 'urban_bridge.local_spatial_reference', default='', context=context)
+        #bridge_fields = bridge_obj.fields_get (cr,uid,context)
         puente = {}
-        #1. Mandar el diccionario de valores para el objeto puente con los campos traducidos al español
-        puente_fields=()
-        vuente_values=()
+        #1. Mandar el diccionario de valores para el objeto puente con los campos traducidos al español        
         for attribute in bridge_dict:
-            puente_fields.append()
             att_name = translate(cr,"addons/urban_bridge/urban_bridge.py","code","es_CO",attribute)
             if (att_name == False):
                 att_name=attribute
-            puente[att_name] = bridge_dict[attribute]
-        res["puente"]=puente
+            att_value = bridge_dict[attribute]
+            #Si es una geometría entonces se debe hacer la transformación de coordenadas.
+            if (attribute == "shape"):
+                query = """
+                select st_asgeojson(st_transform(shape,%s),15,0) 
+                from urban_bridge_bridge where id = %s
+                """
+                cr.execute(query,(spatial_reference,bridge_dict["id"]))
+                for row in cr.fetchall():
+                    att_value=row[0]
+            if (type(att_value) is tuple):
+                puente[att_name] = att_value[0]
+            elif (type(att_value) is list):
+                
+                pass
+#             elif (type(att_value) is dict):
+#                 if att_value.has_key("coordinates"):
+#                     
+            else:
+                puente[att_name] = att_value
+        res["puente"]=[puente]
         #2. Mandar un diccionario por cada objeto de infraestructura
         structure_element_obj = self.pool.get("urban_bridge.structure_element")
         bridge = bridge_obj.browse(cr,uid,bridge_id)
@@ -163,13 +181,22 @@ class urban_bridge_bridge(geo_model.GeoModel):
             element_dict = {}
             #2.1 Primero los atributos generales correspondientes al elemento de infraestructura. 
             elem_type = element.element_type_id.alias
+            #Inicializa diccionario para tipo de elemento
+            if not (res.has_key(elem_type)):
+                res[elem_type]=[]
             elem_base = structure_element_obj.read(cr,uid,element.id)
             for elem_base_att in elem_base:
                 base_att = translate(cr,"addons/urban_bridge/urban_bridge.py","code","es_CO",elem_base_att)
                 if (base_att == False):
                     base_att = elem_base_att
-                element_dict[base_att]=elem_base[elem_base_att]
-
+                att_value = elem_base[elem_base_att]
+                if (type(att_value) is tuple):
+                    element_dict[base_att]=att_value[0]
+                elif (type(att_value) is list):
+                    pass
+                else:
+                    element_dict[base_att]=att_value
+                #element_dict[base_att]=elem_base[elem_base_att]
             for values in element.values:
                 attribute = values.element_attribute_id.alias
                 data_type = values.element_attribute_id.data_type
@@ -192,15 +219,35 @@ class urban_bridge_bridge(geo_model.GeoModel):
                     value = values.value_selection
                 elif (data_type == "binary"):
                     value = values.value_photo
+                #En los tipos de datos geométricos se devuelve la geometría de acuerdo con 
+                #con el sistema de referencia establecido en los parametros de configuracion
                 elif (data_type == "geo_point"):
-                    #TODO: Conversion entre el tipo de coordenadas de almacenamiento y el tipo de coordenadas local.
+                    query = """
+                    select st_asgeojson(st_transform(value_point,%s),15,0) 
+                    from urban_bridge_structure_element_value where id = %s;
+                    """
+                    cr.execute(query,(spatial_reference,value.id))
+                    for row in cr.fetchall():
+                        value = eval(row[0])
                     value = values.value_point
                 elif (data_type == "geo_polygon"):
-                    value = values.value_polygon
+                    query = """
+                    select st_asgeojson(st_transform(value_polygon,%s),15,0) 
+                    from urban_bridge_structure_element_value where id = %s;
+                    """
+                    cr.execute(query,(spatial_reference,values.id))
+                    for row in cr.fetchall():
+                        value = eval(row[0])
                 elif (data_type == "geo_line"):
-                    value = values.value_line
+                    query = """
+                    select st_asgeojson(st_transform(value_line,%s),15,0) 
+                    from urban_bridge_structure_element_value where id = %s;
+                    """
+                    cr.execute(query,(spatial_reference,values.id))
+                    for row in cr.fetchall():
+                        value = eval(row[0])
                 element_dict[attribute]=value
-            res[elem_type]=element_dict
+            res[elem_type].append(element_dict)
         return res
 
 
