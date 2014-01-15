@@ -17,8 +17,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
+from openerp.osv import fields, osv
+from openerp.osv.osv import object_proxy
+from openerp.tools.translate import _
+from openerp import pooler
+import time
+from openerp import tools
+from openerp import SUPERUSER_ID
 
 class plan_contratacion_idu_plan(osv.osv):
     _name = "plan_contratacion_idu.plan"
@@ -27,7 +33,12 @@ class plan_contratacion_idu_plan(osv.osv):
         'state':fields.selection([('draft', 'Draft'),('open', 'In Progress'),('cancel', 'Cancelled'),('done', 'Done'),('pending', 'Pending')],'State', required=True),
         'active':fields.boolean('Activo'),
         'item_ids': fields.one2many('plan_contratacion_idu.item', 'plan_id', 'Items Plan de Contratacion'),
+        'name_items':fields.one2many('plan_contratacion_idu.item', 'name', 'Items Plan de Contratacion'),
     }
+    _sql_constraints =[
+        ('unique_name','unique(name)','El año del plan debe ser único')
+    ]
+     
     _defaults = {
         'active': True,
         'state': 'draft'
@@ -67,13 +78,13 @@ class plan_contratacion_idu_item(osv.osv):
     _columns = {
         'dependencia': fields.many2one('hr.department','Dependencia', select=True, ondelete='cascade'),
         'description': fields.text('Objeto Contractual'),
-        'name': fields.char('Nombre', size=255, required=True, select=True),
+        'name': fields.many2one('plan_contratacion_idu.plan','Plan contractual', select=True, ondelete='cascade'),
         'fuente': fields.many2one('plan_contratacion_idu.fuente','Fuente de Financiación', select=True, ondelete='cascade'),
         'state':fields.selection([('aprobado', 'Por radicar'),('radicado', 'Radicado'),('suscrito', 'Contrato suscrito'),('ejecucion', 'En ejecución'),('ejecutado', 'Ejecutado'), ('no_realizado', 'No realizado')],'State', required=True),
         'active':fields.boolean('Activo'),
         'fecha_radicacion': fields.date ('Fecha Radicacion en DTPS y/o DTGC', required=True, select=True),
         'fecha_crp': fields.date ('Fecha Programada CRP', required=True, select=True, help="CRP es Certificado Registro Presupuestal"),
-        'fecha_acta_inicio': fields.date ('Fecha Acta de Inicio', required=True, select=True),
+        'fecha_acta_inicio': fields.date ('Fecha Aprobación Acta de Inicio', required=True, select=True),
         'plan_id': fields.many2one('plan_contratacion_idu.plan','Plan contractual', select=True, ondelete='cascade'),
         'clasificacion_id': fields.many2one('plan_contratacion_idu.clasificador_proyectos','Clasificación Proyecto', select=True, ondelete='cascade'),
         'presupuesto': fields.integer ('Presupuesto', required=True, select=True),
@@ -127,6 +138,62 @@ class plan_contratacion_idu_item(osv.osv):
         return {
             'value': res
         }
+        
+    
+    def subscribe(self, cr, uid, ids, *args):
+        obj_action = self.pool.get('ir.actions.act_window')
+        obj_model = self.pool.get('plan_contratacion_idu.plan.data')
+        #start Loop
+        for thisrule in self.browse(cr, uid, ids):
+            obj = self.pool.get(thisrule.plan_id.model)
+            if not obj:
+                """except_osv"""
+                raise osv.osv(
+                        _('WARNING: audittrail is not part of the pool'),
+                        _('Change audittrail depends -- Setting rule as DRAFT'))
+                self.write(cr, uid, [thisrule.id], {"state": "aprobado"})
+            val = {
+                 "name": 'View Log',
+                 "res_model": 'audittrail.log',
+                 "src_model": thisrule.plan_id.model,
+                 "domain": "[('plan_id','=', " + str(thisrule.plan_id.id) + "), ('res_id', '=', active_id)]"
+
+            }
+            action_id = obj_action.create(cr, SUPERUSER_ID, val)
+            self.write(cr, uid, [thisrule.id], {"state": "radicado", "action_id": action_id})
+            keyword = 'client_action_relate'
+            value = 'ir.actions.act_window,' + str(action_id)
+            res = obj_model.ir_set(cr, SUPERUSER_ID, 'action', keyword, 'View_log_' + thisrule.plan_id.model, [thisrule.plan_id.model], value, replace=True, isobject=True, xml_id=False)
+            #End Loop
+        return True
+
+    def unsubscribe(self, cr, uid, ids, *args):
+        """
+        Unsubscribe Auditing Rule on object
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Auddittrail Rule’s IDs.
+        @return: True
+        """
+        obj_action = self.pool.get('ir.actions.act_window')
+        ir_values_obj = self.pool.get('ir.values')
+        value=''
+        #start Loop
+        for thisrule in self.browse(cr, uid, ids):
+            if thisrule.id in self.__functions:
+                for function in self.__functions[thisrule.id]:
+                    setattr(function[0], function[1], function[2])
+            w_id = obj_action.search(cr, uid, [('name', '=', 'View Log'), ('res_model', '=', 'audittrail.log'), ('src_model', '=', thisrule.plan_id.model)])
+            if w_id:
+                obj_action.unlink(cr, SUPERUSER_ID, w_id)
+                value = "ir.actions.act_window" + ',' + str(w_id[0])
+            val_id = ir_values_obj.search(cr, uid, [('model', '=', thisrule.plan_id.model), ('value', '=', value)])
+            if val_id:
+                ir_values_obj = pooler.get_pool(cr.dbname).get('ir.values')
+                res = ir_values_obj.unlink(cr, uid, [val_id[0]])
+            self.write(cr, uid, [thisrule.id], {"state": "aprobado"})
+        #End Loop
+        return True
 
 plan_contratacion_idu_item()
 

@@ -74,13 +74,23 @@
             <field name="arch" type="xml">
                 <form string="Item plan de contratación" version="7.0">
                     <header>
-                        <field name="state" widget="statusbar" clickabe= 'True' statusbar_colors='{"pending":"blue"}'/>
+                        <!--  <field name="stage_id" widget="statusbar" clickable="True"/>  statusbar_colors='{"pending":"blue"}'-->
+                        <field name="state" widget="statusbar" colors="blue:state" clickabe= 'True'/>
                     </header>
+                    <group col="1" colspan="1">
+                        <header>
+                           <button id="subscribe" string="Radicado en Orfeo" type="object" icon="gtk-ok" states="aprobado"/>
+                           <button id="add_crp" string="Número CRP" type="action" states="aprobado"/>
+                           <button id="add_fecha_inicio" string="Fecha Acta de Inicio" type="action" states="aprobado"/>
+                           <button id="add_fecha_liquidacion" string="Fecha Acta de liquidacion" type="action" states="aprobado"/>
+                           <button id="unsubscribe" string="No Realizado" icon="gtk-cancel" type="object" states="aprobado"/>
+                        </header>
+                    </group>
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
-                                <field name="name"/>
+                                <!--   <field name="name"/>-->
                             </h1>
                         </div>
                         <group>
@@ -89,7 +99,6 @@
                             <field name="plazo_de_ejecucion"/>
                             <field name="unidad_meta_fisica"/>
                             <field name="cantidad_meta_fisica"/>
-                            <field name="state"/>
                             <field name="active"/>
                             <field name="tipo_proceso"/>
                         </group>
@@ -107,9 +116,15 @@
                                     <field name="fecha_crp"/>
                                     <field name="fecha_acta_inicio"/>
                                  </group>
-                                 <group col="2" colspan="2" string="Ejecución de Fechas">
-                                    <separator colspan="2"/>
-                                 </group>
+                          <!--         <group col="1" colspan="1" string="Ejecución de Fechas">
+                                     <header>
+                                        <button id="subscribe" string="Radicado en Orfeo" type="object" icon="gtk-ok" states="aprobado"/>
+                                        <button id="add_crp" string="Número CRP" type="action" states="aprobado"/>
+                                        <button id="add_fecha_inicio" string="Fecha Acta de Inicio" type="action" states="aprobado"/>
+                                        <button id="add_fecha_liquidacion" string="Fecha Acta de liquidacion" type="action" states="aprobado"/>
+                                        <button id="unsubscribe" string="No Realizado" icon="gtk-cancel" type="object" states="aprobado"/>
+                                     </header>
+                                 </group> -->
                             </page>
                             <page string="Planficación de Pagos">
                                 <group>
