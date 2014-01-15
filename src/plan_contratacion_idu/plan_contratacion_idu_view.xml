@@ -79,11 +79,12 @@
                     </header>
                     <group col="1" colspan="1">
                         <header>
-                           <button id="subscribe" string="Radicado en Orfeo" type="object" icon="gtk-ok" states="aprobado"/>
-                           <button id="add_crp" string="Número CRP" type="action" states="aprobado"/>
-                           <button id="add_fecha_inicio" string="Fecha Acta de Inicio" type="action" states="aprobado"/>
-                           <button id="add_fecha_liquidacion" string="Fecha Acta de liquidacion" type="action" states="aprobado"/>
-                           <button id="unsubscribe" string="No Realizado" icon="gtk-cancel" type="object" states="aprobado"/>
+                           <button name="item_estudios_previos" string="Aprobado" type="object" icon="gtk-ok" states="aprobado,no_realizado"/>
+                           <button name="item_radicado" string="Radicado Orfeo" type="object" icon="gtk-ok" states="aprobado,radicado,no_realizado"/>
+                           <button name="item_suscrito" string="Número CRP" type="object" icon="gtk-ok" states="radicado,suscrito,no_realizado"/>
+                           <button name="item_ejecucion" string="Fecha Acta Inicio" type="object" icon="gtk-ok" states="suscrito,ejecucion,no_realizado"/>
+                           <button name="item_ejecutado" string="Fecha Acta liquidacion" type="object" icon="gtk-ok" states="ejecucion,ejecutado,no_realizado"/>
+                           <button name="item_no_realizado" string="No Realizado" icon="gtk-cancel" type="object" states="no_realizado,suscrito,aprobado,radicado,suscrito,ejecucion,ejecutado"/>
                         </header>
                     </group>
                     <sheet>
@@ -116,15 +117,6 @@
                                     <field name="fecha_crp"/>
                                     <field name="fecha_acta_inicio"/>
                                  </group>
-                          <!--         <group col="1" colspan="1" string="Ejecución de Fechas">
-                                     <header>
-                                        <button id="subscribe" string="Radicado en Orfeo" type="object" icon="gtk-ok" states="aprobado"/>
-                                        <button id="add_crp" string="Número CRP" type="action" states="aprobado"/>
-                                        <button id="add_fecha_inicio" string="Fecha Acta de Inicio" type="action" states="aprobado"/>
-                                        <button id="add_fecha_liquidacion" string="Fecha Acta de liquidacion" type="action" states="aprobado"/>
-                                        <button id="unsubscribe" string="No Realizado" icon="gtk-cancel" type="object" states="aprobado"/>
-                                     </header>
-                                 </group> -->
                             </page>
                             <page string="Planficación de Pagos">
                                 <group>

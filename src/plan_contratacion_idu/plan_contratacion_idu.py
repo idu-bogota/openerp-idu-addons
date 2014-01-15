@@ -19,11 +19,7 @@
 ##############################################################################
 import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv
-from openerp.osv.osv import object_proxy
-from openerp.tools.translate import _
 from openerp import pooler
-import time
-from openerp import tools
 from openerp import SUPERUSER_ID
 
 class plan_contratacion_idu_plan(osv.osv):
@@ -138,8 +134,25 @@ class plan_contratacion_idu_item(osv.osv):
         return {
             'value': res
         }
-        
+
+    def item_estudios_previos(self, cr, uid, ids, plan_items, context=None):
+        self.write(cr, uid, ids, {"state": "aprobado"})
+
+    def item_radicado(self, cr, uid, ids, plan_items, context=None):
+        self.write(cr, uid, ids, {"state": "radicado"})
+
+    def item_no_realizado(self, cr, uid, ids, plan_items, context=None):
+        self.write(cr, uid, ids, {"state": "no_realizado"})
     
+    def item_suscrito(self, cr, uid, ids, plan_items, context=None):
+        self.write(cr, uid, ids, {"state": "suscrito"})
+
+    def item_ejecucion(self, cr, uid, ids, plan_items, context=None):
+        self.write(cr, uid, ids, {"state": "ejecucion"})
+        
+    def item_ejecutado(self, cr, uid, ids, plan_items, context=None):
+        self.write(cr, uid, ids, {"state": "ejecutado"})
+
     def subscribe(self, cr, uid, ids, *args):
         obj_action = self.pool.get('ir.actions.act_window')
         obj_model = self.pool.get('plan_contratacion_idu.plan.data')
@@ -157,24 +170,15 @@ class plan_contratacion_idu_item(osv.osv):
                  "res_model": 'audittrail.log',
                  "src_model": thisrule.plan_id.model,
                  "domain": "[('plan_id','=', " + str(thisrule.plan_id.id) + "), ('res_id', '=', active_id)]"
-
             }
             action_id = obj_action.create(cr, SUPERUSER_ID, val)
             self.write(cr, uid, [thisrule.id], {"state": "radicado", "action_id": action_id})
             keyword = 'client_action_relate'
             value = 'ir.actions.act_window,' + str(action_id)
             res = obj_model.ir_set(cr, SUPERUSER_ID, 'action', keyword, 'View_log_' + thisrule.plan_id.model, [thisrule.plan_id.model], value, replace=True, isobject=True, xml_id=False)
-            #End Loop
         return True
 
     def unsubscribe(self, cr, uid, ids, *args):
-        """
-        Unsubscribe Auditing Rule on object
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Auddittrail Rule’s IDs.
-        @return: True
-        """
         obj_action = self.pool.get('ir.actions.act_window')
         ir_values_obj = self.pool.get('ir.values')
         value=''
@@ -194,7 +198,6 @@ class plan_contratacion_idu_item(osv.osv):
             self.write(cr, uid, [thisrule.id], {"state": "aprobado"})
         #End Loop
         return True
-
 plan_contratacion_idu_item()
 
 class plan_contratacion_idu_clasificador_proyectos(osv.osv):
