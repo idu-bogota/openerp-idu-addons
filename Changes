@@ -1,3 +1,7 @@
+openerp6.1-rev2014011500
+* Fix: Obligar a tipificar PQRS radicadas via formulario web
+* New: Adicionado servicios para extraer datos geográficos del BMS
+
 openerp6.1-rev2013110600
 * New: Adicionado modulo para la gestión de puentes del IDU urban_bridge
 

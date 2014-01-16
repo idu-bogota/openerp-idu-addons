@@ -31,6 +31,7 @@ from base_geoengine import geo_model
 from shapely.geometry import asShape
 from shapely.geometry import MultiPolygon
 from datetime import datetime
+from tools.translate import _
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -42,10 +43,10 @@ class urban_bridge_bridge(geo_model.GeoModel):
     def _get_district(self,cr,uid,ids,fieldname,arg,context=None):
         res = {}
         #Este bloque try es porque a veces los datos vienen con inconsistencia topológica y se pretende evitar que deje de funcionar
-        #la página cuando se manda el query, en ves de eso mejor que siga funcionando y deje un log de eventos
+        #la página cuando se manda el query, en ves de eso mejor que siga funcionando y deje un log de eventos        
         for bridge in self.browse(cr, uid, ids, context = context):
             try:
-                geom = bridge.shape
+                geom = bridge.shape.wkt
                 districts=""
                 if geom != False:
                     query = "SELECT name FROM base_map_district WHERE st_intersects(shape,st_geomfromtext('{0}',900913)) = true".format(geom)
@@ -112,14 +113,15 @@ class urban_bridge_bridge(geo_model.GeoModel):
     def _get_area(self,cr,uid,ids,fieldname,arg,context=None):
         res = {}
         for bridge in self.browse(cr, uid, ids, context = context):
-            try:            
+            try:
                 bridge_id = bridge.id
+                spatial_ref_sys = self.pool.get('ir.config_parameter').get_param(cr, uid, 'urban_bridge.local_spatial_reference', default='', context=context)
                 query = """
                 select st_area(pmagna) as area from (
-                select st_transform(shape,96873) as pmagna from urban_bridge_bridge where id = {0}
+                select st_transform(shape,%s) as pmagna from urban_bridge_bridge where id = %s
                 ) as t1
-                """.format(bridge_id)
-                cr.execute(query)
+                """
+                cr.execute(query,(spatial_ref_sys,bridge_id))
                 area=0.0
                 for row in cr.fetchall():
                     #Crear un diccionario para almacenar areas por
@@ -136,12 +138,13 @@ class urban_bridge_bridge(geo_model.GeoModel):
         for bridge in self.browse(cr, uid, ids, context = context):
             try:
                 bridge_id = bridge.id
+                spatial_ref_sys = self.pool.get('ir.config_parameter').get_param(cr, uid, 'urban_bridge.local_spatial_reference', default='', context=context)
                 query = """
                 select st_perimeter(pmagna) as area from (
-                select st_transform(shape,96873) as pmagna from urban_bridge_bridge where id = {0}
+                select st_transform(shape,%s) as pmagna from urban_bridge_bridge where id = %s
                 ) as t1
-                """.format(bridge_id)
-                cr.execute(query)
+                """
+                cr.execute(query,(spatial_ref_sys,bridge_id))
                 perimeter = 0.0
                 for row in cr.fetchall():
                     #Crear un diccionario para almacenar areas por
@@ -195,6 +198,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
         except Exception as e:
             print e 
             return {"result":"Save Failed!"}
+
     _name="urban_bridge.bridge"
     _columns = {
         'shape':fields.geo_multi_polygon('Shape',help="Shape"),

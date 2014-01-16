@@ -50,6 +50,9 @@ class crm_claim(crm.crm_case,osv.osv):
             classification = self.pool.get('ocs.claim_classification').name_search(cr, uid, name='Trámites a cargo de otras entidades remitidos a IDU', args=None, operator='=', context=None)
             if claim.classification_id.id == classification[0][0] and claim.partner_forwarded_id.id == False:
                 raise osv.except_osv(_('Error'),_('Need Partner Forwarded'))
+            classification = self.pool.get('ocs.claim_classification').name_search(cr, uid, name='Por Clasificar', args=None, operator='=', context=None)
+            if claim.classification_id.id == classification[0][0]:
+                raise osv.except_osv(_('Error'),_('Por favor definir el criterio y subcriterio que corresponda'))
 
         return is_valid_super
 
