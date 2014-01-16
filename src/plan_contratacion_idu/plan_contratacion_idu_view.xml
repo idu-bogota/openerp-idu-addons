@@ -12,6 +12,9 @@
                     <field name="state"/>
                     <field name="active"/>
                     <field name="item_ids"/>
+                    <field name="total_pagos_presupuestado_plan"/>
+                    <field name="total_pagos_programados_plan"/>
+                    <field name="total_rezago_plan"/>
                 </tree>
             </field>
         </record>
@@ -32,6 +35,21 @@
                             <field name="active"/>
                         </group>
                         <field name="item_ids"/>
+                    <!--      <group name="pagos">
+                            <field name="total_pagos_presupuestado_plan"/>
+                            <field name="total_pagos_programados_plan"/>
+                            <field name="total_rezago_plan"/>
+                        </group>-->
+                        <group>
+                            <group class="oe_subtotal_footer oe_right" name="total_pagos_programado_item">>
+                                <field name="total_pagos_presupuestado_plan" widget="monetary" readonly="1"/>
+                                <label for="total_pagos_programados_plan"/>
+                                    <div>
+                                        <field name="total_pagos_programados_plan" string="Rezago" widget="monetary" readonly="1"/>
+                                    </div>
+                                <field name="total_rezago_plan" widget="monetary" class="oe_subtotal_footer_separator" options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                        </group>
                     </sheet>
                 </form>
             </field>
@@ -60,11 +78,11 @@
                     <field name="fuente"/>
                     <field name="plazo_de_ejecucion"/>
                     <field name="state"/>
-                    <field name="active"/>
                     <field name="fecha_radicacion"/>
                     <field name="fecha_crp"/>
                     <field name="fecha_acta_inicio"/>
                     <field name="tipo_proceso"/>
+                    <field name="tipo_proceso_seleccion"/>
                 </tree>
             </field>
         </record>
@@ -74,8 +92,7 @@
             <field name="arch" type="xml">
                 <form string="Item plan de contratación" version="7.0">
                     <header>
-                        <!--  <field name="stage_id" widget="statusbar" clickable="True"/>  statusbar_colors='{"pending":"blue"}'-->
-                        <field name="state" widget="statusbar" colors="blue:state" clickabe= 'True'/>
+                       <field name="state" widget="statusbar" colors="blue:state" clickabe= 'True'/>
                     </header>
                     <group col="1" colspan="1">
                         <header>
@@ -96,18 +113,19 @@
                         </div>
                         <group>
                             <field name="clasificacion_id"/>
+                            <field name="dependencia"/>
                             <field name="fuente"/>
-                            <field name="plazo_de_ejecucion"/>
-                            <field name="unidad_meta_fisica"/>
-                            <field name="cantidad_meta_fisica"/>
-                            <field name="active"/>
                             <field name="tipo_proceso"/>
+                            <field name="tipo_proceso_seleccion"/>
+                            <field name="presupuesto" />
                         </group>
                         <notebook colspan="5">
                             <page string="Detalles">
                                 <group name="detalles">
-                                    <field name="dependencia"/>
                                     <field name="description"/>
+                                    <field name="plazo_de_ejecucion"/>
+                                    <field name="unidad_meta_fisica"/>
+                                    <field name="cantidad_meta_fisica"/>
                                 </group>
                             </page>
                             <page string="Planificación de Fechas">
@@ -119,9 +137,6 @@
                                  </group>
                             </page>
                             <page string="Planficación de Pagos">
-                                <group>
-                                    <field name="presupuesto" />
-                                </group>
                                 <field name="plan_pagos_item_ids" on_change="onchange_plan_pagos_item_ids(plan_pagos_item_ids)" nolabel="1">
                                     <tree string="Plan de pagos" editable="bottom">
                                         <field name="mes"/>

@@ -24,12 +24,41 @@ from openerp import SUPERUSER_ID
 
 class plan_contratacion_idu_plan(osv.osv):
     _name = "plan_contratacion_idu.plan"
+    def _total_pagos_plan(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return res
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        records = self.browse(cr, uid, ids, context=context)
+        res = {}
+        for record in records:
+            sumatoria = 0
+            sumatoria_presupuesto = 0
+            res[record['id']] = {}
+            for pago in record.item_ids:
+                sumatoria += pago.total_pagos_programados
+                sumatoria_presupuesto += pago.presupuesto
+            res[record['id']]['total_pagos_presupuestado_plan'] = sumatoria_presupuesto
+            res[record['id']]['total_pagos_programados_plan'] = sumatoria
+            res[record['id']]['total_rezago_plan'] = sumatoria_presupuesto - sumatoria
+        return res
+
     _columns = {
         'name': fields.char('Nombre', size=255, required=True, select=True),
         'state':fields.selection([('draft', 'Draft'),('open', 'In Progress'),('cancel', 'Cancelled'),('done', 'Done'),('pending', 'Pending')],'State', required=True),
         'active':fields.boolean('Activo'),
         'item_ids': fields.one2many('plan_contratacion_idu.item', 'plan_id', 'Items Plan de Contratacion'),
         'name_items':fields.one2many('plan_contratacion_idu.item', 'name', 'Items Plan de Contratacion'),
+        'total_pagos_presupuestado_plan': fields.function(_total_pagos_plan, type='float', multi="total_pagos_programados", string='Total Presupuestado', digits_compute=dp.get_precision('Account'),
+             store={
+             }),
+        'total_pagos_programados_plan': fields.function(_total_pagos_plan, type='float', multi="total_pagos_programados", string='Total Pagos Programados', digits_compute=dp.get_precision('Account'),
+             store={
+             }),
+        'total_rezago_plan': fields.function(_total_pagos_plan, type='float', multi="total_pagos_programados", string='Total Rezago', digits_compute=dp.get_precision('Account'),
+             store={
+             }),
     }
     _sql_constraints =[
         ('unique_name','unique(name)','El año del plan debe ser único')
@@ -73,11 +102,11 @@ class plan_contratacion_idu_item(osv.osv):
 
     _columns = {
         'dependencia': fields.many2one('hr.department','Dependencia', select=True, ondelete='cascade'),
-        'description': fields.text('Objeto Contractual'),
+        'description': fields.text('Objeto Contractual', select=True),
         'name': fields.many2one('plan_contratacion_idu.plan','Plan contractual', select=True, ondelete='cascade'),
         'fuente': fields.many2one('plan_contratacion_idu.fuente','Fuente de Financiación', select=True, ondelete='cascade'),
-        'state':fields.selection([('aprobado', 'Por radicar'),('radicado', 'Radicado'),('suscrito', 'Contrato suscrito'),('ejecucion', 'En ejecución'),('ejecutado', 'Ejecutado'), ('no_realizado', 'No realizado')],'State', required=True),
-        'active':fields.boolean('Activo'),
+        'state':fields.selection([('aprobado', 'Por radicar'),('radicado', 'Radicado'),('suscrito', 'Contrato suscrito'),('ejecucion', 'En ejecución'),
+                                  ('ejecutado', 'Ejecutado'), ('no_realizado', 'No realizado')],'State', required=True),
         'fecha_radicacion': fields.date ('Fecha Radicacion en DTPS y/o DTGC', required=True, select=True),
         'fecha_crp': fields.date ('Fecha Programada CRP', required=True, select=True, help="CRP es Certificado Registro Presupuestal"),
         'fecha_acta_inicio': fields.date ('Fecha Aprobación Acta de Inicio', required=True, select=True),
@@ -88,7 +117,15 @@ class plan_contratacion_idu_item(osv.osv):
         'unidad_meta_fisica': fields.many2one('product.uom','Unidad Meta Física', select=True, ondelete='cascade'),
         'cantidad_meta_fisica': fields.integer ('Cantidad Metas Físicas'),
         'localidad': fields.char ('Localidad', size=255),
-        'tipo_proceso': fields.selection([('nuevo', 'Contrato Nuevo'),('adicion', 'Adición'),('reconocimiento', 'Reconocimiento a Contrato'),('sentencias', 'Sentencias'),('orden', 'Orden de Servicio'), ('psp', 'PSP'), ('comisiones', 'Comisiones y Gravamen Financiero'), ('compensacion', 'Compensación Social'), ('adquisicion', 'Adquisición Predial')],'Tipo de Proceso de Selección', required=True),
+        'tipo_proceso': fields.selection([('nuevo', 'Contrato Nuevo'),('adicion', 'Adición'),('reconocimiento', 'Reconocimiento a Contrato'),
+                                          ('sentencias', 'Sentencias'),('orden', 'Orden de Servicio'), ('psp', 'PSP'), ('comisiones', 'Comisiones y Gravamen Financiero'),
+                                          ('compensacion', 'Compensación Social'),('adquisicion', 'Adquisición Predial')],'Proceso', required=True),
+        'tipo_proceso_seleccion': fields.selection([('licitacion_publica', 'Licitación Pública'),('concurso_meritos_abierto', 'Concurso de Méritos Abierto'),
+                                                    ('concurso_meritos_precalificacion', 'Concurso de Méritos con Precalificación'),
+                                                    ('seleccion_abreviada_subasta_inversa', 'Selección Abreviada Susbasta Inversa'),
+                                                    ('seleccion_abreviada_menor_cuantia', 'Selección Abreviada Menor Cuantia'), 
+                                                    ('seleccion_abreviada_minima_cuantia', 'Selección Abreviada Mínima Cuantia'),
+                                                    ('contratacion_directa', 'Contratación Directa'),('na', 'NA')],'Tipo de Proceso de Selección', required=True),
         'plan_pagos_item_ids': fields.one2many('plan_contratacion_idu.plan_pagos_item','plan_contratacion_item_id', 'Planificacion de Pagos', select=True, ondelete='cascade'),
         'total_pagos_programados': fields.function(_total_pagos_programados, type='float', multi="presupuesto", string='Total pagos programados', digits_compute=dp.get_precision('Account'),
              store={
@@ -108,7 +145,6 @@ class plan_contratacion_idu_item(osv.osv):
     }
 
     _defaults = {
-        'active': True,
         'state': 'aprobado'
     }
 
