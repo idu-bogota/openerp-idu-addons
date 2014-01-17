@@ -51,12 +51,21 @@ class task(osv.osv):
         'wbs_item_id': fields.many2one('project_pmi.wbs_item', 'Work Breakdown Structure', domain="[('project_id','=',project_id),('type','=','work_package')]"),
     }
 
+    def _is_template(self, cr, uid, ids, field_name, arg, context=None):
+        res = super(task, self)._is_template(cr, uid, ids, field_name, arg, context=context)
+        for task in self.browse(cr, uid, ids, context=context):
+            res[task.id] = True
+            if task.wbs_item_id:
+                if task.wbs_item_id.active == False or task.wbs_item_id.state == 'template':
+                    res[task.id] = False
+        return res
+
 task()
 
 class project_pmi_wbs_item(osv.osv):
     _name = "project_pmi.wbs_item"
     _inherit = ['mail.thread']
-    _description = "WBS item part of WBS tree"
+    _description = "WBS item"
 
     _parent_name = "parent_id"
     _parent_store = True
@@ -296,7 +305,7 @@ class project_pmi_wbs_item(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive deliverable.', ['parent_id']),
+        (_check_recursion, 'Error ! You cannot create recursive wbs items.', ['parent_id']),
         (_check_no_childs, 'Error ! You cannot have childs.', ['type']),
         (_check_unit_measure_work_package, 'Error ! Please select unit of measure.', ['tracking_type']),
         (_check_work_unit_no_task, 'Error ! You cannot change tracking type.', ['tracking_type']),
@@ -304,6 +313,27 @@ class project_pmi_wbs_item(osv.osv):
 
     def child_get(self, cr, uid, ids):
         return [ids]
+
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if context is None:
+            context = {}
+        if default is None:
+            default = {}
+
+        context['active_test'] = False
+        context['copy'] = True #Tasks doesn't add the (copy) text
+        default.update({
+            'message_ids':[],
+            'date_start': False,
+            'date_end': False,
+            'date_deadline': False,
+            'work_record_ids': []
+        })
+        return super(project_pmi_wbs_item, self).copy_data(cr, uid, id, default, context)
+
+    def set_template(self, cr, uid, ids, context=None):
+        item_ids = self.search(cr, uid, [('child_ids','child_of',ids)], context=context)
+        return self.write(cr, uid, item_ids, {'state': 'template'}, context)
 
 project_pmi_wbs_item()
 

@@ -74,7 +74,8 @@
             <field name="arch" type="xml">
            <form string="WBS item" version="7.0">
                 <header>
-                    <field name="state" widget="statusbar" clickable="True"/>
+                    <button name="set_template" string="Set as Template" type="object" states="draft" groups="base.group_user"/>
+                    <field name="state" widget="statusbar"/>
                 </header>
                     <sheet string="Deliverable">
                         <div class="oe_title">
