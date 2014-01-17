@@ -2,6 +2,7 @@
 <openerp>
     <data>
         <menuitem name="Plan de Contratacion" id="menu_plan_contratacion" parent="base.menu_main_contrato_idu"/>
+
         <!-- Plan de contratacion -->
         <record id="plan_contratacion_idu_list" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.plan.list</field>
@@ -35,11 +36,6 @@
                             <field name="active"/>
                         </group>
                         <field name="item_ids"/>
-                    <!--      <group name="pagos">
-                            <field name="total_pagos_presupuestado_plan"/>
-                            <field name="total_pagos_programados_plan"/>
-                            <field name="total_rezago_plan"/>
-                        </group>-->
                         <group>
                             <group class="oe_subtotal_footer oe_right" name="total_pagos_programado_item">>
                                 <field name="total_pagos_presupuestado_plan" widget="monetary" readonly="1"/>
@@ -47,7 +43,7 @@
                                     <div>
                                         <field name="total_pagos_programados_plan" string="Rezago" widget="monetary" readonly="1"/>
                                     </div>
-                                <field name="total_rezago_plan" widget="monetary" class="oe_subtotal_footer_separator" options="{'currency_field': 'currency_id'}"/>
+                                <field name="total_rezago_plan" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                             </group>
                         </group>
                     </sheet>
@@ -67,6 +63,7 @@
             id="menu_plan_contratacion_plan_list"
             parent="menu_plan_contratacion"
             sequence="0"/>
+
         <!-- Item Plan de contratacion -->
         <record id="plan_contratacion_idu_item_list" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.item.list</field>
@@ -77,12 +74,10 @@
                     <field name="dependencia"/>
                     <field name="fuente"/>
                     <field name="plazo_de_ejecucion"/>
-                    <field name="state"/>
                     <field name="fecha_radicacion"/>
                     <field name="fecha_crp"/>
                     <field name="fecha_acta_inicio"/>
-                    <field name="tipo_proceso"/>
-                    <field name="tipo_proceso_seleccion"/>
+                    <field name="presupuesto"/>
                 </tree>
             </field>
         </record>
@@ -113,6 +108,7 @@
                         </div>
                         <group>
                             <field name="clasificacion_id"/>
+                            <field name="centro_costo"/>
                             <field name="dependencia"/>
                             <field name="fuente"/>
                             <field name="tipo_proceso"/>
@@ -136,7 +132,7 @@
                                     <field name="fecha_acta_inicio"/>
                                  </group>
                             </page>
-                            <page string="Planficación de Pagos">
+                            <page string="Planificación de Pagos">
                                 <field name="plan_pagos_item_ids" on_change="onchange_plan_pagos_item_ids(plan_pagos_item_ids)" nolabel="1">
                                     <tree string="Plan de pagos" editable="bottom">
                                         <field name="mes"/>
@@ -175,8 +171,8 @@
         <menuitem
             action="plan_contratacion_idu_item_action"
             id="menu_plan_contratacion_item_list"
-            parent="menu_plan_contratacion"
-        />
+            parent="menu_plan_contratacion"/>
+
         <!-- Clasificador de Proyectos -->
         <record id="plan_contratacion_idu_clasificador_proyectos_search" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.clasificador_proyectos.search</field>
@@ -209,7 +205,9 @@
                 <tree string="Clasificación de Proyectos">
                     <field name="sequence" widget="handle"/>
                     <field name="complete_name"/>
-                    <field name="active"/>
+                    <field name="codigo"/>
+                    <field name="name"/>
+                    <field name="tipo"/>
                 </tree>
             </field>
         </record>
@@ -217,22 +215,22 @@
             <field name="name">plan_contratacion_idu.clasificador_proyectos.form</field>
             <field name="model">plan_contratacion_idu.clasificador_proyectos</field>
             <field name="arch" type="xml">
-           <form string="Clasificación de Proyectos" version="7.0">
-                    <sheet string="Clasificación">
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1>
-                                <field name="name"/>
-                            </h1>
-                        </div>
-                        <group name="detalles">
-                            <field name="active" />
-                            <field name="parent_id" />
-                            <field name="child_ids" />
-                            <field name="item_ids" />
-                        </group>
-                    </sheet>
-                </form>
+            <form string="Clasificación de Proyectos" version="7.0">
+                <sheet string="Clasificación">
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="tipo"/>
+                        </h1>
+                    </div>
+                    <group name="detalles">
+                        <field name="codigo"/>
+                        <field name="name"/>
+                        <field name="parent_id" />
+                        <field name="child_ids" />
+                    </group>
+                </sheet>
+            </form>
             </field>
         </record>
         <record id="plan_contratacion_idu_clasificador_proyectos_tree_action" model="ir.actions.act_window">
@@ -273,14 +271,15 @@
             <field name="view_mode">tree,form,gantt,calendar</field>
             <field name="view_id" ref="plan_contratacion_idu_clasificador_proyectos_list"/>
         </record>
+
         <!-- Fuente de Financiacion -->
         <record id="plan_contratacion_idu_fuente_list" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.fuente.list</field>
             <field name="model">plan_contratacion_idu.fuente</field>
             <field name="arch" type="xml">
                 <tree string="Fuente de Financiación">
-                    <field name="abreviado"/>
                     <field name="name"/>
+                    <field name="abreviado"/>
                 </tree>
             </field>
         </record>
@@ -291,13 +290,13 @@
                 <form string="Fuente de Financiación" version="7.0">
                     <sheet>
                         <div class="oe_title">
-                            <label for="abreviado" class="oe_edit_only"/>
+                            <label for="name" class="oe_edit_only"/>
                             <h1>
-                                <field name="abreviado"/>
+                                <field name="name"/>
                             </h1>
                         </div>
                         <group name="detalles">
-                            <field name="name"/>
+                            <field name="abreviado"/>
                         </group>
                     </sheet>
                 </form>
@@ -322,7 +321,6 @@
             <field name="model">plan_contratacion_idu.plan_pagos_item</field>
             <field name="arch" type="xml" >
                 <tree string="Planificación de Pagos">
-                 <!--     <field name="item_ids"/> -->
                     <field name="mes"/>
                     <field name="valor"/>
                 </tree>
@@ -347,6 +345,64 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="plan_contratacion_idu_plan_pagos_item_list"/>
+        </record>
+        <!-- Tipo de Proceso -->
+        <record id="plan_contratacion_idu_plan_tipo_proceso_item_list" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.plan_tipo_proceso_item.list</field>
+            <field name="model">plan_contratacion_idu.plan_tipo_proceso_item</field>
+            <field name="arch" type="xml" >
+                <tree string="Tipo Proceso">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="plan_contratacion_idu_plan_tipo_proceso_item_form" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.plan_tipo_proceso_item.form</field>
+            <field name="model">plan_contratacion_idu.plan_tipo_proceso_item</field>
+            <field name="arch" type="xml">
+                <form string="Proceso" version="7.0">
+                    <sheet>
+                        <field name="name"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="plan_contratacion_idu_tipo_proceso_item_action" model="ir.actions.act_window">
+            <field name="name">Tipo Proceso del item</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">plan_contratacion_idu.plan_tipo_proceso_item</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="plan_contratacion_idu_plan_tipo_proceso_item_list"/>
+        </record>
+        <!-- Tipo Proceso de Seleccion-->
+        <record id="plan_contratacion_idu_plan_tipo_proceso_seleccion_item_list" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.plan_tipo_proceso_seleccion_item.list</field>
+            <field name="model">plan_contratacion_idu.plan_tipo_proceso_seleccion_item</field>
+            <field name="arch" type="xml" >
+                <tree string="Tipo Proceso de Selección">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="plan_contratacion_idu_plan_tipo_proceso_seleccion_item_form" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.plan_tipo_proceso_seleccion_item.form</field>
+            <field name="model">plan_contratacion_idu.plan_tipo_proceso_seleccion_item</field>
+            <field name="arch" type="xml">
+                <form string="Procesi" version="7.0">
+                    <sheet>
+                        <field name="name"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="plan_contratacion_idu_plan_tipo_proceso_seleccion_item_action" model="ir.actions.act_window">
+            <field name="name">Tipo de Proceso de Seleccion</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">plan_contratacion_idu.plan_tipo_proceso_seleccion_item</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="plan_contratacion_idu_plan_tipo_proceso_seleccion_item_list"/>
         </record>
     </data>
 </openerp>

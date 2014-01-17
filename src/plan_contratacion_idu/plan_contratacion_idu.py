@@ -50,7 +50,7 @@ class plan_contratacion_idu_plan(osv.osv):
         'active':fields.boolean('Activo'),
         'item_ids': fields.one2many('plan_contratacion_idu.item', 'plan_id', 'Items Plan de Contratacion'),
         'name_items':fields.one2many('plan_contratacion_idu.item', 'name', 'Items Plan de Contratacion'),
-        'total_pagos_presupuestado_plan': fields.function(_total_pagos_plan, type='float', multi="total_pagos_programados", string='Total Presupuestado', digits_compute=dp.get_precision('Account'),
+        'total_pagos_presupuestado_plan': fields.function(_total_pagos_plan, type='float', multi="total_pagos_programados", string='Total Presupuestado', digits_compute=dp.get_precision('Account'), readonly = True,
              store={
              }),
         'total_pagos_programados_plan': fields.function(_total_pagos_plan, type='float', multi="total_pagos_programados", string='Total Pagos Programados', digits_compute=dp.get_precision('Account'),
@@ -89,7 +89,7 @@ class plan_contratacion_idu_item(osv.osv):
                 sumatoria += pago.valor
             res[record['id']]['total_pagos_programados'] = sumatoria
             res[record['id']]['presupuesto_rezago'] = record.presupuesto - sumatoria
-            res[record['id']]['total_programado_rezago'] = sumatoria + record.presupuesto_rezago
+            res[record['id']]['total_programado_rezago'] = sumatoria + (record.presupuesto - sumatoria)
         return res
 
     def _get_plan_item_from_pago_records(self, cr, uid, pago_ids, context=None):
@@ -102,8 +102,9 @@ class plan_contratacion_idu_item(osv.osv):
 
     _columns = {
         'dependencia': fields.many2one('hr.department','Dependencia', select=True, ondelete='cascade'),
-        'description': fields.text('Objeto Contractual', select=True),
+        'description': fields.text('Objeto Contractual', states={'suscrito':[('readonly',True)], 'ejecucion':[('readonly',True)], 'ejecutado':[('readonly',True)]}),
         'name': fields.many2one('plan_contratacion_idu.plan','Plan contractual', select=True, ondelete='cascade'),
+        'centro_costo': fields.many2one('plan_contratacion_idu.plan_centro_costo_item','Centro de Costo', select=True, ondelete='cascade'),
         'fuente': fields.many2one('plan_contratacion_idu.fuente','Fuente de Financiación', select=True, ondelete='cascade'),
         'state':fields.selection([('aprobado', 'Por radicar'),('radicado', 'Radicado'),('suscrito', 'Contrato suscrito'),('ejecucion', 'En ejecución'),
                                   ('ejecutado', 'Ejecutado'), ('no_realizado', 'No realizado')],'State', required=True),
@@ -117,15 +118,8 @@ class plan_contratacion_idu_item(osv.osv):
         'unidad_meta_fisica': fields.many2one('product.uom','Unidad Meta Física', select=True, ondelete='cascade'),
         'cantidad_meta_fisica': fields.integer ('Cantidad Metas Físicas'),
         'localidad': fields.char ('Localidad', size=255),
-        'tipo_proceso': fields.selection([('nuevo', 'Contrato Nuevo'),('adicion', 'Adición'),('reconocimiento', 'Reconocimiento a Contrato'),
-                                          ('sentencias', 'Sentencias'),('orden', 'Orden de Servicio'), ('psp', 'PSP'), ('comisiones', 'Comisiones y Gravamen Financiero'),
-                                          ('compensacion', 'Compensación Social'),('adquisicion', 'Adquisición Predial')],'Proceso', required=True),
-        'tipo_proceso_seleccion': fields.selection([('licitacion_publica', 'Licitación Pública'),('concurso_meritos_abierto', 'Concurso de Méritos Abierto'),
-                                                    ('concurso_meritos_precalificacion', 'Concurso de Méritos con Precalificación'),
-                                                    ('seleccion_abreviada_subasta_inversa', 'Selección Abreviada Susbasta Inversa'),
-                                                    ('seleccion_abreviada_menor_cuantia', 'Selección Abreviada Menor Cuantia'), 
-                                                    ('seleccion_abreviada_minima_cuantia', 'Selección Abreviada Mínima Cuantia'),
-                                                    ('contratacion_directa', 'Contratación Directa'),('na', 'NA')],'Tipo de Proceso de Selección', required=True),
+        'tipo_proceso': fields.many2one('plan_contratacion_idu.plan_tipo_proceso_item','Tipo Proceso', select=True, ondelete='cascade'),
+        'tipo_proceso_seleccion': fields.many2one('plan_contratacion_idu.plan_tipo_proceso_seleccion_item','Tipo Proceso de Selección', select=True, ondelete='cascade'),
         'plan_pagos_item_ids': fields.one2many('plan_contratacion_idu.plan_pagos_item','plan_contratacion_item_id', 'Planificacion de Pagos', select=True, ondelete='cascade'),
         'total_pagos_programados': fields.function(_total_pagos_programados, type='float', multi="presupuesto", string='Total pagos programados', digits_compute=dp.get_precision('Account'),
              store={
@@ -135,11 +129,13 @@ class plan_contratacion_idu_item(osv.osv):
         'presupuesto_rezago': fields.function(_total_pagos_programados, type='float', multi="presupuesto", string='Rezago', digits_compute=dp.get_precision('Account'),
              store={
                 'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_item_ids', 'presupuesto'], 10),
+                'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['presupuesto', 'presupuesto'], 10),
                 'plan_contratacion_idu.plan_pagos_item': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
             }),
         'total_programado_rezago': fields.function(_total_pagos_programados, type='float', multi="presupuesto", string='Total', digits_compute=dp.get_precision('Account'),
              store={
                 'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_item_ids', 'presupuesto'], 10),
+                'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['presupuesto', 'presupuesto'], 10),
                 'plan_contratacion_idu.plan_pagos_item': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
             }),
     }
@@ -166,6 +162,7 @@ class plan_contratacion_idu_item(osv.osv):
             res = {
                 'total_pagos_programados': sumatoria,
                 'presupuesto_rezago': plan_item['presupuesto'] - sumatoria,
+                'total_programado_rezago': sumatoria + (plan_item['presupuesto'] - sumatoria),
             }
         return {
             'value': res
@@ -263,7 +260,10 @@ class plan_contratacion_idu_clasificador_proyectos(osv.osv):
         return dict(res)
 
     _columns = {
+        'codigo': fields.integer ('Código', required=True, select=True),
         'name': fields.char('Nombre', size=255, required=True, select=True),
+        'tipo': fields.selection([('proyecto_inversion', 'Proyecto de Inversión'),('proyecto_prioritario', 'Proyecto Prioritario'),
+                                  ('proyecto_idu', 'Proyecto IDU'),('punto_inversion', 'Punto de Inversión')],'Tipo', required=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Nombre'),
         'parent_id': fields.many2one('plan_contratacion_idu.clasificador_proyectos','Clasificación padre', select=True, ondelete='cascade'),
         'child_ids': fields.one2many('plan_contratacion_idu.clasificador_proyectos', 'parent_id', string='Clasificaciones hijas'),
@@ -297,7 +297,7 @@ plan_contratacion_idu_clasificador_proyectos()
 class plan_contratacion_idu_fuente(osv.osv):
     _name = "plan_contratacion_idu.fuente"
     _columns = {
-        'abreviado': fields.char  ('Abreviado', size=10, required=True, select=True),
+        'abreviado': fields.char  ('Abreviación', size=10, required=True, select=True),
         'name': fields.char('Nombre', size=255, required=True, select=True),
     }
 plan_contratacion_idu_fuente()
@@ -317,6 +317,41 @@ class plan_contratacion_idu_plan_pagos_item(osv.osv):
     ]
 
 plan_contratacion_idu_plan_pagos_item()
+
+class plan_contratacion_idu_plan_tipo_proceso_item(osv.osv):
+    _name = "plan_contratacion_idu.plan_tipo_proceso_item"
+    _columns = {
+        'name':fields.char('Nombre', size=255, required=True, select=True),
+    }
+
+    _sql_constraints =[
+        ('unique_name','unique(name)','El tipo de proceso debe ser único')
+    ]
+
+plan_contratacion_idu_plan_tipo_proceso_item()
+
+class plan_contratacion_idu_plan_tipo_proceso_seleccion_item(osv.osv):
+    _name = "plan_contratacion_idu.plan_tipo_proceso_seleccion_item"
+    _columns = {
+        'name':fields.char('Nombre', size=255, required=True, select=True),
+    }
+
+    _sql_constraints =[
+        ('unique_name','unique(name)','El tipo de proceso debe ser único')
+    ]
+
+class plan_contratacion_idu_plan_centro_costo_item(osv.osv):
+    _name = "plan_contratacion_idu.plan_centro_costo_item"
+    _columns = {
+        'codigo': fields.integer ('Código', required=True, select=True),
+        'name':fields.char('Nombre', size=255, required=True, select=True),
+    }
+
+    _sql_constraints =[
+        ('unique_name','unique(name)','El tipo de proceso debe ser único')
+    ]
+
+plan_contratacion_idu_plan_centro_costo_item()
 
 def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
     results = []
