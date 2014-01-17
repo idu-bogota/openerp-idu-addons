@@ -51,15 +51,6 @@ class task(osv.osv):
         'wbs_item_id': fields.many2one('project_pmi.wbs_item', 'Work Breakdown Structure', domain="[('project_id','=',project_id),('type','=','work_package')]"),
     }
 
-    def _is_template(self, cr, uid, ids, field_name, arg, context=None):
-        res = super(task, self)._is_template(cr, uid, ids, field_name, arg, context=context)
-        for task in self.browse(cr, uid, ids, context=context):
-            res[task.id] = True
-            if task.wbs_item_id:
-                if task.wbs_item_id.active == False or task.wbs_item_id.state == 'template':
-                    res[task.id] = False
-        return res
-
 task()
 
 class project_pmi_wbs_item(osv.osv):
