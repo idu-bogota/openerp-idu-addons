@@ -136,14 +136,14 @@ class project_pmi_wbs_item(osv.osv):
                     else:
                         res[id]['progress_rate'] = progress
                 else:
-                    number = self._get_Values_Dictionary(child_parent,id)
+                    number = self._get_values_dictionary(child_parent,id)
                     if number > 0:
                         value *= number
                     res[id]['progress_rate'] += progress / value
                 id = child_parent[id]
         return res
 
-    def _get_Values_Dictionary(self,my_dictionary,my_value):
+    def _get_values_dictionary(self,my_dictionary,my_value):
         number = 0
         for key,value in my_dictionary.items():
             if value == my_value:
@@ -273,7 +273,7 @@ class project_pmi_wbs_item(osv.osv):
         isValid = True
         type = self.read(cr, uid, ids, ['type'], context=context)
         child_parent = self._get_wbs_item_and_children(cr, uid, ids, context)
-        if self._get_Values_Dictionary(child_parent, ids[0]) > 0:
+        if self._get_values_dictionary(child_parent, ids[0]) > 0:
             for record in type:
                 if record['type'] == 'work_package':
                     isValid = False
