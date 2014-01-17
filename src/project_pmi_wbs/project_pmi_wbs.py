@@ -261,43 +261,48 @@ class project_pmi_wbs_item(osv.osv):
         return True
 
     def _check_no_childs(self,cr,uid,ids,context=None):
-        isValid = True
-        type = self.read(cr, uid, ids, ['type'], context=context)
-        child_parent = self._get_wbs_item_and_children(cr, uid, ids, context)
-        if self._get_values_dictionary(child_parent, ids[0]) > 0:
-            for record in type:
-                if record['type'] == 'work_package':
-                    isValid = False
-        return isValid
+        res = {}
+        records = self.read(cr, uid, ids, ['type','tracking_type','progress','child_ids','task_ids','work_record_ids'], context=context)
+        for record in records:
+            res[record['id']] = True
+            if record['type'] == 'work_package' and len(record['child_ids']):
+                res[record['id']] = False
+        return reduce(lambda x, y: x and y, res.values())
+
+    def _check_no_work_or_taks(self,cr,uid,ids,context=None):
+        res = {}
+        records = self.read(cr, uid, ids, ['type','tracking_type','progress','child_ids','task_ids','work_record_ids'], context=context)
+        for record in records:
+            res[record['id']] = True
+            if record['type'] == 'deliverable' and (len(record['task_ids']) or len(record['work_record_ids']) or record['tracking_type']):
+                res[record['id']] = False
+        return reduce(lambda x, y: x and y, res.values())
 
     def _check_unit_measure_work_package(self,cr,uid,ids,context=None):
-        type = self.read(cr, uid, ids, ['type','tracking_type','uom_id','progress'], context=context)
-        for record in type:
-            if record['type'] == 'work_package':
-                if record['tracking_type'] == 'units':
-                    if not record['uom_id']:
-                        return False
-        return True
-  
+        res = {}
+        records = self.read(cr, uid, ids, ['id','type','tracking_type','uom_id'], context=context)
+        for record in records:
+            res[record['id']] = True
+            if record['type'] == 'work_package' and record['tracking_type'] == 'units' and not record['uom_id']:
+                res[record['id']] = False
+
+        return reduce(lambda x, y: x and y, res.values())
+
     def _check_work_unit_no_task(self,cr,uid,ids,context=None):
-        type = self.read(cr, uid, ids, ['type','tracking_type','uom_id','progress'], context=context)
-        for record in type:
-            if record['type'] == 'work_package':
-                if record['tracking_type'] == 'units':
-                    cr.execute('select count(*) from project_task where wbs_item_id IN %s',(tuple(ids),))
-                    for row in cr.fetchall():
-                        if (row[0] > 0):
-                            return False
-                if record['tracking_type'] == 'tasks':
-                    cr.execute('select count(*) from project_pmi_wbs_work_record where wbs_item_id IN %s',(tuple(ids),))
-                    for row in cr.fetchall():
-                        if row[0] > 0:
-                            return False
-        return True
+        res = {}
+        records = self.read(cr, uid, ids, ['type','tracking_type','progress','task_ids','work_record_ids'], context=context)
+        for record in records:
+            res[record['id']] = True
+            if record['type'] == 'work_package' and record['tracking_type'] == 'units' and len(record['task_ids']):
+                res[record['id']] = False
+            if record['type'] == 'work_package' and record['tracking_type'] == 'tasks' and len(record['work_record_ids']):
+                res[record['id']] = False
+        return reduce(lambda x, y: x and y, res.values())
 
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive wbs items.', ['parent_id']),
-        (_check_no_childs, 'Error ! You cannot have childs.', ['type']),
+        (_check_no_childs, 'Error ! A work package cannot have children.', ['type']),
+        (_check_no_work_or_taks, 'Error ! a Deliverable cannot have neither unit tracking, tasks nor work_records.', ['type']),
         (_check_unit_measure_work_package, 'Error ! Please select unit of measure.', ['tracking_type']),
         (_check_work_unit_no_task, 'Error ! You cannot change tracking type.', ['tracking_type']),
     ]
