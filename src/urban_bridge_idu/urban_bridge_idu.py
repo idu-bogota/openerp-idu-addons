@@ -212,7 +212,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
                 elif (data_type == "float"):
                     value = values.value_float
                 elif (data_type=="boolean"):
-                    value = values.value_boolean
+                    value = values.value_bool
                 elif (data_type == "char"):
                     value = values.value_char
                 elif (data_type == "selection"):
