@@ -31,6 +31,7 @@ class project_pmi_wbs_wizard_create_wbs(osv.osv_memory):
         'parent_project_wbs_count': fields.integer(string="Parent Project WBS count", required=False),
         'parent_wbs_id': fields.many2one('project_pmi.wbs_item', 'WBS Parent', required=False),
         'wbs_template_id': fields.many2one('project_pmi.wbs_item', 'WBS template', required=False, domain="[('state', '=', 'template')]"),
+        'reference_date': fields.date('WBS start date', help="Used as a reference to set the deadline"),
         'link_to_parent': fields.boolean("Link new WBS to parent's project WBS?"),
     }
 
@@ -70,7 +71,7 @@ class project_pmi_wbs_wizard_create_wbs(osv.osv_memory):
                 data['parent_id'] = form_object.parent_wbs_id.id
 
             if(form_object.wbs_template_id):
-                context.update({'copy':True})
+                context.update({'copy':True, 'reference_date':form_object.reference_date})
                 wbs_table.copy(cr, uid, form_object.wbs_template_id.id, default = data, context=context)
             else:
                 wbs_table.create(cr, uid, data, context)

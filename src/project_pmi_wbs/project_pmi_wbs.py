@@ -20,6 +20,7 @@
 
 from openerp.osv import fields, osv
 import time
+from datetime import datetime
 
 class project(osv.osv):
     _name = "project.project"
@@ -209,7 +210,7 @@ class project_pmi_wbs_item(osv.osv):
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
         'color': fields.integer('Color Index'),
-        'date_deadline': fields.date('Deadline'),
+        'date_deadline': fields.date('Deadline', help="For template items, this date will be copied using current context reference_date provided"),
         'date_start': fields.date('Starting Date'),
         'date_end': fields.date('Ending Date'),
         'excess_progress': fields.function(_progress_rate, multi="progress", string='Excess Progress', type='float', group_operator="avg",
@@ -316,13 +317,31 @@ class project_pmi_wbs_item(osv.osv):
         if default is None:
             default = {}
 
+        record = self.read(cr,uid,id,['date_deadline','date_start'])
+        deadline = False
+        date_start = False
+
+        if(record['date_deadline'] or record['date_start']) and 'reference_date' in context:
+            reference_date = datetime.strptime(context['reference_date'], '%Y-%m-%d')
+            if record['date_deadline']:
+                template_deadline = datetime.strptime(record['date_deadline'], '%Y-%m-%d')
+                template_reference_date = datetime(template_deadline.year, 1, 1)
+                delta = template_deadline - template_reference_date
+                deadline = reference_date + delta
+
+            if record['date_start']:
+                template_date_start = datetime.strptime(record['date_start'], '%Y-%m-%d')
+                template_reference_date = datetime(template_date_start.year, 1, 1)
+                delta = template_date_start - template_reference_date
+                date_start = reference_date + delta
+
         context['active_test'] = False
         context['copy'] = True #Tasks doesn't add the (copy) text
         default.update({
             'message_ids':[],
-            'date_start': False,
+            'date_start': date_start,
             'date_end': False,
-            'date_deadline': False,
+            'date_deadline': deadline,
             'work_record_ids': []
         })
         return super(project_pmi_wbs_item, self).copy_data(cr, uid, id, default, context)
