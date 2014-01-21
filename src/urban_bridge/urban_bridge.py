@@ -232,7 +232,8 @@ class urban_bridge_bridge(geo_model.GeoModel):
         'calc_area':fields.function(_get_area,string="Calculated Area",method=True,type="float"),
         'calc_perimeter':fields.function(_get_perimeter,string="Calculated Perimeter",method=True,type="float"),
         'elements':fields.one2many('urban_bridge.structure_element','bridge_id','Elements'),
-        'survey_id':fields.one2many('urban_bridge.inspection_survey','bridge_id','Inspection Survey')
+        'survey_id':fields.one2many('urban_bridge.inspection_survey','bridge_id','Inspection Survey'),
+        'state':fields.selection([('draft','Draft'),('updated','Updated'),('maintenance','Maintenance'),('warranty','Warranty')],'State'),
     }
     
     _sql_contraints = [
