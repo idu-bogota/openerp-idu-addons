@@ -6,8 +6,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Radicar PQR">
-                    <field name="description"/>
+                    <field name="partner_forwarded_id" />
                     <field name="folios" />
+                    <field name="description"/>
                     <separator colspan="4"/>
                     <group col="4" colspan="4">
                         <label string="" colspan="2"/>

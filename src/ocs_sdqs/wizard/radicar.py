@@ -29,6 +29,8 @@
 
 from osv import osv, fields
 from ocs_sdqs.wsclient.wsclient import SdqsClient
+import mimetypes
+from mimetypes import guess_type
 
 class ocs_sdqs_wizard_radicar(osv.osv_memory):
     _name = 'ocs_sdqs.wizard.radicar'
@@ -37,17 +39,21 @@ class ocs_sdqs_wizard_radicar(osv.osv_memory):
     _columns = {
         'description': fields.text('Description', help='Texto a ser radicado', required=True),
         'folios':fields.integer('folios', help='Numero de folios', required=True),
+        'partner_forwarded_id': fields.many2one('res.partner', 'Partner Forwarded',domain="[('supplier','=',True)]",),
     }
 
     def default_get(self, cr, uid, fields, context=None):
         claim = self.pool.get('crm.claim').browse(cr, uid, context['active_id'], context=None);
         res = super(ocs_sdqs_wizard_radicar, self).default_get(cr, uid, fields, context=context)
         res.update({'description': claim.description })
+        res.update({'partner_forwarded_id': claim.partner_forwarded_id.id })
         return res
 
     def radicar(self, cr, uid, ids, context=None):
         wsdl_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'sdqs.ws.url', default='', context=context)
         sdqs_token = self.pool.get('ir.config_parameter').get_param(cr, uid, 'sdqs.token', default='', context=context)
+        attach_pool = self.pool.get('ir.attachment')
+        attach_id = attach_pool.search(cr, uid,[('res_id', '=', context['active_id'])])
         client = SdqsClient(wsdl_url,sdqs_token)
 
         current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
@@ -69,66 +75,67 @@ class ocs_sdqs_wizard_radicar(osv.osv_memory):
 
             if ciudadano:
                 if ciudadano.document_number:
-                    numeroDocumento = ciudadano.document_number
+                    numero_documento = ciudadano.document_number
                 else:
-                    numeroDocumento = 1
+                    numero_documento = 1
                 if ciudadano.name:
-                    nombreCiudadano = ciudadano.name
+                    nombre_ciudadano = ciudadano.name
                 else:
-                    nombreCiudadano = ""
+                    nombre_ciudadano = ""
                 if ciudadano.last_name:
-                    apellidoCiudadano = ciudadano.last_name
+                    apellido_ciudadano = ciudadano.last_name
                 else:
-                    apellidoCiudadano = ""
+                    apellido_ciudadano = ""
                 if ciudadano.email:
-                    correoCiudadano = ciudadano.email
+                    correo_ciudadano = ciudadano.email
                 else:
-                    correoCiudadano = ""
+                    correo_ciudadano = ""
                 if ciudadano.phone:
-                    telefonoCiudadano = ciudadano.phone
+                    telefono_ciudadano = ciudadano.phone
                 else:
-                    telefonoCiudadano = ""
+                    telefono_ciudadano = ""
             if form_object:
                 if form_object.folios:
                     foliosSDQS = form_object.folios
                 else:
                     foliosSDQS = 1
                 if form_object.description:
-                    descripcionSDQS = form_object.description
+                    descripcion_sdqs = form_object.description
                 else:
-                    descripcionSDQS = "Sin descripcion"
+                    descripcion_sdqs = "Sin descripcion"
 
             if claim:
                 if claim.claim_address:
-                    direccionReclamo = claim.claim_address
+                    direccion_reclamo = claim.claim_address
                 else:
-                    direccionReclamo = "Sin direccion"
+                    direccion_reclamo = "Sin direccion"
                 if claim.id:
-                    numeroRadicado = claim.id
+                    numero_radicado = claim.id
                 else:
-                    numeroRadicado = 0
+                    numero_radicado = 0
 
             if categoria:
-                codigoTipoRequerimiento = categoria.sdqs_req_type 
+                codigo_tipo_requerimiento = categoria.sdqs_req_type 
             else:
-                codigoTipoRequerimiento = 1
+                codigo_tipo_requerimiento = 1
 
             params = {
-            "numeroRadicado": numeroRadicado,
+            "numeroRadicado": numero_radicado,
             "numeroFolios": foliosSDQS,        
-            "asunto": descripcionSDQS.strip(),
-            "numeroDocumento": numeroDocumento,
-            "nombres": nombreCiudadano,
-            "apellidos": apellidoCiudadano,
-            "email": correoCiudadano,
-            "telefonoCasa": telefonoCiudadano,
+    
+            "asunto": descripcion_sdqs.strip(),
+            "numeroDocumento": numero_documento,
+            "nombres": nombre_ciudadano,
+            "apellidos": apellido_ciudadano,
+            "email": correo_ciudadano,
+            "telefonoCasa": telefono_ciudadano,
             "telefonoOficina": "000000000",
             "telefonoCelular": "000000000",
-            "direccion": direccionReclamo,
+            "direccion": direccion_reclamo,
             "codigoCiudad": "11001",
             "codigoDepartamento": "250",
             "codigoPais": "1",
-            "codigoTipoRequerimiento": codigoTipoRequerimiento,
+            "codigoTipoRequerimiento": codigo_tipo_requerimiento,
             #===================================================================
             # "clasificacionRequerimiento": {
             # "codigoSector": [11],
@@ -136,14 +143,20 @@ class ocs_sdqs_wizard_radicar(osv.osv_memory):
             # "codigoSubtema": [4],
             # },
             #===================================================================
-            "observaciones": descripcionSDQS,
+            "observaciones": descripcion_sdqs,
             "prioridad": "2",
             "entidadQueIngresaRequerimiento": 2972,
             }
 
             try:
                 result = client.registrarRequerimiento(params)
-                if result['codigoRequerimiento'] > 0:
+                if result['codigoRequerimiento'] > 0:                    
+                    mimetypes.init()
+                    for id in attach_id:
+                        file = attach_pool.browse(cr, uid, id, context=None);
+                        resultado = client.adjuntarArchivoEnRequerimiento(result['codigoRequerimiento'], file.datas, file.name,guess_type(file.name)[0])
+                        if resultado['codigoError'] > 0:
+                            raise osv.except_osv('Error retornado por el sistema SDQS al adjuntar el archivo:' + file.name, result['codigoError'])
                     claim_table.write(cr, uid, claim.id, {'sdqs_id': result['codigoRequerimiento']}, context=context)
                 else:
                     raise osv.except_osv('Error retornado por el sistema SDQS', result['codigoError'])
