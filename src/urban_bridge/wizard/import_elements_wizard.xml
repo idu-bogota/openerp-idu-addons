@@ -39,7 +39,7 @@
             <field name="arch" type="xml">
                 <form string="Import from elements">
                     <field name="bridge_id" readonly="True"/>
-                    <field name="srid" readonly="False"/>
+                    <field name="srid" readonly="True"/>
                     <field name="element" widget="selection"/>
                     <field name="file"/>
                     <group col="4" colspan="4">

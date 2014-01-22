@@ -49,8 +49,8 @@ class urban_bridge_wizard_update_shape(osv.osv_memory):
             res["wkt"]=shape
             res["srid"]=int(spatial_ref_sys)
         return res
-    
-    
+
+
     def create(self, cr, uid, vals, context=None):
         """
         This method si called when every action at wizard
@@ -68,6 +68,7 @@ class urban_bridge_wizard_update_shape(osv.osv_memory):
             return id_val
         except Exception:
             raise except_osv(_('Geometry wizard Load Fail'), str("Geometry bad definition"))
+
     def elem_create (self, cr, uid, ids, context=None):
         return {'type': 'ir.actions.act_window_close'}
 

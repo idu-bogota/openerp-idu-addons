@@ -271,8 +271,10 @@ class urban_bridge_wizard_import_elements(osv.osv_memory):
         """
         Fields View Get method :- generate the new view and display the survey pages of selected survey.
         """
+        spatial_ref_sys = self.pool.get('ir.config_parameter').get_param(cr, uid, 'urban_bridge.local_spatial_reference', default='', context=context)
         res = super(urban_bridge_wizard_import_elements, self).default_get(cr, uid, fields, context=context)
         res['bridge_id']=context['active_id']
+        res['srid']=int(spatial_ref_sys)
         return res
 
 
