@@ -24,6 +24,7 @@
 from openerp.osv import osv, fields
 from openerp.osv.osv import except_osv
 from shapely.wkt import dumps, loads
+import common_fun
 from tools.translate import _
 
 class urban_bridge_wizard_update_shape(osv.osv_memory):
@@ -42,16 +43,11 @@ class urban_bridge_wizard_update_shape(osv.osv_memory):
         bridge_id = context['active_id']
         res["bridge_id"]=bridge_id
         if bridge_id is not False:
-            spatial_ref_sys = self.pool.get('ir.config_parameter').get_param(cr, uid, 'urban_bridge.local_spatial_reference', default='', context=context) 
-            query = """
-            SELECT  ST_ASTEXT(ST_TRANSFORM(SHAPE,%s)) FROM URBAN_BRIDGE_BRIDGE WHERE ID = %s
-            """
-            cr.execute(query,(spatial_ref_sys,bridge_id))
-            for row in cr.fetchall():
-                shape = row[0]
-                if shape is not False:
-                    res["wkt"]=shape
-                    res["srid"]=int(spatial_ref_sys)
+            spatial_ref_sys = self.pool.get('ir.config_parameter').get_param(cr, uid, 'urban_bridge.local_spatial_reference', default='', context=context)
+            bridge = self.pool.get('urban_bridge.bridge').browse(cr,uid,bridge_id,context)
+            shape = common_fun.transform_from_web_mercator_to_source_coordinates(cr,bridge.shape.wkt, spatial_ref_sys)
+            res["wkt"]=shape
+            res["srid"]=int(spatial_ref_sys)
         return res
     
     
@@ -63,19 +59,12 @@ class urban_bridge_wizard_update_shape(osv.osv_memory):
             id_val = super(urban_bridge_wizard_update_shape,self).create(cr, uid, vals, context=context)
             #3. Captura de Dato desde un WKT
             wkt = vals["wkt"]
-            spatial_ref_sys = self.pool.get('ir.config_parameter').get_param(cr, uid, 'urban_bridge.local_spatial_reference', default='', context=context)
             bridge_id = context["bridge_id"]
             if ((wkt is not None) or (wkt is not False)):
-                #Transform coordinates first
-                query = """
-                Select ST_ASTEXT(ST_TRANSFORM(ST_GEOMFROMTEXT(%s,
-                %s),900913))
-                """
-                cr.execute(query,(wkt,spatial_ref_sys))
-                for row in cr.fetchall():
-                    if (row[0] is not False):
-                        shape = dumps(loads(row[0]))
-                        self.pool.get('urban_bridge.bridge').write(cr,uid,bridge_id,{'shape':shape})
+                spatial_ref_sys = self.pool.get('ir.config_parameter').get_param(cr, uid, 'urban_bridge.local_spatial_reference', default='', context=context)
+                shape = common_fun.transform_source_geometry_to_web_mercator(cr, wkt, spatial_ref_sys)
+                if (shape is not False):
+                    self.pool.get('urban_bridge.bridge').write(cr,uid,bridge_id,{'shape':shape})
             return id_val
         except Exception:
             raise except_osv(_('Geometry wizard Load Fail'), str("Geometry bad definition"))

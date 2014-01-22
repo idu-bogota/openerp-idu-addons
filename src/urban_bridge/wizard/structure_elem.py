@@ -29,6 +29,7 @@ from ast import literal_eval
 from shapely.wkt import dumps, loads
 from openerp.osv.osv import except_osv
 from tools.translate import _
+import common_fun
 #from suds.client import Client
 
 class urban_bridge_wizard_structure_elem(osv.osv_memory):
@@ -195,17 +196,37 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
             elif(data_type=='binary'):
                 res.update({field_id:value.value_binary})
             elif(data_type=='geo_point'):
-                if (value.value_point is not False):
-                    res.update({field_id:value.value_point.wkt})
+                geom = self.__transform_from_web_mercator_to_source_coordinates(cr,uid,value.value_point,context)
+                if (geom is not None):
+                    res.update({field_id:geom})
             elif(data_type=='geo_line'):
-                if (value.value_line is not False):
-                    res.update({field_id:value.value_line.wkt})
+                geom = self.__transform_from_web_mercator_to_source_coordinates(cr, uid,value.value_line, context)
+                if (geom is not None):
+                    res.update({field_id:geom})
             elif(data_type=='geo_polygon'):
-                if (value.value_polygon is not False):
-                    res.update({field_id:value.value_polygon.wkt})
+                geom = self.__transform_from_web_mercator_to_source_coordinates(cr, uid,value.value_polygon,context)
+                if (geom is not None):
+                    res.update({field_id:geom})
         return res
-            
-        
+
+
+    def __transform_from_web_mercator_to_source_coordinates(self,cr,uid,input_geometry,context):
+        try:
+            spatial_ref_sys = self.pool.get('ir.config_parameter').get_param(cr, uid, 'urban_bridge.local_spatial_reference', default='', context=context)
+            #Llamada al codigo que hace la conversion con la base de datos
+            if  (input_geometry is not False):
+                return common_fun.transform_from_web_mercator_to_source_coordinates(cr, input_geometry.wkt, spatial_ref_sys)
+        except Exception as e:
+            raise except_osv(_('Error'), str("something is wrong : "+str(e.value)))
+                
+    def __transform_source_geometry_to_web_mercator(self,cr,uid,input_wkt,context):
+        try:
+            spatial_ref_sys = self.pool.get('ir.config_parameter').get_param(cr, uid, 'urban_bridge.local_spatial_reference', default='', context=context)
+            return common_fun.transform_source_geometry_to_web_mercator(cr, input_wkt, spatial_ref_sys)
+        except Exception as e:
+            raise e
+
+
     def elem_create (self, cr, uid, ids, context=None):
         return {'type': 'ir.actions.act_window_close'}
 
@@ -260,32 +281,14 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                     elif(data_type=='binary'):
                         str_elem_val_vals['value_binary']=vals[value_form]
                     elif(data_type=='geo_line'):
-                        if vals[value_form] is not False:
-                            try:
-                                line = dumps(loads(vals[value_form]))
-                                str_elem_val_vals['value_line']= line
-                            except Exception:
-                                raise except_osv(_('Error'), str("Line is not valid!"))
-                        else :
-                            str_elem_val_vals['value_line']= vals[value_form]
+                        shape_line = self.__transform_source_geometry_to_web_mercator(cr, uid,vals[value_form], context)
+                        str_elem_val_vals['value_line']=shape_line
                     elif(data_type=='geo_point'):
-                        if vals[value_form] is not False:
-                            try:
-                                point = dumps(loads(vals[value_form]))
-                                str_elem_val_vals['value_point']= point
-                            except Exception:
-                                raise except_osv(_('Error'), str("Point is not valid!"))
-                        else :
-                            str_elem_val_vals['value_point']= vals[value_form]
+                        shape_point = self.__transform_source_geometry_to_web_mercator(cr, uid,vals[value_form], context)
+                        str_elem_val_vals['value_point']= shape_point
                     elif(data_type=='geo_polygon'):
-                        if vals[value_form] is not False:
-                            try:
-                                polygon = dumps(loads(vals[value_form]))
-                                str_elem_val_vals['value_polygon']= polygon
-                            except Exception:
-                                raise except_osv(_('Error'), str("Polygon is not valid!"))
-                        else :
-                            str_elem_val_vals['value_polygon']= vals[value_form] 
+                        shape_polygon = self.__transform_source_geometry_to_web_mercator(cr, uid,vals[value_form], context)
+                        str_elem_val_vals['value_polygon']= shape_polygon
                     isnew=True
                     id_value=0 
                     for struc_elem_value in structure_elem.values:
@@ -300,7 +303,7 @@ class urban_bridge_wizard_structure_elem(osv.osv_memory):
                         structure_elem_value_obj.create(cr,uid,str_elem_val_vals)
             return urban_bridge_wizard_structure_elem_id
         except Exception as e:
-            raise except_osv(_('Error'), str("something is wrong : "+str(e.value)))
+            raise except_osv(_('Error'), str("something is wrong : "+str(e)))
             
 
 urban_bridge_wizard_structure_elem()
