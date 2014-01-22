@@ -19,6 +19,7 @@ Bridges
             <form string="Bridge Inventory">
             <group colspan="4" col="4">
                 <group colspan="2" col="4">
+                    <field name ="id" readonly ="1"/>
                     <field name="name" select="1"/>
                     <field name="code" select="1"/>
                     <field name="address" select="1"/>

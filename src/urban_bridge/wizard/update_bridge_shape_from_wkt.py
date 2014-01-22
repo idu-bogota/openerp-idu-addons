@@ -33,8 +33,7 @@ class urban_bridge_wizard_update_shape(osv.osv_memory):
         'wkt':fields.text('WKT Text',required=True),
         'srid':fields.integer('SRID',required=True)
     }
-    
-    
+
     def default_get(self,cr, uid, fields, context=None):
         """
         Fields View Get method :- generate the new view and display the survey pages of selected survey.
@@ -43,10 +42,16 @@ class urban_bridge_wizard_update_shape(osv.osv_memory):
         bridge_id = context['active_id']
         res["bridge_id"]=bridge_id
         if bridge_id is not False:
-            bridge=self.pool.get("urban_bridge.bridge").browse(cr,uid,bridge_id)
-            shape = bridge.shape
-            if shape is not False:
-                res["wkt"] = shape.wkt
+            spatial_ref_sys = self.pool.get('ir.config_parameter').get_param(cr, uid, 'urban_bridge.local_spatial_reference', default='', context=context) 
+            query = """
+            SELECT  ST_ASTEXT(ST_TRANSFORM(SHAPE,%s)) FROM URBAN_BRIDGE_BRIDGE WHERE ID = %s
+            """
+            cr.execute(query,(spatial_ref_sys,bridge_id))
+            for row in cr.fetchall():
+                shape = row[0]
+                if shape is not False:
+                    res["wkt"]=shape
+                    res["srid"]=int(spatial_ref_sys)
         return res
     
     
@@ -58,14 +63,22 @@ class urban_bridge_wizard_update_shape(osv.osv_memory):
             id_val = super(urban_bridge_wizard_update_shape,self).create(cr, uid, vals, context=context)
             #3. Captura de Dato desde un WKT
             wkt = vals["wkt"]
-            bridge_id = vals["bridge_id"]
+            spatial_ref_sys = self.pool.get('ir.config_parameter').get_param(cr, uid, 'urban_bridge.local_spatial_reference', default='', context=context)
+            bridge_id = context["bridge_id"]
             if ((wkt is not None) or (wkt is not False)):
-                shape = dumps(loads(wkt))
-                self.pool.get('urban_bridge.bridge').write(cr,uid,bridge_id,{'shape':shape})
+                #Transform coordinates first
+                query = """
+                Select ST_ASTEXT(ST_TRANSFORM(ST_GEOMFROMTEXT(%s,
+                %s),900913))
+                """
+                cr.execute(query,(wkt,spatial_ref_sys))
+                for row in cr.fetchall():
+                    if (row[0] is not False):
+                        shape = dumps(loads(row[0]))
+                        self.pool.get('urban_bridge.bridge').write(cr,uid,bridge_id,{'shape':shape})
             return id_val
         except Exception:
             raise except_osv(_('Geometry wizard Load Fail'), str("Geometry bad definition"))
-    
     def elem_create (self, cr, uid, ids, context=None):
         return {'type': 'ir.actions.act_window_close'}
 

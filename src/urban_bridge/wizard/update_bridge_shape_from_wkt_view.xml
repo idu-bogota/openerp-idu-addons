@@ -7,8 +7,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Structure Elements">
-                    <field name="bridge_id"/>
-                    <field name="srid"/>
+                    <field name="bridge_id" readonly="1"/>
+                    <field name="srid" readonly="1"/>
                     <group col="2" colspan="4">
                         <field name="wkt"/>
                     </group>
