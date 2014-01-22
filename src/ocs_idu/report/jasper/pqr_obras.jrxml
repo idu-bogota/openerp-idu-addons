@@ -305,7 +305,7 @@ ORDER BY
 FROM
      "crm_claim" c
      LEFT JOIN "ocs_district" l ON l."id" = c."district_id"
-     LEFT JOIN "ocs_claim_classification" su ON su."id" = c."sub_classification_id"
+     LEFT JOIN "ocs_claim_classification" su ON su."id" = c."classification_id"
      LEFT JOIN (
 	SELECT l.id as id, COUNT(c.id) as orden
 	FROM "crm_claim" c LEFT JOIN "ocs_district" l ON l."id" = c."district_id"

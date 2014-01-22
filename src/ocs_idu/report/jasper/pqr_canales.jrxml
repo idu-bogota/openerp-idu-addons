@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="IDU_reports" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="03dc2d70-070b-4adb-aa0a-612d4cabbd33">
 	<property name="ireport.zoom" value="1.500000000000002"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="1369"/>
+	<property name="ireport.y" value="1176"/>
 	<style name="table" hAlign="Left" vAlign="Middle" fontName="Arial">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -305,7 +305,7 @@ ORDER BY
 FROM
      "crm_claim" c
      LEFT JOIN "ocs_district" l ON l."id" = c."district_id"
-     LEFT JOIN "ocs_claim_classification" su ON su."id" = c."sub_classification_id"
+     LEFT JOIN "ocs_claim_classification" su ON su."id" = c."classification_id"
      LEFT JOIN (
 	SELECT l.id as id, COUNT(c.id) as orden
 	FROM "crm_claim" c LEFT JOIN "ocs_district" l ON l."id" = c."district_id"
@@ -331,10 +331,10 @@ ORDER BY
 			<groupExpression><![CDATA[$F{criterio}]]></groupExpression>
 		</group>
 	</subDataset>
-	<parameter name="Fecha_Inicial" class="java.util.Date" isForPrompting="false">
+	<parameter name="Fecha_Inicial" class="java.util.Date">
 		<defaultValueExpression><![CDATA[(new SimpleDateFormat("yyyy-MM-dd")).parse("2013-04-01")]]></defaultValueExpression>
 	</parameter>
-	<parameter name="Fecha_Final" class="java.util.Date" isForPrompting="false">
+	<parameter name="Fecha_Final" class="java.util.Date">
 		<defaultValueExpression><![CDATA[(new SimpleDateFormat("yyyy-MM-dd")).parse("2013-05-01")]]></defaultValueExpression>
 	</parameter>
 	<queryString>
