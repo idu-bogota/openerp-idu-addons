@@ -27,7 +27,7 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_id" ref="project.view_project_kanban"/>
             <field name="search_view_id" ref="project.view_project_project_filter"/>
-            <field name="context">{'search_default_Current': 1}</field>
+            <field name="context">{'search_default_Current': 1, 'search_default_group_by_etapa':1}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                   Click to start a new project.
@@ -61,7 +61,7 @@
             <field name="inherit_id" ref="project.view_project_project_filter"/>
             <field name="arch" type="xml">
                 <filter name="Parent" position="after">
-                    <filter string="Etapa" name="Etapa" icon="terp-personal" domain="[]" context="{'group_by':'etapa_nombre'}"/>
+                    <filter string="Etapa" name="group_by_etapa" icon="terp-personal" domain="[]" context="{'group_by':'etapa_nombre'}"/>
                 </filter>
             </field>
         </record>
