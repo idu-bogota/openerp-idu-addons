@@ -1,0 +1,149 @@
+id,duration,date_start,constraint_date_end,name,product_uom/id,project_id/id
+__export__.project_phase_1,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_2,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_3,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_4,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_5,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_6,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_7,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_8,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_9,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_10,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_11,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_12,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_13,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_14,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_15,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_16,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_17,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_18,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_19,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_20,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_21,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_22,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_23,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_24,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_25,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_26,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_27,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_28,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_29,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_30,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_31,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_32,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_33,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_34,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_35,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_36,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_37,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_38,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_39,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_40,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_41,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_42,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_43,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_44,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_45,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_46,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_47,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_48,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_49,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_50,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_51,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_52,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_53,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_54,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_55,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_56,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_57,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_58,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_59,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_60,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_61,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_62,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_63,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_64,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_65,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_66,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_67,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_68,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_69,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_70,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_71,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_72,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_73,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_74,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_75,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_76,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_77,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_78,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_79,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_80,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_81,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_82,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_83,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_84,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_85,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_86,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_87,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_88,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_89,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_90,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_91,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_92,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_93,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_94,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_95,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_96,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_97,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_98,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_99,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_100,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_101,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_102,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_103,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_104,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_105,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_106,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_107,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_108,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_109,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_110,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_111,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_112,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_113,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_114,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_115,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_116,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_117,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_118,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_119,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_120,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_121,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_122,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_123,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_124,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_125,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_126,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_127,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_128,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_129,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_130,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_131,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_132,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_133,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_134,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_135,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_136,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_137,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_138,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_139,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_140,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_141,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_142,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_143,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_144,1,,,Construcción,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_145,1,,,Factibilidad,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_146,1,,,Adquisición Predial,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_147,1,,,Estudios y Diseños,product.product_uom_unit,__export__.project_project_1
+__export__.project_phase_148,1,,,Construcción,product.product_uom_unit,__export__.project_project_1

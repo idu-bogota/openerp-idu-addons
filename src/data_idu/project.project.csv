@@ -1,38 +1,149 @@
-id,active,alias_name,alias_model,company_id/id,state,etapa_id/id,alias_model_id/id,name,privacy_visibility,type
-__export__.project_project_1,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Avenida José Celestino Mutis (AC 63) desde Carrera 114 hasta Carrera 122,employees,contract
-__export__.project_project_2,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,"Avenida Ciudad de Cali, desde Avenida Bosa hasta Avenida San Bernardino",employees,contract
-__export__.project_project_3,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,"Avenida Bosa, desde Avenida Agoberto Mejía (AK 80) hasta Avenida Ciudad de Cali ",employees,contract
-__export__.project_project_4,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Avenida Bosa desde Avenida Ciudad de Cali hasta Avenida Tintal ,employees,contract
-__export__.project_project_5,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Avenida de los Cerros (Avenida Circunvalar) desde Calle 9 hasta Avenida de los Comuneros. ,employees,contract
-__export__.project_project_6,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task, PAR VIAL - Carrera 6 y Carrera 7 desde Avenida de los Comuneros hasta Avenida  de la Hortúa (AC 1) ,employees,contract
-__export__.project_project_7,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task, Avenida de La Hortúa (AC 1) desde la Carrera 6 hasta Avenida Fernando Mazuera (AK 10) ,employees,contract
-__export__.project_project_8,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Avenida El Rincón (KR 91 y AC 131A) desde Carrera 91 hasta Avenida la Conejera (TV97),employees,contract
-__export__.project_project_9,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Avenida Tabor desde Avenida la Conejera hasta Av. Ciudad de Cali,employees,contract
-__export__.project_project_10,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Avenida Tintal (AK 89) desde Avenida Villavicencio hasta Avenida Manuel Cepeda Vargas - Calzada Occidental,employees,contract
-__export__.project_project_11,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Avenida Tintal (AK 89) desde Avenida Manuel Cepeda Vargas hasta Avenida Alsacia (AC 12) - Calzada Occidental,employees,contract
-__export__.project_project_12,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Avenida Alsacia desde Avenida Tintal (AK 89) hasta Avenida Ciudad de Cali (AK 86),employees,contract
-__export__.project_project_13,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Avenida Alsacia (AC 12) desde Avenida de la Constitución hasta Avenida Boyacá (AK 72),employees,contract
-__export__.project_project_14,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Avenida Constitución desde Avenida Alsacia ( AC 12)hasta Avenida Centenario (AC 13),employees,contract
-__export__.project_project_15,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Avenida Alsacia desde Avenida Boyacà (AK 72) hasta Avenida Ciudad de Cali (AK 86).  ,employees,contract
-__export__.project_project_16,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Avenida San Antonio (AC 183) desde la Av. Paseo de los Libertadores (Autonorte) hasta Av. Alberto Lleras Camargo (AC. 7),employees,contract
-__export__.project_project_17,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Avenida Laureano Gómez (AK 9) desde Avenida San José (AC 170) hasta la Calle 183,employees,contract
-__export__.project_project_18,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Avenida Laureano Gómez (AK 9) desde Avenida San José (AC 170) hasta la Calle 193,employees,contract
-__export__.project_project_19,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Avenida Jorge Gaitán Cortes (AK 33) desde Avenida Boyacá hasta Avenida del Congreso Eucarístico ,employees,contract
-__export__.project_project_20,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Avenida Chile (AC 72) por Avenida Ciudad de Cali,employees,contract
-__export__.project_project_21,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Avenida Primero de Mayo desde Kr 3 Este hasta Calle 11 Sur ,employees,contract
-__export__.project_project_22,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Ampliación Portal Tunal,employees,contract
-__export__.project_project_23,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,"Ampliación Estaciones Fase I: Toberin, Pepe Sierra, Escuela Militar, Calle 146, Calle 127, Av. Cali",employees,contract
-__export__.project_project_24,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Ampliación Caracas (Molinos a Portal Usme) ,employees,contract
-__export__.project_project_25,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Troncal Américas (Puente Aranda - NQS),employees,contract
-__export__.project_project_26,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Extensión Caracas (Portal Usme a Yomasa),employees,contract
-__export__.project_project_27,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Troncal Av. Villavicencio (Portal Tunal - NQS),employees,contract
-__export__.project_project_28,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,Cables,employees,contract
-__export__.project_project_29,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,RAPS RINCÓN,employees,contract
-__export__.project_project_30,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,RAPS NIEVES,employees,contract
-__export__.project_project_31,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,RAPS TEUSAQUILLO,employees,contract
-__export__.project_project_32,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,RAPS KENNEDY CENTRAL,employees,contract
-__export__.project_project_33,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,RAPS RESTREPO,employees,contract
-__export__.project_project_34,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,RAPS CARVAJAL,employees,contract
-__export__.project_project_35,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,RED TINTAL,employees,contract
-__export__.project_project_36,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,CAF FASE II,employees,contract
-__export__.project_project_37,True,project+obra,project.task,base.main_company,In Progress,__export__.project_project_1,project.model_project_task,ADECUACIÓN DE INFRAESTRUCTURA CICLOINCLUSIVA,employees,contract
+id,phase_ids/id,phase_ids/duration,phase_ids/date_start,phase_ids/constraint_date_end,phase_ids/name,name,use_phases,use_tasks,alias_model_id/id,alias_name,state
+__export__.project_project_1,__export__.project_phase_1,,,,Factibilidad,Avenida José Celestino Mutis (AC 63) desde Carrera 114 hasta Carrera 122,TRUE,TRUE,project.model_project_task,project-cupo-1,draft
+,__export__.project_phase_2,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_3,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_4,,,,Construcción,,,,,,
+__export__.project_project_2,__export__.project_phase_5,,,,Factibilidad,"Avenida Ciudad de Cali, desde Avenida Bosa hasta Avenida San Bernardino",TRUE,TRUE,project.model_project_task,project-cupo-2,draft
+,__export__.project_phase_6,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_7,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_8,,,,Construcción,,,,,,
+__export__.project_project_3,__export__.project_phase_9,,,,Factibilidad,"Avenida Bosa, desde Avenida Agoberto Mejía (AK 80) hasta Avenida Ciudad de Cali ",TRUE,TRUE,project.model_project_task,project-cupo-3,draft
+,__export__.project_phase_10,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_11,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_12,,,,Construcción,,,,,,
+__export__.project_project_4,__export__.project_phase_13,,,,Factibilidad,Avenida Bosa desde Avenida Ciudad de Cali hasta Avenida Tintal ,TRUE,TRUE,project.model_project_task,Project-cupo-4,draft
+,__export__.project_phase_14,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_15,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_16,,,,Construcción,,,,,,
+__export__.project_project_5,__export__.project_phase_17,,,,Factibilidad,Avenida de los Cerros (Avenida Circunvalar) desde Calle 9 hasta Avenida de los Comuneros. ,TRUE,TRUE,project.model_project_task,Project-cupo-5,draft
+,__export__.project_phase_18,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_19,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_20,,,,Construcción,,,,,,
+__export__.project_project_6,__export__.project_phase_21,,,,Factibilidad, PAR VIAL - Carrera 6 y Carrera 7 desde Avenida de los Comuneros hasta Avenida  de la Hortúa (AC 1) ,TRUE,TRUE,project.model_project_task,Project-cupo-6,draft
+,__export__.project_phase_22,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_23,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_24,,,,Construcción,,,,,,
+__export__.project_project_7,__export__.project_phase_25,,,,Factibilidad, Avenida de La Hortúa (AC 1) desde la Carrera 6 hasta Avenida Fernando Mazuera (AK 10) ,TRUE,TRUE,project.model_project_task,project-cupo-7,draft
+,__export__.project_phase_26,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_27,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_28,,,,Construcción,,,,,,
+__export__.project_project_8,__export__.project_phase_29,,,,Factibilidad,Avenida El Rincón (KR 91 y AC 131A) desde Carrera 91 hasta Avenida la Conejera (TV97),TRUE,TRUE,project.model_project_task,Project-cupo-8,draft
+,__export__.project_phase_30,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_31,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_32,,,,Construcción,,,,,,
+__export__.project_project_9,__export__.project_phase_33,,,,Factibilidad,Avenida Tabor desde Avenida la Conejera hasta Av. Ciudad de Cali,TRUE,TRUE,project.model_project_task,project-cupo-9,draft
+,__export__.project_phase_34,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_35,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_36,,,,Construcción,,,,,,
+__export__.project_project_10,__export__.project_phase_37,,,,Factibilidad,Avenida Tintal (AK 89) desde Avenida Villavicencio hasta Avenida Manuel Cepeda Vargas - Calzada Occidental,TRUE,TRUE,project.model_project_task,Project-cupo-10,draft
+,__export__.project_phase_38,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_39,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_40,,,,Construcción,,,,,,
+__export__.project_project_11,__export__.project_phase_41,,,,Factibilidad,Avenida Tintal (AK 89) desde Avenida Manuel Cepeda Vargas hasta Avenida Alsacia (AC 12) - Calzada Occidental,TRUE,TRUE,project.model_project_task,Project-cupo-11,draft
+,__export__.project_phase_42,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_43,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_44,,,,Construcción,,,,,,
+__export__.project_project_12,__export__.project_phase_45,,,,Factibilidad,Avenida Alsacia desde Avenida Tintal (AK 89) hasta Avenida Ciudad de Cali (AK 86),TRUE,TRUE,project.model_project_task,Project-cupo-12,draft
+,__export__.project_phase_46,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_47,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_48,,,,Construcción,,,,,,
+__export__.project_project_13,__export__.project_phase_49,,,,Factibilidad,Avenida Alsacia (AC 12) desde Avenida de la Constitución hasta Avenida Boyacá (AK 72),TRUE,TRUE,project.model_project_task,Project-cupo-13,draft
+,__export__.project_phase_50,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_51,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_52,,,,Construcción,,,,,,
+__export__.project_project_14,__export__.project_phase_53,,,,Factibilidad,Avenida Constitución desde Avenida Alsacia ( AC 12)hasta Avenida Centenario (AC 13),TRUE,TRUE,project.model_project_task,Project-cupo-14,draft
+,__export__.project_phase_54,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_55,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_56,,,,Construcción,,,,,,
+__export__.project_project_15,__export__.project_phase_57,,,,Factibilidad,Avenida Alsacia desde Avenida Boyacà (AK 72) hasta Avenida Ciudad de Cali (AK 86).  ,TRUE,TRUE,project.model_project_task,Project-cupo-15,draft
+,__export__.project_phase_58,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_59,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_60,,,,Construcción,,,,,,
+__export__.project_project_16,__export__.project_phase_61,,,,Factibilidad,Avenida San Antonio (AC 183) desde la Av. Paseo de los Libertadores (Autonorte) hasta Av. Alberto Lleras Camargo (AC. 7),TRUE,TRUE,project.model_project_task,Project-cupo-16,draft
+,__export__.project_phase_62,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_63,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_64,,,,Construcción,,,,,,
+__export__.project_project_17,__export__.project_phase_65,,,,Factibilidad,Avenida Laureano Gómez (AK 9) desde Avenida San José (AC 170) hasta la Calle 183,TRUE,TRUE,project.model_project_task,Project-cupo-17,draft
+,__export__.project_phase_66,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_67,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_68,,,,Construcción,,,,,,
+__export__.project_project_18,__export__.project_phase_69,,,,Factibilidad,Avenida Laureano Gómez (AK 9) desde Avenida San José (AC 170) hasta la Calle 193,TRUE,TRUE,project.model_project_task,Project-cupo-18,draft
+,__export__.project_phase_70,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_71,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_72,,,,Construcción,,,,,,
+__export__.project_project_19,__export__.project_phase_73,,,,Factibilidad,Avenida Jorge Gaitán Cortes (AK 33) desde Avenida Boyacá hasta Avenida del Congreso Eucarístico ,TRUE,TRUE,project.model_project_task,Project-cupo-19,draft
+,__export__.project_phase_74,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_75,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_76,,,,Construcción,,,,,,
+__export__.project_project_20,__export__.project_phase_77,,,,Factibilidad,Avenida Chile (AC 72) por Avenida Ciudad de Cali,TRUE,TRUE,project.model_project_task,Project-cupo-20,draft
+,__export__.project_phase_78,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_79,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_80,,,,Construcción,,,,,,
+__export__.project_project_21,__export__.project_phase_81,,,,Factibilidad,Avenida Primero de Mayo desde Kr 3 Este hasta Calle 11 Sur ,TRUE,TRUE,project.model_project_task,Project-cupo-21,draft
+,__export__.project_phase_82,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_83,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_84,,,,Construcción,,,,,,
+__export__.project_project_22,__export__.project_phase_85,,,,Factibilidad,Ampliación Portal Tunal,TRUE,TRUE,project.model_project_task,Project-cupo-22,draft
+,__export__.project_phase_86,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_87,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_88,,,,Construcción,,,,,,
+__export__.project_project_23,__export__.project_phase_89,,,,Factibilidad,"Ampliación Estaciones Fase I: Toberin, Pepe Sierra, Escuela Militar, Calle 146, Calle 127, Av. Cali",TRUE,TRUE,project.model_project_task,Project-cupo-23,draft
+,__export__.project_phase_90,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_91,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_92,,,,Construcción,,,,,,
+__export__.project_project_24,__export__.project_phase_93,,,,Factibilidad,Ampliación Caracas (Molinos a Portal Usme) ,TRUE,TRUE,project.model_project_task,Project-cupo-24,draft
+,__export__.project_phase_94,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_95,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_96,,,,Construcción,,,,,,
+__export__.project_project_25,__export__.project_phase_97,,,,Factibilidad,Troncal Américas (Puente Aranda - NQS),TRUE,TRUE,project.model_project_task,Project-cupo-25,draft
+,__export__.project_phase_98,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_99,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_100,,,,Construcción,,,,,,
+__export__.project_project_26,__export__.project_phase_101,,,,Factibilidad,Extensión Caracas (Portal Usme a Yomasa),TRUE,TRUE,project.model_project_task,Project-cupo-26,draft
+,__export__.project_phase_102,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_103,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_104,,,,Construcción,,,,,,
+__export__.project_project_27,__export__.project_phase_105,,,,Factibilidad,Troncal Av. Villavicencio (Portal Tunal - NQS),TRUE,TRUE,project.model_project_task,Project-cupo-27,draft
+,__export__.project_phase_106,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_107,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_108,,,,Construcción,,,,,,
+__export__.project_project_28,__export__.project_phase_109,,,,Factibilidad,Cables,TRUE,TRUE,project.model_project_task,Project-cupo-28,draft
+,__export__.project_phase_110,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_111,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_112,,,,Construcción,,,,,,
+__export__.project_project_29,__export__.project_phase_113,,,,Factibilidad,RAPS RINCÓN,TRUE,TRUE,project.model_project_task,Project-cupo-29,draft
+,__export__.project_phase_114,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_115,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_116,,,,Construcción,,,,,,
+__export__.project_project_30,__export__.project_phase_117,,,,Factibilidad,RAPS NIEVES,TRUE,TRUE,project.model_project_task,Project-cupo-30,draft
+,__export__.project_phase_118,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_119,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_120,,,,Construcción,,,,,,
+__export__.project_project_31,__export__.project_phase_121,,,,Factibilidad,RAPS TEUSAQUILLO,TRUE,TRUE,project.model_project_task,Project-cupo-31,draft
+,__export__.project_phase_122,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_123,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_124,,,,Construcción,,,,,,
+__export__.project_project_32,__export__.project_phase_125,,,,Factibilidad,RAPS KENNEDY CENTRAL,TRUE,TRUE,project.model_project_task,Project-cupo-32,draft
+,__export__.project_phase_126,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_127,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_128,,,,Construcción,,,,,,
+__export__.project_project_33,__export__.project_phase_129,,,,Factibilidad,RAPS RESTREPO,TRUE,TRUE,project.model_project_task,Project-cupo-33,draft
+,__export__.project_phase_130,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_131,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_132,,,,Construcción,,,,,,
+__export__.project_project_34,__export__.project_phase_133,,,,Factibilidad,RAPS CARVAJAL,TRUE,TRUE,project.model_project_task,Project-cupo-34,draft
+,__export__.project_phase_134,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_135,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_136,,,,Construcción,,,,,,
+__export__.project_project_35,__export__.project_phase_137,,,,Factibilidad,RED TINTAL,TRUE,TRUE,project.model_project_task,Project-cupo-35,draft
+,__export__.project_phase_138,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_139,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_140,,,,Construcción,,,,,,
+__export__.project_project_36,__export__.project_phase_141,,,,Factibilidad,CAF FASE II,TRUE,TRUE,project.model_project_task,Project-cupo-36,draft
+,__export__.project_phase_142,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_143,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_144,,,,Construcción,,,,,,
+__export__.project_project_37,__export__.project_phase_145,,,,Factibilidad,ADECUACIÓN DE INFRAESTRUCTURA CICLOINCLUSIVA,TRUE,TRUE,project.model_project_task,Project-cupo-37,draft
+,__export__.project_phase_146,,,,Adquisición Predial,,,,,,
+,__export__.project_phase_147,,,,Estudios y Diseños,,,,,,
+,__export__.project_phase_148,,,,Construcción,,,,,,

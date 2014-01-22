@@ -1,10 +1,16 @@
-id,active,description,parent_left,name,parent_id/id,parent_right,sequence,state,strategic_goal_id/id
-__export__.project_pmi_portfolio_1,True,,1,Por Proyecto de Inversión,,10,,Draft,
-__export__.project_pmi_portfolio_3,True,,2, 762 -Atención integral del riesgo al Sistema de Movilidad y Espacio Público frente a la ocurrencia de eventos de emergencia y catastróficos ,__export__.project_pmi_portfolio_1,3,,Draft,
-__export__.project_pmi_portfolio_4,True,,4, 809 - Desarrollo y Sostenibilidad de la Infraestructura para la movilidad ,__export__.project_pmi_portfolio_1,5,,Draft,
-__export__.project_pmi_portfolio_5,True,,6, 810 - Desarrollo y conservación del espacio público y la red de ciclorutas ,__export__.project_pmi_portfolio_1,7,,Draft,
-__export__.project_pmi_portfolio_2,True,,8,543 - Infraestructura para el SITP,__export__.project_pmi_portfolio_1,9,,Draft,
-__export__.project_pmi_portfolio_6,True,,11,Por Plan de Desarrollo,,18,,Draft,
-__export__.project_pmi_portfolio_9,True,,12,2004 - 2008 Bogotá Sin Indiferencia,__export__.project_pmi_portfolio_6,13,,Draft,
-__export__.project_pmi_portfolio_8,True,,14,2008 - 2012 Bogotá Positiva,__export__.project_pmi_portfolio_6,15,,Draft,
-__export__.project_pmi_portfolio_7,True,,16,2012 - 2016 Bogotá Humana,__export__.project_pmi_portfolio_6,17,,Draft,
+id,active,description,parent_left,name,parent_id/id,parent_right,sequence,state
+__export__.project_pmi_portfolio_1,TRUE,,1,Por Sistema,,8,,Draft
+__export__.project_pmi_portfolio_2,TRUE,,2,Espacio Publico,__export__.project_pmi_portfolio_1,3,,Draft
+__export__.project_pmi_portfolio_4,TRUE,,4,Fortalecimiento Institucional,__export__.project_pmi_portfolio_1,5,,Draft
+__export__.project_pmi_portfolio_3,TRUE,,6,Movilidad,__export__.project_pmi_portfolio_1,7,,Draft
+__export__.project_pmi_portfolio_5,TRUE,,9,Por Componente,,18,,Draft
+__export__.project_pmi_portfolio_7,TRUE,,10,Anden,__export__.project_pmi_portfolio_5,11,,Draft
+__export__.project_pmi_portfolio_8,TRUE,,12,Calzada,__export__.project_pmi_portfolio_5,13,,Draft
+__export__.project_pmi_portfolio_9,TRUE,,14,Ciclo Puentes,__export__.project_pmi_portfolio_5,15,,Draft
+__export__.project_pmi_portfolio_6,TRUE,,16,Puente,__export__.project_pmi_portfolio_5,17,,Draft
+__export__.project_pmi_portfolio_10,TRUE,,19,Por Fuente de Financiación,,24,,Draft
+__export__.project_pmi_portfolio_12,TRUE,,20,Cupo de Endeudamiento,__export__.project_pmi_portfolio_10,21,,Draft
+__export__.project_pmi_portfolio_11,TRUE,,22,Valorización,__export__.project_pmi_portfolio_10,23,,Draft
+__export__.project_pmi_portfolio_13,TRUE,,25,Por Tipo de Obra,,30,,Draft
+__export__.project_pmi_portfolio_15,TRUE,,26,Conservación,__export__.project_pmi_portfolio_13,27,,Draft
+__export__.project_pmi_portfolio_14,TRUE,,28,Construcción,__export__.project_pmi_portfolio_13,29,,Draft
