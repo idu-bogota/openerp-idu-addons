@@ -30,7 +30,7 @@ This module adds the WBS support for Projects.
     'author': 'Instituto De Desarrollo Urbano',
     'website': 'http://www.idu.gov.co',
     'depends': [
-        'project'
+        'project','project_long_term'
     ],
     'data': [
         'wizard/create_wbs.xml',

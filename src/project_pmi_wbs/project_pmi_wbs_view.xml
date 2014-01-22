@@ -87,6 +87,7 @@
                         <group name="details">
                             <field name="code" readonly="1" />
                             <field name="project_id"/>
+                            <field name="phase_id"/>
                             <field name="type" />
                             <field name="tracking_type" attrs="{'invisible': [('type','!=','work_package')],'required':[('type','=','work_package')]}"/>
                             <field name="date_deadline"/>
@@ -111,10 +112,20 @@
                             </field>
                         </group>
                         <group string="Tasks" attrs="{'invisible': ['|',('tracking_type','!=','tasks'),('type','!=','work_package')]}">
-                           <field name="task_ids" nolabel="1" context="{'project_id':project_id,'wbs_item_id': active_id}"/>
+                           <field name="task_ids" nolabel="1" context="{'project_id':project_id,'phase_id':phase_id,'wbs_item_id': active_id}"/>
                         </group>
                         <group string="Child Deliverables" attrs="{'invisible': [('type','!=','deliverable')]}">
-                           <field name="child_ids" nolabel="1" context="{'project_id':project_id,'parent_id':parent_id}"/>
+                           <field name="child_ids" nolabel="1" context="{'project_id':project_id,'phase_id':phase_id,'parent_id':parent_id}">
+                                <tree>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="type"/>
+                                    <field name="tracking_type"/>
+                                    <field name="date_deadline"/>
+                                    <field name="progress_rate" widget="progressbar"/>
+                                    <field name="state"/>
+                                </tree>
+                           </field>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -212,7 +223,7 @@
             parent="project.menu_project_management"
             name="WBS Tree"
             groups="project.group_project_manager,project.group_project_user"
-            sequence="0" />
+            sequence="20" />
 
         <record id="project_pmi_deliverable_action" model="ir.actions.act_window">
             <field name="name">Deliverables</field>

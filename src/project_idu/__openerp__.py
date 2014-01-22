@@ -29,7 +29,7 @@ This module customize project management for IDU
     'author': 'Instituto De Desarrollo Urbano',
     'website': 'http://www.idu.gov.co',
     'depends': [
-        'project_pmi_portfolio','project_pmi_wbs'
+        'project_pmi_portfolio','project_pmi_wbs','project_long_term'
     ],
     'data': [
         'project_idu_view.xml',

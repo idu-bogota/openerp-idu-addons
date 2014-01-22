@@ -97,7 +97,7 @@
             id="project_pmi_portfolio_tree_menu"
             parent="project.menu_project_management"
             groups="project.group_project_manager,project.group_project_user"
-            sequence="0" />
+            sequence="30" />
 
         <record id="project_pmi_portfolio_list_action" model="ir.actions.act_window">
             <field name="name">Portfolios</field>
@@ -112,7 +112,7 @@
             id="project_pmi_portfolio_list_menu"
             parent="base.menu_definitions"
             groups="project.group_project_manager,project.group_project_user"
-            sequence="0" />
+            sequence="30" />
 
         <!-- Programs Views -->
         <record id="project_pmi_program_tree" model="ir.ui.view">
@@ -203,7 +203,7 @@
             id="project_pmi_program_tree_menu"
             parent="project.menu_project_management"
             groups="project.group_project_manager,project.group_project_user"
-            sequence="0" />
+            sequence="30" />
 
         <record id="project_pmi_program_list_action" model="ir.actions.act_window">
             <field name="name">Programs</field>
@@ -218,7 +218,7 @@
             id="project_pmi_program_list_menu"
             parent="base.menu_definitions"
             groups="project.group_project_manager,project.group_project_user"
-            sequence="0" />
+            sequence="30" />
 
         <!-- Project Views -->
         <record id="project_form" model="ir.ui.view">

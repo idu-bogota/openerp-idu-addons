@@ -27,9 +27,28 @@ class project(osv.osv):
     _name = "project.project"
     _inherit = "project.project"
 
+    def _etapa_id(self, cr, uid, ids, names, arg, context=None):
+        res = {}
+        phase_ids = self.pool.get('project.phase').search(cr, uid, [('project_id','in',ids),('state','=','open')], context=context, order="write_date ASC")
+        phases = self.pool.get('project.phase').browse(cr, uid, phase_ids, context=context)
+        for phase in phases:
+            res[phase.project_id.id] = phase.name
+        return res
+
+    def _get_ids_from_phases(self, cr, uid, ids, context=None):
+        phases = self.pool.get('project.phase').browse(cr, uid, ids, context=context)
+        project_ids = [wr.project_id.id for wr in phases if wr.project_id]
+        return project_ids
+
     _columns = {
-        'etapa_id': fields.many2one('project_idu.etapa','Etapa', select=True),
         'clasificacion_id': fields.many2one('project_idu.proyecto_tipificacion','Clasificación', select=True),
+        'etapa_nombre': fields.function(_etapa_id, string='Etapa actual del proyecto', type='char', help="Indica las etapas que estan en progreso para el proyecto", 
+            store = {
+                'project.project': (lambda self, cr, uid, ids, c={}: ids, ['phase_id'], 10),
+                'project.phase': (_get_ids_from_phases, ['state', 'project_id'], 20),
+            }
+         ),
+
         #Punto de inversion
         #Centro de costo
         #Fuente de Financiacion
@@ -63,17 +82,11 @@ class task(osv.osv):
         return result.keys()
 
     _columns = {
+        'etapa_nombre': fields.related('phase_id','name', type='char', string='Etapa', store=True),
         'clasificacion_id': fields.many2one('project_idu.tarea_tipificacion','Clasificación', select=True),
         'producto_intermedio_id': fields.many2one('project_idu.producto_intermedio','Producto intermedio afectado', 
             select=True,
             domain="[('project_id','=',project_id)]"),
-        'etapa_id': fields.related(
-            'project_id',
-            'etapa_id',
-            type="many2one",
-            relation="project_idu.etapa",
-            string="Etapa del Proyecto",
-            store=True),
         'numero_convocados': fields.integer('Número de convocados'),
         'numero_asistentes': fields.integer('Número de asistentes'),
         'participacion_ciudadana': fields.function(_participacion_ciudadana, type="boolean",
@@ -92,14 +105,21 @@ class task(osv.osv):
 
 task()
 
-class project_idu_etapa(osv.osv):
-    _name = "project_idu.etapa"
+class project_phase(osv.osv):
+    _name = "project.phase"
+    _inherit = "project.phase"
+
+    def _etapa_nombre(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = {}
+        for record in self.read(cr, uid, ids, ['name'], context=context):
+            res[record['id']] =record['name']
+        return res
 
     _columns = {
-        'name': fields.char('Name', size=255, required=True, select=True),
+        'etapa_nombre': fields.function(_etapa_nombre, type='char', store=True, help='Guarda el nombre de la etapa, corrige bug se llama la vista desde el kanban de proyectos agrupado por etapa'),
     }
 
-project_idu_etapa()
+project_phase()
 
 #TODO: De acuerdo a la etapa del proyecto desplegar la tipificación correspondiente de actividades
 class project_idu_tarea_tipificacion(osv.osv):
@@ -375,6 +395,7 @@ class project_pmi_wbs_item(osv.osv):
         return res
 
     _columns = {
+        'etapa_nombre': fields.related('phase_id','name', type='char', string='Etapa', store=True),
         'opportunity_evaluation': fields.function(_opportunity_evaluation, type="char", translate=True, string='is late, on time, not finished?',store = {
                 'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['date_end','date_deadline'], 10),
         }),

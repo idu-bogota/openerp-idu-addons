@@ -51,6 +51,9 @@ class task(osv.osv):
     _columns = {
         'wbs_item_id': fields.many2one('project_pmi.wbs_item', 'Work Breakdown Structure', domain="[('project_id','=',project_id),('type','=','work_package')]"),
     }
+    _defaults = {
+        'phase_id' : lambda self, cr, uid, context : context['phase_id'] if context and 'phase_id' in context else None,
+    }
 
 task()
 
@@ -193,6 +196,7 @@ class project_pmi_wbs_item(osv.osv):
 
     _columns = {
         'project_id': fields.many2one('project.project','Project'),
+        'phase_id': fields.many2one('project.phase','Phase', domain="[('project_id','=',project_id)]"),
         'is_root_node': fields.boolean('Is a root node for the project WBS',help='Any project with a WBS can have several WBS Items, but one active WBS item as root node'),
         'code': fields.char('Code', size=20, required=True, select=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
@@ -248,7 +252,8 @@ class project_pmi_wbs_item(osv.osv):
         'active': True,
         'state': 'draft',
         'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'project_pmi.wbs'),
-        'project_id' : lambda self, cr, uid, context : context['project_id'] if context and 'project_id' in context else None #Set by default the project given in the context
+        'project_id' : lambda self, cr, uid, context : context['project_id'] if context and 'project_id' in context else None, #Set by default the project given in the context
+        'phase_id' : lambda self, cr, uid, context : context['phase_id'] if context and 'phase_id' in context else None,
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):

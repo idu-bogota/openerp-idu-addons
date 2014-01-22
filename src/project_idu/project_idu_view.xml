@@ -1,6 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <!-- Ajustando menú de usuario -->
+        <delete id="base.menu_project_long_term" model="ir.ui.menu"/>
+        <delete id="project_long_term.menu_phase_schedule" model="ir.ui.menu"/>
+        <delete id="project_long_term.menu_project_phase_list" model="ir.ui.menu"/>
+        <delete id="project_long_term.menu_project_phase" model="ir.ui.menu"/>
+        <delete id="project_long_term.menu_resouce_allocation" model="ir.ui.menu"/>
+        <delete id="project_long_term.menu_compute_phase" model="ir.ui.menu"/>
+        <delete id="project_long_term.menu_compute_tasks" model="ir.ui.menu"/>
+        <menuitem action="project_long_term.act_project_phase" id="menu_project_phase" parent="project.menu_project_management" sequence="2"/>
+
+        <!-- Modificando actions existentes en otros módulos -->
+        <record id="project_long_term.act_project_phases" model="ir.actions.act_window">
+            <field name="res_model">project.phase</field>
+            <field name="view_type">form</field>
+            <field name="name">Phases</field>
+            <field name="view_mode">tree,form,gantt</field>
+            <field name="context">{'search_default_project_id': [active_id], 'default_project_id': active_id}</field>
+        </record>
+        <record id="project.open_view_project_all" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="res_model">project.project</field>
+            <field name="view_type">form</field>
+            <field name="domain">[]</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="project.view_project_kanban"/>
+            <field name="search_view_id" ref="project.view_project_project_filter"/>
+            <field name="context">{'search_default_Current': 1}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                  Click to start a new project.
+                </p><p>
+                  Projects are used to organize your activities; plan
+                  tasks, track issues, invoice timesheets. You can define
+                  internal projects (R&amp;D, Improve Sales Process),
+                  private projects (My Todos) or customer ones.
+                </p><p>
+                  You will be able collaborate with internal users on
+                  projects or invite customers to share your activities.
+                </p>
+            </field>
+        </record>
+
         <!-- Project Views -->
         <record id="project_form" model="ir.ui.view">
             <field name="name">project_idu.project.form</field>
@@ -19,7 +61,7 @@
             <field name="inherit_id" ref="project.view_project_project_filter"/>
             <field name="arch" type="xml">
                 <filter name="Parent" position="after">
-                    <filter string="Etapa" name="Etapa" icon="terp-personal" domain="[]" context="{'group_by':'etapa_id'}"/>
+                    <filter string="Etapa" name="Etapa" icon="terp-personal" domain="[]" context="{'group_by':'etapa_nombre'}"/>
                 </filter>
             </field>
         </record>
@@ -142,7 +184,7 @@
             parent="base.menu_definitions"
             name="Clasificación de tareas"
             groups="project.group_project_manager"
-            sequence="0" />
+            sequence="10" />
 
         <record id="project_idu_tarea_tipificacion_action" model="ir.actions.act_window">
             <field name="name">Tipificación de tareas</field>
@@ -242,7 +284,7 @@
         parent="base.menu_definitions"
         name="Clasificación de proyectos"
         groups="project.group_project_manager"
-            sequence="0" />
+            sequence="10" />
 
         <record id="project_idu_proyecto_tipificacion_action" model="ir.actions.act_window">
             <field name="name">Tipificación de proyectos</field>
@@ -343,7 +385,7 @@
         parent="base.menu_definitions"
         name="Clasificación prod. intermedios"
         groups="project.group_project_manager"
-            sequence="0" />
+            sequence="10" />
 
         <record id="project_idu_producto_intermedio_tipificacion_action" model="ir.actions.act_window">
             <field name="name">Tipificación de productos intermedios</field>
@@ -451,6 +493,6 @@
             parent="project.menu_project_management"
             groups="project.group_project_manager,project.group_project_user"
             name="Producto intermedio"
-            sequence="0"/>
+            sequence="10"/>
     </data>
 </openerp>
