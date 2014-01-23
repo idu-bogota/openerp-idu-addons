@@ -36,14 +36,15 @@
                             <field name="active"/>
                         </group>
                         <field name="item_ids"/>
+                         <field name="currency_id" invisible="1"/>
                         <group>
                             <group class="oe_subtotal_footer oe_right" name="total_pagos_programado_item">>
-                                <field name="total_pagos_presupuestado_plan" widget="monetary" readonly="1"/>
+                                <field name="total_pagos_presupuestado_plan" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
                                 <label for="total_pagos_programados_plan"/>
                                     <div>
-                                        <field name="total_pagos_programados_plan" string="Rezago" widget="monetary" readonly="1"/>
+                                        <field name="total_pagos_programados_plan" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1" string="Rezago"/>
                                     </div>
-                                <field name="total_rezago_plan" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="total_rezago_plan" widget='monetary' options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
                             </group>
                         </group>
                     </sheet>
@@ -103,7 +104,7 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
-                                <!--   <field name="name"/>-->
+                                <field name="name" invisible="1"/>
                             </h1>
                         </div>
                         <group>
@@ -113,7 +114,8 @@
                             <field name="fuente"/>
                             <field name="tipo_proceso"/>
                             <field name="tipo_proceso_seleccion"/>
-                            <field name="presupuesto" />
+                            <field name="currency_id" invisible="1"/>
+                            <field name="presupuesto" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         </group>
                         <notebook colspan="5">
                             <page string="Detalles">
@@ -136,17 +138,17 @@
                                 <field name="plan_pagos_item_ids" on_change="onchange_plan_pagos_item_ids(plan_pagos_item_ids)" nolabel="1">
                                     <tree string="Plan de pagos" editable="bottom">
                                         <field name="mes"/>
-                                        <field name="valor" widget="monetary"/>
+                                        <field name="valor" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     </tree>
                                 </field>
                                 <group>
                                      <group class="oe_subtotal_footer oe_right" name="total_pagos_programado_item">>
-                                         <field name="total_pagos_programados" widget="monetary" readonly="1"/>
+                                         <field name="total_pagos_programados" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
                                          <label for="presupuesto_rezago"/>
                                             <div>
-                                                <field name="presupuesto_rezago" string="Rezago" widget="monetary" readonly="1"/>
+                                                <field name="presupuesto_rezago" string="Rezago" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
                                             </div>
-                                            <field name="total_programado_rezago" widget="monetary" class="oe_subtotal_footer_separator"/>
+                                            <field name="total_programado_rezago" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
                                      </group>
                                </group>
                             </page>
@@ -268,7 +270,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">plan_contratacion_idu.clasificador_proyectos</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,gantt,calendar</field>
+            <field name="view_mode">tree,form</field>
             <field name="view_id" ref="plan_contratacion_idu_clasificador_proyectos_list"/>
         </record>
 
@@ -315,14 +317,16 @@
             id="menu_plan_contratacion_plan_fuente_list"
             parent="menu_plan_contratacion"
             sequence="0"/>
+
         <!-- Programacion de Pagos -->
         <record id="plan_contratacion_idu_plan_pagos_item_list" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.plan_pagos_item.list</field>
             <field name="model">plan_contratacion_idu.plan_pagos_item</field>
             <field name="arch" type="xml" >
                 <tree string="Planificación de Pagos">
+                     <field name="currency_id" invisible="1"/>
                     <field name="mes"/>
-                    <field name="valor"/>
+                    <field name="valor" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                 </tree>
             </field>
         </record>
@@ -332,8 +336,9 @@
             <field name="arch" type="xml">
                 <form string="Planificación de Pagos" version="7.0">
                     <sheet>
+                        <field name="currency_id" invisible="1"/>
                         <field name="mes"/>
-                        <field name="valor"/>
+                        <field name="valor" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     </sheet>
                 </form>
             </field>
@@ -346,6 +351,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="plan_contratacion_idu_plan_pagos_item_list"/>
         </record>
+
         <!-- Tipo de Proceso -->
         <record id="plan_contratacion_idu_plan_tipo_proceso_item_list" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.plan_tipo_proceso_item.list</field>
@@ -375,6 +381,12 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="plan_contratacion_idu_plan_tipo_proceso_item_list"/>
         </record>
+        <menuitem
+            action="plan_contratacion_idu_tipo_proceso_item_action"
+            id="menu_plan_contratacion_idu_plan_tipo_proceso_item_list"
+            parent="menu_plan_contratacion"
+            sequence="0"/>
+
         <!-- Tipo Proceso de Seleccion-->
         <record id="plan_contratacion_idu_plan_tipo_proceso_seleccion_item_list" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.plan_tipo_proceso_seleccion_item.list</field>
@@ -404,5 +416,15 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="plan_contratacion_idu_plan_tipo_proceso_seleccion_item_list"/>
         </record>
+        <menuitem
+            action="plan_contratacion_idu_plan_tipo_proceso_seleccion_item_action"
+            id="menu_plan_contratacion_idu_plan_tipo_proceso_seleccion_item_list"
+            parent="menu_plan_contratacion"
+            sequence="0"/>
+
+         <!--  Acceso Menus -->
+<!--           <record model="ir.ui.menu" id="menu_plan_contratacion_idu_plan_tipo_proceso_seleccion_item_list">
+                <field eval="[(4, ref('group_plan_contratacion_idu_user'))]" name="groups_id"/>
+         </record> -->
     </data>
 </openerp>

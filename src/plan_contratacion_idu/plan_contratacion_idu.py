@@ -19,11 +19,20 @@
 ##############################################################################
 import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv
-from openerp import pooler
-from openerp import SUPERUSER_ID
 
 class plan_contratacion_idu_plan(osv.osv):
     _name = "plan_contratacion_idu.plan"
+
+
+    def _get_currency(self, cr, uid, ids, field, args, context=None):
+        res = {}
+        company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'plan_contratacion_idu.plan', context=context)
+        company = self.pool.get('res.company').read(cr, uid, company_id, ['currency_id'])
+        currency_id = company['currency_id'][0]
+        for plan_id in ids:
+            res[plan_id] = currency_id
+        return res
+
     def _total_pagos_plan(self, cr, uid, ids, name, args, context=None):
         res = {}
         if isinstance(ids, (list, tuple)) and not len(ids):
@@ -50,6 +59,7 @@ class plan_contratacion_idu_plan(osv.osv):
         'active':fields.boolean('Activo'),
         'item_ids': fields.one2many('plan_contratacion_idu.item', 'plan_id', 'Items Plan de Contratacion'),
         'name_items':fields.one2many('plan_contratacion_idu.item', 'name', 'Items Plan de Contratacion'),
+        'currency_id': fields.function(_get_currency, type='many2one', relation="res.currency", method=True, string='Currency', readonly=True),
         'total_pagos_presupuestado_plan': fields.function(_total_pagos_plan, type='float', multi="total_pagos_programados", string='Total Presupuestado', digits_compute=dp.get_precision('Account'), readonly = True,
              store={
              }),
@@ -100,6 +110,15 @@ class plan_contratacion_idu_item(osv.osv):
         plan_item_ids = [pago.plan_contratacion_item_id.id for pago in pago_records if pago.plan_contratacion_item_id]
         return plan_item_ids
 
+    #def _check_demo_not_a(self,cr,uid,ids,context=None):
+       # demo_record = self.browse(cr,uid,ids,context=context)
+        #if demo_record.fecha_crp > demo_record.fecha_radicacion:
+        #pagos_prog = self.pool.get('plan_contratacion_idu.item').browse(cr,uid,ids,context)
+        #if pagos_prog.fecha_crp > pagos_prog.fecha_radicacion:
+         #   return True
+        #else:
+         #   return False
+
     _columns = {
         'dependencia': fields.many2one('hr.department','Dependencia', select=True, ondelete='cascade'),
         'description': fields.text('Objeto Contractual', states={'suscrito':[('readonly',True)], 'ejecucion':[('readonly',True)], 'ejecutado':[('readonly',True)]}),
@@ -113,26 +132,27 @@ class plan_contratacion_idu_item(osv.osv):
         'fecha_acta_inicio': fields.date ('Fecha Aprobación Acta de Inicio', required=True, select=True),
         'plan_id': fields.many2one('plan_contratacion_idu.plan','Plan contractual', select=True, ondelete='cascade'),
         'clasificacion_id': fields.many2one('plan_contratacion_idu.clasificador_proyectos','Clasificación Proyecto', select=True, ondelete='cascade'),
-        'presupuesto': fields.integer ('Presupuesto', required=True, select=True),
+        'presupuesto': fields.float ('Presupuesto', required=True, select=True, obj="res.currency"),
         'plazo_de_ejecucion': fields.integer ('Plazo de Ejecución', required=True, select=True, help="Tiempo estimado en meses"),
         'unidad_meta_fisica': fields.many2one('product.uom','Unidad Meta Física', select=True, ondelete='cascade'),
         'cantidad_meta_fisica': fields.integer ('Cantidad Metas Físicas'),
         'localidad': fields.char ('Localidad', size=255),
+        'currency_id': fields.related('plan_id','currency_id',type='many2one',relation='res.currency',string='Company',store=True,readonly=True),
         'tipo_proceso': fields.many2one('plan_contratacion_idu.plan_tipo_proceso_item','Tipo Proceso', select=True, ondelete='cascade'),
         'tipo_proceso_seleccion': fields.many2one('plan_contratacion_idu.plan_tipo_proceso_seleccion_item','Tipo Proceso de Selección', select=True, ondelete='cascade'),
         'plan_pagos_item_ids': fields.one2many('plan_contratacion_idu.plan_pagos_item','plan_contratacion_item_id', 'Planificacion de Pagos', select=True, ondelete='cascade'),
-        'total_pagos_programados': fields.function(_total_pagos_programados, type='float', multi="presupuesto", string='Total pagos programados', digits_compute=dp.get_precision('Account'),
+        'total_pagos_programados': fields.function(_total_pagos_programados, type='float', multi="presupuesto", string='Total pagos programados', obj="res.currency", digits_compute=dp.get_precision('Account'),
              store={
                 'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_item_ids', 'presupuesto'], 10),
                 'plan_contratacion_idu.plan_pagos_item': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
             }),
-        'presupuesto_rezago': fields.function(_total_pagos_programados, type='float', multi="presupuesto", string='Rezago', digits_compute=dp.get_precision('Account'),
+        'presupuesto_rezago': fields.function(_total_pagos_programados, type='float', multi="presupuesto", string='Rezago', obj="res.currency", digits_compute=dp.get_precision('Account'),
              store={
                 'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_item_ids', 'presupuesto'], 10),
                 'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['presupuesto', 'presupuesto'], 10),
                 'plan_contratacion_idu.plan_pagos_item': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
             }),
-        'total_programado_rezago': fields.function(_total_pagos_programados, type='float', multi="presupuesto", string='Total', digits_compute=dp.get_precision('Account'),
+        'total_programado_rezago': fields.function(_total_pagos_programados, type='float', multi="presupuesto", string='Total', obj="res.currency", digits_compute=dp.get_precision('Account'),
              store={
                 'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_item_ids', 'presupuesto'], 10),
                 'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['presupuesto', 'presupuesto'], 10),
@@ -143,6 +163,10 @@ class plan_contratacion_idu_item(osv.osv):
     _defaults = {
         'state': 'aprobado'
     }
+
+#   _constraints = [(_check_demo_not_a,
+  #                   "La fecha programada CRP debe ser posterior a la fecha programada de radicación",
+   #                  ['fecha_crp'])]
 
     def onchange_plan_pagos_item_ids(self, cr, uid, ids, pagos_ids, context=None):
         context = context or {}
@@ -186,51 +210,6 @@ class plan_contratacion_idu_item(osv.osv):
     def item_ejecutado(self, cr, uid, ids, plan_items, context=None):
         self.write(cr, uid, ids, {"state": "ejecutado"})
 
-    def subscribe(self, cr, uid, ids, *args):
-        obj_action = self.pool.get('ir.actions.act_window')
-        obj_model = self.pool.get('plan_contratacion_idu.plan.data')
-        #start Loop
-        for thisrule in self.browse(cr, uid, ids):
-            obj = self.pool.get(thisrule.plan_id.model)
-            if not obj:
-                """except_osv"""
-                raise osv.osv(
-                        _('WARNING: audittrail is not part of the pool'),
-                        _('Change audittrail depends -- Setting rule as DRAFT'))
-                self.write(cr, uid, [thisrule.id], {"state": "aprobado"})
-            val = {
-                 "name": 'View Log',
-                 "res_model": 'audittrail.log',
-                 "src_model": thisrule.plan_id.model,
-                 "domain": "[('plan_id','=', " + str(thisrule.plan_id.id) + "), ('res_id', '=', active_id)]"
-            }
-            action_id = obj_action.create(cr, SUPERUSER_ID, val)
-            self.write(cr, uid, [thisrule.id], {"state": "radicado", "action_id": action_id})
-            keyword = 'client_action_relate'
-            value = 'ir.actions.act_window,' + str(action_id)
-            res = obj_model.ir_set(cr, SUPERUSER_ID, 'action', keyword, 'View_log_' + thisrule.plan_id.model, [thisrule.plan_id.model], value, replace=True, isobject=True, xml_id=False)
-        return True
-
-    def unsubscribe(self, cr, uid, ids, *args):
-        obj_action = self.pool.get('ir.actions.act_window')
-        ir_values_obj = self.pool.get('ir.values')
-        value=''
-        #start Loop
-        for thisrule in self.browse(cr, uid, ids):
-            if thisrule.id in self.__functions:
-                for function in self.__functions[thisrule.id]:
-                    setattr(function[0], function[1], function[2])
-            w_id = obj_action.search(cr, uid, [('name', '=', 'View Log'), ('res_model', '=', 'audittrail.log'), ('src_model', '=', thisrule.plan_id.model)])
-            if w_id:
-                obj_action.unlink(cr, SUPERUSER_ID, w_id)
-                value = "ir.actions.act_window" + ',' + str(w_id[0])
-            val_id = ir_values_obj.search(cr, uid, [('model', '=', thisrule.plan_id.model), ('value', '=', value)])
-            if val_id:
-                ir_values_obj = pooler.get_pool(cr.dbname).get('ir.values')
-                res = ir_values_obj.unlink(cr, uid, [val_id[0]])
-            self.write(cr, uid, [thisrule.id], {"state": "aprobado"})
-        #End Loop
-        return True
 plan_contratacion_idu_item()
 
 class plan_contratacion_idu_clasificador_proyectos(osv.osv):
@@ -308,13 +287,16 @@ class plan_contratacion_idu_plan_pagos_item(osv.osv):
         'mes': fields.selection([(1,'Enero'), (2,'Febrero'), (3,'Marzo'), (4,'Abril'),
             (5,'Mayo'), (6,'Junio'), (7,'Julio'), (8,'Agosto'), (9,'Septiembre'),
             (10,'Octubre'), (11,'Noviembre'), (12,'Diciembre')], 'Mes', required=True),
-        'valor': fields.integer('Valor', required=True, select=True),
+        'valor': fields.float('Valor', required=True, select=True, obj="res.currency"),
         'plan_contratacion_item_id': fields.many2one('plan_contratacion_idu.item','Item Plan de Contratacion', select=True, ondelete='cascade'),
+        'currency_id': fields.related('plan_contratacion_item_id','currency_id',type='many2one',relation='res.currency',string='Company',store=True,readonly=True),
     }
 
     _sql_constraints =[
         ('unique_mes','unique(mes,plan_contratacion_item_id)','El mes debe ser único')
     ]
+
+    _order = 'mes'
 
 plan_contratacion_idu_plan_pagos_item()
 
