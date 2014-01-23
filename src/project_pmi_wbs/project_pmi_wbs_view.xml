@@ -74,6 +74,7 @@
             <field name="arch" type="xml">
            <form string="WBS item" version="7.0">
                 <header>
+                    <button name="set_draft" string="Draft" type="object" states="open" groups="base.group_user"/>
                     <button name="set_open" string="Open" type="object" states="draft,pending" groups="base.group_user"/>
                     <button name="set_open" string="Re-open" type="object" states="done" groups="base.group_user"/>
                     <button name="set_done" string="Done" type="object" states="open" groups="base.group_user"/>

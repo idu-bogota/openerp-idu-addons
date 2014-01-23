@@ -355,6 +355,10 @@ class project_pmi_wbs_item(osv.osv):
         item_ids = self.search(cr, uid, [('child_ids','child_of',ids)], context=context)
         return self.write(cr, uid, item_ids, {'state': 'template'}, context)
 
+    def set_draft(self, cr, uid, ids, context=None):
+        item_ids = self.search(cr, uid, [('child_ids','child_of',ids)], context=context)
+        return self.write(cr, uid, item_ids, {'state': 'draft'}, context)
+
     def set_open(self, cr, uid, ids, context=None):
         item_ids = self.search(cr, uid, [('child_ids','child_of',ids)], context=context)
         return self.write(cr, uid, item_ids, {'state': 'open'}, context)
