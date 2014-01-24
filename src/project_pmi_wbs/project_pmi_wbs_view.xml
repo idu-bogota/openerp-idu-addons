@@ -325,9 +325,12 @@
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.view_task_search_form"/>
             <field name="arch" type="xml">
-            <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}" position="after">
-                <filter string="WBS Item" name="group_project_wbs_item" icon="terp-folder-violet" domain="[]" context="{'group_by':'wbs_item_id'}"/>
-            </filter>
+                <field name="user_id" position="before">
+                    <field name="wbs_item_id" domain="[]"/>
+                </field>
+                <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}" position="after">
+                    <filter string="WBS Item" name="group_project_wbs_item" icon="terp-folder-violet" domain="[]" context="{'group_by':'wbs_item_id'}"/>
+                </filter>
             </field>
         </record>
     </data>
