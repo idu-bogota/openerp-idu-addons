@@ -85,6 +85,23 @@ class project_pmi_wbs_item(osv.osv):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
+    def _listing_name(self, cr, uid, ids, prop, unknow_none, context=None):
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return []
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        reads = self.read(cr, uid, ids, ['name','parent_id','type'], context=context)
+        res = []
+        for record in reads:
+            name = record['name']
+            if record['parent_id']:
+                name_parts = record['parent_id'][1].split(' / ')
+                parts = ['--' for i in name_parts]
+                name = ' '.join(parts) + ' ' + name
+            res.append((record['id'], name))
+        return dict(res)
+
+
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
         child_parent = self._get_wbs_item_and_children(cr, uid, ids, context)
         # compute planned_hours, total_hours, effective_hours specific to each project
@@ -200,6 +217,7 @@ class project_pmi_wbs_item(osv.osv):
         'is_root_node': fields.boolean('Is a root node for the project WBS',help='Any project with a WBS can have several WBS Items, but one active WBS item as root node'),
         'code': fields.char('Code', size=20, required=True, select=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
+        'listing_name': fields.function(_listing_name, type="char", string='Name'),
         'name': fields.char('Name', size=255, required=True, select=True),
         'type': fields.selection([('work_package', 'Work Package'),('deliverable', 'Deliverable')],'Deliverable Type', required=True),
         'tracking_type': fields.selection([('tasks', 'Tasks'),('units', 'Units')],'Tracking Type', required=False),
