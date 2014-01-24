@@ -83,6 +83,7 @@ plan_contratacion_idu_plan()
 
 class plan_contratacion_idu_item(osv.osv):
     _name = "plan_contratacion_idu.item"
+    _inherit = ['mail.thread']
 
     def _total_pagos_programados(self, cr, uid, ids, name, args, context=None):
         res = {}
@@ -110,14 +111,19 @@ class plan_contratacion_idu_item(osv.osv):
         plan_item_ids = [pago.plan_contratacion_item_id.id for pago in pago_records if pago.plan_contratacion_item_id]
         return plan_item_ids
 
-    #def _check_demo_not_a(self,cr,uid,ids,context=None):
-       # demo_record = self.browse(cr,uid,ids,context=context)
-        #if demo_record.fecha_crp > demo_record.fecha_radicacion:
-        #pagos_prog = self.pool.get('plan_contratacion_idu.item').browse(cr,uid,ids,context)
-        #if pagos_prog.fecha_crp > pagos_prog.fecha_radicacion:
-         #   return True
-        #else:
-         #   return False
+    def _check_demo_not_a(self,cr,uid,ids,context=None):
+        res = {}
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return res
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        records = self.browse(cr, uid, ids, context=context)
+        res = {}
+        for record in records:
+            if record.fecha_crp > record.fecha_radicacion and record.fecha_acta_inicio > record.fecha_crp:
+                return True
+            else:
+                return False
 
     _columns = {
         'dependencia': fields.many2one('hr.department','Dependencia', select=True, ondelete='cascade'),
@@ -164,9 +170,9 @@ class plan_contratacion_idu_item(osv.osv):
         'state': 'aprobado'
     }
 
-#   _constraints = [(_check_demo_not_a,
-  #                   "La fecha programada CRP debe ser posterior a la fecha programada de radicación",
-   #                  ['fecha_crp'])]
+    _constraints = [(_check_demo_not_a,
+                    "La fecha programada CRP debe ser posterior a la fecha programada de radicación y anterior a la fecha programada para la aprobación del acta de Inicio",
+                    ['fecha_crp','fecha_acta_inicio'])]
 
     def onchange_plan_pagos_item_ids(self, cr, uid, ids, pagos_ids, context=None):
         context = context or {}
@@ -190,6 +196,40 @@ class plan_contratacion_idu_item(osv.osv):
             }
         return {
             'value': res
+        }
+
+    def action_invoice_sent(self, cr, uid, ids, context=None):
+        '''
+        This function opens a window to compose an email, with the edi invoice template message loaded by default
+        '''
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
+        ir_model_data = self.pool.get('ir.model.data')
+        try:
+            template_id = ir_model_data.get_object_reference(cr, uid, 'account', 'email_template_edi_invoice')[1]
+        except ValueError:
+            template_id = False
+        try:
+            compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
+        except ValueError:
+            compose_form_id = False
+        ctx = dict(context)
+        ctx.update({
+            'default_model': 'plan_contratacion_idu.item',
+            'default_res_id': ids[0],
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+            'mark_invoice_as_sent': True,
+            })
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form_id, 'form')],
+            'view_id': compose_form_id,
+            'target': 'new',
+            'context': ctx,
         }
 
     def item_estudios_previos(self, cr, uid, ids, plan_items, context=None):
@@ -241,8 +281,7 @@ class plan_contratacion_idu_clasificador_proyectos(osv.osv):
     _columns = {
         'codigo': fields.integer ('Código', required=True, select=True),
         'name': fields.char('Nombre', size=255, required=True, select=True),
-        'tipo': fields.selection([('proyecto_inversion', 'Proyecto de Inversión'),('proyecto_prioritario', 'Proyecto Prioritario'),
-                                  ('proyecto_idu', 'Proyecto IDU'),('punto_inversion', 'Punto de Inversión')],'Tipo', required=True),
+        'tipo': fields.selection([('proyecto_inversion', 'Proyecto de Inversión'),('proyecto_prioritario', 'Proyecto Prioritario')],'Tipo', required=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Nombre'),
         'parent_id': fields.many2one('plan_contratacion_idu.clasificador_proyectos','Clasificación padre', select=True, ondelete='cascade'),
         'child_ids': fields.one2many('plan_contratacion_idu.clasificador_proyectos', 'parent_id', string='Clasificaciones hijas'),
@@ -272,12 +311,15 @@ class plan_contratacion_idu_clasificador_proyectos(osv.osv):
 
 plan_contratacion_idu_clasificador_proyectos()
 
-
 class plan_contratacion_idu_fuente(osv.osv):
     _name = "plan_contratacion_idu.fuente"
     _columns = {
-        'abreviado': fields.char  ('Abreviación', size=10, required=True, select=True),
-        'name': fields.char('Nombre', size=255, required=True, select=True),
+        'codigo_fuente':fields.char('Codigo Fuente',size=10,required=True, select=True),
+        'name': fields.char('Nombre', size=50, required=True, select=True),
+        'codigo_fuente_sdh': fields.char('Codigo Fuente Secretaria Distrital de Hacienda',size=10,required=True, select=True),
+        'nombre_fuente_sdh': fields.char('Nombre Fuente Secretaria Distrital de Hacienda', size=50, required=True, select=True),
+        'codigo_detalle_fuente_sdh': fields.char('Código detalle fuente Secretaria Distrital de Hacienda',size=10, required=True, select=True),
+        'nombre_detalle_fuente_sdh': fields.char('Nombre detalle fuente Secretaria Distrital de Hacienda',size=50, select=True),
     }
 plan_contratacion_idu_fuente()
 

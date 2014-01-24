@@ -159,6 +159,10 @@
                             </page>
                         </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                       <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                       <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -281,7 +285,11 @@
             <field name="arch" type="xml">
                 <tree string="Fuente de Financiación">
                     <field name="name"/>
-                    <field name="abreviado"/>
+                    <field name="codigo_fuente"/>
+                    <field name="codigo_fuente_sdh"/>
+                    <field name="nombre_fuente_sdh"/>
+                    <field name="codigo_detalle_fuente_sdh"/>
+                    <field name="nombre_detalle_fuente_sdh"/>
                 </tree>
             </field>
         </record>
@@ -298,7 +306,11 @@
                             </h1>
                         </div>
                         <group name="detalles">
-                            <field name="abreviado"/>
+                            <field name="codigo_fuente"/>
+                            <field name="codigo_fuente_sdh"/>
+                            <field name="nombre_fuente_sdh"/>
+                            <field name="codigo_detalle_fuente_sdh"/>
+                            <field name="nombre_detalle_fuente_sdh"/>
                         </group>
                     </sheet>
                 </form>
