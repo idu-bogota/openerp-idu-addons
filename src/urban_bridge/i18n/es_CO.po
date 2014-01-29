@@ -22,6 +22,11 @@ msgstr "tipo_elemento"
 
 #. module: urban_bridge
 #: code:addons/urban_bridge/urban_bridge.py:0
+msgid "state"
+msgstr "estado"
+
+#. module: urban_bridge
+#: code:addons/urban_bridge/urban_bridge.py:0
 msgid "values"
 msgstr "valores"
 

@@ -218,7 +218,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
                 elif (data_type == "selection"):
                     value = values.value_selection
                 elif (data_type == "binary"):
-                    value = values.value_photo
+                    value = values.value_binary
                 #En los tipos de datos geométricos se devuelve la geometría de acuerdo con 
                 #con el sistema de referencia establecido en los parametros de configuracion
                 elif (data_type == "geo_point"):
