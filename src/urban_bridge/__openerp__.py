@@ -45,6 +45,7 @@
                         'wizard/inspection_survey.xml',
                         'wizard/import_elements_wizard.xml',
                         'wizard/update_bridge_shape_from_wkt_view.xml',
+                        'urban_bridge_workflow.xml',
                         'urban_bridge_view.xml',
                         ],
         "installable": True

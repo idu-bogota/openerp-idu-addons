@@ -203,6 +203,18 @@ class urban_bridge_bridge(geo_model.GeoModel):
             print e 
             return {"result":"Save Failed!"}
 
+    def case_inventory(self,cr,uid,ids,context=None):
+        return True
+    def case_service(self,cr,uid,ids,context=None):
+        return True
+    def case_prioritized(self,cr,uid,ids,context=None):
+        return True
+    def case_maintainance(self,cr,uid,ids,context=None):
+        return True
+    def case_assured(self,cr,uid,ids,context=None):
+        return True
+    
+
     _name="urban_bridge.bridge"
     _columns = {
         'shape':fields.geo_multi_polygon('Shape',help="Shape"),
@@ -219,6 +231,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
         'superstructure_area':fields.float('Bridge Super-Structure Area'),
         'vertical_gauge':fields.float('Vertical Gauge'),
         'horizontal_gauge':fields.float('Horizontal Gauge'),
+        #Number of lanes?
         'design_load_capacity':fields.float('Design Load Capacity'),
         'level':fields.selection([('-2','-2'),('-1','-1'),('0','0'),('1','1'),('2','2'),('3','3'),('4','4')],'Bridge Level'),
         'structure_material':fields.many2one('urban_bridge.structure_material','Structure Materials'),
