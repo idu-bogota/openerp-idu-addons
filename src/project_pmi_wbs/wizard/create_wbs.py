@@ -33,6 +33,9 @@ class project_pmi_wbs_wizard_create_wbs(osv.osv_memory):
         'wbs_template_id': fields.many2one('project_pmi.wbs_item', 'WBS template', required=False, domain="[('state', '=', 'template')]"),
         'reference_date': fields.date('WBS start date', help="Used as a reference to set the deadline"),
         'link_to_parent': fields.boolean("Link new WBS to parent's project WBS?"),
+        'file':fields.binary('File'),
+        'max_level_evaluate': fields.integer(string="Max level to evaluate", required=True),
+        'min_level_task': fields.integer(string="Min level to generate task", required=True),
     }
 
     def default_get(self, cr, uid, fields, context=None):
