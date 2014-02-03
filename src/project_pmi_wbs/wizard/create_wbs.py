@@ -1,20 +1,20 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2013 Instituto de Desarrollo Urbano (<http://www.idu.gov.co>). All Rights Reserved
+# Copyright (C) 2013 Instituto de Desarrollo Urbano (<http://www.idu.gov.co>). All Rights Reserved
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU Affero General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -33,15 +33,12 @@ class project_pmi_wbs_wizard_create_wbs(osv.osv_memory):
         'wbs_template_id': fields.many2one('project_pmi.wbs_item', 'WBS template', required=False, domain="[('state', '=', 'template')]"),
         'reference_date': fields.date('WBS start date', help="Used as a reference to set the deadline"),
         'link_to_parent': fields.boolean("Link new WBS to parent's project WBS?"),
-        'file':fields.binary('File'),
-        'max_level_evaluate': fields.integer(string="Max level to evaluate", required=True),
-        'min_level_task': fields.integer(string="Min level to generate task", required=True),
     }
 
     def default_get(self, cr, uid, fields, context=None):
         """
-        Get default values to fill the form
-        """
+Get default values to fill the form
+"""
         res = super(project_pmi_wbs_wizard_create_wbs, self).default_get(cr, uid, fields, context=context)
         if 'active_id' in context:
             project = self.pool.get('project.project').browse(cr, uid, context['active_id'], context)
