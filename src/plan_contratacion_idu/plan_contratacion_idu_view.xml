@@ -109,7 +109,14 @@
                         </div>
                         <group>
                             <field name="clasificacion_id"/>
-                            <field name="centro_costo"/>
+                        </group>
+                        <group col="3" colspan="1">
+                            <field name="centro_costo" on_change="onchange_centro_costo(centro_costo)"/>
+                            <button name="consultar_nombre_proyecto_idu" string="Consultar" type="object" icon="gtk-ok"/>
+                        </group>
+                        <group>
+                            <field name="nombre_proyecto_idu"/>
+                            <field name="nombre_punto_inversion"/>
                             <field name="dependencia"/>
                             <field name="fuente"/>
                             <field name="tipo_proceso"/>
@@ -178,6 +185,18 @@
             action="plan_contratacion_idu_item_action"
             id="menu_plan_contratacion_item_list"
             parent="menu_plan_contratacion"/>
+
+<!-- notify all employees of module installation -->
+         <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="subject">Project Management application installed!</field>
+            <field name="body"><![CDATA[<p>Manage multi-level projects and tasks.  You can delegate tasks, track task work, and review your planning.</p>
+            <p>You can manage todo lists on tasks by installing the <i>Todo Lists</i> application, supporting the Getting Things Done (GTD) methodology.</p>
+            <p>You can also manage issues/bugs in projects by installing the "Issue Tracker" application.</p>]]></field>
+        </record>
 
         <!-- Clasificador de Proyectos -->
         <record id="plan_contratacion_idu_clasificador_proyectos_search" model="ir.ui.view">
@@ -330,6 +349,39 @@
             parent="menu_plan_contratacion"
             sequence="0"/>
 
+        <!-- Centro de costo-->
+        <record id="plan_contratacion_idu_plan_centro_costo_item_list" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.plan_centro_costo_item.list</field>
+            <field name="model">plan_contratacion_idu.plan_centro_costo_item</field>
+            <field name="arch" type="xml" >
+                <tree string="Centro Costo">
+                    <field name="codigo"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="plan_contratacion_idu_plan_centro_costo_item_form" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.plan_centro_costo_item.form</field>
+            <field name="model">plan_contratacion_idu.plan_centro_costo_item</field>
+            <field name="arch" type="xml">
+             <form string="Procesi" version="7.0">
+                        <field name="codigo"/>
+                        <field name="name"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="plan_contratacion_idu_plan_centro_costo_item_action" model="ir.actions.act_window">
+            <field name="name">Centro Costo</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">plan_contratacion_idu.plan_centro_costo_item</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="plan_contratacion_idu_plan_centro_costo_item_list"/>
+        </record>
+         
+
         <!-- Programacion de Pagos -->
         <record id="plan_contratacion_idu_plan_pagos_item_list" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.plan_pagos_item.list</field>
@@ -363,6 +415,11 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="plan_contratacion_idu_plan_pagos_item_list"/>
         </record>
+        <menuitem
+            action="plan_contratacion_idu_plan_pagos_item_action"
+            id="menu_plan_contratacion_idu_plan_pagos_item_list"
+            parent="menu_plan_contratacion"
+            sequence="0"/>
 
         <!-- Tipo de Proceso -->
         <record id="plan_contratacion_idu_plan_tipo_proceso_item_list" model="ir.ui.view">

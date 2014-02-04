@@ -19,6 +19,15 @@
 ##############################################################################
 import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv
+from suds.client import Client
+url = 'http://172.16.2.233:9763/services/ws_stone_plan_contratacion?wsdl'
+client = Client(url)
+print client
+client.set_options (port = 'SOAP11Endpoint')
+print client.service.obtener_centro_costo ().COD_CCOS
+print client.service.obtener_centro_costo ().NOM_CCOS
+print client.service.obtener_proyecto_punto_inversion(20202, )
+print client.service.obtener_proyecto_punto_inversion(20202, ).proyecto
 
 class plan_contratacion_idu_plan(osv.osv):
     _name = "plan_contratacion_idu.plan"
@@ -85,6 +94,14 @@ class plan_contratacion_idu_item(osv.osv):
     _name = "plan_contratacion_idu.item"
     _inherit = ['mail.thread']
 
+    _track = {
+        'state': {
+            'plan_contratacion_idu.item_aprobado': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['aprobado', 'ejecucion'],
+            'plan_contratacion_idu.item_radicado': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'radicado',
+            'plan_contratacion_idu.item_suscrito': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'suscrito',
+        },
+    }
+ 
     def _total_pagos_programados(self, cr, uid, ids, name, args, context=None):
         res = {}
         if isinstance(ids, (list, tuple)) and not len(ids):
@@ -120,30 +137,43 @@ class plan_contratacion_idu_item(osv.osv):
         records = self.browse(cr, uid, ids, context=context)
         res = {}
         for record in records:
-            if record.fecha_crp > record.fecha_radicacion and record.fecha_acta_inicio > record.fecha_crp:
+            if record.fecha_crp >= record.fecha_radicacion and record.fecha_acta_inicio >= record.fecha_crp:
                 return True
             else:
                 return False
+
+    def onchange_centro_costo(self, cr, uid, ids, centro_costo, context=None):
+        if centro_costo:
+            x= client.service.obtener_proyecto_punto_inversion(20207, ).nombre_proyecto
+            company = self.pool.get('plan_contratacion_idu.plan_centro_costo_item').read(cr, uid, centro_costo, ['name'])
+            currency_id = company.centro_costo.name
+            x = currency_id
+        else:
+            x = "nada"
+        return {'value':{'nombre_proyecto_idu': x }}
 
     _columns = {
         'dependencia': fields.many2one('hr.department','Dependencia', select=True, ondelete='cascade'),
         'description': fields.text('Objeto Contractual', states={'suscrito':[('readonly',True)], 'ejecucion':[('readonly',True)], 'ejecutado':[('readonly',True)]}),
         'name': fields.many2one('plan_contratacion_idu.plan','Plan contractual', select=True, ondelete='cascade'),
-        'centro_costo': fields.many2one('plan_contratacion_idu.plan_centro_costo_item','Centro de Costo', select=True, ondelete='cascade'),
+        'centro_costo': fields.char('Centro de Costo', size=255),
+        'nombre_proyecto_idu':fields.char('Nombre Proyecto IDU', size=255, domain="[('parent_id','=',centro_costo),('enabled','=',True)]",),
+        'nombre_punto_inversion':fields.char('Nombre Punto de Inversión', size=255),
         'fuente': fields.many2one('plan_contratacion_idu.fuente','Fuente de Financiación', select=True, ondelete='cascade'),
         'state':fields.selection([('aprobado', 'Por radicar'),('radicado', 'Radicado'),('suscrito', 'Contrato suscrito'),('ejecucion', 'En ejecución'),
-                                  ('ejecutado', 'Ejecutado'), ('no_realizado', 'No realizado')],'State', required=True),
-        'fecha_radicacion': fields.date ('Fecha Radicacion en DTPS y/o DTGC', required=True, select=True),
-        'fecha_crp': fields.date ('Fecha Programada CRP', required=True, select=True, help="CRP es Certificado Registro Presupuestal"),
-        'fecha_acta_inicio': fields.date ('Fecha Aprobación Acta de Inicio', required=True, select=True),
+                                  ('ejecutado', 'Ejecutado'), ('no_realizado', 'No realizado')],'State',
+                                  track_visibility='onchange', required=True),
+        'fecha_radicacion': fields.date ('Fecha Radicacion en DTPS y/o DTGC', required= False, select=True),
+        'fecha_crp': fields.date ('Fecha Programada CRP', required=False, select=False, help="CRP es Certificado Registro Presupuestal"),
+        'fecha_acta_inicio': fields.date ('Fecha Aprobación Acta de Inicio', required=False, select=True),
         'plan_id': fields.many2one('plan_contratacion_idu.plan','Plan contractual', select=True, ondelete='cascade'),
         'clasificacion_id': fields.many2one('plan_contratacion_idu.clasificador_proyectos','Clasificación Proyecto', select=True, ondelete='cascade'),
-        'presupuesto': fields.float ('Presupuesto', required=True, select=True, obj="res.currency"),
-        'plazo_de_ejecucion': fields.integer ('Plazo de Ejecución', required=True, select=True, help="Tiempo estimado en meses"),
-        'unidad_meta_fisica': fields.many2one('product.uom','Unidad Meta Física', select=True, ondelete='cascade'),
-        'cantidad_meta_fisica': fields.integer ('Cantidad Metas Físicas'),
+        'presupuesto': fields.float ('Presupuesto', required=True, select=True, obj="res.currency", track_visibility='onchange'),
+        'plazo_de_ejecucion': fields.char('Plazo de Ejecución', required=True, select=True, help="Tiempo estimado en meses"),
+        'unidad_meta_fisica': fields.char('Unidad Meta Física', size=255),
+        'cantidad_meta_fisica': fields.char ('Cantidad Metas Físicas', size=255),
         'localidad': fields.char ('Localidad', size=255),
-        'currency_id': fields.related('plan_id','currency_id',type='many2one',relation='res.currency',string='Company',store=True,readonly=True),
+        'currency_id': fields.related('plan_id','currency_id',type='many2one',relation='res.currency',string='Company',store=True, readonly=True),
         'tipo_proceso': fields.many2one('plan_contratacion_idu.plan_tipo_proceso_item','Tipo Proceso', select=True, ondelete='cascade'),
         'tipo_proceso_seleccion': fields.many2one('plan_contratacion_idu.plan_tipo_proceso_seleccion_item','Tipo Proceso de Selección', select=True, ondelete='cascade'),
         'plan_pagos_item_ids': fields.one2many('plan_contratacion_idu.plan_pagos_item','plan_contratacion_item_id', 'Planificacion de Pagos', select=True, ondelete='cascade'),
@@ -246,9 +276,26 @@ class plan_contratacion_idu_item(osv.osv):
 
     def item_ejecucion(self, cr, uid, ids, plan_items, context=None):
         self.write(cr, uid, ids, {"state": "ejecucion"})
-        
+
     def item_ejecutado(self, cr, uid, ids, plan_items, context=None):
         self.write(cr, uid, ids, {"state": "ejecutado"})
+
+    def consultar_nombre_proyecto_idu(self, cr, uid, ids, plan_items, context=None):
+        res = {}
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return res
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        records = self.browse(cr, uid, ids, context=context)
+        res = {}
+        for record in records:
+            valor= record.centro_costo
+        print "Value : %s" %  res.get('centro_costo')
+        print "Value : %s" %  self._columns['centro_costo']
+        print "Value : %s" %  valor
+        section_id_obj = self.pool.get('plan_contratacion_idu_plan_centro_costo_item') #con esto obtengo el objeto sale.order
+        section_ides = section_id_obj.search(cr, uid, [('codigo')])
+        print section_ides
 
 plan_contratacion_idu_item()
 
@@ -364,10 +411,11 @@ class plan_contratacion_idu_plan_tipo_proceso_seleccion_item(osv.osv):
         ('unique_name','unique(name)','El tipo de proceso debe ser único')
     ]
 
-class plan_contratacion_idu_plan_centro_costo_item(osv.osv):
+class plan_contratacion_idu_plan_centro_costo(osv.osv):
     _name = "plan_contratacion_idu.plan_centro_costo_item"
+
     _columns = {
-        'codigo': fields.integer ('Código', required=True, select=True),
+        'codigo': fields.integer ('Codigo', required=True, select=True),
         'name':fields.char('Nombre', size=255, required=True, select=True),
     }
 
@@ -375,7 +423,7 @@ class plan_contratacion_idu_plan_centro_costo_item(osv.osv):
         ('unique_name','unique(name)','El tipo de proceso debe ser único')
     ]
 
-plan_contratacion_idu_plan_centro_costo_item()
+plan_contratacion_idu_plan_centro_costo()
 
 def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
     results = []
