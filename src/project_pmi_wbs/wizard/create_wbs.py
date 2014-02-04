@@ -56,7 +56,6 @@ Get default values to fill the form
         form_object_id = ids and ids[0] or False
         form_object = self.browse(cr, uid, form_object_id, context=context)
 
-
         for project in project_table.browse(cr, uid, project_ids, context=context):
             data = {
                 'project_id': project.id,

@@ -33,29 +33,27 @@ class project_pmi_wbs_wizard_create_edt_from_file(osv.osv_memory):
         'min_level_task': fields.integer(string="Min level to generate task", required=True),
     }
 
-    def action_create(self, cr, uid, ids, context=None):
-        project_ids = context and context.get('active_ids', False)
-        project_table = self.pool.get('project.project')    
-        wbs_table = self.pool.get('project_pmi.wbs_item')            
+    def action_create(self, cr, uid, ids, context=None):         
         wizards = self.pool.get('project_pmi_wbs.wizard.create_edt_from_file').browse(cr,uid,ids,context=None)   
         for wizard in wizards:      
             tree = ET.XML(base64.decodestring(wizard.file))
+            parent_ids = [0,0,0,0,0,0,0,0,0,0,0]
+            before_outline_level = -1
             for task in tree.iter('{http://schemas.microsoft.com/project}Task'):
                 outline_level = int(task.find('{http://schemas.microsoft.com/project}OutlineLevel').text)
                 outline_number = task.find('{http://schemas.microsoft.com/project}OutlineNumber').text
                 name = task.find('{http://schemas.microsoft.com/project}Name').text
                 if outline_level <= wizard.max_level_evaluate:
-                    print outline_number + ' - '  + name + ' level: ' 
-
-        form_object_id = ids and ids[0] or False
-        form_object = self.browse(cr, uid, form_object_id, context=context)
-
-#         if(form_object.wbs_template_id):
-#             context.update({'copy':True, 'reference_date':form_object.reference_date})
-#             wbs_table.copy(cr, uid, form_object.wbs_template_id.id, default = None, context=context)
-#         else:
-#             wbs_table.create(cr, uid, None, context)
-
+                    data = {'name':name,
+                            'type':'work_package',
+                            'parent_id':parent_ids[outline_level -1],
+                            }
+                    if outline_level != before_outline_level:                    
+                        before_outline_level = outline_level
+                        parent_ids[outline_level] = self.pool.get('project_pmi.wbs_item').create(cr, uid, data, context)                           
+                    else:
+                        self.pool.get('project_pmi.wbs_item').create(cr, uid, data, context)   
+                    print outline_number + ' - '  + name
         return {'type': 'ir.actions.act_window_close'}
 
 project_pmi_wbs_wizard_create_edt_from_file()
