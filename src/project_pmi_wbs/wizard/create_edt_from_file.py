@@ -15,6 +15,8 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    
+#     developed by: Julian Andres Fernandez
 #
 ##############################################################################
 
@@ -36,9 +38,9 @@ class project_pmi_wbs_wizard_create_edt_from_file(osv.osv_memory):
         wizards = self.pool.get('project_pmi_wbs.wizard.create_edt_from_file').browse(cr,uid,ids,context=None)   
         for wizard in wizards:      
             tree = ET.XML(base64.decodestring(wizard.file))
-            parent_ids = [0,0,0,0,0,0,0,0,0,0,0]
-            before_outline_level = -1
+            parent_ids = [0]            
             for task in tree.iter('{http://schemas.microsoft.com/project}Task'):
+                data_task_create = False
                 outline_level = int(task.find('{http://schemas.microsoft.com/project}OutlineLevel').text)
                 outline_number = task.find('{http://schemas.microsoft.com/project}OutlineNumber').text
                 name = task.find('{http://schemas.microsoft.com/project}Name').text
@@ -50,20 +52,18 @@ class project_pmi_wbs_wizard_create_edt_from_file(osv.osv_memory):
                         tracking_type = 'tasks'
                         type_task = 'work_package'        
                     else:
-                        data_task= {'etapa_nombre':name,
+                        data_task= {'name':name,
                                     'wbs_item_id':parent_ids[outline_level -1],                                    
                                     }          
                         self.pool.get('project.task').create(cr, uid, data_task, context)
+                        data_task_create = True
                     data = {'name':name,
                             'type':type_task,
-                            'parent_id':parent_ids[outline_level -1],
                             'tracking_type':tracking_type,
+                            'parent_id':parent_ids[outline_level -1],             
                             }
-                    if outline_level != before_outline_level:                    
-                        before_outline_level = outline_level
-                        parent_ids[outline_level] = self.pool.get('project_pmi.wbs_item').create(cr, uid, data, context)                           
-                    else:
-                        self.pool.get('project_pmi.wbs_item').create(cr, uid, data, context)   
+                    if not data_task_create:
+                        parent_ids.insert(outline_level, self.pool.get('project_pmi.wbs_item').create(cr, uid, data, context))                           
                     print outline_number + ' - '  + name
         return {'type': 'ir.actions.act_window_close'}
 
