@@ -26,8 +26,7 @@ class project_pmi_wbs_wizard_create_edt_from_file(osv.osv_memory):
     _name = 'project_pmi_wbs.wizard.create_edt_from_file'
     _description = 'Create a EDT for a project'
 
-    _columns = {
-        'name': fields.char('Name', size=128, required=False),
+    _columns = {       
         'file':fields.binary('File'),
         'max_level_evaluate': fields.integer(string="Max level to evaluate", required=True),
         'min_level_task': fields.integer(string="Min level to generate task", required=True),
@@ -44,9 +43,21 @@ class project_pmi_wbs_wizard_create_edt_from_file(osv.osv_memory):
                 outline_number = task.find('{http://schemas.microsoft.com/project}OutlineNumber').text
                 name = task.find('{http://schemas.microsoft.com/project}Name').text
                 if outline_level <= wizard.max_level_evaluate:
+                    if outline_level < wizard.min_level_task:
+                        tracking_type = ''
+                        type_task = 'deliverable'
+                    elif outline_level == wizard.min_level_task:
+                        tracking_type = 'tasks'
+                        type_task = 'work_package'        
+                    else:
+                        data_task= {'etapa_nombre':name,
+                                    'wbs_item_id':parent_ids[outline_level -1],                                    
+                                    }          
+                        self.pool.get('project.task').create(cr, uid, data_task, context)
                     data = {'name':name,
-                            'type':'work_package',
+                            'type':type_task,
                             'parent_id':parent_ids[outline_level -1],
+                            'tracking_type':tracking_type,
                             }
                     if outline_level != before_outline_level:                    
                         before_outline_level = outline_level
