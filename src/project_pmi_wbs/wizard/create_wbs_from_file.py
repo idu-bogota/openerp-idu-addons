@@ -33,7 +33,7 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
         'file':fields.binary('File'),
         'max_level_evaluate': fields.integer(string="Maximum level to evaluate", required=True),
         'min_level_task': fields.integer(string="Level to generate tasks", required=True),
-        'include_wbs_outline_number': fields.boolean("Include the wbs assigned code in the name?", required=True),
+        'include_wbs_outline_number': fields.boolean("Include the wbs assigned code in the name?", required=False),
     }
 
     def calculate_days(self,date1):
