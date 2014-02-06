@@ -41,6 +41,12 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
         actual_date = date(today.year,01,01)
         days = actual_date - date_project
         return int(days.days)
+    
+    def get_date(self,date_project):
+        date_temp = date(int(date_project[0:4]),
+                          int(date_project[5:7]),
+                          int(date_project[8:10]))
+        return date_temp 
 
     def action_create(self, cr, uid, ids, context=None):
         wizards = self.pool.get('project_pmi_wbs.wizard.create_wbs_from_file').browse(cr,uid,ids,context=None)
@@ -61,14 +67,8 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
                     if outline_level < wizard.min_level_task:
                         data['type'] = 'deliverable'
                     elif outline_level == wizard.min_level_task:
-                        date_start = date(int(task.find('{http://schemas.microsoft.com/project}Start').text[0:4]),
-                                  int(task.find('{http://schemas.microsoft.com/project}Start').text[5:7]),
-                                  int(task.find('{http://schemas.microsoft.com/project}Start').text[8:10]))
-                        date_start =date_start + timedelta(days=add_days)
-                        date_deadline = date(int(task.find('{http://schemas.microsoft.com/project}Finish').text[0:4]),
-                                  int(task.find('{http://schemas.microsoft.com/project}Finish').text[5:7]),
-                                  int(task.find('{http://schemas.microsoft.com/project}Finish').text[8:10]))
-                        date_deadline =date_deadline - timedelta(days=add_days)
+                        date_start = self.get_date(task.find('{http://schemas.microsoft.com/project}Start').text) + timedelta(days=add_days)
+                        date_deadline = self.get_date(task.find('{http://schemas.microsoft.com/project}Finish').text) - timedelta(days=add_days)
                         data['type'] = 'work_package'
                         data['tracking_type'] = 'tasks'
                         data['date_start'] = date_start.strftime('%Y-%m-%d')
