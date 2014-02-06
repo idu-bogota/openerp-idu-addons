@@ -203,8 +203,11 @@ class urban_bridge_bridge(geo_model.GeoModel):
             print e 
             return {"result":"Save Failed!"}
 
-    def case_inventory(self,cr,uid,ids,context=None):
+    def case_inventory(self,cr,uid,ids, *args):
+        state = {'state':'inventory'}
+        self.write(cr,uid,ids,state)
         return True
+    
     def case_service(self,cr,uid,ids,context=None):
         return True
     def case_prioritized(self,cr,uid,ids,context=None):
@@ -246,7 +249,7 @@ class urban_bridge_bridge(geo_model.GeoModel):
         'calc_perimeter':fields.function(_get_perimeter,string="Calculated Perimeter",method=True,type="float"),
         'elements':fields.one2many('urban_bridge.structure_element','bridge_id','Elements'),
         'survey_id':fields.one2many('urban_bridge.inspection_survey','bridge_id','Inspection Survey'),
-        'state':fields.selection([('draft','Draft'),('updated','Updated'),('maintenance','Maintenance'),('warranty','Warranty')],'State'),
+        'state':fields.selection([('draft','Draft'),('inventory','Inventory'),('maintenance','Maintenance'),('assured','Assured'),('prioritized','Prioritized'),('service','Service')],'State'),
     }
     
     _sql_contraints = [
