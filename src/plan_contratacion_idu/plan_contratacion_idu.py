@@ -19,15 +19,6 @@
 ##############################################################################
 import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv
-from suds.client import Client
-url = 'http://172.16.2.233:9763/services/ws_stone_plan_contratacion?wsdl'
-client = Client(url)
-print client
-client.set_options (port = 'SOAP11Endpoint')
-print client.service.obtener_centro_costo ().COD_CCOS
-print client.service.obtener_centro_costo ().NOM_CCOS
-print client.service.obtener_proyecto_punto_inversion(20202, )
-print client.service.obtener_proyecto_punto_inversion(20202, ).proyecto
 
 class plan_contratacion_idu_plan(osv.osv):
     _name = "plan_contratacion_idu.plan"
@@ -63,7 +54,7 @@ class plan_contratacion_idu_plan(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Nombre', size=255, required=True, select=True),
+        'name': fields.char('Vigencia', size=255, required=True, select=True),
         'state':fields.selection([('draft', 'Draft'),('open', 'In Progress'),('cancel', 'Cancelled'),('done', 'Done'),('pending', 'Pending')],'State', required=True),
         'active':fields.boolean('Activo'),
         'item_ids': fields.one2many('plan_contratacion_idu.item', 'plan_id', 'Items Plan de Contratacion'),
@@ -96,7 +87,8 @@ class plan_contratacion_idu_item(osv.osv):
 
     _track = {
         'state': {
-            'plan_contratacion_idu.item_aprobado': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['aprobado', 'ejecucion'],
+            'plan_contratacion_idu.item_draft': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['draft'],
+            'plan_contratacion_idu.item_estudios_previos': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['estudios_previos', 'ejecucion'],
             'plan_contratacion_idu.item_radicado': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'radicado',
             'plan_contratacion_idu.item_suscrito': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'suscrito',
         },
@@ -128,7 +120,8 @@ class plan_contratacion_idu_item(osv.osv):
         plan_item_ids = [pago.plan_contratacion_item_id.id for pago in pago_records if pago.plan_contratacion_item_id]
         return plan_item_ids
 
-    def _check_demo_not_a(self,cr,uid,ids,context=None):
+    def _check_fechas_programadas(self,cr,uid,ids,context=None):
+        """valida las fechas programadas"""
         res = {}
         if isinstance(ids, (list, tuple)) and not len(ids):
             return res
@@ -142,30 +135,117 @@ class plan_contratacion_idu_item(osv.osv):
             else:
                 return False
 
-    def onchange_centro_costo(self, cr, uid, ids, centro_costo, context=None):
-        if centro_costo:
-            x= client.service.obtener_proyecto_punto_inversion(20207, ).nombre_proyecto
-            company = self.pool.get('plan_contratacion_idu.plan_centro_costo_item').read(cr, uid, centro_costo, ['name'])
-            currency_id = company.centro_costo.name
-            x = currency_id
-        else:
-            x = "nada"
-        return {'value':{'nombre_proyecto_idu': x }}
+    def _check_state(self,cr,uid,ids,context=None):
+        """valida el cambio de estado"""
+        res = {}
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return res
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        records = self.browse(cr, uid, ids, context=context)
+        res = {}
+        for record in records:
+            if record.state == 'draft':
+                return True
+            if record.state == 'estudios_previos':
+                return True
+            if record.state=='ejecucion':
+                if record.acta_inicio:
+                    return True
+                else:
+                    return False
+            if record.state == 'ejecutado':
+                if record.acta_liquidacion:
+                    return True
+                else:
+                    return False
+
+    def _check_state_radicado(self,cr,uid,ids,context=None):
+        """valida el cambio de estado"""
+        res = {}
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return res
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        records = self.browse(cr, uid, ids, context=context)
+        res = {}
+        is_valid = True
+        for record in records:
+            if record.state == 'radicado':
+                if record.numero_orfeo:
+                    is_valid = True
+                else:
+                    is_valid = False
+        return is_valid
+
+    def _check_state_suscrito(self,cr,uid,ids,context=None):
+        """valida el cambio de estado"""
+        res = {}
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return res
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        records = self.browse(cr, uid, ids, context=context)
+        res = {}
+        is_valid = True
+        for record in records:
+            if record.state == 'suscrito':
+                if record.numero_crp:
+                    is_valid = True
+                else:
+                    is_valid = False
+        return is_valid
+
+    def _check_state_ejecucion(self,cr,uid,ids,context=None):
+        """valida el cambio de estado """
+        res = {}
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return res
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        records = self.browse(cr, uid, ids, context=context)
+        res = {}
+        is_valid = True
+        for record in records:
+            if record.state == 'ejecucion':
+                if record.numero_crp:
+                    is_valid = True
+                else:
+                    is_valid = False
+        return is_valid
+
+    def _check_state_ejecutado(self,cr,uid,ids,context=None):
+        """valida el cambio de estado"""
+        res = {}
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return res
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        records = self.browse(cr, uid, ids, context=context)
+        res = {}
+        is_valid = True
+        for record in records:
+            if record.state == 'ejecutado':
+                if record.numero_crp:
+                    is_valid = True
+                else:
+                    is_valid = False
+        return is_valid
 
     _columns = {
         'dependencia': fields.many2one('hr.department','Dependencia', select=True, ondelete='cascade'),
         'description': fields.text('Objeto Contractual', states={'suscrito':[('readonly',True)], 'ejecucion':[('readonly',True)], 'ejecutado':[('readonly',True)]}),
         'name': fields.many2one('plan_contratacion_idu.plan','Plan contractual', select=True, ondelete='cascade'),
         'centro_costo': fields.char('Centro de Costo', size=255),
-        'nombre_proyecto_idu':fields.char('Nombre Proyecto IDU', size=255, domain="[('parent_id','=',centro_costo),('enabled','=',True)]",),
+        'nombre_proyecto_idu':fields.char('Nombre Proyecto IDU', size=255, domain="[('parent_id','=',centro_costo),('enabled','=',False)]",),
         'nombre_punto_inversion':fields.char('Nombre Punto de Inversión', size=255),
         'fuente': fields.many2one('plan_contratacion_idu.fuente','Fuente de Financiación', select=True, ondelete='cascade'),
-        'state':fields.selection([('aprobado', 'Por radicar'),('radicado', 'Radicado'),('suscrito', 'Contrato suscrito'),('ejecucion', 'En ejecución'),
+        'state':fields.selection([('draft', 'Draft'),('estudios_previos', 'Estudios Previos'),('radicado', 'Radicado'),('suscrito', 'Contrato Suscrito'),('ejecucion', 'En ejecución'),
                                   ('ejecutado', 'Ejecutado'), ('no_realizado', 'No realizado')],'State',
                                   track_visibility='onchange', required=True),
-        'fecha_radicacion': fields.date ('Fecha Radicacion en DTPS y/o DTGC', required= False, select=True),
-        'fecha_crp': fields.date ('Fecha Programada CRP', required=False, select=False, help="CRP es Certificado Registro Presupuestal"),
-        'fecha_acta_inicio': fields.date ('Fecha Aprobación Acta de Inicio', required=False, select=True),
+        'fecha_radicacion': fields.date ('Fecha Radicacion en DTPS y/o DTGC', state={'draft':[('required',False)],'estudios_previos':[('required',False)]}, required=True, select=True),
+        'fecha_crp': fields.date ('Fecha Programada CRP', state={'draft':[('required',False)],'estudios_previos':[('required',False)]}, required=True, select=False, help="CRP es Certificado Registro Presupuestal"),
+        'fecha_acta_inicio': fields.date ('Fecha Aprobación Acta de Inicio', state={'draft':[('required',False)],'estudios_previos':[('required',False)]}, required=True, select=True),
         'plan_id': fields.many2one('plan_contratacion_idu.plan','Plan contractual', select=True, ondelete='cascade'),
         'clasificacion_id': fields.many2one('plan_contratacion_idu.clasificador_proyectos','Clasificación Proyecto', select=True, ondelete='cascade'),
         'presupuesto': fields.float ('Presupuesto', required=True, select=True, obj="res.currency", track_visibility='onchange'),
@@ -194,15 +274,36 @@ class plan_contratacion_idu_item(osv.osv):
                 'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['presupuesto', 'presupuesto'], 10),
                 'plan_contratacion_idu.plan_pagos_item': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
             }),
+        'numero_orfeo':fields.char('Número Radicado Orfeo', help='Validado desdes Orfeo', states={'estudios_previos':[('readonly',False)]}, readonly=True,
+                                   track_visibility='onchange'),
+        'numero_crp':fields.char('Numero CRP', help ='Validado desde Stone', states={'radicado':[('readonly',False)]}, readonly=True,
+                                 track_visibility='onchange'),
+        'numero_contrato': fields.char('Numero Contrato', help ='Validado desde SIAC', states={'suscrito':[('readonly',False)]}, readonly=True,
+                                       track_visibility='onchange'),
+        'acta_inicio':fields.date('Fecha acta de inicio', help = 'Validador desde SIAC', readonly=True),
+        'acta_liquidacion':fields.date('Fecha acta de Liquidacion', help = 'Validador desde SIAC',readonly =True),
     }
 
     _defaults = {
-        'state': 'aprobado'
+        'state': 'draft'
     }
 
-    _constraints = [(_check_demo_not_a,
+    _constraints = [(_check_fechas_programadas,
                     "La fecha programada CRP debe ser posterior a la fecha programada de radicación y anterior a la fecha programada para la aprobación del acta de Inicio",
-                    ['fecha_crp','fecha_acta_inicio'])]
+                    ['fecha_crp','fecha_acta_inicio']),
+                    (_check_state_radicado,
+                    "Para cambiar el estado a Radicado debe ingresar el número de radicado Orfeo en información de verificación",
+                    ['state']),
+                    (_check_state_suscrito,
+                    "Para cambiar el estado a Contrato Suscrito debe ingresar el número CRP en información de verificación",
+                    ['state']),
+                    (_check_state_ejecucion,
+                    "Para cambiar el estado a Ejecucion debe ingresar el número del contrato en información de verificación",
+                    ['state']),
+                    (_check_state_ejecutado,
+                    "Para cambiar el estado a Ejecutado debe ingresar el número del contrato en información de verificación",
+                    ['state']),
+                    ]
 
     def onchange_plan_pagos_item_ids(self, cr, uid, ids, pagos_ids, context=None):
         context = context or {}
@@ -262,40 +363,27 @@ class plan_contratacion_idu_item(osv.osv):
             'context': ctx,
         }
 
-    def item_estudios_previos(self, cr, uid, ids, plan_items, context=None):
-        self.write(cr, uid, ids, {"state": "aprobado"})
+    def wkf_draft(self, cr, uid, ids, plan_items, context=None):
+        self.write(cr, uid, ids, {"state": "draft"})
 
-    def item_radicado(self, cr, uid, ids, plan_items, context=None):
+    def wkf_estudios_previos(self, cr, uid, ids, plan_items, context=None):
+        self.write(cr, uid, ids, {"state": "estudios_previos","numero_orfeo":"",
+                                  "numero_crp":"", "numero_contrato":None})
+
+    def wkf_radicado(self, cr, uid, ids, plan_items, context=None):
         self.write(cr, uid, ids, {"state": "radicado"})
 
-    def item_no_realizado(self, cr, uid, ids, plan_items, context=None):
+    def wkf_no_realizado(self, cr, uid, ids, plan_items, context=None):
         self.write(cr, uid, ids, {"state": "no_realizado"})
     
-    def item_suscrito(self, cr, uid, ids, plan_items, context=None):
+    def wkf_suscrito(self, cr, uid, ids, plan_items, context=None):
         self.write(cr, uid, ids, {"state": "suscrito"})
 
-    def item_ejecucion(self, cr, uid, ids, plan_items, context=None):
+    def wkf_ejecucion(self, cr, uid, ids, plan_items, context=None):
         self.write(cr, uid, ids, {"state": "ejecucion"})
 
-    def item_ejecutado(self, cr, uid, ids, plan_items, context=None):
+    def wkf_ejecutado(self, cr, uid, ids, plan_items, context=None):
         self.write(cr, uid, ids, {"state": "ejecutado"})
-
-    def consultar_nombre_proyecto_idu(self, cr, uid, ids, plan_items, context=None):
-        res = {}
-        if isinstance(ids, (list, tuple)) and not len(ids):
-            return res
-        if isinstance(ids, (long, int)):
-            ids = [ids]
-        records = self.browse(cr, uid, ids, context=context)
-        res = {}
-        for record in records:
-            valor= record.centro_costo
-        print "Value : %s" %  res.get('centro_costo')
-        print "Value : %s" %  self._columns['centro_costo']
-        print "Value : %s" %  valor
-        section_id_obj = self.pool.get('plan_contratacion_idu_plan_centro_costo_item') #con esto obtengo el objeto sale.order
-        section_ides = section_id_obj.search(cr, uid, [('codigo')])
-        print section_ides
 
 plan_contratacion_idu_item()
 
@@ -411,20 +499,6 @@ class plan_contratacion_idu_plan_tipo_proceso_seleccion_item(osv.osv):
         ('unique_name','unique(name)','El tipo de proceso debe ser único')
     ]
 
-class plan_contratacion_idu_plan_centro_costo(osv.osv):
-    _name = "plan_contratacion_idu.plan_centro_costo_item"
-
-    _columns = {
-        'codigo': fields.integer ('Codigo', required=True, select=True),
-        'name':fields.char('Nombre', size=255, required=True, select=True),
-    }
-
-    _sql_constraints =[
-        ('unique_name','unique(name)','El tipo de proceso debe ser único')
-    ]
-
-plan_contratacion_idu_plan_centro_costo()
-
 def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
     results = []
     for operation in operations:
@@ -443,3 +517,4 @@ def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
         if result != None:
             results.append(result)
     return results
+
