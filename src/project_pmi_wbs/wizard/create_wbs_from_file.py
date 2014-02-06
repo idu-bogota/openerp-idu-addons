@@ -24,9 +24,9 @@ from osv import osv, fields
 import xml.etree.ElementTree as ET
 import base64
 
-class project_pmi_wbs_wizard_create_edt_from_file(osv.osv_memory):
-    _name = 'project_pmi_wbs.wizard.create_edt_from_file'
-    _description = 'Create a EDT for a project'
+class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
+    _name = 'project_pmi_wbs.wizard.create_wbs_from_file'
+    _description = 'Create a WBS for a project'
 
     _columns = {       
         'file':fields.binary('File'),
@@ -35,7 +35,7 @@ class project_pmi_wbs_wizard_create_edt_from_file(osv.osv_memory):
     }
 
     def action_create(self, cr, uid, ids, context=None):         
-        wizards = self.pool.get('project_pmi_wbs.wizard.create_edt_from_file').browse(cr,uid,ids,context=None)   
+        wizards = self.pool.get('project_pmi_wbs.wizard.create_wbs_from_file').browse(cr,uid,ids,context=None)   
         for wizard in wizards:      
             tree = ET.XML(base64.decodestring(wizard.file))
             parent_ids = [0]            
@@ -44,27 +44,28 @@ class project_pmi_wbs_wizard_create_edt_from_file(osv.osv_memory):
                 outline_level = int(task.find('{http://schemas.microsoft.com/project}OutlineLevel').text)
                 outline_number = task.find('{http://schemas.microsoft.com/project}OutlineNumber').text
                 name = task.find('{http://schemas.microsoft.com/project}Name').text
+                date_start = task.find('{http://schemas.microsoft.com/project}Start').text
+                date_deadline = task.find('{http://schemas.microsoft.com/project}Finish').text
                 if outline_level <= wizard.max_level_evaluate:
+                    data = {'name':name,
+                            'parent_id':parent_ids[outline_level -1],                                                                   
+                            }
                     if outline_level < wizard.min_level_task:
-                        tracking_type = ''
-                        type_task = 'deliverable'
-                    elif outline_level == wizard.min_level_task:
-                        tracking_type = 'tasks'
-                        type_task = 'work_package'        
+                        data['type'] = 'deliverable'   
+                    elif outline_level == wizard.min_level_task:           
+                        data['type'] = 'work_package'
+                        data['tracking_type'] = 'tasks' 
+                        data['date_start'] = date_start
+                        data['date_deadline'] = date_deadline
                     else:
                         data_task= {'name':name,
                                     'wbs_item_id':parent_ids[outline_level -1],                                    
                                     }          
                         self.pool.get('project.task').create(cr, uid, data_task, context)
                         data_task_create = True
-                    data = {'name':name,
-                            'type':type_task,
-                            'tracking_type':tracking_type,
-                            'parent_id':parent_ids[outline_level -1],             
-                            }
                     if not data_task_create:
                         parent_ids.insert(outline_level, self.pool.get('project_pmi.wbs_item').create(cr, uid, data, context))                           
                     print outline_number + ' - '  + name
         return {'type': 'ir.actions.act_window_close'}
 
-project_pmi_wbs_wizard_create_edt_from_file()
+project_pmi_wbs_wizard_create_wbs_from_file()
