@@ -31,8 +31,9 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
 
     _columns = {
         'file':fields.binary('File'),
-        'max_level_evaluate': fields.integer(string="Max level to evaluate", required=True),
-        'min_level_task': fields.integer(string="Min level to generate task", required=True),
+        'max_level_evaluate': fields.integer(string="Maximum level to evaluate", required=True),
+        'min_level_task': fields.integer(string="Level to generate tasks", required=True),
+        'include_wbs_outline_number': fields.boolean("Include the wbs assigned code in the name?", required=True),
     }
 
     def calculate_days(self,date1):
@@ -53,13 +54,15 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
         for wizard in wizards:
             tree = ET.XML(base64.decodestring(wizard.file))
             date_project = tree.find('{http://schemas.microsoft.com/project}StartDate').text
-            add_days =self.calculate_days(date_project)
+            add_days = self.calculate_days(date_project)
             parent_ids = [0]
             for task in tree.iter('{http://schemas.microsoft.com/project}Task'):
                 data_task_create = False
                 outline_level = int(task.find('{http://schemas.microsoft.com/project}OutlineLevel').text)
-#                 outline_number = task.find('{http://schemas.microsoft.com/project}OutlineNumber').text
                 name = task.find('{http://schemas.microsoft.com/project}Name').text
+                if wizard.include_wbs_outline_number:
+                    outline_number = task.find('{http://schemas.microsoft.com/project}OutlineNumber').text
+                    name = '{0} {1}'.format(outline_number, name)
                 if outline_level <= wizard.max_level_evaluate:
                     data = {'name':name,
                             'parent_id':parent_ids[outline_level -1],
@@ -74,7 +77,7 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
                         data['date_start'] = date_start.strftime('%Y-%m-%d')
                         data['date_deadline'] = date_deadline.strftime('%Y-%m-%d')
                     else:
-                        data_task= {'name':name,
+                        data_task = {'name':name,
                                     'wbs_item_id':parent_ids[outline_level -1],
                                     }
                         self.pool.get('project.task').create(cr, uid, data_task, context)
