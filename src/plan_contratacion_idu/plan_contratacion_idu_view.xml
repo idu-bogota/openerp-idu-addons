@@ -393,6 +393,11 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="plan_contratacion_idu_plan_pagos_item_list"/>
         </record>
+        <menuitem
+            action="plan_contratacion_idu_plan_pagos_item_action"
+            id="menu_plan_contratacion_idu_plan_pagos_item_list"
+            parent="menu_plan_contratacion"
+            sequence="0"/>
 
         <!-- Tipo de Proceso -->
         <record id="plan_contratacion_idu_plan_tipo_proceso_list" model="ir.ui.view">

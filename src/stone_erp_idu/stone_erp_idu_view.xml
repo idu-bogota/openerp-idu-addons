@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <menuitem name="Stone" id="menu_stone_erp_idu" parent="base.menu_main_contrato_idu"/>
+
+        <!--Centro de Costo IDU-->
+        <record id="stone_erp_idu_centro_costo_list" model="ir.ui.view">
+            <field name="name">stone_erp_idu.centro_costo.list</field>
+            <field name="model">stone_erp_idu.centro_costo</field>
+            <field name="arch" type="xml" >
+                <tree string="Centro de Costo IDU">
+                    <field name="codigo"/>
+                </tree>
+            </field>
+        </record>
+        <record id="stone_erp_idu_centro_costo_form" model="ir.ui.view">
+            <field name="name">stone_erp_idu.centro_costo.form</field>
+            <field name="model">stone_erp_idu.centro_costo</field>
+            <field name="arch" type="xml">
+                <form string="Procesi" version="7.0">
+                    <sheet>
+                        <field name="codigo"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="stone_erp_idu_centro_costo_action" model="ir.actions.act_window">
+            <field name="name">Centro de Costo IDU</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stone_erp_idu.centro_costo</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="stone_erp_idu_centro_costo_list"/>
+        </record>
+        <menuitem
+            action="stone_erp_idu_centro_costo_action"
+            id="menu_stone_erp_idu_centro_costo_list"
+            parent="menu_stone_erp_idu"
+            sequence="0"/>
+    </data>
+</openerp>
