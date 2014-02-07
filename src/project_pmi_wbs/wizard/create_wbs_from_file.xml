@@ -10,6 +10,7 @@
                         <field name="max_level_evaluate" colspan="4"/>
                         <field name="min_level_task" colspan="4" />
                         <field name="include_wbs_outline_number" colspan="4" />
+                        <field name="assign_task_to_current_user" colspan="4" />
                         <field name="file" colspan="2"/>
                     </group>
 
@@ -31,7 +32,7 @@
             <field name="target">new</field>
         </record>
         
-        <menuitem name="Import WBS" id="menu_project_management__wizard_create_wbs_from_file" action="project_pmi_wbs_wizard_create_wbs_from_file_action" parent ="project.menu_project_management"/>
+        <menuitem name="Import WBS" id="menu_project_management__wizard_create_wbs_from_file" action="project_pmi_wbs_wizard_create_wbs_from_file_action" parent ="base.menu_definitions"/>
 
 </data>
 </openerp>

@@ -32,8 +32,9 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
     _columns = {
         'file':fields.binary('File'),
         'max_level_evaluate': fields.integer(string="Maximum level to evaluate", required=True),
-        'min_level_task': fields.integer(string="Level to generate tasks", required=True),
+        'min_level_task': fields.integer(string="Level to start generating tasks", required=True),
         'include_wbs_outline_number': fields.boolean("Include the wbs assigned code in the name?", required=False),
+        'assign_task_to_current_user': fields.boolean("Assign new tasks to current user? otherwise they will be unassigned", required=False),
     }
 
     def calculate_days(self,date1):
@@ -67,9 +68,9 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
                     data = {'name':name,
                             'parent_id':parent_ids[outline_level -1],
                             }
-                    if outline_level < wizard.min_level_task:
+                    if outline_level < wizard.min_level_task - 1:
                         data['type'] = 'deliverable'
-                    elif outline_level == wizard.min_level_task:
+                    elif outline_level == wizard.min_level_task - 1:
                         date_start = self.get_date(task.find('{http://schemas.microsoft.com/project}Start').text) + timedelta(days=add_days)
                         date_deadline = self.get_date(task.find('{http://schemas.microsoft.com/project}Finish').text) - timedelta(days=add_days)
                         data['type'] = 'work_package'
@@ -78,8 +79,11 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
                         data['date_deadline'] = date_deadline.strftime('%Y-%m-%d')
                     else:
                         data_task = {'name':name,
-                                    'wbs_item_id':parent_ids[outline_level -1],
+                                     'wbs_item_id':parent_ids[outline_level -1],
                                     }
+                        if not wizard.assign_task_to_current_user:
+                            data_task['user_id'] = None
+
                         self.pool.get('project.task').create(cr, uid, data_task, context)
                         data_task_create = True
                     if not data_task_create:
