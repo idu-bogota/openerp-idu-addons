@@ -5,7 +5,7 @@
 </listAttribute>
 <stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="/usr/bin/openerp-server"/>
 <stringAttribute key="org.eclipse.ui.externaltools.ATTR_OTHER_WORKING_DIRECTORY" value="${git_work_tree}"/>
-<stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="--config=${project_loc:openerp-idu-addons}/openerp-server.conf -r openerp -w openerp --db_host=localhost --update=ocs,ocs_idu,contrato_idu,project_idu,project_pmi_wbs,project_pmi_portfolio,enterprise_strategic_planning,plan_contratacion_idu"/>
+<stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="--config=${project_loc:openerp-idu-addons}/openerp-server.conf -r openerp -w openerp --db_host=localhost --update=ocs,ocs_idu,contrato_idu,project_idu,project_pmi_wbs,project_pmi_portfolio,enterprise_strategic_planning,plan_contratacion_idu,stone_erp_idu"/>
 <stringAttribute key="org.python.pydev.debug.ATTR_INTERPRETER" value="__default"/>
 <stringAttribute key="org.python.pydev.debug.ATTR_PROJECT" value="openerp-idu-addons"/>
 </launchConfiguration>
