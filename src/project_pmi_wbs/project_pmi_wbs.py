@@ -153,6 +153,13 @@ class project_pmi_wbs_item(osv.osv):
                         value *= number
                     res[id]['progress_rate'] += progress / value
                 id = child_parent[id]
+        if len(res) == 1:
+            if len(child_parent) == 1:
+                for val in res:
+                    if res[val]['state'] == 'done':#
+                        task_id = self.pool.get('project.task').search(cr, uid, [('wbs_item_id','=',val)], context=context)
+                        if res[val]['type'] == 'work_package' and len(task_id) == 0:
+                            res[val]['progress_rate'] = 100.0
         return res
 
     def _get_values_dictionary(self,my_dictionary,my_value):
@@ -323,12 +330,23 @@ class project_pmi_wbs_item(osv.osv):
                 res[record['id']] = False
         return reduce(lambda x, y: x and y, res.values())
 
+    def _check_no_task_finished(self,cr,uid,ids,context=None):
+        task_ids = self.pool.get('project.task').search(cr, uid, [('wbs_item_id','=',ids)], context=context)
+        records = self.read(cr, uid, ids, ['type','state','tracking_type','progress','task_ids','work_record_ids'], context=context)
+        for record in records:
+            if record['state'] == 'done':
+                for task in self.pool.get('project.task').browse(cr, uid, task_ids, context):
+                    if task['state'] != 'done':
+                        return False
+        return True
+
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive wbs items.', ['parent_id']),
         (_check_no_childs, 'Error ! A work package cannot have children.', ['type']),
         (_check_no_work_or_taks, 'Error ! a Deliverable cannot have neither unit tracking, tasks nor work_records.', ['type']),
         (_check_unit_measure_work_package, 'Error ! Please select unit of measure.', ['tracking_type']),
         (_check_work_unit_no_task, 'Error ! You cannot change tracking type.', ['tracking_type']),
+        (_check_no_task_finished, 'Error ! You finish first the children tasks.', ['state']),
     ]
 
     def child_get(self, cr, uid, ids):
