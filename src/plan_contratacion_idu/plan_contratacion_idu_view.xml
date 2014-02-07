@@ -10,8 +10,8 @@
             <field name="arch" type="xml">
                 <tree string="Plan de contratación">
                     <field name="name"/>
-                    <field name="state"/>
-                    <field name="active"/>
+                    <field name="state" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                    <field name="active" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                     <field name="item_ids"/>
                     <field name="total_pagos_presupuestado_plan"/>
                     <field name="total_pagos_programados_plan"/>
@@ -32,8 +32,8 @@
                             </h1>
                         </div>
                         <group name="detalles">
-                            <field name="state"/>
-                            <field name="active"/>
+                            <field name="state" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                            <field name="active" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                         </group>
                         <field name="item_ids"/>
                          <field name="currency_id" invisible="1"/>
@@ -73,8 +73,8 @@
                 <tree string="Item Plan de contratación">
                     <field name="clasificacion_id"/>
                     <field name="state"/>
-                    <field name="dependencia"/>
-                    <field name="fuente"/>
+                    <field name="dependencia_id"/>
+                    <field name="fuente_id"/>
                     <field name="plazo_de_ejecucion"/>
                     <field name="fecha_radicacion"/>
                     <field name="fecha_crp"/>
@@ -110,19 +110,20 @@
                             </h1>
                         </div>
                         <group>
+                            <field name="codigo_unspsc"/>
                             <field name="clasificacion_id"/>
                         </group>
                         <group col="3" colspan="1">
-                            <field name="centro_costo"/>
+                            <field name="centro_costo_id"/>
                             <button name="consultar_nombre_proyecto_idu" string="Consultar" type="object" icon="gtk-ok"/>
                         </group>
                         <group>
                             <field name="nombre_proyecto_idu"/>
                             <field name="nombre_punto_inversion"/>
-                            <field name="dependencia"/>
-                            <field name="fuente"/>
-                            <field name="tipo_proceso"/>
-                            <field name="tipo_proceso_seleccion"/>
+                            <field name="dependencia_id"/>
+                            <field name="fuente_id"/>
+                            <field name="tipo_proceso_id"/>
+                            <field name="tipo_proceso_seleccion_id"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="presupuesto" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         </group>
@@ -197,7 +198,7 @@
             id="menu_plan_contratacion_item_list"
             parent="menu_plan_contratacion"/>
 
-<!-- notify all employees of module installation -->
+        <!-- notify all employees of module installation -->
          <record model="mail.message" id="module_install_notification">
             <field name="model">mail.group</field>
             <field name="res_id" ref="mail.group_all_employees"/>
@@ -393,12 +394,6 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="plan_contratacion_idu_plan_pagos_item_list"/>
         </record>
-        <menuitem
-            action="plan_contratacion_idu_plan_pagos_item_action"
-            id="menu_plan_contratacion_idu_plan_pagos_item_list"
-            parent="menu_plan_contratacion"
-            sequence="0"/>
-
         <!-- Tipo de Proceso -->
         <record id="plan_contratacion_idu_plan_tipo_proceso_list" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.plan_tipo_proceso.list</field>

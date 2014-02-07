@@ -19,9 +19,10 @@
 
 from openerp.osv import fields, osv
 from suds.client import Client
+
+url = 'http://172.16.2.233:9763/services/ws_stone_plan_contratacion?wsdl'
+client = Client(url)
 #===============================================================================
-# url = 'http://172.16.2.233:9763/services/ws_stone_plan_contratacion?wsdl'
-# client = Client(url)
 # print client
 # client.set_options (port = 'SOAP11Endpoint')
 # print client.service.obtener_centro_costo ().COD_CCOS

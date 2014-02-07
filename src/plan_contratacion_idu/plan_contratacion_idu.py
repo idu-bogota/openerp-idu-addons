@@ -211,13 +211,14 @@ class plan_contratacion_idu_item(osv.osv):
         return is_valid
 
     _columns = {
-        'dependencia': fields.many2one('hr.department','Dependencia', select=True, ondelete='cascade'),
+        'codigo_unspsc': fields.char('Codigo UNSPSC', help='Codificación de bienes y servicios, Colombia compra eficiente'),
+        'dependencia_id': fields.many2one('hr.department','Dependencia', select=True, ondelete='cascade'),
         'description': fields.text('Objeto Contractual', states={'suscrito':[('readonly',True)], 'ejecucion':[('readonly',True)], 'ejecutado':[('readonly',True)]}),
         'name': fields.many2one('plan_contratacion_idu.plan','Plan contractual', select=True, ondelete='cascade'),
-        'centro_costo': fields.many2one('stone_erp_idu.centro_costo','Centro de Costo', select=True, ondelete='cascade'),
+        'centro_costo_id': fields.many2one('stone_erp_idu.centro_costo','Centro de Costo', select=True, ondelete='cascade'),
         'nombre_proyecto_idu':fields.char('Nombre Proyecto IDU', size=255, domain="[('parent_id','=',centro_costo),('enabled','=',False)]",),
         'nombre_punto_inversion':fields.char('Nombre Punto de Inversión', size=255),
-        'fuente': fields.many2one('plan_contratacion_idu.fuente','Fuente de Financiación', select=True, ondelete='cascade'),
+        'fuente_id': fields.many2one('plan_contratacion_idu.fuente','Fuente de Financiación', select=True, ondelete='cascade'),
         'state':fields.selection([('draft', 'Borrador'),('estudios_previos', 'Estudios Previos'),('radicado', 'Radicado'),('suscrito', 'Contrato Suscrito'),('ejecucion', 'En ejecución'),
                                   ('ejecutado', 'Ejecutado'), ('no_realizado', 'No realizado')],'State',
                                   track_visibility='onchange', required=True),
@@ -232,8 +233,8 @@ class plan_contratacion_idu_item(osv.osv):
         'cantidad_meta_fisica': fields.char ('Cantidad Metas Físicas', size=255),
         'localidad': fields.char ('Localidad', size=255),
         'currency_id': fields.related('plan_id','currency_id',type='many2one',relation='res.currency',string='Company',store=True, readonly=True),
-        'tipo_proceso': fields.many2one('plan_contratacion_idu.plan_tipo_proceso','Tipo Proceso', select=True, ondelete='cascade'),
-        'tipo_proceso_seleccion': fields.many2one('plan_contratacion_idu.plan_tipo_proceso_seleccion','Tipo Proceso de Selección', select=True, ondelete='cascade'),
+        'tipo_proceso_id': fields.many2one('plan_contratacion_idu.plan_tipo_proceso','Tipo Proceso', select=True, ondelete='cascade'),
+        'tipo_proceso_seleccion_id': fields.many2one('plan_contratacion_idu.plan_tipo_proceso_seleccion','Tipo Proceso de Selección', select=True, ondelete='cascade'),
         'plan_pagos_item_ids': fields.one2many('plan_contratacion_idu.plan_pagos_item','plan_contratacion_item_id', 'Planificacion de Pagos', select=True, ondelete='cascade'),
         'total_pagos_programados': fields.function(_total_pagos_programados, type='float', multi="presupuesto", string='Total pagos programados', obj="res.currency", digits_compute=dp.get_precision('Account'),
              store={
@@ -258,7 +259,7 @@ class plan_contratacion_idu_item(osv.osv):
                                  track_visibility='onchange'),
         'numero_contrato': fields.char('Numero Contrato', help ='Validado desde SIAC', states={'suscrito':[('readonly',False)]}, readonly=True,
                                        track_visibility='onchange'),
-        'acta_inicio':fields.date('Fecha acta de inicio', help = 'Validador desde SIAC', readonly=True),
+        'acta_inicio':fields.date('Fecha Acta de Inicio', help = 'Validador desde SIAC', readonly=True),
         'acta_liquidacion':fields.date('Fecha acta de Liquidacion', help = 'Validador desde SIAC',readonly =True),
     }
 
@@ -496,3 +497,20 @@ def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
             results.append(result)
     return results
 
+class res_users(osv.osv):
+    _name = 'res.users'
+    _inherit = 'res.users'
+
+    def _deparment_ids(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = {}
+        for user in self.browse(cr, uid, ids, context=context):
+            for employee in user.employee_ids:
+                res[user['id']] = employee.department_id.id
+                break;
+        return res
+
+    _columns = {
+        'department_ids': fields.function(_deparment_ids, type="int", string='Dependencias'),
+    }
+
+res_users()

@@ -22,14 +22,17 @@
                                 Domain Constraints
             ;============================================================================= -->
 
- <!--        <record id="plan_contratacion_rule_user_claims" model="ir.rule">
-            <field name="name">User Claims</field>
-            <field name="model_id" ref="crm_claim.model_crm_claim"/>
-            <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
-            <field name="groups" eval="[(4, ref('group_plan_contratacion_user'))]"/>
+        <record id="plan_contratacion_rule_user_plan" model="ir.rule">
+            <field name="name">Item Plan Contratacion</field>
+            <field name="model_id" ref="plan_contratacion_idu.model_plan_contratacion_idu_item"/>
+            <field name="domain_force">[('dependencia_id','=',user.department_ids)]</field>
+            <field name="groups" eval="[(4, ref('group_plan_contratacion_idu_user'))]"/>
         </record>
-
-        <record id="plan_contratacion_rule_user_claims_res_users" model="ir.rule">
+        
+<!--  
+['|',('employee_id.user_id','=',user.id),('employee_id.parent_id.user_id','=',user.id),('user_id','=',False)]</field>
+[' |', ( ' department_id ', ' child_of ', [ user.department_id.id ] ) , (Falso , ' =', user.department_id )]
+       <record id="plan_contratacion_rule_user_claims_res_users" model="ir.rule">
             <field name="name">User Claims</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="domain_force">[('id','=',user.id)]</field>
