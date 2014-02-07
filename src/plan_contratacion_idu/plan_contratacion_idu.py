@@ -19,6 +19,9 @@
 ##############################################################################
 import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv
+from suds.client import Client
+url = 'http://gesdocpru/desarrollo/webServices/orfeoIduWebServices.php/OrfeoWs.existeRadicado?wsdl'
+client = Client(url)
 
 class plan_contratacion_idu_plan(osv.osv):
     _name = "plan_contratacion_idu.plan"
@@ -211,11 +214,11 @@ class plan_contratacion_idu_item(osv.osv):
         'dependencia': fields.many2one('hr.department','Dependencia', select=True, ondelete='cascade'),
         'description': fields.text('Objeto Contractual', states={'suscrito':[('readonly',True)], 'ejecucion':[('readonly',True)], 'ejecutado':[('readonly',True)]}),
         'name': fields.many2one('plan_contratacion_idu.plan','Plan contractual', select=True, ondelete='cascade'),
-        'centro_costo': fields.char('Centro de Costo', size=255),
+        'centro_costo': fields.many2one('stone_erp_idu.centro_costo','Centro de Costo', select=True, ondelete='cascade'),
         'nombre_proyecto_idu':fields.char('Nombre Proyecto IDU', size=255, domain="[('parent_id','=',centro_costo),('enabled','=',False)]",),
         'nombre_punto_inversion':fields.char('Nombre Punto de Inversión', size=255),
         'fuente': fields.many2one('plan_contratacion_idu.fuente','Fuente de Financiación', select=True, ondelete='cascade'),
-        'state':fields.selection([('draft', 'Draft'),('estudios_previos', 'Estudios Previos'),('radicado', 'Radicado'),('suscrito', 'Contrato Suscrito'),('ejecucion', 'En ejecución'),
+        'state':fields.selection([('draft', 'Borrador'),('estudios_previos', 'Estudios Previos'),('radicado', 'Radicado'),('suscrito', 'Contrato Suscrito'),('ejecucion', 'En ejecución'),
                                   ('ejecutado', 'Ejecutado'), ('no_realizado', 'No realizado')],'State',
                                   track_visibility='onchange', required=True),
         'fecha_radicacion': fields.date ('Fecha Radicacion en DTPS y/o DTGC', state={'draft':[('required',False)],'estudios_previos':[('required',False)]}, required=True, select=True),
@@ -229,8 +232,8 @@ class plan_contratacion_idu_item(osv.osv):
         'cantidad_meta_fisica': fields.char ('Cantidad Metas Físicas', size=255),
         'localidad': fields.char ('Localidad', size=255),
         'currency_id': fields.related('plan_id','currency_id',type='many2one',relation='res.currency',string='Company',store=True, readonly=True),
-        'tipo_proceso': fields.many2one('plan_contratacion_idu.plan_tipo_proceso_item','Tipo Proceso', select=True, ondelete='cascade'),
-        'tipo_proceso_seleccion': fields.many2one('plan_contratacion_idu.plan_tipo_proceso_seleccion_item','Tipo Proceso de Selección', select=True, ondelete='cascade'),
+        'tipo_proceso': fields.many2one('plan_contratacion_idu.plan_tipo_proceso','Tipo Proceso', select=True, ondelete='cascade'),
+        'tipo_proceso_seleccion': fields.many2one('plan_contratacion_idu.plan_tipo_proceso_seleccion','Tipo Proceso de Selección', select=True, ondelete='cascade'),
         'plan_pagos_item_ids': fields.one2many('plan_contratacion_idu.plan_pagos_item','plan_contratacion_item_id', 'Planificacion de Pagos', select=True, ondelete='cascade'),
         'total_pagos_programados': fields.function(_total_pagos_programados, type='float', multi="presupuesto", string='Total pagos programados', obj="res.currency", digits_compute=dp.get_precision('Account'),
              store={
@@ -452,8 +455,8 @@ class plan_contratacion_idu_plan_pagos_item(osv.osv):
 
 plan_contratacion_idu_plan_pagos_item()
 
-class plan_contratacion_idu_plan_tipo_proceso_item(osv.osv):
-    _name = "plan_contratacion_idu.plan_tipo_proceso_item"
+class plan_contratacion_idu_plan_tipo_proceso(osv.osv):
+    _name = "plan_contratacion_idu.plan_tipo_proceso"
     _columns = {
         'name':fields.char('Nombre', size=255, required=True, select=True),
     }
@@ -462,10 +465,10 @@ class plan_contratacion_idu_plan_tipo_proceso_item(osv.osv):
         ('unique_name','unique(name)','El tipo de proceso debe ser único')
     ]
 
-plan_contratacion_idu_plan_tipo_proceso_item()
+plan_contratacion_idu_plan_tipo_proceso()
 
-class plan_contratacion_idu_plan_tipo_proceso_seleccion_item(osv.osv):
-    _name = "plan_contratacion_idu.plan_tipo_proceso_seleccion_item"
+class plan_contratacion_idu_plan_tipo_proceso_seleccion(osv.osv):
+    _name = "plan_contratacion_idu.plan_tipo_proceso_seleccion"
     _columns = {
         'name':fields.char('Nombre', size=255, required=True, select=True),
     }

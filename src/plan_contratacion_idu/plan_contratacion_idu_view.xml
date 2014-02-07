@@ -400,18 +400,18 @@
             sequence="0"/>
 
         <!-- Tipo de Proceso -->
-        <record id="plan_contratacion_idu_plan_tipo_proceso_item_list" model="ir.ui.view">
-            <field name="name">plan_contratacion_idu.plan_tipo_proceso_item.list</field>
-            <field name="model">plan_contratacion_idu.plan_tipo_proceso_item</field>
+        <record id="plan_contratacion_idu_plan_tipo_proceso_list" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.plan_tipo_proceso.list</field>
+            <field name="model">plan_contratacion_idu.plan_tipo_proceso</field>
             <field name="arch" type="xml" >
                 <tree string="Tipo Proceso">
                     <field name="name"/>
                 </tree>
             </field>
         </record>
-        <record id="plan_contratacion_idu_plan_tipo_proceso_item_form" model="ir.ui.view">
-            <field name="name">plan_contratacion_idu.plan_tipo_proceso_item.form</field>
-            <field name="model">plan_contratacion_idu.plan_tipo_proceso_item</field>
+        <record id="plan_contratacion_idu_plan_tipo_proceso_form" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.plan_tipo_proceso.form</field>
+            <field name="model">plan_contratacion_idu.plan_tipo_proceso</field>
             <field name="arch" type="xml">
                 <form string="Proceso" version="7.0">
                     <sheet>
@@ -423,30 +423,30 @@
         <record id="plan_contratacion_idu_tipo_proceso_item_action" model="ir.actions.act_window">
             <field name="name">Tipo Proceso del item</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">plan_contratacion_idu.plan_tipo_proceso_item</field>
+            <field name="res_model">plan_contratacion_idu.plan_tipo_proceso</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="plan_contratacion_idu_plan_tipo_proceso_item_list"/>
+            <field name="view_id" ref="plan_contratacion_idu_plan_tipo_proceso_list"/>
         </record>
         <menuitem
             action="plan_contratacion_idu_tipo_proceso_item_action"
-            id="menu_plan_contratacion_idu_plan_tipo_proceso_item_list"
+            id="menu_plan_contratacion_idu_plan_tipo_proceso_list"
             parent="menu_plan_contratacion"
             sequence="0"/>
 
         <!-- Tipo Proceso de Seleccion-->
-        <record id="plan_contratacion_idu_plan_tipo_proceso_seleccion_item_list" model="ir.ui.view">
-            <field name="name">plan_contratacion_idu.plan_tipo_proceso_seleccion_item.list</field>
-            <field name="model">plan_contratacion_idu.plan_tipo_proceso_seleccion_item</field>
+        <record id="plan_contratacion_idu_plan_tipo_proceso_seleccion_list" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.plan_tipo_proceso_seleccion.list</field>
+            <field name="model">plan_contratacion_idu.plan_tipo_proceso_seleccion</field>
             <field name="arch" type="xml" >
                 <tree string="Tipo Proceso de Selección">
                     <field name="name"/>
                 </tree>
             </field>
         </record>
-        <record id="plan_contratacion_idu_plan_tipo_proceso_seleccion_item_form" model="ir.ui.view">
-            <field name="name">plan_contratacion_idu.plan_tipo_proceso_seleccion_item.form</field>
-            <field name="model">plan_contratacion_idu.plan_tipo_proceso_seleccion_item</field>
+        <record id="plan_contratacion_idu_plan_tipo_proceso_seleccion_form" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.plan_tipo_proceso_seleccion.form</field>
+            <field name="model">plan_contratacion_idu.plan_tipo_proceso_seleccion</field>
             <field name="arch" type="xml">
                 <form string="Procesi" version="7.0">
                     <sheet>
@@ -455,22 +455,22 @@
                 </form>
             </field>
         </record>
-        <record id="plan_contratacion_idu_plan_tipo_proceso_seleccion_item_action" model="ir.actions.act_window">
+        <record id="plan_contratacion_idu_plan_tipo_proceso_seleccion_action" model="ir.actions.act_window">
             <field name="name">Tipo de Proceso de Seleccion</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">plan_contratacion_idu.plan_tipo_proceso_seleccion_item</field>
+            <field name="res_model">plan_contratacion_idu.plan_tipo_proceso_seleccion</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="plan_contratacion_idu_plan_tipo_proceso_seleccion_item_list"/>
+            <field name="view_id" ref="plan_contratacion_idu_plan_tipo_proceso_seleccion_list"/>
         </record>
         <menuitem
-            action="plan_contratacion_idu_plan_tipo_proceso_seleccion_item_action"
-            id="menu_plan_contratacion_idu_plan_tipo_proceso_seleccion_item_list"
+            action="plan_contratacion_idu_plan_tipo_proceso_seleccion_action"
+            id="menu_plan_contratacion_idu_plan_tipo_proceso_seleccion_list"
             parent="menu_plan_contratacion"
             sequence="0"/>
 
          <!--  Acceso Menus -->
-<!--           <record model="ir.ui.menu" id="menu_plan_contratacion_idu_plan_tipo_proceso_seleccion_item_list">
+<!--           <record model="ir.ui.menu" id="menu_plan_contratacion_idu_plan_tipo_proceso_seleccion_list">
                 <field eval="[(4, ref('group_plan_contratacion_idu_user'))]" name="groups_id"/>
          </record> -->
     </data>
