@@ -135,31 +135,6 @@ class plan_contratacion_idu_item(osv.osv):
             else:
                 return False
 
-    def _check_state(self,cr,uid,ids,context=None):
-        """valida el cambio de estado"""
-        res = {}
-        if isinstance(ids, (list, tuple)) and not len(ids):
-            return res
-        if isinstance(ids, (long, int)):
-            ids = [ids]
-        records = self.browse(cr, uid, ids, context=context)
-        res = {}
-        for record in records:
-            if record.state == 'draft':
-                return True
-            if record.state == 'estudios_previos':
-                return True
-            if record.state=='ejecucion':
-                if record.acta_inicio:
-                    return True
-                else:
-                    return False
-            if record.state == 'ejecutado':
-                if record.acta_liquidacion:
-                    return True
-                else:
-                    return False
-
     def _check_state_radicado(self,cr,uid,ids,context=None):
         """valida el cambio de estado"""
         res = {}
