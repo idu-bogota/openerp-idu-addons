@@ -39,18 +39,20 @@ class stone_erp_idu_centro_costo(osv.osv):
 
     _columns = {
         'codigo': fields.char('Codigo', required=True, select=True),
-        'nombre':fields.char('Nombre', size=255, required=True, select=True),
-        'codigo_proyecto_obra': fields.integer ('Codigo', required=True, select=True),
-        'nombre_proyecto_obra': fields.char('Nombre', size=255, required=True, select=True),
-        'codigo_punto_inversion': fields.integer ('Codigo', required=True, select=True),
-        'nombre_punto_inversion':fields.char('Nombre', size=255, required=True, select=True),
+        'name':fields.char('Nombre', size=255, required=True, select=True),
+        'proyecto_id':fields.many2one(),
+        'punto_inversion_id':fields.many2one(),
+                
     }
-
 stone_erp_idu_centro_costo()
 
-def obtener_centro_costo():
-    lista= {}
-    total = len((client.service.obtener_centro_costo ().COD_CCOS))
-    for a in total:
-        lista[a] = client.service.obtener_centro_costo ().COD_CCOS[a]
-    return lista
+
+class stone_erp_punto_inversion (osv.osv):
+    _name = "stone_erp_idu.punto_inversion"
+    _columns = {
+        'codigo':fields.integer('Codigo'),
+        'name':fields.char('Nombre',size=1025)
+    }
+stone_erp_punto_inversion()
+
+

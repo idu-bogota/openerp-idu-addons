@@ -11,7 +11,7 @@ def main():
     usage = "Create an OpenERP database\nusage: %prog [options]"
     parser = OptionParser(usage)
     parser.add_option("-n", "--db_name", dest="db_name", help="New database name")
-    parser.add.option("-u", "--db_user",dest="db_user",help="Database user")
+    parser.add_option("-u", "--db_user",dest="db_user",help="Database user")
     parser.add_option("-p", "--db_password", dest="db_password", help="New database password")
     parser.add_option("-H", "--host", dest="host", help="OpenERP server host", default="localhost")
     parser.add_option("-j", "--port", dest="port", help="OpenERP server port", default="8069")
