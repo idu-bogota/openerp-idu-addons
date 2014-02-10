@@ -18,24 +18,18 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from suds.client import Client
-
-url = 'http://172.16.2.233:9763/services/ws_stone_plan_contratacion?wsdl'
-client = Client(url)
 #===============================================================================
-# print client
-# client.set_options (port = 'SOAP11Endpoint')
-# print client.service.obtener_centro_costo ().COD_CCOS
-# print client.service.obtener_centro_costo ().NOM_CCOS
-# print client.service.obtener_proyecto_punto_inversion(20202, )
-# print client.service.obtener_proyecto_punto_inversion(20202, ).proyecto
-# print len((client.service.obtener_centro_costo ().COD_CCOS))
-#===============================================================================
-
-
 
 class stone_erp_idu_centro_costo(osv.osv):
     _name = "stone_erp_idu.centro_costo"
+    
+    def obtener_centros_costo(self,cr,uid,ids,context=None):
+        res= {}
+        wsdl_stone = self.pool.get('ir.config_parameter').get_param(cr, uid, 'stone_erp_idu_web_stone_wsdl', default='', context=context)
+        
+        return res
+    
+    
 
     _columns = {
         'codigo': fields.char('Codigo', required=True, select=True),

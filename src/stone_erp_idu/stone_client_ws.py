@@ -17,13 +17,27 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+#    Realizado por: Andrés Ignacio Báez Alba andresignaciob@gmail.com
+#
+#
 ##############################################################################
 from suds.client import Client
-
-
-WSDL = "http://172.16.2.233:9763/services/ws_stone_plan_contratacion?wsdl"
+#WSDL = "http://172.16.2.233:9763/services/ws_stone_plan_contratacion?wsdl"
 
 def obtener_centros_costo(wsdl_url):
+    """
+    Metodo que recibe como parámetro de entrada el wsdl del web service de conexión con
+    stone y devuelve un diccionario con información de los centros de costo de la siguiente manera:    
+    {
+    codigo_centro_costo:{'nombre_centro_costo':--value--, 
+                        'nombre_proyecto':--value--, #Nombre del proyecto IDU
+                        'nombre_punto':--value--,  #Nombre del punto de Inversion
+                        'proyecto':--value-- #Código del proyecto IDU
+                        'punto':--value-- #Código del punto de inversión
+                      }
+    }
+    
+    """
     try:
         client = Client(wsdl_url)
         planc = client.service.obtener_centro_costo()
@@ -40,18 +54,9 @@ def obtener_centros_costo(wsdl_url):
             centros_costo[num]['proyecto']=punto_inversion["proyecto"]
             centros_costo[num]['punto']=punto_inversion["punto"]
             index = index+1
-            if (index == 10):
-                break
-            
         return centros_costo
     except Exception as e:
         raise e
 
-print "Iniciando Script"
-
-centros_costo = obtener_centros_costo(WSDL)
-
-
-print centros_costo
 
 
