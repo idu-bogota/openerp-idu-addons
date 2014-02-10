@@ -20,8 +20,10 @@
 import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv
 from suds.client import Client
-url = 'http://gesdocpru/desarrollo/webServices/orfeoIduWebServices.php/OrfeoWs.existeRadicado?wsdl'
-client = Client(url)
+
+wsdl_url='http://gesdocpru/desarrollo/webServices/orfeoIduWebServices.php?wsdl'
+client = Client(wsdl_url)
+orfeo_existe_radicado = getattr(client.service, 'OrfeoWs.existeRadicado')
 
 class plan_contratacion_idu_plan(osv.osv):
     _name = "plan_contratacion_idu.plan"
@@ -139,7 +141,7 @@ class plan_contratacion_idu_item(osv.osv):
                 return False
 
     def _check_state_radicado(self,cr,uid,ids,context=None):
-        """valida el cambio de estado"""
+        """valida el cambio de estado y si existe el numero de radicado en orfeo"""
         res = {}
         if isinstance(ids, (list, tuple)) and not len(ids):
             return res
@@ -151,7 +153,10 @@ class plan_contratacion_idu_item(osv.osv):
         for record in records:
             if record.state == 'radicado':
                 if record.numero_orfeo:
-                    is_valid = True
+                    try:
+                        is_valid = orfeo_existe_radicado(record.numero_orfeo)
+                    except Exception as e:
+                        raise Exception.message('Error al consultar servicio web ORFEO', str(e))
                 else:
                     is_valid = False
         return is_valid
@@ -216,8 +221,8 @@ class plan_contratacion_idu_item(osv.osv):
         'description': fields.text('Objeto Contractual', states={'suscrito':[('readonly',True)], 'ejecucion':[('readonly',True)], 'ejecutado':[('readonly',True)]}),
         'name': fields.many2one('plan_contratacion_idu.plan','Plan contractual', select=True, ondelete='cascade'),
         'centro_costo_id': fields.many2one('stone_erp_idu.centro_costo','Centro de Costo', select=True, ondelete='cascade'),
-        'nombre_proyecto_idu':fields.char('Nombre Proyecto IDU', size=255, domain="[('parent_id','=',centro_costo),('enabled','=',False)]",),
-        'nombre_punto_inversion':fields.char('Nombre Punto de Inversión', size=255),
+        'nombre_proyecto_idu':fields.char('Nombre Proyecto IDU', size=255, readonly=True,),
+        'nombre_punto_inversion':fields.char('Nombre Punto de Inversión', size=255, readonly=True),
         'fuente_id': fields.many2one('plan_contratacion_idu.fuente','Fuente de Financiación', select=True, ondelete='cascade'),
         'state':fields.selection([('draft', 'Borrador'),('estudios_previos', 'Estudios Previos'),('radicado', 'Radicado'),('suscrito', 'Contrato Suscrito'),('ejecucion', 'En ejecución'),
                                   ('ejecutado', 'Ejecutado'), ('no_realizado', 'No realizado')],'State',
@@ -228,7 +233,8 @@ class plan_contratacion_idu_item(osv.osv):
         'plan_id': fields.many2one('plan_contratacion_idu.plan','Plan contractual', select=True, ondelete='cascade'),
         'clasificacion_id': fields.many2one('plan_contratacion_idu.clasificador_proyectos','Clasificación Proyecto', select=True, ondelete='cascade'),
         'presupuesto': fields.float ('Presupuesto', required=True, select=True, obj="res.currency", track_visibility='onchange'),
-        'plazo_de_ejecucion': fields.char('Plazo de Ejecución', required=True, select=True, help="Tiempo estimado en meses"),
+        'plazo_de_ejecucion': fields.integer('Plazo de Ejecución (meses)', readonly= False, select=True, help="Tiempo estimado en meses"),
+        'a_monto_agotable':fields.boolean('A monto agotable', help="plazo de ejecución a monto agotable"),
         'unidad_meta_fisica': fields.char('Unidad Meta Física', size=255),
         'cantidad_meta_fisica': fields.char ('Cantidad Metas Físicas', size=255),
         'localidad': fields.char ('Localidad', size=255),
@@ -271,8 +277,8 @@ class plan_contratacion_idu_item(osv.osv):
                     "La fecha programada CRP debe ser posterior a la fecha programada de radicación y anterior a la fecha programada para la aprobación del acta de Inicio",
                     ['fecha_crp','fecha_acta_inicio']),
                     (_check_state_radicado,
-                    "Para cambiar el estado a Radicado debe ingresar el número de radicado Orfeo en información de verificación",
-                    ['state']),
+                    "Para cambiar el estado a Radicado debe ingresar el un número válido de radicado Orfeo en información de verificación",
+                    ['state', 'numero_orfeo']),
                     (_check_state_suscrito,
                     "Para cambiar el estado a Contrato Suscrito debe ingresar el número CRP en información de verificación",
                     ['state']),
@@ -307,6 +313,12 @@ class plan_contratacion_idu_item(osv.osv):
         return {
             'value': res
         }
+
+    def onchange_a_monto_agotable(self, cr, uid, ids, a_monto_agotable):
+        if a_monto_agotable:
+            return {'value': {'plazo_de_ejecucion': False}}
+        else:
+            return {'value': {'plazo_de_ejecucion': 0}}
 
     def action_invoice_sent(self, cr, uid, ids, context=None):
         '''
@@ -346,8 +358,8 @@ class plan_contratacion_idu_item(osv.osv):
         self.write(cr, uid, ids, {"state": "draft"})
 
     def wkf_estudios_previos(self, cr, uid, ids, plan_items, context=None):
-        self.write(cr, uid, ids, {"state": "estudios_previos","numero_orfeo":"",
-                                  "numero_crp":"", "numero_contrato":None})
+        self.write(cr, uid, ids, {"state": "estudios_previos","numero_orfeo":None,
+                                  "numero_crp":None, "numero_contrato":None})
 
     def wkf_radicado(self, cr, uid, ids, plan_items, context=None):
         self.write(cr, uid, ids, {"state": "radicado"})
@@ -363,6 +375,15 @@ class plan_contratacion_idu_item(osv.osv):
 
     def wkf_ejecutado(self, cr, uid, ids, plan_items, context=None):
         self.write(cr, uid, ids, {"state": "ejecutado"})
+
+    def check_numero_orfeo(self,cr,uid,ids,context=None):
+        records = self.browse(cr, uid, ids, context=context)
+        try:
+            for record in records:
+                result = orfeo_existe_radicado(record.numero_orfeo)
+        except Exception as e:
+            raise Exception.message('Error al consultar servicio web ORFEO', str(e))
+        return result
 
 plan_contratacion_idu_item()
 

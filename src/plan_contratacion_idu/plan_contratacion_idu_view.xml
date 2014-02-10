@@ -131,7 +131,8 @@
                             <page string="Detalles">
                                 <group name="detalles">
                                     <field name="description"/>
-                                    <field name="plazo_de_ejecucion"/>
+                                    <field name="plazo_de_ejecucion" attrs="{'readonly':[('a_monto_agotable','=',True)]}"/>
+                                    <field name="a_monto_agotable" on_change="onchange_a_monto_agotable(a_monto_agotable)"/>/>
                                     <field name="unidad_meta_fisica"/>
                                     <field name="cantidad_meta_fisica"/>
                                 </group>
