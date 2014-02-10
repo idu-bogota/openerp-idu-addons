@@ -1,0 +1,107 @@
+id,codigo_fuente_sdh,nombre_fuente_sdh,codigo_detalle_fuente_sdh,nombre_detalle_fuente_sdh,codigo_fuente,name
+__export__.plan_contratacion_idu_fuente_1,1,Recursos del distrito,19,Crédito BANCO MUNDIAL,1,BANCO MUNDIAL
+__export__.plan_contratacion_idu_fuente_2,3,Recursos administrados,21,Administrados de Libre Destinación,4,INGRESOS CORRIENTES
+__export__.plan_contratacion_idu_fuente_3,3,Recursos administrados,374,RENDIMIENTOS FINANCIEROS DE DESTINACION ESPECIFICA,5,RECURSOS DE CAPITAL
+__export__.plan_contratacion_idu_fuente_4,1,Recursos del distrito,6,Sobretasa a la Gasolina,6,SOBRETASA A LA GASOLINA
+__export__.plan_contratacion_idu_fuente_5,1,Recursos del distrito,12,Otros Distrito,7,TRANSF. ORDINARIAS
+__export__.plan_contratacion_idu_fuente_6,3,Recursos administrados,20,Administrados de Destinación Específica,23,VALORIZACION BENEFICIO LOCAL
+__export__.plan_contratacion_idu_fuente_7,3,Recursos administrados,20,Administrados de Destinación Específica,29,OBRA POR TU LUGAR
+__export__.plan_contratacion_idu_fuente_8,3,Recursos administrados,20,Administrados de Destinación Específica,30,CONVENIOS
+__export__.plan_contratacion_idu_fuente_9,1,Recursos del distrito,46,Crédito KFW,31,CREDITO K.F.W.
+__export__.plan_contratacion_idu_fuente_10,1,Recursos del distrito,23,Contrapartida Banco Mundial,32,T.O.  BANCO MUNDIAL
+__export__.plan_contratacion_idu_fuente_11,1,Recursos del distrito,33,Sobretasa al ACPM,38,ST ACPM
+__export__.plan_contratacion_idu_fuente_12,1,Recursos del distrito,25,Recursos KFW,45,RECURSOS K.F.W.
+__export__.plan_contratacion_idu_fuente_13,1,Recursos del distrito,338,Recursos del Balance Reaforo Sobretasa a la Gasolina,49,RB REAFORO ST A LA GASOLINA
+__export__.plan_contratacion_idu_fuente_14,1,Recursos del distrito,297,Recursos del Balance  Credito KFW,50,REC. BAL CREDITO K.F.W.
+__export__.plan_contratacion_idu_fuente_15,3,Recursos administrados,20,Administrados de Destinación Específica,51,FONDO CESIONES PUBLICAS
+__export__.plan_contratacion_idu_fuente_16,1,Recursos del distrito,103,Recursos del Balance Sobretasa a la Gasolina,52,REC. BAL. SOBRETASA A LA GASOLINA
+__export__.plan_contratacion_idu_fuente_17,1,Recursos del distrito,439,PCC OTROS DISTRITOS,52,REC. BAL. SOBRETASA A LA GASOLINA
+__export__.plan_contratacion_idu_fuente_18,1,Recursos del distrito,33,Sobretasa al ACPM,53,SOBRETASA ACPM
+__export__.plan_contratacion_idu_fuente_19,3,Recursos administrados,292,Valorización Acuerdo 451 Plan Zonal Norte,54,POZN - VALORA
+__export__.plan_contratacion_idu_fuente_20,3,Recursos administrados,126,Valorización Acuerdo 180 De 2005,57,VALORIZACION AC.180/05
+__export__.plan_contratacion_idu_fuente_21,1,Recursos del distrito,186,Contrapartida Crédito KFW,63,T.O. K.F.W.
+__export__.plan_contratacion_idu_fuente_22,1,Recursos del distrito,12,Otros Distrito,64,CONTRAPARTIDA O.D.
+__export__.plan_contratacion_idu_fuente_23,1,Recursos del distrito,118,Multas,70,TRANSF. ORD.- SEG. VIAL
+__export__.plan_contratacion_idu_fuente_24,1,Recursos del distrito,146,PCC ADMINISTRADOS DE LIBRE DESTINACION,146,R.B. CONTRAPARTIDA O.D.
+__export__.plan_contratacion_idu_fuente_25,3,Recursos administrados,147,Recursos del Balance de Libre Destinación,147,RB. FONDO CESIONES PUBLICAS
+__export__.plan_contratacion_idu_fuente_26,3,Recursos administrados,146,Otros Recursos del Balance de destinacion especifica,148,RB INGRESOS CTES.
+__export__.plan_contratacion_idu_fuente_27,3,Recursos administrados,249,Recursos del Balance de Libre Destinación,249,REC RES. V.B.L.
+__export__.plan_contratacion_idu_fuente_28,1,Recursos del distrito,293,Recursos Reservas Valorización Beneficio local,293,R.B. BANCO MUNDIAL
+__export__.plan_contratacion_idu_fuente_29,1,Recursos del distrito,294,Recursos del Balance Banco Mundial,294,R.B. TO BANCO MUNDIAL
+__export__.plan_contratacion_idu_fuente_30,1,Recursos del distrito,295,Recursos del Balance Contrapartida Banco Mundial,295,REC. BAL. K.F.W.
+__export__.plan_contratacion_idu_fuente_31,1,Recursos del distrito,296,Recursos del Balance  KFW,296,REC. BAL. TO K.F.W.
+__export__.plan_contratacion_idu_fuente_33,3,Recursos administrados,20,Administrados de Destinación Específica,302,CONVENIOS TRANSMILENIO
+__export__.plan_contratacion_idu_fuente_34,3,Recursos administrados,20,Administrados de Destinación Específica,303,CONVENIOS EMPRESAS DE SERVICIOS PUBLICOS
+__export__.plan_contratacion_idu_fuente_35,3,Recursos administrados,20,Administrados de Destinación Específica,304,CONVENIOS FDL
+__export__.plan_contratacion_idu_fuente_36,3,Recursos administrados,20,Administrados de Destinación Específica,305,CONVENIOS OTROS
+__export__.plan_contratacion_idu_fuente_37,1,Recursos del distrito,348,Recursos del Balance Otros Distrito,348,RB TRANSF. ORDINARIAS
+__export__.plan_contratacion_idu_fuente_38,3,Recursos administrados,374,RENDIMIENTOS FINANCIEROS DE DESTINACION ESPECIFICA,374,RENDIMIENTOS FINANCIEROS DE DESTINACION
+__export__.plan_contratacion_idu_fuente_39,1,Recursos del distrito,439,PCC OTROS DISTRITOS,439,PCC-OTROS DISTRITOS
+__export__.plan_contratacion_idu_fuente_40,3,Recursos administrados,441,ADMINISTRADOS DE DESTINACION ESPECIFICA,441,PCC- ADMINISTRADOS DE DESTINACION ESPECI
+__export__.plan_contratacion_idu_fuente_41,3,Recursos administrados,442,PCC ADMINISTRADOS DE LIBRE DESTINACION,442,PCC ADMINISTRADOS LIBRE DESTINACION
+__export__.plan_contratacion_idu_fuente_42,3,Recursos administrados,448,VALORIZACION ACUERDO 523/2013,448,VALORIZACION ACUERDO 523/2013
+__export__.plan_contratacion_idu_fuente_43,1,Recursos del distrito,80,Recursos Pasivos Banco Mundial,471,P.E. B.M.
+__export__.plan_contratacion_idu_fuente_44,1,Recursos del distrito,74,Recursos Pasivos Exigibles Otros Distrito,472,P.E. TRANSF. ORD.
+__export__.plan_contratacion_idu_fuente_45,1,Recursos del distrito,473,PASIVOS EXIGIBLES KFW,473,P.E. K.F.W.
+__export__.plan_contratacion_idu_fuente_46,1,Recursos del distrito,88,Recursos Pasivos Sobretasa a la Gasolina,474,P.E. ST.
+__export__.plan_contratacion_idu_fuente_47,1,Recursos del distrito,88,Recursos Pasivos Sobretasa a la Gasolina,475,P.E. ST-B.M.
+__export__.plan_contratacion_idu_fuente_48,1,Recursos del distrito,87,Recursos Pasivos Contrapartida Banco Mundial,476,P.E. T.O.-B.M.
+__export__.plan_contratacion_idu_fuente_49,1,Recursos del distrito,88,Recursos Pasivos Sobretasa a la Gasolina,477,ST ACPM. T.D.
+__export__.plan_contratacion_idu_fuente_50,1,Recursos del distrito,421,Recursos Pasivos Exigibles Contrapartida KFW,478,P.E. CONTRAPARTIDA KFW
+__export__.plan_contratacion_idu_fuente_51,3,Recursos administrados,142,Recursos del Balance Valorización General,517,RB VAL GRAL
+__export__.plan_contratacion_idu_fuente_52,3,Recursos administrados,141,Recursos del Balance Valorización Ingreso Ordinario,523,RB VAL ING. ORD.
+__export__.plan_contratacion_idu_fuente_53,3,Recursos administrados,20,Administrados de Destinación Específica,530,R.BAL. CONVENIOS
+__export__.plan_contratacion_idu_fuente_54,3,Recursos administrados,20,Administrados de Destinación Específica,541,RC VAL POZ NORTE
+__export__.plan_contratacion_idu_fuente_55,3,Recursos administrados,21,Administrados de Libre Destinación,551,RECURSOS DE CAPITAL - LIBRE DEST.
+__export__.plan_contratacion_idu_fuente_56,3,Recursos administrados,147,Otros Recursos del Balance de destinacion especifica,557,RB VAL AC. 180/05 F1
+__export__.plan_contratacion_idu_fuente_57,3,Recursos administrados,126,Valorización Acuerdo 180 De 2005,572,VALORIZACION AC.180/05 FASE 2
+__export__.plan_contratacion_idu_fuente_58,3,Recursos administrados,126,Valorización Acuerdo 180 De 2005,573,VALORIZACION AC 523/13
+__export__.plan_contratacion_idu_fuente_59,3,Recursos administrados,147,Otros Recursos del Balance de destinacion especifica,574,RB VAL  AC 523/13
+__export__.plan_contratacion_idu_fuente_60,3,Recursos administrados,374,RENDIMIENTOS FINANCIEROS DE DESTINACION ESPECIFICA,575,RC VAL 523/13
+__export__.plan_contratacion_idu_fuente_61,1,Recursos del distrito,88,Recursos Pasivos Sobretasa a la Gasolina,4753,ST-B.M.TD.
+__export__.plan_contratacion_idu_fuente_62,1,Recursos del distrito,74,Recursos Pasivos Exigibles Otros Distrito,4756,T.O. VAL AC. 180/05 TD
+__export__.plan_contratacion_idu_fuente_63,1,Recursos del distrito,74,Recursos Pasivos Exigibles Otros Distrito,4770,P.E.  SEG. VIAL
+__export__.plan_contratacion_idu_fuente_64,3,Recursos administrados,85,Rec Pasivos Exigibles- Rec Admin de Destin Específica,4803,P.E. OBRA POR TU LUGAR
+__export__.plan_contratacion_idu_fuente_65,3,Recursos administrados,85,Rec Pasivos Exigibles- Rec Admin de Destin Específica,4804,P.E. VALORIZACION
+__export__.plan_contratacion_idu_fuente_66,3,Recursos administrados,85,Rec Pasivos Exigibles- Rec Admin de Destin Específica,4805,I.C. - B.M.-R.C.
+__export__.plan_contratacion_idu_fuente_67,3,Recursos administrados,85,Rec Pasivos Exigibles- Rec Admin de Destin Específica,4806,R.C. - B.M.-R.C.
+__export__.plan_contratacion_idu_fuente_68,3,Recursos administrados,86,Rec Pasivos Exigibles- Rec Admin de Destin Específica,4807,P.E. ING. CTES.
+__export__.plan_contratacion_idu_fuente_69,3,Recursos administrados,85,Rec Pasivos Exigibles- Rec Admin de Destin Específica,4808,P.E. REC. DE CAPITAL
+__export__.plan_contratacion_idu_fuente_70,3,Recursos administrados,85,Rec Pasivos Exigibles- Rec Admin de Destin Específica,4809,INVIAS-R.C.
+__export__.plan_contratacion_idu_fuente_71,3,Recursos administrados,85,Rec Pasivos Exigibles- Rec Admin de Destin Específica,4810,P.E. CONVENIOS
+__export__.plan_contratacion_idu_fuente_72,3,Recursos administrados,85,Rec Pasivos Exigibles- Rec Admin de Destin Específica,4811,P.E. TRANSMILENIO
+__export__.plan_contratacion_idu_fuente_73,3,Recursos administrados,85,Rec Pasivos Exigibles- Rec Admin de Destin Específica,4812,T.N. - R.C.
+__export__.plan_contratacion_idu_fuente_74,3,Recursos administrados,85,Rec Pasivos Exigibles- Rec Admin de Destin Específica,4813,K.F.W. -R.C.
+__export__.plan_contratacion_idu_fuente_75,1,Recursos del distrito,87,Recursos Pasivos Contrapartida Banco Mundial,4814,TO.B.M.-R.C
+__export__.plan_contratacion_idu_fuente_76,1,Recursos del distrito,80,Recursos Pasivos Banco Mundial,4816,B.M.-R.C.
+__export__.plan_contratacion_idu_fuente_77,1,Recursos del distrito,88,Recursos Pasivos Sobretasa a la Gasolina,4817,P.E. ST
+__export__.plan_contratacion_idu_fuente_78,1,Recursos del distrito,74,Recursos Pasivos Exigibles Otros Distrito,4818,RC. TD T.O.
+__export__.plan_contratacion_idu_fuente_79,1,Recursos del distrito,88,Recursos Pasivos Sobretasa a la Gasolina,4819,P.E. TD ST.
+__export__.plan_contratacion_idu_fuente_80,3,Recursos administrados,230,RECURSOS PASIVOS EXIGIBLES VALORIZACION,4820,P.E. RB. VAL. GRAL
+__export__.plan_contratacion_idu_fuente_81,3,Recursos administrados,85,Rec Pasivos Exigibles- Rec Admin de Dest Específica,4823,P.E. RB. VAL ING. ORD.
+__export__.plan_contratacion_idu_fuente_82,3,Recursos administrados,329,Recursos Pasivos Valorización Acuerdo 180/05,4856,P.E. VAL. AC 180/05
+__export__.plan_contratacion_idu_fuente_83,3,Recursos administrados,330,Rec Pasivos Rec del Balance Valorización Acuerdo 180/05,4857,P.E. RB AC 180/05
+__export__.plan_contratacion_idu_fuente_84,1,Recursos del distrito,56,Recursos Reservas- Crédito BANCO MUNDIAL,5401,TD B.M.
+__export__.plan_contratacion_idu_fuente_85,3,Recursos administrados,73,Recursos Reservas Administrados de Libre Destinación,5404,TD ING. CTES
+__export__.plan_contratacion_idu_fuente_86,3,Recursos administrados,72,Rec Reservas Admin de Destinación Específica,5405,TD REC. DE CAP.
+__export__.plan_contratacion_idu_fuente_87,1,Recursos del distrito,61,Recursos Reservas-Sobretasa a la Gasolina,5406,TD SOBRETASA.
+__export__.plan_contratacion_idu_fuente_88,1,Recursos del distrito,60,Recursos Reservas- Otros Distrito,5407,TD TRANSF. ORD.
+__export__.plan_contratacion_idu_fuente_89,3,Recursos administrados,72,Rec Reservas Administrados de Destinación Específica,5423,TD VALORIZACION
+__export__.plan_contratacion_idu_fuente_90,3,Recursos administrados,72,Rec Reservas Administrados de Destinación Específica,5430,TD CONVENIOS
+__export__.plan_contratacion_idu_fuente_91,1,Recursos del distrito,301,recursos reservas CREDITO K.F.W.,5431,TD K.F.W. -
+__export__.plan_contratacion_idu_fuente_92,1,Recursos del distrito,57,Recursos Reservas -Contrapartida Banco Mundial,5432,TD CONTRAP. B.M.
+__export__.plan_contratacion_idu_fuente_93,1,Recursos del distrito,94,RECURSOS RESERVAS RECURSOS  K.F.W.,5445,TD RECURSOS K.F.W.
+__export__.plan_contratacion_idu_fuente_94,1,Recursos del distrito,314,Recursos Reservas RB sobretasa Gasolina,5452,TD. RB. SOBRETASA
+__export__.plan_contratacion_idu_fuente_95,1,Recursos del distrito,317,RECURSOS RESERVAS CONTRAPARTIDA CREDITO K.F.W.,5463,TD T.O. K.F.W.
+__export__.plan_contratacion_idu_fuente_96,1,Recursos del distrito,60,Recursos Reservas- Otros Distrito,5464,TD CONTRAPARTIDA O.D.
+__export__.plan_contratacion_idu_fuente_97,1,Recursos del distrito,162,Recursos Reservas Multas,5470,TD.  SEG. VIAL
+__export__.plan_contratacion_idu_fuente_98,3,Recursos administrados,73,Recursos Reservas Administrados de Libre Destinación,5504,RC.  I.C
+__export__.plan_contratacion_idu_fuente_99,3,Recursos administrados,72,Recursos Reservas Administrados de Destinación Específica,5505,RC. R.C.
+__export__.plan_contratacion_idu_fuente_100,3,Recursos administrados,246,Recursos Reservas RB VAL GRAL,5517,R.C. RB VAL GRAL
+__export__.plan_contratacion_idu_fuente_101,3,Recursos administrados,72,Recursos Reservas Administrados de Destinación Específica,5523,RC. VALORIZ.
+__export__.plan_contratacion_idu_fuente_102,3,Recursos administrados,374,RENDIMIENTOS FINANCIEROS DE DESTINACION ESPECIFICA,5530,RC. CONVENIOS.
+__export__.plan_contratacion_idu_fuente_103,3,Recursos administrados,374,RENDIMIENTOS FINANCIEROS DE DESTINACION ESPECIFICA,5557,R.C. RB VAL AC. 180/05 F1
+__export__.plan_contratacion_idu_fuente_104,3,Recursos administrados,374,RENDIMIENTOS FINANCIEROS DE DESTINACION ESPECIFICA,5567,R.C. VAL. AC.180/05 F1
+__export__.plan_contratacion_idu_fuente_105,3,Recursos administrados,20,Administrados de Destinación Específica,5721,R.C. VAL. AC.180/05 F2
+__export__.plan_contratacion_idu_fuente_106,1,Recursos del distrito,385,RECURSOS RESERVAS RECURSOS DEL  BALANCE K.F.W.,54295,TD. REC. BAL. K.F.W.
+__export__.plan_contratacion_idu_fuente_107,1,Recursos del distrito,386,REC RESERVAS RECURSOS DEL  BALANCE CONTRAPARTIDA K.F.W.,54296,TD. REC.BAL. TO KFW
