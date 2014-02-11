@@ -18,24 +18,17 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+import stone_client_ws
 #===============================================================================
 
 class stone_erp_idu_centro_costo(osv.osv):
-    _name = "stone_erp_idu.centro_costo"
-    
-    def obtener_centros_costo(self,cr,uid,ids,context=None):
-        res= {}
-        wsdl_stone = self.pool.get('ir.config_parameter').get_param(cr, uid, 'stone_erp_idu_web_stone_wsdl', default='', context=context)
-        
-        return res
-    
-    
+    _name = "stone_erp_idu.centro_costo"    
 
     _columns = {
         'codigo': fields.char('Codigo', required=True, select=True),
         'name':fields.char('Nombre', size=255, required=True, select=True),
-        'proyecto_id':fields.many2one(),
-        'punto_inversion_id':fields.many2one(),
+        #'proyecto_id':fields.many2one('plan_contratacion_idu.clasificador_proyectos','Proyecto'),
+        'punto_inversion_id':fields.many2one('stone_erp_idu.punto_inversion','Punto de Inversion'),
                 
     }
 stone_erp_idu_centro_costo()

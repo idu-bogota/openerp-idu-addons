@@ -24,20 +24,39 @@
 from suds.client import Client
 #WSDL = "http://172.16.2.233:9763/services/ws_stone_plan_contratacion?wsdl"
 
+def completar_datos_centro_costo(wsdl_url,centro_costo):
+    """
+    Metodo que recibe como parámetro de entrada el wsdl del web service de conexión con
+    stone y devuelve un diccionario con información de los centros de costo de la siguiente manera:    
+    {'nombre_centro_costo':--value--, 
+                        'nombre_proyecto':--value--, #Nombre del proyecto IDU
+                        'nombre_punto':--value--,  #Nombre del punto de Inversion
+                        'proyecto':--value-- #Código del proyecto IDU
+                        'punto':--value-- #Código del punto de inversión    
+    }    
+    """
+    try:
+        client = Client(wsdl_url)
+        res={}
+        punto_inversion = client.service.obtener_proyecto_punto_inversion(centro_costo)
+        res['nombre_proyecto']=punto_inversion["nombre_proyecto"]
+        res['nombre_punto']=punto_inversion["nombre_punto"]
+        res['proyecto']=punto_inversion["proyecto"]
+        res['punto']=punto_inversion["punto"]        
+        return res
+    except Exception as e:
+        raise e
+
+
 def obtener_centros_costo(wsdl_url):
     """
     Metodo que recibe como parámetro de entrada el wsdl del web service de conexión con
     stone y devuelve un diccionario con información de los centros de costo de la siguiente manera:    
     {
-    codigo_centro_costo:{'nombre_centro_costo':--value--, 
-                        'nombre_proyecto':--value--, #Nombre del proyecto IDU
-                        'nombre_punto':--value--,  #Nombre del punto de Inversion
-                        'proyecto':--value-- #Código del proyecto IDU
-                        'punto':--value-- #Código del punto de inversión
-                      }
+    codigo_centro_costo:nombre_centro_costo
     }
     
-    """
+    """    
     try:
         client = Client(wsdl_url)
         planc = client.service.obtener_centro_costo()
@@ -46,14 +65,7 @@ def obtener_centros_costo(wsdl_url):
         index=0
         centros_costo = {}
         for num in COD_CCOS:
-            centros_costo[num] = {}
-            centros_costo[num]['nombre_centro_costo']=NOM_CCOS[index]
-            punto_inversion = client.service.obtener_proyecto_punto_inversion(num)
-            centros_costo[num]['nombre_proyecto']=punto_inversion["nombre_proyecto"]
-            centros_costo[num]['nombre_punto']=punto_inversion["nombre_punto"]
-            centros_costo[num]['proyecto']=punto_inversion["proyecto"]
-            centros_costo[num]['punto']=punto_inversion["punto"]
-            index = index+1
+            centros_costo[num] = NOM_CCOS[index]            
         return centros_costo
     except Exception as e:
         raise e
