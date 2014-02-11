@@ -160,6 +160,8 @@ class project_pmi_wbs_item(osv.osv):
                         task_id = self.pool.get('project.task').search(cr, uid, [('wbs_item_id','=',val)], context=context)
                         if res[val]['type'] == 'work_package' and len(task_id) == 0:
                             res[val]['progress_rate'] = 100.0
+                            res[val]['planned_quantity'] = 100.0
+                            res[val]['effective_quantity'] = 100.0
         return res
 
     def _get_values_dictionary(self,my_dictionary,my_value):

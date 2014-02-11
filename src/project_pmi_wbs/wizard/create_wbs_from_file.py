@@ -80,6 +80,8 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
                     else:
                         data_task = {'name':name,
                                      'wbs_item_id':parent_ids[outline_level -1],
+                                     'planned_quantity':100.0,
+                                     'effective_quantity':100.0,
                                     }
                         if not wizard.assign_task_to_current_user:
                             data_task['user_id'] = None
