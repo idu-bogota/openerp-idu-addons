@@ -66,6 +66,35 @@
             sequence="0"/>
 
         <!-- Item Plan de contratacion -->
+            <record id="plan_contratacion_idu_item_search" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.item.search</field>
+            <field name="model">plan_contratacion_idu.item</field>
+            <field name="arch" type="xml">
+               <search string="Plan Contratación Items">
+                    <field name="dependencia_id" string="Dependencia"/>
+                    <separator/>
+                    <filter name="draft" string="Borrador" domain="[('state','=','draft')]" help="Estado del item en Borrador" icon="terp-check"/>
+                    <filter name="estudios_previos" string="Estudios Previos" domain="[('state','=','estudios_previos')]" help="Estado del item en Estudios Previos" icon="terp-check"/>
+                    <filter name="radicado" string="Radicado" domain="[('state','=','radicado')]" help="Estado del item Radicado" icon="terp-check"/>
+                    <filter name="suscrito" string="Contrato Suscrito" domain="[('state','=','suscrito')]" help="Estado del item Contrato Suscrito" icon="terp-check"/>
+                    <filter name="ejecucion" string="Ejecución" domain="[('state','=','ejecucion')]" help="Estado del item en Ejecución" icon="terp-check"/>
+                    <filter name="ejecutado" string="Ejecutado" domain="[('state','=','ejecutado')]" help="Estado del item en Ejecutado" icon="terp-check"/>
+                    <filter name="no_realizado" string="No realizado" domain="[('state','=','no_realizado')]" help="Estado del item No Realizado" icon="terp-check"/>
+                    <separator/>
+                    <filter icon="terp-mail-message-new" string="Mensajes no leidos" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <separator/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Dependencia" name="group_dependencia_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'dependencia_id'}"/>
+                        <filter string="Clasificación Proyecto" icon="terp-gnome-cpu-frequency-applet+" domain="[]" context="{'group_by':'clasificacion_id'}"/>
+                        <filter string="Proyecto IDU" icon="terp-go-month" domain="[]" context="{'group_by':'nombre_proyecto_idu''}" groups="base.group_no_one"/>
+                        <filter string="Fuente de Financiación" icon="terp-go-month" domain="[]" context="{'group_by':'fuente_id''}" groups="base.group_no_one"/>
+                        <filter string="Tipo Proceso" icon="terp-go-month" domain="[]" context="{'group_by':'tipo_proceso_id'}" groups="base.group_no_one"/>
+                        <filter string="Tipo Proceso de Selección" icon="terp-go-month" domain="[]" context="{'group_by':'tipo_proceso_seleccion_id'}" groups="base.group_no_one"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+
         <record id="plan_contratacion_idu_item_list" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.item.list</field>
             <field name="model">plan_contratacion_idu.item</field>
@@ -118,14 +147,17 @@
                             <button name="consultar_nombre_proyecto_idu" string="Consultar" type="object" icon="gtk-ok"/>
                         </group>
                         <group>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group col="4" colspan="1">
                             <field name="nombre_proyecto_idu"/>
                             <field name="nombre_punto_inversion"/>
                             <field name="dependencia_id"/>
                             <field name="fuente_id"/>
                             <field name="tipo_proceso_id"/>
                             <field name="tipo_proceso_seleccion_id"/>
-                            <field name="currency_id" invisible="1"/>
                             <field name="presupuesto" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="progress_rate" widget="progressbar"/>
                         </group>
                         <notebook colspan="6">
                             <page string="Detalles">
@@ -165,7 +197,7 @@
                             </page>
                             <page string="Información de Verificación">
                                 <group name="informacion_verificacion">
-                                    <field name="numero_orfeo"/>
+                                    <field name="numero_orfeo" on_change="onchange_numero_orfeo(numero_orfeo)"/>
                                     <field name="numero_crp"/>
                                     <field name="numero_contrato"/>
                                     <field name="acta_inicio"/>

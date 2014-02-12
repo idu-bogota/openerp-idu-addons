@@ -28,7 +28,6 @@ orfeo_existe_radicado = getattr(client.service, 'OrfeoWs.existeRadicado')
 class plan_contratacion_idu_plan(osv.osv):
     _name = "plan_contratacion_idu.plan"
 
-
     def _get_currency(self, cr, uid, ids, field, args, context=None):
         res = {}
         company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'plan_contratacion_idu.plan', context=context)
@@ -88,17 +87,17 @@ plan_contratacion_idu_plan()
 
 class plan_contratacion_idu_item(osv.osv):
     _name = "plan_contratacion_idu.item"
-    _inherit = ['mail.thread']
-
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _description = "Item Plan de Contratación"
     _track = {
         'state': {
-            'plan_contratacion_idu.item_draft': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['draft'],
-            'plan_contratacion_idu.item_estudios_previos': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['estudios_previos', 'ejecucion'],
-            'plan_contratacion_idu.item_radicado': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'radicado',
-            'plan_contratacion_idu.item_suscrito': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'suscrito',
+            'plan_contratacion_idu.item.mt_radicado': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['radicado'],
+            'plan_contratacion_idu.item.mt_suscrito': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['suscrito'],
+            'plan_contratacion_idu.item.mt_ejecucion': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['ejecucion'],
+            'plan_contratacion_idu.item.mt_ejecutado': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['ejecutado'],
         },
     }
- 
+
     def _total_pagos_programados(self, cr, uid, ids, name, args, context=None):
         res = {}
         if isinstance(ids, (list, tuple)) and not len(ids):
@@ -133,7 +132,6 @@ class plan_contratacion_idu_item(osv.osv):
         if isinstance(ids, (long, int)):
             ids = [ids]
         records = self.browse(cr, uid, ids, context=context)
-        res = {}
         for record in records:
             if record.fecha_crp >= record.fecha_radicacion and record.fecha_acta_inicio >= record.fecha_crp:
                 return True
@@ -148,7 +146,6 @@ class plan_contratacion_idu_item(osv.osv):
         if isinstance(ids, (long, int)):
             ids = [ids]
         records = self.browse(cr, uid, ids, context=context)
-        res = {}
         is_valid = True
         for record in records:
             if record.state == 'radicado':
@@ -169,7 +166,6 @@ class plan_contratacion_idu_item(osv.osv):
         if isinstance(ids, (long, int)):
             ids = [ids]
         records = self.browse(cr, uid, ids, context=context)
-        res = {}
         is_valid = True
         for record in records:
             if record.state == 'suscrito':
@@ -187,7 +183,6 @@ class plan_contratacion_idu_item(osv.osv):
         if isinstance(ids, (long, int)):
             ids = [ids]
         records = self.browse(cr, uid, ids, context=context)
-        res = {}
         is_valid = True
         for record in records:
             if record.state == 'ejecucion':
@@ -215,33 +210,58 @@ class plan_contratacion_idu_item(osv.osv):
                     is_valid = False
         return is_valid
 
+    def _progress_rate(self, cr, uid, ids, field_names, args, context=None):
+        res = {}
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return res
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        records = self.browse(cr, uid, ids, context=context)
+        for record in records:
+            res[record['id']] = {}
+            if record.state == 'draft':
+                res[record['id']]['progress_rate']=10
+            if record.state == 'estudios_previos':
+                res[record['id']]['progress_rate']=20
+            if record.state == 'radicado':
+                res[record['id']]['progress_rate']=30
+            if record.state == 'suscrito':
+                res[record['id']]['progress_rate']=50
+            if record.state == 'ejecucion':
+                res[record['id']]['progress_rate']=70
+            if record.state == 'ejecutado':
+                res[record['id']]['progress_rate']=100
+            if record.state == 'no_realizado':
+                res[record['id']]['progress_rate']=0
+        return res
+ 
     _columns = {
-        'codigo_unspsc': fields.char('Codigo UNSPSC', help='Codificación de bienes y servicios, Colombia compra eficiente'),
-        'dependencia_id': fields.many2one('hr.department','Dependencia', select=True, ondelete='cascade'),
-        'description': fields.text('Objeto Contractual', states={'suscrito':[('readonly',True)], 'ejecucion':[('readonly',True)], 'ejecutado':[('readonly',True)]}),
-        'name': fields.many2one('plan_contratacion_idu.plan','Plan contractual', select=True, ondelete='cascade'),
-        'centro_costo_id': fields.many2one('stone_erp_idu.centro_costo','Centro de Costo', select=True, ondelete='cascade'),
+        'codigo_unspsc': fields.char('Codigo UNSPSC', help='Codificación de bienes y servicios, Colombia compra eficiente', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+        'dependencia_id': fields.many2one('hr.department','Dependencia', select=True, ondelete='cascade', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+        'description': fields.text('Objeto Contractual', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+        'name': fields.many2one('plan_contratacion_idu.plan','Plan contractual', select=True, ondelete='cascade', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+        'centro_costo_id': fields.many2one('stone_erp_idu.centro_costo','Centro de Costo', select=True, ondelete='cascade', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'nombre_proyecto_idu':fields.char('Nombre Proyecto IDU', size=255, readonly=True,),
         'nombre_punto_inversion':fields.char('Nombre Punto de Inversión', size=255, readonly=True),
-        'fuente_id': fields.many2one('plan_contratacion_idu.fuente','Fuente de Financiación', select=True, ondelete='cascade'),
+        'fuente_id': fields.many2one('plan_contratacion_idu.fuente','Fuente de Financiación', select=True, ondelete='cascade', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'state':fields.selection([('draft', 'Borrador'),('estudios_previos', 'Estudios Previos'),('radicado', 'Radicado'),('suscrito', 'Contrato Suscrito'),('ejecucion', 'En ejecución'),
                                   ('ejecutado', 'Ejecutado'), ('no_realizado', 'No realizado')],'State',
                                   track_visibility='onchange', required=True),
-        'fecha_radicacion': fields.date ('Fecha Radicacion en DTPS y/o DTGC', state={'draft':[('required',False)],'estudios_previos':[('required',False)]}, required=True, select=True),
-        'fecha_crp': fields.date ('Fecha Programada CRP', state={'draft':[('required',False)],'estudios_previos':[('required',False)]}, required=True, select=False, help="CRP es Certificado Registro Presupuestal"),
-        'fecha_acta_inicio': fields.date ('Fecha Aprobación Acta de Inicio', state={'draft':[('required',False)],'estudios_previos':[('required',False)]}, required=True, select=True),
-        'plan_id': fields.many2one('plan_contratacion_idu.plan','Plan contractual', select=True, ondelete='cascade'),
-        'clasificacion_id': fields.many2one('plan_contratacion_idu.clasificador_proyectos','Clasificación Proyecto', select=True, ondelete='cascade'),
-        'presupuesto': fields.float ('Presupuesto', required=True, select=True, obj="res.currency", track_visibility='onchange'),
-        'plazo_de_ejecucion': fields.integer('Plazo de Ejecución (meses)', readonly= False, select=True, help="Tiempo estimado en meses"),
-        'a_monto_agotable':fields.boolean('A monto agotable', help="plazo de ejecución a monto agotable"),
-        'unidad_meta_fisica': fields.char('Unidad Meta Física', size=255),
-        'cantidad_meta_fisica': fields.char ('Cantidad Metas Físicas', size=255),
-        'localidad': fields.char ('Localidad', size=255),
+        'fecha_radicacion': fields.date ('Fecha Radicacion en DTPS y/o DTGC', state={'draft':[('required',False)],'estudios_previos':[('required',False)]}, required=True, select=True, readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+        'fecha_crp': fields.date ('Fecha Programada CRP', state={'draft':[('required',False)],'estudios_previos':[('required',False)]}, required=True, select=False, help="CRP es Certificado Registro Presupuestal", readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+        'fecha_acta_inicio': fields.date ('Fecha Aprobación Acta de Inicio', state={'draft':[('required',False)],'estudios_previos':[('required',False)]}, required=True, select=True, readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+        'plan_id': fields.many2one('plan_contratacion_idu.plan','Plan contractual', select=True, ondelete='cascade', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+        'clasificacion_id': fields.many2one('plan_contratacion_idu.clasificador_proyectos','Clasificación Proyecto', select=True, ondelete='cascade', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+        'presupuesto': fields.float ('Presupuesto', required=True, select=True, obj="res.currency", track_visibility='onchange', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+        'plazo_de_ejecucion': fields.integer('Plazo de Ejecución (meses)', select=True, help="Tiempo estimado en meses", readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+        'a_monto_agotable':fields.boolean('A monto agotable', help="plazo de ejecución a monto agotable", readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+        'unidad_meta_fisica': fields.char('Unidad Meta Física', size=255, readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+        'cantidad_meta_fisica': fields.char ('Cantidad Metas Físicas', size=255, readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+        'localidad': fields.char ('Localidad', size=255, readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'currency_id': fields.related('plan_id','currency_id',type='many2one',relation='res.currency',string='Company',store=True, readonly=True),
-        'tipo_proceso_id': fields.many2one('plan_contratacion_idu.plan_tipo_proceso','Tipo Proceso', select=True, ondelete='cascade'),
-        'tipo_proceso_seleccion_id': fields.many2one('plan_contratacion_idu.plan_tipo_proceso_seleccion','Tipo Proceso de Selección', select=True, ondelete='cascade'),
-        'plan_pagos_item_ids': fields.one2many('plan_contratacion_idu.plan_pagos_item','plan_contratacion_item_id', 'Planificacion de Pagos', select=True, ondelete='cascade'),
+        'tipo_proceso_id': fields.many2one('plan_contratacion_idu.plan_tipo_proceso','Tipo Proceso', select=True, ondelete='cascade', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+        'tipo_proceso_seleccion_id': fields.many2one('plan_contratacion_idu.plan_tipo_proceso_seleccion','Tipo Proceso de Selección', select=True, ondelete='cascade', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+        'plan_pagos_item_ids': fields.one2many('plan_contratacion_idu.plan_pagos_item','plan_contratacion_item_id', 'Planificacion de Pagos', select=True, ondelete='cascade', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'total_pagos_programados': fields.function(_total_pagos_programados, type='float', multi="presupuesto", string='Total pagos programados', obj="res.currency", digits_compute=dp.get_precision('Account'),
              store={
                 'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_item_ids', 'presupuesto'], 10),
@@ -267,10 +287,13 @@ class plan_contratacion_idu_item(osv.osv):
                                        track_visibility='onchange'),
         'acta_inicio':fields.date('Fecha Acta de Inicio', help = 'Validador desde SIAC', readonly=True),
         'acta_liquidacion':fields.date('Fecha acta de Liquidacion', help = 'Validador desde SIAC',readonly =True),
+        'progress_rate': fields.function(_progress_rate, multi="progress", string='Progreso (%)', type='float', group_operator="avg", help="Porcentaje de avance del item.",
+            store = True),
     }
 
     _defaults = {
-        'state': 'draft'
+        'state': 'draft',
+        'progress_rate':0,
     }
 
     _constraints = [(_check_fechas_programadas,
@@ -314,11 +337,18 @@ class plan_contratacion_idu_item(osv.osv):
             'value': res
         }
 
-    def onchange_a_monto_agotable(self, cr, uid, ids, a_monto_agotable):
+    def onchange_a_monto_agotable(self, cr, uid, ids, a_monto_agotable, context=None):
         if a_monto_agotable:
-            return {'value': {'plazo_de_ejecucion': False}}
+            return {'value': {'plazo_de_ejecucion': 0}}
         else:
             return {'value': {'plazo_de_ejecucion': 0}}
+
+    def onchange_numero_orfeo(self, cr, uid, ids, numero_orfeo, context=None):
+        if orfeo_existe_radicado(numero_orfeo):
+            return True
+        else:
+            return {'warning': {'message': 'El número de radicado Orfeo ingresado no existe'},
+                    'value': {'numero_orfeo': False}}
 
     def action_invoice_sent(self, cr, uid, ids, context=None):
         '''
@@ -366,7 +396,7 @@ class plan_contratacion_idu_item(osv.osv):
 
     def wkf_no_realizado(self, cr, uid, ids, plan_items, context=None):
         self.write(cr, uid, ids, {"state": "no_realizado"})
-    
+
     def wkf_suscrito(self, cr, uid, ids, plan_items, context=None):
         self.write(cr, uid, ids, {"state": "suscrito"})
 
@@ -375,15 +405,6 @@ class plan_contratacion_idu_item(osv.osv):
 
     def wkf_ejecutado(self, cr, uid, ids, plan_items, context=None):
         self.write(cr, uid, ids, {"state": "ejecutado"})
-
-    def check_numero_orfeo(self,cr,uid,ids,context=None):
-        records = self.browse(cr, uid, ids, context=context)
-        try:
-            for record in records:
-                result = orfeo_existe_radicado(record.numero_orfeo)
-        except Exception as e:
-            raise Exception.message('Error al consultar servicio web ORFEO', str(e))
-        return result
 
 plan_contratacion_idu_item()
 
