@@ -311,7 +311,7 @@
                         Create WBS
                     </a>
                 </xpath>
-            </field>f
+            </field>
         </record>
         <!-- Task Views -->
         <record id="view_task_form2" model="ir.ui.view">
