@@ -80,6 +80,7 @@
                     <button name="set_done" string="Done" type="object" states="open" groups="base.group_user"/>
                     <button name="set_pending" string="Pending" type="object" states="open" groups="base.group_user"/>
                     <button name="set_template" string="Set as a template" type="object" states="draft" groups="base.group_user"/>
+                    <button name="set_bulk_project" string="bulk project and phase assignation" type="object" states="draft" groups="base.group_user"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                     <sheet string="Deliverable">

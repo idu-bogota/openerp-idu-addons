@@ -21,6 +21,7 @@
 from openerp.osv import fields, osv
 import time
 from datetime import datetime
+from osv import osv
 
 class project(osv.osv):
     _name = "project.project"
@@ -392,6 +393,16 @@ class project_pmi_wbs_item(osv.osv):
     def set_template(self, cr, uid, ids, context=None):
         item_ids = self.search(cr, uid, [('child_ids','child_of',ids)], context=context)
         return self.write(cr, uid, item_ids, {'state': 'template'}, context)
+
+    def set_bulk_project(self, cr, uid, ids, context=None):
+        item_ids = self.search(cr, uid, [('child_ids','child_of',ids)], context=context)
+        reads = self.read(cr, uid, ids, ['phase_id','project_id'], context=context)
+        for read in reads:
+            if read['phase_id'] and read['project_id']:
+                self.write(cr, uid, item_ids, {'phase_id': read['phase_id'][0],'project_id': read['project_id'][0]}, context)
+            else:
+                raise osv.except_osv('Debe seleccionar un proyecto y una fase','Error')
+        return True
 
     def set_draft(self, cr, uid, ids, context=None):
         item_ids = self.search(cr, uid, [('child_ids','child_of',ids)], context=context)
