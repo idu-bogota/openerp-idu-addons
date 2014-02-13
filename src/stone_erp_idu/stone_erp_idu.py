@@ -29,7 +29,6 @@ class stone_erp_idu_centro_costo(osv.osv):
         'name':fields.char('Nombre', size=255, required=True, select=True),
         #'proyecto_id':fields.many2one('plan_contratacion_idu.clasificador_proyectos','Proyecto'),
         'punto_inversion_id':fields.many2one('stone_erp_idu.punto_inversion','Punto de Inversion'),
-                
     }
 stone_erp_idu_centro_costo()
 

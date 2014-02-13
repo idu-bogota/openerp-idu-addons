@@ -39,10 +39,10 @@ def completar_datos_centro_costo(wsdl_url,centro_costo):
         client = Client(wsdl_url)
         res={}
         punto_inversion = client.service.obtener_proyecto_punto_inversion(centro_costo)
-        res['nombre_proyecto']=punto_inversion["nombre_proyecto"]
-        res['nombre_punto']=punto_inversion["nombre_punto"]
-        res['proyecto']=punto_inversion["proyecto"]
-        res['punto']=punto_inversion["punto"]        
+        res['proyecto_idu']=punto_inversion["nombre_proyecto"]
+        res['punto_inversion']=punto_inversion["nombre_punto"]
+        res['proyecto_idu_id']=punto_inversion["proyecto"]
+        res['punto_inversion_id']=punto_inversion["punto"]
         return res
     except Exception as e:
         raise e
@@ -65,10 +65,10 @@ def obtener_centros_costo(wsdl_url):
         index=0
         centros_costo = {}
         for num in COD_CCOS:
-            centros_costo[num] = NOM_CCOS[index]            
+            centros_costo[num] = NOM_CCOS[index]
+            index = index+1 
         return centros_costo
     except Exception as e:
         raise e
-
 
 

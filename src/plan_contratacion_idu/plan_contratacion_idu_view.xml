@@ -144,7 +144,7 @@
                         </group>
                         <group col="3" colspan="1">
                             <field name="centro_costo_id"/>
-                            <button name="consultar_nombre_proyecto_idu" string="Consultar" type="object" icon="gtk-ok"/>
+                            <button name="%(plan_contratacion_idu.action_plan_contratacion_idu_wizard_get_centro_costo)d" string="Consultar" type="action" icon="gtk-ok"/>
                         </group>
                         <group>
                             <field name="currency_id" invisible="1"/>
