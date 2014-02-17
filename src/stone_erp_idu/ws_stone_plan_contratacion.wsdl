@@ -27,6 +27,27 @@
                     <xs:element minOccurs="0" name="Contrasena" nillable="true" type="xs:string"></xs:element>
                 </xs:sequence>
             </xs:complexType>
+            <xs:element name="obtener_giros_X_crp">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="cod_empr" nillable="true" type="xs:short"></xs:element>
+                        <xs:element name="pre_cont" nillable="true" type="xs:string"></xs:element>
+                        <xs:element name="con_cont" nillable="true" type="xs:int"></xs:element>
+                        <xs:element name="suf_cont" nillable="true" type="xs:string"></xs:element>
+                        <xs:element name="cod_bene" nillable="true" type="xs:long"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="pre_crp_numero" type="ns0:pre_crp_numero"></xs:element>
+            <xs:complexType name="pre_crp_numero">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="pre_crp_numero" nillable="true" type="xs:integer"></xs:element>
+                    <xs:element minOccurs="0" name="pre_crp_fecha" nillable="true" type="xs:dateTime"></xs:element>
+                    <xs:element minOccurs="0" name="pre_crp_numero" nillable="true" type="xs:integer"></xs:element>
+                    <xs:element minOccurs="0" name="pre_crp_fecha" nillable="true" type="xs:dateTime"></xs:element>
+                    <xs:element minOccurs="0" name="pre_crp_valor" nillable="true" type="xs:decimal"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
             <xs:element name="obtener_proyecto_punto_inversion">
                 <xs:complexType>
                     <xs:sequence>
@@ -66,6 +87,12 @@
     <wsdl:message name="DataServiceFault">
         <wsdl:part name="parameters" element="ns0:DataServiceFault"></wsdl:part>
     </wsdl:message>
+    <wsdl:message name="obtener_giros_X_crpRequest">
+        <wsdl:part name="parameters" element="ns0:obtener_giros_X_crp"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="obtener_giros_X_crpResponse">
+        <wsdl:part name="parameters" element="ns0:pre_crp_numero"></wsdl:part>
+    </wsdl:message>
     <wsdl:message name="obtener_proyecto_punto_inversionRequest">
         <wsdl:part name="parameters" element="ns0:obtener_proyecto_punto_inversion"></wsdl:part>
     </wsdl:message>
@@ -85,6 +112,12 @@
             <wsdl:output message="ns0:obtener_tramite_notarialXcorreoResponse" wsaw:Action="urn:obtener_tramite_notarialXcorreoResponse"></wsdl:output>
             <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:obtener_tramite_notarialXcorreoDataServiceFault"></wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="obtener_giros_X_crp">
+            <wsdl:documentation></wsdl:documentation>
+            <wsdl:input message="ns0:obtener_giros_X_crpRequest" wsaw:Action="urn:obtener_giros_X_crp"></wsdl:input>
+            <wsdl:output message="ns0:obtener_giros_X_crpResponse" wsaw:Action="urn:obtener_giros_X_crpResponse"></wsdl:output>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:obtener_giros_X_crpDataServiceFault"></wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="obtener_proyecto_punto_inversion">
             <wsdl:documentation></wsdl:documentation>
             <wsdl:input message="ns0:obtener_proyecto_punto_inversionRequest" wsaw:Action="urn:obtener_proyecto_punto_inversion"></wsdl:input>
@@ -102,6 +135,18 @@
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"></soap:binding>
         <wsdl:operation name="obtener_tramite_notarialXcorreo">
             <soap:operation soapAction="urn:obtener_tramite_notarialXcorreo" style="document"></soap:operation>
+            <wsdl:input>
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"></soap:body>
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"></soap:fault>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="obtener_giros_X_crp">
+            <soap:operation soapAction="urn:obtener_giros_X_crp" style="document"></soap:operation>
             <wsdl:input>
                 <soap:body use="literal"></soap:body>
             </wsdl:input>
@@ -151,6 +196,18 @@
                 <soap12:fault use="literal" name="DataServiceFault"></soap12:fault>
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="obtener_giros_X_crp">
+            <soap12:operation soapAction="urn:obtener_giros_X_crp" style="document"></soap12:operation>
+            <wsdl:input>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"></soap12:fault>
+            </wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="obtener_proyecto_punto_inversion">
             <soap12:operation soapAction="urn:obtener_proyecto_punto_inversion" style="document"></soap12:operation>
             <wsdl:input>
@@ -180,6 +237,15 @@
         <http:binding verb="POST"></http:binding>
         <wsdl:operation name="obtener_tramite_notarialXcorreo">
             <http:operation location="obtener_tramite_notarialXcorreo"></http:operation>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="obtener_giros_X_crp">
+            <http:operation location="obtener_giros_X_crp"></http:operation>
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters"></mime:content>
             </wsdl:input>

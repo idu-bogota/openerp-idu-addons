@@ -20,7 +20,7 @@
 import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv
 from suds.client import Client
-from stone_erp_idu import stone_client_ws,stone_erp_idu
+from stone_erp_idu import stone_client_ws
 
 wsdl_url='http://gesdocpru/desarrollo/webServices/orfeoIduWebServices.php?wsdl'
 client = Client(wsdl_url)
@@ -402,7 +402,7 @@ class plan_contratacion_idu_item(osv.osv):
         }
 
     def onchange_a_monto_agotable(self, cr, uid, ids, a_monto_agotable, context=None):
-        if a_monto_agotable:
+        if a_monto_agotable:  
             return {'value': {'plazo_de_ejecucion': 0}}
         else:
             return {'value': {'plazo_de_ejecucion': 0}}
@@ -426,7 +426,7 @@ class plan_contratacion_idu_item(osv.osv):
             template_id = False
         try:
             compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
-        except ValueError:
+        except ValueError:  
             compose_form_id = False
         ctx = dict(context)
         ctx.update({
@@ -474,7 +474,7 @@ plan_contratacion_idu_item()
 
 class plan_contratacion_idu_clasificador_proyectos(osv.osv):
     _name = "plan_contratacion_idu.clasificador_proyectos"
-    _description = "Clasificación de los proyectos"
+    _description = "Clasificación de los proyectos"  
     _parent_name = "parent_id"
     _parent_store = True
     _parent_order = 'sequence, name'

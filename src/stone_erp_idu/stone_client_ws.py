@@ -72,5 +72,39 @@ def obtener_centros_costo(wsdl_url):
         return centros_costo
     except Exception as e:
         raise e
-
+    
+    
+def obtener_giros(wsdl_url,cod_empr,pre_cont,con_cont,suf_cont,cod_bene):
+    """
+    Parámetros de entrada : 
+    
+    cod_empr short
+    pre_cont string
+    con_cont int
+    suf_cont string
+    cod_bene long
+    
+    Devuelve los giros de la siguiente manera:
+    {
+    1:{'pre_crp_numero':1251,'pre_crp_fecha':2013-03-18 00:00:00,'pre_op_numero':646,'pre_op_fecha[]':2013-04-08 00:00:00,'pre_crp_valor':15888633.0}
+    
+    } 
+    """
+    try:
+        client = Client(wsdl_url)
+        planc = client.service.obtener_giros_X_crp(cod_empr,pre_cont,con_cont,suf_cont,cod_bene)
+        res={}
+        index = 0
+        for val in planc["pre_crp_numero"]:
+            d = {}
+            d["pre_crp_numero"] = val
+            d["pre_crp_fecha"] = planc["pre_crp_fecha"][index]
+            d["pre_op_numero"] = planc["pre_op_numero"][index]
+            d["pre_op_fecha"] = planc["pre_op_fecha"][index]
+            d["pre_crp_valor"] = planc["pre_crp_valor"][index]
+            res[index]=d
+            index = index + 1
+        return res
+    except Exception as e:
+        raise e
 
