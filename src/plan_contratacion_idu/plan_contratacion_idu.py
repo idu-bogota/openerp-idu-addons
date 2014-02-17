@@ -26,10 +26,6 @@ wsdl_url_orfeo='http://gesdocpru/desarrollo/webServices/orfeoIduWebServices.php?
 client = Client(wsdl_url_orfeo)
 orfeo_existe_radicado = getattr(client.service, 'OrfeoWs.existeRadicado')
 
-wsdl_url_stone='http://172.16.2.233:9763/services/ws_stone_plan_contratacion?wsdl'
-client_stone = Client(wsdl_url_stone)
-stone_obtener_giros = getattr(client_stone.service, 'obtener_giros_X_crp')
-
 class plan_contratacion_idu_plan(osv.osv):
     _name = "plan_contratacion_idu.plan"
 
@@ -625,6 +621,3 @@ class res_users(osv.osv):
 
 res_users()
 
-def update_giros_realizados(cr, uid, ids, numero_contrato, context=None):
-     res = stone_obtener_giros.obtener_giros_X_crp()
-     return res
