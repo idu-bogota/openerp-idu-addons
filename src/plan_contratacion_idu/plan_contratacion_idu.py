@@ -20,6 +20,7 @@
 import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv
 from suds.client import Client
+from stone_erp_idu import stone_client_ws,stone_erp_idu
 
 wsdl_url='http://gesdocpru/desarrollo/webServices/orfeoIduWebServices.php?wsdl'
 client = Client(wsdl_url)
@@ -233,16 +234,20 @@ class plan_contratacion_idu_item(osv.osv):
                 res[record['id']]['progress_rate']=100
             if record.state == 'no_realizado':
                 res[record['id']]['progress_rate']=0
-        return res
- 
+        return res 
+
+
     _columns = {
         'codigo_unspsc': fields.char('Codigo UNSPSC', help='Codificación de bienes y servicios, Colombia compra eficiente', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'dependencia_id': fields.many2one('hr.department','Dependencia', select=True, ondelete='cascade', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'description': fields.text('Objeto Contractual', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'name': fields.many2one('plan_contratacion_idu.plan','Plan contractual', select=True, ondelete='cascade', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
-        'centro_costo_id': fields.many2one('stone_erp_idu.centro_costo','Centro de Costo', select=True, ondelete='cascade', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
-        'nombre_proyecto_idu':fields.char('Nombre Proyecto IDU', size=255, readonly=True,),
-        'nombre_punto_inversion':fields.char('Nombre Punto de Inversión', size=255, readonly=True),
+        'centro_costo_id': fields.many2one('stone_erp_idu.centro_costo','Codigo Centro de Costo', readonly=True, select=True, ondelete='cascade'),
+        'centro_costo':fields.char('Centro de Costo',size=512),
+        'proyecto_idu_id':fields.integer('Codigo Proyecto IDU:',readonly=True),
+        'proyecto_idu':fields.char('Proyecto IDU', size=255, readonly=True,),
+        'punto_inversion_id':fields.integer('Codigo punto_inversion',readonly=True),
+        'punto_inversion':fields.char('Nombre Punto de Inversión', size=255, readonly=True),
         'fuente_id': fields.many2one('plan_contratacion_idu.fuente','Fuente de Financiación', select=True, ondelete='cascade', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'state':fields.selection([('draft', 'Borrador'),('estudios_previos', 'Estudios Previos'),('radicado', 'Radicado'),('suscrito', 'Contrato Suscrito'),('ejecucion', 'En ejecución'),
                                   ('ejecutado', 'Ejecutado'), ('no_realizado', 'No realizado')],'State',
@@ -312,6 +317,65 @@ class plan_contratacion_idu_item(osv.osv):
                     "Para cambiar el estado a Ejecutado debe ingresar el número del contrato en información de verificación",
                     ['state']),
                     ]
+
+    def on_change_centro_costo(self,cr,uid,ids,centro_costo,context=None):
+        centro_costo_obj=self.pool.get('stone_erp_idu.centro_costo')
+        #Verificacion que el centro de costo este guardado en la base de datos
+        ids = centro_costo_obj.search(cr,uid,[('codigo','=',centro_costo)])
+        res = {}
+        if (ids.__len__()==0):
+            #No hay nada en base de datos entonces buscar en el stone
+            wsdl = self.pool.get('ir.config_parameter').get_param(cr,uid,'stone_idu.webservice.wsdl',default=False,context=context)
+            det_cc = stone_client_ws.completar_datos_centro_costo(wsdl, centro_costo)
+            if (det_cc == False):
+                raise osv.except_osv('Error','No existe el Centro de Costo')
+            else :
+                #Actualizar Centros de costo
+                stone_erp_idu_obj = self.pool.get('stone_erp_idu.centro_costo')
+                #Mejor guardar provisionalmente y despues se hace la actualizacion y se le pone el nombre jaja
+                id_cc = stone_erp_idu_obj.create(cr,uid,{'codigo':det_cc['centro_costo'],'name':det_cc['centro_costo']})
+                stone_erp_idu_obj.actualizar_centros_costo(cr,uid,context)
+                #stone_erp_idu.stone_erp_idu_centro_costo().actualizar_centros_costo(cr, uid, context)
+                #stone_erp_idu.stone_erp_idu_centro_costo().actualizar_centros_cost(cr, uid, context)
+                det_cc['centro_costo_id']= id_cc
+                res = {'value':det_cc}
+        else :
+            wsdl = self.pool.get('ir.config_parameter').get_param(cr,uid,'stone_idu.webservice.wsdl',default=False,context=context)
+            det_cc = stone_client_ws.completar_datos_centro_costo(wsdl, centro_costo)
+            det_cc['centro_costo_id']=ids[0]
+            res = {'value':det_cc}
+        return res
+
+    def update_vals(self,cr,uid,vals,context=None):
+        centro_costo = vals["centro_costo"]
+        centro_costo_obj=self.pool.get('stone_erp_idu.centro_costo')
+        ids = centro_costo_obj.search(cr,uid,[('codigo','=',centro_costo)])
+        if (ids.__len__()>0):
+            wsdl = self.pool.get('ir.config_parameter').get_param(cr,uid,'stone_idu.webservice.wsdl',default=False,context=context)
+            det_cc = stone_client_ws.completar_datos_centro_costo(wsdl, centro_costo)
+            det_cc['centro_costo_id']=ids[0]
+            for k in det_cc:
+                #agrega datos al diccionario de valores
+                vals[k]=det_cc[k]
+        else:
+            #No permite que el centro de costo se guarde con un valor no válido
+            vals["centro_costo"]=False
+        return vals
+    
+    
+    def write (self,cr,uid, ids, vals, context = None):
+        vals = self.update_vals(cr,uid,vals,context=None)
+        write = super(plan_contratacion_idu_item,self).write(cr,uid,ids,vals,context=context)
+        return write
+    
+    def create (self,cr,uid,vals,context=None):
+        """
+        Crea el item del plan de contratacion y hace persistencia en los valores calculados
+        """
+        vals = self.update_vals(cr,uid,vals,context=None)
+        id_item = super(plan_contratacion_idu_item,self).create(cr,uid,vals,context=context)
+        return id_item
+    
 
     def onchange_plan_pagos_item_ids(self, cr, uid, ids, pagos_ids, context=None):
         context = context or {}

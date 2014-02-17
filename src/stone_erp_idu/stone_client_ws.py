@@ -38,14 +38,16 @@ def completar_datos_centro_costo(wsdl_url,centro_costo):
     try:
         client = Client(wsdl_url)
         res={}
-        punto_inversion = client.service.obtener_proyecto_punto_inversion(centro_costo)
+        c_costo = int(centro_costo)
+        punto_inversion = client.service.obtener_proyecto_punto_inversion(c_costo)
+        res['centro_costo']=c_costo
         res['proyecto_idu']=punto_inversion["nombre_proyecto"]
         res['punto_inversion']=punto_inversion["nombre_punto"]
         res['proyecto_idu_id']=punto_inversion["proyecto"]
         res['punto_inversion_id']=punto_inversion["punto"]
         return res
-    except Exception as e:
-        raise e
+    except Exception:
+        return False
 
 
 def obtener_centros_costo(wsdl_url):

@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <form string="Obtener Centro de Costo"  version="7.0">
                     <group col="4">
-                        <field name="centro_costo" colspan="4" on_change="on_change_centro_costo(centro_costo)"/>
+                        <field name="centro_costo" colspan="4"/>
                             <group col = "4" colspan = "4">
                                 <field name="proyecto_idu_id"/>
                                 <field name="proyecto_idu"/>

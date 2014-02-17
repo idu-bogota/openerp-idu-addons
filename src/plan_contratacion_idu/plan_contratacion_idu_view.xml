@@ -142,16 +142,21 @@
                             <field name="codigo_unspsc"/>
                             <field name="clasificacion_id"/>
                         </group>
-                        <group col="3" colspan="1">
+                        <group col="4" colspan="4">
+                            <separator colspan="4"/>
+                            <field name="centro_costo" colspan="4" on_change="on_change_centro_costo(centro_costo)" />
                             <field name="centro_costo_id"/>
-                            <button name="%(plan_contratacion_idu.action_plan_contratacion_idu_wizard_get_centro_costo)d" string="Consultar" type="action" icon="gtk-ok"/>
+                            <field name="proyecto_idu_id"/>
+                            <field name="proyecto_idu"/>
+                            <field name="punto_inversion_id"/>
+                            <field name="punto_inversion"/>
+                            <separator colspan="4" />
                         </group>
                         <group>
                             <field name="currency_id" invisible="1"/>
                         </group>
                         <group col="4" colspan="1">
-                            <field name="nombre_proyecto_idu"/>
-                            <field name="nombre_punto_inversion"/>
+                            
                             <field name="dependencia_id"/>
                             <field name="fuente_id"/>
                             <field name="tipo_proceso_id"/>

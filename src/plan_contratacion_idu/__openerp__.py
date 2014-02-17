@@ -35,7 +35,7 @@
         'plan_contratacion_idu_data.xml',
     ],
     'init_xml' : [
-                  'wizard/get_centro_costo_view.xml',
+                  #'wizard/get_centro_costo_view.xml',
                   'plan_contratacion_idu_view.xml',
                   ],
     'demo': [],
