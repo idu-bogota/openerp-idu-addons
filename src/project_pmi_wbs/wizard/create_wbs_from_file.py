@@ -35,6 +35,7 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
         'min_level_task': fields.integer(string="Level to start generating tasks", required=True),
         'include_wbs_outline_number': fields.boolean("Include the wbs assigned code in the name?", required=False),
         'assign_task_to_current_user': fields.boolean("Assign new tasks to current user? otherwise they will be unassigned", required=False),
+        'take_leaves_as_tasks': fields.boolean("take leaves as tasks", required=False),
     }
 
     def calculate_days(self,date1):
@@ -49,14 +50,37 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
                           int(date_project[5:7]),
                           int(date_project[8:10]))
         return date_temp 
+    
+    def put_tree_on_struct (self,tree):
+        struct = {}
+        for task in tree.iter('{http://schemas.microsoft.com/project}Task'):
+            temp = task.find('{http://schemas.microsoft.com/project}OutlineNumber').text.split('.')
+            father = ''
+            for cad in range(len(temp) - 1):
+                father += temp[cad] + '.'
+            father = father[:-1]
+            struct[task.find('{http://schemas.microsoft.com/project}OutlineNumber').text] = father
+        return struct
+
+    def get_chlids(self,struct,id,flag):
+        for key in struct:
+            if struct[key] == id:
+                if flag > -1:
+                    return self.get_chlids(struct, key,flag -1)
+                else: 
+                    return flag
+        return flag
 
     def action_create(self, cr, uid, ids, context=None):
         wizards = self.pool.get('project_pmi_wbs.wizard.create_wbs_from_file').browse(cr,uid,ids,context=None)
         for wizard in wizards:
             tree = ET.XML(base64.decodestring(wizard.file))
+            struct = self.put_tree_on_struct(tree)
+            flag = self.get_chlids(struct, '1.1.10.1', 1)
             date_project = tree.find('{http://schemas.microsoft.com/project}StartDate').text
             add_days = self.calculate_days(date_project)
             parent_ids = [0]
+            return {'type': 'ir.actions.act_window_close'}
             for task in tree.iter('{http://schemas.microsoft.com/project}Task'):
                 data_task_create = False
                 outline_level = int(task.find('{http://schemas.microsoft.com/project}OutlineLevel').text)

@@ -11,6 +11,7 @@
                         <field name="min_level_task" colspan="4" />
                         <field name="include_wbs_outline_number" colspan="4" />
                         <field name="assign_task_to_current_user" colspan="4" />
+                        <field name="take_leaves_as_tasks" colspan="4" />
                         <field name="file" colspan="2"/>
                     </group>
 
