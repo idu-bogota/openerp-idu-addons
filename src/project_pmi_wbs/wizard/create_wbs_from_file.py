@@ -78,8 +78,14 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
                     return flag
         return flag
 
-    def save_info(self,data,task,add_days,name,parent_ids,outline_level,cr,uid,context,wizard,type):
+    def save_info(self,struct,struct_type,outline_number ,data,task,add_days,name,parent_ids,outline_level,cr,uid,context,wizard,type):
         data_task_create = False
+        if type == 1:
+            for key in struct:
+                if key == outline_number:
+                    for key1 in struct_type:
+                        if struct_type[struct[key]] == -1:
+                            type = 0
         if type == -1:
             data['type'] = 'deliverable'
         elif type == 0:
@@ -100,23 +106,25 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
             data_task_create = True
         if not data_task_create:
             parent_ids.insert(outline_level, self.pool.get('project_pmi.wbs_item').create(cr, uid, data, context))
+        struct_type[outline_number] = type
 
-    def take_leaves_as_tasks(self,struct,outline_number,task,parent_ids,outline_level,context,data,name,cr,uid,add_days,wizard):
+    def take_leaves_as_tasks(self,struct,struct_type,outline_number,task,parent_ids,outline_level,context,data,name,cr,uid,add_days,wizard):
         type = self.get_type(struct, outline_number, 1)
-        self.save_info(data, task, add_days, name, parent_ids, outline_level, cr, uid, context, wizard, type)
+        self.save_info(struct,struct_type, outline_number ,data, task, add_days, name, parent_ids, outline_level, cr, uid, context, wizard, type)
 
-    def create_normal_tree(self,outline_level,wizard,task,add_days,data,name,parent_ids,cr,uid,context):
+    def create_normal_tree(self,struct,outline_level,wizard,task,add_days,data,name,parent_ids,cr,uid,context):
         if outline_level < wizard.min_level_task -1:
             type = -1
         elif outline_level == wizard.min_level_task - 1:
             type = 0
         else:
             type = 1
-        self.save_info(data, task, add_days, name, parent_ids, outline_level, cr, uid, context, wizard, type)
+        self.save_info(struct,struct,data, -1,task, add_days, name, parent_ids, outline_level, cr, uid, context, wizard, type)
 
     def action_create(self, cr, uid, ids, context=None):
         wizards = self.pool.get('project_pmi_wbs.wizard.create_wbs_from_file').browse(cr,uid,ids,context=None)
         struct = {}
+        struct_type = {}
         try:
             for wizard in wizards:
                 tree = ET.XML(base64.decodestring(wizard.file))
@@ -137,9 +145,9 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
                                 'state': 'draft',
                                 }
                         if wizard.take_leaves_as_tasks:
-                            self.take_leaves_as_tasks(struct, outline_number, task, parent_ids, outline_level, context, data, name, cr, uid, add_days,wizard)
+                            self.take_leaves_as_tasks(struct,struct_type, outline_number, task, parent_ids, outline_level, context, data, name, cr, uid, add_days,wizard)
                         else:
-                            self.create_normal_tree(outline_level, wizard, task, add_days, data, name, parent_ids, cr, uid, context)
+                            self.create_normal_tree(struct,outline_level, wizard, task, add_days, data, name, parent_ids, cr, uid, context)
 #                     print outline_number + ' - '  + name
         except Exception as e:
             raise osv.except_osv('Error loading the tree', str(e))
