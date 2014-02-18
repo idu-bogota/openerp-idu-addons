@@ -122,7 +122,18 @@
                             </field>
                         </group>
                         <group string="Tasks" attrs="{'invisible': ['|',('tracking_type','!=','tasks'),('type','!=','work_package')]}">
-                           <field name="task_ids" nolabel="1" context="{'project_id':project_id,'phase_id':phase_id,'wbs_item_id': active_id}"/>
+                           <field name="task_ids" nolabel="1" context="{'project_id':project_id,'phase_id':phase_id,'wbs_item_id': active_id}">
+                                <tree string="Tasks">
+                                    <field name="name" />
+                                    <field name="state" />
+                                    <button name="action_close" string="Done" type="object" icon="gtk-apply"
+                                            states="draft,open,pending" groups="base.group_user"/>
+                                    <button name="do_cancel" string="Cancel Task" type="object" icon="gtk-cancel"
+                                            states="draft,open,pending" groups="base.group_user"/>
+                                    <button name="project_task_reevaluate" string="Reactivate" type="object" icon="gtk-ok"
+                                            states="cancelled,done" context="{'button_reactivate':True}" groups="base.group_user"/>
+                                </tree>
+                           </field>
                         </group>
                         <group string="Child Deliverables" attrs="{'invisible': [('type','!=','deliverable')]}">
                            <field name="child_ids" nolabel="1" context="{'project_id':project_id,'phase_id':phase_id,'parent_id':parent_id}">
