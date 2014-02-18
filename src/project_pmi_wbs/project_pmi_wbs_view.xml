@@ -125,7 +125,9 @@
                            <field name="task_ids" nolabel="1" context="{'project_id':project_id,'phase_id':phase_id,'wbs_item_id': active_id}">
                                 <tree string="Tasks">
                                     <field name="name" />
+                                    <field name="user_id" />
                                     <field name="state" />
+                                    <field name="progress" widget="progressbar" />
                                     <button name="action_close" string="Done" type="object" icon="gtk-apply"
                                             states="draft,open,pending" groups="base.group_user"/>
                                     <button name="do_cancel" string="Cancel Task" type="object" icon="gtk-cancel"

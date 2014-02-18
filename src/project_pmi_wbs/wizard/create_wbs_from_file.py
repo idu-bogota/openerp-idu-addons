@@ -35,7 +35,7 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
         'min_level_task': fields.integer(string="Level to start generating tasks", required=True),
         'include_wbs_outline_number': fields.boolean("Include the wbs assigned code in the name?", required=False),
         'assign_task_to_current_user': fields.boolean("Assign new tasks to current user? otherwise they will be unassigned", required=False),
-        'take_leaves_as_tasks': fields.boolean("take leaves as tasks", required=False),
+        'take_leaves_as_tasks': fields.boolean("Take leaves as tasks", required=False),
     }
 
     def calculate_days(self,date1):
@@ -89,8 +89,7 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
         else:
             data_task = {'name':name,
                          'wbs_item_id':parent_ids[outline_level -1],
-                         'planned_quantity':100.0,
-                         'effective_quantity':100.0,
+                         'state': 'draft',
                          }
             if not wizard.assign_task_to_current_user:
                 data_task['user_id'] = None
@@ -132,6 +131,7 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
                     if outline_level <= wizard.max_level_evaluate and outline_level > 0:
                         data = {'name':name,
                                 'parent_id':parent_ids[outline_level -1],
+                                'state': 'draft',
                                 }
                         if wizard.take_leaves_as_tasks:
                             self.take_leaves_as_tasks(struct, outline_number, task, parent_ids, outline_level, context, data, name, cr, uid, add_days,wizard)
@@ -139,7 +139,7 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
                             self.create_normal_tree(outline_level, wizard, task, add_days, data, name, parent_ids, cr, uid, context)
 #                     print outline_number + ' - '  + name
         except Exception as e:
-            raise osv.except_osv('Error al Cargar el arbol', str(e))
+            raise osv.except_osv('Error loading the tree', str(e))
         return {'type': 'ir.actions.act_window_close'}
 
 project_pmi_wbs_wizard_create_wbs_from_file()
