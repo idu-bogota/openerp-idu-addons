@@ -80,7 +80,7 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
 
     def save_info(self,struct,struct_type,outline_number ,data,task,add_days,name,parent_ids,outline_level,cr,uid,context,wizard,type):
         data_task_create = False
-        if type == 1:
+        if type == 1 and wizard.take_leaves_as_tasks:
             for key in struct:
                 if key == outline_number:
                     for key1 in struct_type:
@@ -119,7 +119,7 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
             type = 0
         else:
             type = 1
-        self.save_info(struct,struct,data, -1,task, add_days, name, parent_ids, outline_level, cr, uid, context, wizard, type)
+        self.save_info(struct,struct,-1,data, task, add_days, name, parent_ids, outline_level, cr, uid, context, wizard, type)
 
     def action_create(self, cr, uid, ids, context=None):
         wizards = self.pool.get('project_pmi_wbs.wizard.create_wbs_from_file').browse(cr,uid,ids,context=None)
