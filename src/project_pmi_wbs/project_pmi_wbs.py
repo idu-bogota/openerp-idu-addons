@@ -308,7 +308,7 @@ class project_pmi_wbs_item(osv.osv):
         records = self.read(cr, uid, ids, ['type','tracking_type','progress','child_ids','task_ids','work_record_ids'], context=context)
         for record in records:
             res[record['id']] = True
-            if record['type'] == 'deliverable' and (len(record['task_ids']) or len(record['work_record_ids']) or record['tracking_type']):
+            if record['type'] == 'deliverable' and (len(record['task_ids']) or len(record['work_record_ids'])):
                 res[record['id']] = False
         return reduce(lambda x, y: x and y, res.values())
 
@@ -400,6 +400,9 @@ class project_pmi_wbs_item(osv.osv):
         for read in reads:
             if read['phase_id'] and read['project_id']:
                 self.write(cr, uid, item_ids, {'phase_id': read['phase_id'][0],'project_id': read['project_id'][0]}, context)
+                for item in item_ids:
+                    task_ids = self.pool.get('project.task').search(cr, uid, [('wbs_item_id','=',item)], context=context)
+                    self.pool.get('project.task').write(cr, uid, task_ids, {'phase_id': read['phase_id'][0],'project_id': read['project_id'][0]}, context)
             else:
                 raise osv.except_osv('Debe seleccionar un proyecto y una fase','Error')
         return True

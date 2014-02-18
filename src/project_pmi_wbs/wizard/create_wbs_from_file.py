@@ -56,9 +56,12 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
         for task in tree.iter('{http://schemas.microsoft.com/project}Task'):
             temp = task.find('{http://schemas.microsoft.com/project}OutlineNumber').text.split('.')
             father = ''
-            for cad in range(len(temp) - 1):
-                father += temp[cad] + '.'
-            father = father[:-1]
+            if len(temp) == 1:
+                father = '0'
+            else:
+                for cad in range(len(temp) - 1):
+                    father += temp[cad] + '.'
+                father = father[:-1]
             struct[task.find('{http://schemas.microsoft.com/project}OutlineNumber').text] = father
         return struct
 
@@ -128,7 +131,7 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
                     outline_number = task.find('{http://schemas.microsoft.com/project}OutlineNumber').text
                     if wizard.include_wbs_outline_number:
                         name = '{0} {1}'.format(outline_number, name)
-                    if outline_level <= wizard.max_level_evaluate and outline_level > 0:
+                    if outline_level <= wizard.max_level_evaluate:
                         data = {'name':name,
                                 'parent_id':parent_ids[outline_level -1],
                                 'state': 'draft',
