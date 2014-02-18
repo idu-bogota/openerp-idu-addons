@@ -66,81 +66,80 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
     #return == 1 is Task
     #       == 0 is Package
     #       == -1 is Deliverable  
-    def get_chlids(self,struct,id,flag):
+    def get_type(self,struct,id,flag):
         for key in struct:
             if struct[key] == id:
                 if flag > -1:
-                    return self.get_chlids(struct, key,flag -1)
+                    return self.get_type(struct, key,flag -1)
                 else: 
                     return flag
         return flag
 
+    def save_info(self,data,task,add_days,name,parent_ids,outline_level,cr,uid,context,wizard,type):
+        data_task_create = False
+        if type == -1:
+            data['type'] = 'deliverable'
+        elif type == 0:
+            date_start = self.get_date(task.find('{http://schemas.microsoft.com/project}Start').text) + timedelta(days=add_days)
+            date_deadline = self.get_date(task.find('{http://schemas.microsoft.com/project}Finish').text) - timedelta(days=add_days)
+            data['type'] = 'work_package'
+            data['tracking_type'] = 'tasks'
+            data['date_start'] = date_start.strftime('%Y-%m-%d')
+            data['date_deadline'] = date_deadline.strftime('%Y-%m-%d')
+        else:
+            data_task = {'name':name,
+                         'wbs_item_id':parent_ids[outline_level -1],
+                         'planned_quantity':100.0,
+                         'effective_quantity':100.0,
+                         }
+            if not wizard.assign_task_to_current_user:
+                data_task['user_id'] = None
+            self.pool.get('project.task').create(cr, uid, data_task, context)
+            data_task_create = True
+        if not data_task_create:
+            parent_ids.insert(outline_level, self.pool.get('project_pmi.wbs_item').create(cr, uid, data, context))
+
+    def take_leaves_as_tasks(self,struct,outline_number,task,parent_ids,outline_level,context,data,name,cr,uid,add_days,wizard):
+        type = self.get_type(struct, outline_number, 1)
+        self.save_info(data, task, add_days, name, parent_ids, outline_level, cr, uid, context, wizard, type)
+
+    def create_normal_tree(self,outline_level,wizard,task,add_days,data,name,parent_ids,cr,uid,context):
+        if outline_level < wizard.min_level_task -1:
+            type = -1
+        elif outline_level == wizard.min_level_task - 1:
+            type = 0
+        else:
+            type = 1
+        self.save_info(data, task, add_days, name, parent_ids, outline_level, cr, uid, context, wizard, type)
+
     def action_create(self, cr, uid, ids, context=None):
         wizards = self.pool.get('project_pmi_wbs.wizard.create_wbs_from_file').browse(cr,uid,ids,context=None)
         struct = {}
-        for wizard in wizards:
-            tree = ET.XML(base64.decodestring(wizard.file))
-            date_project = tree.find('{http://schemas.microsoft.com/project}StartDate').text
-            add_days = self.calculate_days(date_project)
-            parent_ids = [0]
-            if wizard.take_leaves_as_tasks:
-                struct = self.put_tree_on_struct(tree)
-#             return {'type': 'ir.actions.act_window_close'}
-            for task in tree.iter('{http://schemas.microsoft.com/project}Task'):
-                data_task_create = False
-                outline_level = int(task.find('{http://schemas.microsoft.com/project}OutlineLevel').text)
-                name = task.find('{http://schemas.microsoft.com/project}Name').text
-                outline_number = task.find('{http://schemas.microsoft.com/project}OutlineNumber').text
-                if wizard.include_wbs_outline_number:
-                    name = '{0} {1}'.format(outline_number, name)
-                if outline_level <= wizard.max_level_evaluate and outline_level > 0:
-                    data = {'name':name,
-                            'parent_id':parent_ids[outline_level -1],
-                            }
-                    if wizard.take_leaves_as_tasks:
-                        have_grandson = self.get_chlids(struct, outline_number, 1)
-                        if have_grandson == -1:
-                            data['type'] = 'deliverable'
-                        elif have_grandson == 0:
-                            date_start = self.get_date(task.find('{http://schemas.microsoft.com/project}Start').text) + timedelta(days=add_days)
-                            date_deadline = self.get_date(task.find('{http://schemas.microsoft.com/project}Finish').text) - timedelta(days=add_days)
-                            data['type'] = 'work_package'
-                            data['tracking_type'] = 'tasks'
-                            data['date_start'] = date_start.strftime('%Y-%m-%d')
-                            data['date_deadline'] = date_deadline.strftime('%Y-%m-%d')
+        try:
+            for wizard in wizards:
+                tree = ET.XML(base64.decodestring(wizard.file))
+                date_project = tree.find('{http://schemas.microsoft.com/project}StartDate').text
+                add_days = self.calculate_days(date_project)
+                parent_ids = [0]
+                if wizard.take_leaves_as_tasks:
+                    struct = self.put_tree_on_struct(tree)
+                for task in tree.iter('{http://schemas.microsoft.com/project}Task'):
+                    outline_level = int(task.find('{http://schemas.microsoft.com/project}OutlineLevel').text)
+                    name = task.find('{http://schemas.microsoft.com/project}Name').text 
+                    outline_number = task.find('{http://schemas.microsoft.com/project}OutlineNumber').text
+                    if wizard.include_wbs_outline_number:
+                        name = '{0} {1}'.format(outline_number, name)
+                    if outline_level <= wizard.max_level_evaluate and outline_level > 0:
+                        data = {'name':name,
+                                'parent_id':parent_ids[outline_level -1],
+                                }
+                        if wizard.take_leaves_as_tasks:
+                            self.take_leaves_as_tasks(struct, outline_number, task, parent_ids, outline_level, context, data, name, cr, uid, add_days,wizard)
                         else:
-                            data_task = {'name':name,
-                                      'wbs_item_id':parent_ids[outline_level -1],
-                                      'planned_quantity':100.0,
-                                      'effective_quantity':100.0,
-                                     }
-                            self.pool.get('project.task').create(cr, uid, data_task, context)
-                            data_task_create = True
-                        if not data_task_create:
-                            parent_ids.insert(outline_level, self.pool.get('project_pmi.wbs_item').create(cr, uid, data, context))
-                    else:
-                        if outline_level < wizard.min_level_task - 1:
-                            data['type'] = 'deliverable'
-                        elif outline_level == wizard.min_level_task - 1:
-                            date_start = self.get_date(task.find('{http://schemas.microsoft.com/project}Start').text) + timedelta(days=add_days)
-                            date_deadline = self.get_date(task.find('{http://schemas.microsoft.com/project}Finish').text) - timedelta(days=add_days)
-                            data['type'] = 'work_package'
-                            data['tracking_type'] = 'tasks'
-                            data['date_start'] = date_start.strftime('%Y-%m-%d')
-                            data['date_deadline'] = date_deadline.strftime('%Y-%m-%d')
-                        else:
-                            data_task = {'name':name,
-                                     'wbs_item_id':parent_ids[outline_level -1],
-                                     'planned_quantity':100.0,
-                                     'effective_quantity':100.0,
-                                    }
-                            if not wizard.assign_task_to_current_user:
-                                data_task['user_id'] = None
-                            self.pool.get('project.task').create(cr, uid, data_task, context)
-                            data_task_create = True
-                        if not data_task_create:
-                            parent_ids.insert(outline_level, self.pool.get('project_pmi.wbs_item').create(cr, uid, data, context))
+                            self.create_normal_tree(outline_level, wizard, task, add_days, data, name, parent_ids, cr, uid, context)
 #                     print outline_number + ' - '  + name
+        except Exception as e:
+            raise osv.except_osv('Error al Cargar el arbol', str(e))
         return {'type': 'ir.actions.act_window_close'}
 
 project_pmi_wbs_wizard_create_wbs_from_file()
