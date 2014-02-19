@@ -398,13 +398,19 @@ class project_pmi_wbs_item(osv.osv):
         item_ids = self.search(cr, uid, [('child_ids','child_of',ids)], context=context)
         reads = self.read(cr, uid, ids, ['phase_id','project_id'], context=context)
         for read in reads:
-            if read['phase_id'] and read['project_id']:
-                self.write(cr, uid, item_ids, {'phase_id': read['phase_id'][0],'project_id': read['project_id'][0]}, context)
+            if read['project_id']:
+                if read['phase_id']:
+                    self.write(cr, uid, item_ids, {'phase_id': read['phase_id'][0],'project_id': read['project_id'][0]}, context)
+                else: 
+                    self.write(cr, uid, item_ids, {'project_id': read['project_id'][0]}, context)
                 for item in item_ids:
                     task_ids = self.pool.get('project.task').search(cr, uid, [('wbs_item_id','=',item)], context=context)
-                    self.pool.get('project.task').write(cr, uid, task_ids, {'phase_id': read['phase_id'][0],'project_id': read['project_id'][0]}, context)
+                    if read['phase_id']:
+                        self.pool.get('project.task').write(cr, uid, task_ids, {'phase_id': read['phase_id'][0],'project_id': read['project_id'][0]}, context)
+                    else:
+                        self.pool.get('project.task').write(cr, uid, task_ids, {'project_id': read['project_id'][0]}, context)
             else:
-                raise osv.except_osv('Debe seleccionar un proyecto y una fase','Error')
+                raise osv.except_osv('Debe seleccionar un proyecto','Error')
         return True
 
     def set_draft(self, cr, uid, ids, context=None):
