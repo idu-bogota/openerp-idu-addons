@@ -146,10 +146,11 @@
                             <separator colspan="4"/>
                             <field name="centro_costo" colspan="4" on_change="on_change_centro_costo(centro_costo)" />
                             <field name="centro_costo_id"/>
-                            <field name="proyecto_idu_id"/>
-                            <field name="proyecto_idu"/>
-                            <field name="punto_inversion_id"/>
-                            <field name="punto_inversion"/>
+                            <field name="centro_costo_nombre" />
+                            <field name="proyecto_idu_codigo"/>
+                            <field name="proyecto_idu_nombre"/>
+                            <field name="punto_inversion_codigo"/>
+                            <field name="punto_inversion_nombre"/>
                             <separator colspan="4" />
                         </group>
                         <group>

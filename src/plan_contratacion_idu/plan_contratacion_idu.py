@@ -242,12 +242,13 @@ class plan_contratacion_idu_item(osv.osv):
         'dependencia_id': fields.many2one('hr.department','Dependencia', select=True, ondelete='cascade', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'description': fields.text('Objeto Contractual', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'name': fields.many2one('plan_contratacion_idu.plan','Plan contractual', select=True, ondelete='cascade', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
-        'centro_costo_id': fields.many2one('stone_erp_idu.centro_costo','Codigo Centro de Costo', readonly=True, select=True, ondelete='cascade'),
         'centro_costo':fields.char('Centro de Costo',size=512),
-        'proyecto_idu_id':fields.integer('Codigo Proyecto IDU:',readonly=True),
-        'proyecto_idu':fields.char('Proyecto IDU', size=255, readonly=True,),
-        'punto_inversion_id':fields.integer('Codigo punto_inversion',readonly=True),
-        'punto_inversion':fields.char('Nombre Punto de Inversión', size=255, readonly=True),
+        'centro_costo_id': fields.many2one('stone_erp_idu.centro_costo','Codigo Centro de Costo', readonly=True, select=True, ondelete='cascade'),
+        'centro_costo_nombre':fields.related('centro_costo_id','name',type="char",relation="stone_erp_idu.centro_costo",string="Nombre Centro de Costo", store=False,readonly=True),
+        'proyecto_idu_codigo':fields.related('centro_costo_id','proyecto_idu_codigo',type="integer",relation="stone_erp_idu.centro_costo",string="Codigo Proyecto IDU", store=False,readonly=True),
+        'proyecto_idu_nombre':fields.related('centro_costo_id','proyecto_idu_nombre',type="char",relation="stone_erp_idu.centro_costo",string="Nombre Proyecto IDU", store=False,readonly=True),
+        'punto_inversion_codigo':fields.related('centro_costo_id','punto_inversion_codigo',type="integer",relation="stone_erp_idu.centro_costo",string="Codigo Punto Inversion", store=False,readonly=True),
+        'punto_inversion_nombre':fields.related('centro_costo_id','punto_inversion_nombre',type="char",relation="stone_erp_idu.centro_costo",string="Codigo Punto Inversion", store=False,readonly=True),
         'fuente_id': fields.many2one('plan_contratacion_idu.fuente','Fuente de Financiación', select=True, ondelete='cascade', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'state':fields.selection([('draft', 'Borrador'),('estudios_previos', 'Estudios Previos'),('radicado', 'Radicado'),('suscrito', 'Contrato Suscrito'),('ejecucion', 'En ejecución'),
                                   ('ejecutado', 'Ejecutado'), ('no_realizado', 'No realizado')],'State',
@@ -322,7 +323,8 @@ class plan_contratacion_idu_item(osv.osv):
         centro_costo_obj=self.pool.get('stone_erp_idu.centro_costo')
         #Verificacion que el centro de costo este guardado en la base de datos
         ids = centro_costo_obj.search(cr,uid,[('codigo','=',centro_costo)])
-        res = {}
+       
+        id_cc = 0
         if (ids.__len__()==0):
             #No hay nada en base de datos entonces buscar en el stone
             wsdl = self.pool.get('ir.config_parameter').get_param(cr,uid,'stone_idu.webservice.wsdl',default=False,context=context)
@@ -330,20 +332,24 @@ class plan_contratacion_idu_item(osv.osv):
             if (det_cc == False):
                 raise osv.except_osv('Error','No existe el Centro de Costo')
             else :
-                #Actualizar Centros de costo
                 stone_erp_idu_obj = self.pool.get('stone_erp_idu.centro_costo')
                 #Mejor guardar provisionalmente y despues se hace la actualizacion y se le pone el nombre jaja
                 id_cc = stone_erp_idu_obj.create(cr,uid,{'codigo':det_cc['centro_costo'],'name':det_cc['centro_costo']})
                 stone_erp_idu_obj.actualizar_centros_costo(cr,uid,context)
-                #stone_erp_idu.stone_erp_idu_centro_costo().actualizar_centros_costo(cr, uid, context)
-                #stone_erp_idu.stone_erp_idu_centro_costo().actualizar_centros_cost(cr, uid, context)
-                det_cc['centro_costo_id']= id_cc
-                res = {'value':det_cc}
         else :
-            wsdl = self.pool.get('ir.config_parameter').get_param(cr,uid,'stone_idu.webservice.wsdl',default=False,context=context)
-            det_cc = stone_client_ws.completar_datos_centro_costo(wsdl, centro_costo)
-            det_cc['centro_costo_id']=ids[0]
-            res = {'value':det_cc}
+            id_cc = ids[0]
+        #Actualiza valores completo centro de costo -> No se hace por defecto para evitar ralentizar la aplicacion"
+        vals = centro_costo_obj.completar_centro_costo(cr,uid,{'codigo':centro_costo},context = context)
+        centro_costo_obj.write(cr,uid,id_cc,vals,context = context)
+        centro_costo = centro_costo_obj.browse(cr,uid,id_cc,context) 
+        #Completar Diccionario
+        
+        res = {'value':{'centro_costo_id':id_cc,
+                        'centro_costo_nombre':centro_costo.name,
+                        'punto_inversion_codigo':centro_costo.punto_inversion_codigo,
+                        'punto_inversion_nombre':centro_costo.punto_inversion_nombre,
+                        'proyecto_idu_codigo':centro_costo.proyecto_idu_codigo,
+                        'proyecto_idu_nombre':centro_costo.proyecto_idu_nombre}}
         return res
 
     def update_vals(self,cr,uid,vals,context=None):
@@ -351,18 +357,12 @@ class plan_contratacion_idu_item(osv.osv):
         centro_costo_obj=self.pool.get('stone_erp_idu.centro_costo')
         ids = centro_costo_obj.search(cr,uid,[('codigo','=',centro_costo)])
         if (ids.__len__()>0):
-            wsdl = self.pool.get('ir.config_parameter').get_param(cr,uid,'stone_idu.webservice.wsdl',default=False,context=context)
-            det_cc = stone_client_ws.completar_datos_centro_costo(wsdl, centro_costo)
-            det_cc['centro_costo_id']=ids[0]
-            for k in det_cc:
-                #agrega datos al diccionario de valores
-                vals[k]=det_cc[k]
+            vals['centro_costo_id']=ids[0]
         else:
             #No permite que el centro de costo se guarde con un valor no válido
             vals["centro_costo"]=False
         return vals
-    
-    
+
     def write (self,cr,uid, ids, vals, context = None):
         vals = self.update_vals(cr,uid,vals,context=None)
         write = super(plan_contratacion_idu_item,self).write(cr,uid,ids,vals,context=context)
