@@ -137,7 +137,7 @@ class ocs_report(osv.osv_memory):
               LEFT JOIN ocs_citizen_service_point as csp ON pqr.csp_id = csp.id
               LEFT JOIN ocs_contract as ctr ON csp.contract_id = ctr.id
           WHERE 
-              pqr.create_date BETWEEN '{0}' AND '{1}'
+              pqr.create_date BETWEEN '{0}' AND '{1}' AND pqr.active = TRUE
           """.format(this.start_date, this.end_date)
 
         if not otc:

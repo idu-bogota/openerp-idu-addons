@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    <record id="urban_bridge_workflow" model="workflow">
+            <field name="name">urban_bridge.bridge.basic</field>
+            <field name="osv">urban_bridge.bridge</field>
+            <field name="on_create">True</field>
+    </record>
+    <!-- Actividades  -->
+
+    <record id="act_urban_bridge_draft" model="workflow.activity">
+            <field name="wkf_id" ref="urban_bridge_workflow"/>
+            <field name="flow_start">True</field>
+            <field name="name">draft</field>
+    </record>
+
+    <record id="act_urban_bridge_inventory" model="workflow.activity">
+            <field name="wkf_id" ref="urban_bridge_workflow"/>
+            <field name="name">inventory</field>
+            <field name="kind">function</field>
+            <field name="action">case_inventory()</field>
+    </record>
+
+  <record id="act_urban_bridge_service" model="workflow.activity">
+        <field name="wkf_id" ref="urban_bridge_workflow"/>
+        <field name="name">service</field>
+        <field name="kind">function</field>
+        <field name="action">case_service()</field>
+  </record>
+  
+  <record id="act_urban_bridge_prioritized" model="workflow.activity">
+        <field name="wkf_id" ref="urban_bridge_workflow"/>
+        <field name="name">prioritized</field>
+        <field name="kind">function</field>
+        <field name="action">case_prioritized()</field>
+  </record>
+  
+  <record id="act_urban_bridge_maintenance" model="workflow.activity">
+        <field name="wkf_id" ref="urban_bridge_workflow"/>
+        <field name="name">maintenance</field>
+        <field name="kind">function</field>
+        <field name="action">case_maintainance()</field>
+  </record>
+  
+  <record id="act_urban_bridge_assured" model="workflow.activity">
+        <field name="wkf_id" ref="urban_bridge_workflow"/>
+        <field name="name">assured</field>
+        <field name="kind">function</field>
+        <field name="action">case_assured()</field>
+  </record>
+  
+
+    <!-- Transiciones  -->
+
+  <record id="ocs_tr_draft_to_inventory" model="workflow.transition">
+            <field name="act_from" ref="act_urban_bridge_draft"/>
+            <field name="act_to" ref="act_urban_bridge_inventory"/>
+            <field name="condition">True</field>
+            <field name="signal">case_inventory</field>
+  </record>
+
+  <record id="ocs_tr_in_inventory_to_draft" model="workflow.transition">
+            <field name="act_from" ref="act_urban_bridge_inventory"/>
+            <field name="act_to" ref="act_urban_bridge_draft"/>
+            <field name="condition">True</field>
+            <field name="signal">case_draft</field>
+  </record>
+
+  <record id="ocs_tr_in_inventory_to_service" model="workflow.transition">
+            <field name="act_from" ref="act_urban_bridge_inventory"/>
+            <field name="act_to" ref="act_urban_bridge_service"/>
+            <field name="condition">True</field>
+            <field name="signal">case_service</field>
+  </record>
+
+  <record id="ocs_tr_in_progress_to_done" model="workflow.transition">
+            <field name="act_from" ref="act_urban_bridge_service"/>
+            <field name="act_to" ref="act_urban_bridge_inventory"/>
+            <field name="condition">True</field>
+            <field name="signal">case_inventory</field>
+  </record>
+  </data>
+</openerp>

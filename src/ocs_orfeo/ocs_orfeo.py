@@ -60,7 +60,6 @@ class crm_claim(osv.osv):
         }
         if 'partner_address_id' in data:
             data['partner_address_id'] = self._search_details_for_orfeo(cr, uid, data['partner_address_id'], search_for_orfeo_ctz, context)
-
         if 'orfeo_id' in data and data['orfeo_id'] > 0:
             solution = self.pool.get('ocs.claim_solution_classification').name_search(cr, uid, name='Redireccionado Internamente', args=None, operator='=', context=None)
             data['solution_classification_id'] = solution[0][0]

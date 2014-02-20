@@ -1,0 +1,309 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* base_map
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.1-20121005-233110\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-08-15 17:44+0000\n"
+"PO-Revision-Date: 2012-08-15 17:44+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module:base_map
+#: model:ir.ui.menu,name:base_map.base_map_main
+msgid "Base Maps"
+msgstr "Cartografía Base"
+
+#. module:base_map
+#: model:ir.ui.menu,name:base_map.base_map_administrative
+msgid "Administrative Layers"
+msgstr "Capas Administrativas"
+
+#. module:base_map
+#: model:ir.ui.menu,name:base_map.base_map_environmental
+msgid "Environmental Layers"
+msgstr "Capas Ambientales"
+
+#. module:base_map
+#: model:ir.ui.menu,name:base_map.base_map_transportation
+msgid "Transportation Layers"
+msgstr "Capas de Transporte"
+
+#. module:base_map
+#: model:ir.ui.menu,name:base_map.base_map_settings
+msgid "Settings"
+msgstr "Configuración"
+
+#. module:base_map
+#: model:ir.ui.menu,name:base_map.base_map_district
+msgid "Districts"
+msgstr "Localidades"
+
+#. module:base_map
+#: model:ir.ui.menu,name:base_map.base_map_sub_district
+msgid "Sub Districts"
+msgstr "Unidades de Planificación Zonal (UPZ)"
+
+#. module:base_map
+#: model:ir.ui.menu,name:base_map.base_map_cadastral_zone
+msgid "Cadastral Zone"
+msgstr "Sector Catastral"
+
+#. module:base_map
+#: model:ir.ui.menu,name:base_map.base_map_neighborhood
+msgid "Neighborhood"
+msgstr "Barrio"
+
+#. module:base_map
+#: model:ir.ui.menu,name:base_map.base_map_micro_seismicity
+msgid "Micro-Seismicity"
+msgstr "Micro-Sismicidad"
+
+
+#. module:base_map
+#: model:ir.ui.menu,name:base_map.base_map_geological_zone
+msgid "Geological Zone"
+msgstr "Zona Geológica"
+
+
+#. module:base_map
+#: model:ir.ui.menu,name:base_map.menu_base_map_road_section
+msgid "Road Section"
+msgstr "Vías"
+
+
+#. module:base_map
+#: model:ir.ui.menu,name:base_map.menu_base_map_road_hierarchy
+msgid "Road Hierarchy"
+msgstr "Clasificación de las Vías"
+
+#. module:base_map
+#: model:ir.actions.act_window,name:base_map.action_base_map_district
+msgid "Districts"
+msgstr "Localidades"
+
+#. module: base_map
+#: field:base_map.district,name:0
+msgid "District Name"
+msgstr "Nombre de la Localidad"
+
+#. module: base_map
+#: field:base_map.district,code:0
+msgid "District Code"
+msgstr "Código de la Localidad"
+
+#. module: base_map
+#: field:base_map.district,shape:0
+msgid "Shape"
+msgstr "Geometría"
+
+#. module:base_map
+#: model:ir.actions.act_window,name:base_map.action_base_map_sub_district
+msgid "Sub Districts"
+msgstr "Unidades de Planificación Zonal (UPZ)"
+
+#. module: base_map
+#: field:base_map.sub_district,code:0
+msgid "Code"
+msgstr "Código"
+
+#. module: base_map
+#: field:base_map.sub_district,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module: base_map
+#: field:base_map.sub_district,shape:0
+msgid "Shape"
+msgstr "Geometría"
+
+#. module: base_map
+#: field:base_map.sub_district,classification:0
+msgid "Classification"
+msgstr "Clasificación"
+
+#. module:base_map
+#: model:ir.actions.act_window,name:base_map.action_base_map_cadastral_zone
+msgid "Cadastral Zone"
+msgstr "Sector Catastral"
+
+#. module: base_map
+#: field:base_map.cadastral_zone,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module: base_map
+#: field:base_map.cadastral_zone,code:0
+msgid "Code"
+msgstr "Código"
+
+#. module: base_map
+#: field:base_map.cadastral_zone,alt_code:0
+msgid "Alternative Code"
+msgstr "Código Alternativo"
+
+#. module: base_map
+#: field:base_map.cadastral_zone,start_date:0
+msgid "Create Date"
+msgstr "Fecha de Creación"
+
+#. module: base_map
+#: field:base_map.cadastral_zone,update_0:0
+msgid "First Update"
+msgstr "Primera Actualización"
+
+#. module: base_map
+#: field:base_map.cadastral_zone,update_1:0
+msgid "Second Update"
+msgstr "Segunda Actualización"
+
+#. module: base_map
+#: field:base_map.cadastral_zone,update_2:0
+msgid "Third Update"
+msgstr "Tercera Actualización"
+
+#. module: base_map
+#: field:base_map.cadastral_zone,update_3:0
+msgid "Third Update"
+msgstr "Cuarta Actualización"
+
+#. module: base_map
+#: field:base_map.cadastral_zone,zone_code:0
+msgid "Zone Code"
+msgstr "Código de la Zona"
+
+#. module: base_map
+#: field:base_map.cadastral_zone,shape:0
+msgid "Shape"
+msgstr "Geometría"
+
+#. module:base_map
+#: model:ir.actions.act_window,name:base_map.action_base_map_neighborhood
+msgid "Neighborhood"
+msgstr "Barrio"
+
+#. module: base_map
+#: field:base_map.cadastral_zone,shape:0
+msgid "Shape"
+msgstr "Geometría"
+
+#. module: base_map
+#: field:base_map.neighborhood,code:0
+msgid "Code"
+msgstr "Código"
+
+#. module: base_map
+#: field:base_map.neighborhood,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module: base_map
+#: field:base_map.neighborhood,name:0
+msgid "Shape"
+msgstr "Geometría"
+
+#. module:base_map
+#: model:ir.actions.act_window,name:base_map.action_base_map_micro_seismicity
+msgid "Micro-Seismicity"
+msgstr "Micro Sismicidad"
+
+#. module: base_map
+#: field:base_map.micro_seismicity,zone_name:0
+msgid "Zone Name"
+msgstr "Nombre de la Zona"
+
+#. module: base_map
+#: field:base_map.micro_seismicity,colour:0
+msgid "Colour"
+msgstr "Color"
+
+#. module: base_map
+#: field:base_map.micro_seismicity,colour:0
+msgid "Colour"
+msgstr "Color"
+
+#. module: base_map
+#: field:base_map.micro_seismicity,micr_measure1:0
+msgid "Measure 1"
+msgstr "Medida 1"
+
+#. module: base_map
+#: field:base_map.micro_seismicity,micr_measure2:0
+msgid "Measure 2"
+msgstr "Medida 2"
+
+#. module: base_map
+#: field:base_map.micro_seismicity,shape:0
+msgid "Shape"
+msgstr "Geometría"
+
+#. module:base_map
+#: model:ir.actions.act_window,name:base_map.action_base_map_geological_zone
+msgid "Geological Zone"
+msgstr "Zona Geológica"
+
+#. module: base_map
+#: field:base_map.geological_zone,shape:0
+msgid "Shape"
+msgstr "Geometría"
+
+#. module: base_map
+#: field:base_map.geological_zone,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module: base_map
+#: field:base_map.geological_zone,code:0
+msgid "Code"
+msgstr "Codigo"
+
+#. module:base_map
+#: model:ir.actions.act_window,name:base_map.action_base_map_road_section
+msgid "Road Section"
+msgstr "Vías"
+
+#. module: base_map
+#: field:base_map.road_section,rsic:0
+msgid "Road Section ID Code"
+msgstr "Código de Identificación de la Vía"
+
+#. module: base_map
+#: field:base_map.road_section,name:0
+msgid "Road Section Name"
+msgstr "Nombre de la Vía"
+
+#. module: base_map
+#: field:base_map.road_section,start_edge:0
+msgid "Start Edge"
+msgstr "Nodo de Inicio"
+
+#. module: base_map
+#: field:base_map.road_section,end_edge:0
+msgid "End edge"
+msgstr "Nodo Final"
+
+#. module: base_map
+#: field:base_map.road_section,road_hierarchy:0
+msgid "Road Hierarchy"
+msgstr "Clasificación de la Vía"
+
+#. module:base_map
+#: model:ir.actions.act_window,name:base_map.action_base_map_road_hierarchy
+msgid "Road Hierarchy"
+msgstr "Clasificación de las Vías"
+
+#. module: base_map
+#: field:base_map.road_hierarchy,code:0
+msgid "Code"
+msgstr "Código"
+
+#. module: base_map
+#: field:base_map.road_hierarchy,name:0
+msgid "Name"
+msgstr "Nombre"

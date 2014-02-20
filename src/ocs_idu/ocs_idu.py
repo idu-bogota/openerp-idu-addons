@@ -50,6 +50,9 @@ class crm_claim(crm.crm_case,osv.osv):
             classification = self.pool.get('ocs.claim_classification').name_search(cr, uid, name='Trámites a cargo de otras entidades remitidos a IDU', args=None, operator='=', context=None)
             if claim.classification_id.id == classification[0][0] and claim.partner_forwarded_id.id == False:
                 raise osv.except_osv(_('Error'),_('Need Partner Forwarded'))
+            classification = self.pool.get('ocs.claim_classification').name_search(cr, uid, name='Por Clasificar', args=None, operator='=', context=None)
+            if claim.classification_id.id == classification[0][0]:
+                raise osv.except_osv(_('Error'),_('Por favor definir el criterio y subcriterio que corresponda'))
 
         return is_valid_super
 
@@ -237,17 +240,14 @@ class crm_claim(crm.crm_case,osv.osv):
         'district_id':fields.many2one('ocs.district','District',required=True, readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'resolution': fields.text('Resolution',readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)],'rejected':[('readonly',False)]},
             write = ['ocs_idu.group_ocs_outsourced_user','ocs_idu.group_ocs_outsourced_manager','ocs.group_ocs_user','ocs.group_ocs_manager'],
-            read = ['ocs_idu.group_ocs_outsourced_user','ocs_idu.group_ocs_outsourced_manager','ocs_idu.group_ocs_outsourced_reviewer','ocs.group_ocs_user','ocs.group_ocs_manager'],
             ),
         'solution_classification_id':fields.many2one('ocs.claim_solution_classification','Solution Classification',
             domain="[('parent_id','!=',False),('enabled','=',True)]",required=False,readonly=True,
             states={'draft':[('readonly',False)],'open':[('readonly',False)],'rejected':[('readonly',False)]},
             write = ['ocs_idu.group_ocs_outsourced_user','ocs_idu.group_ocs_outsourced_manager','ocs.group_ocs_user','ocs.group_ocs_manager'],
-            read = ['ocs_idu.group_ocs_outsourced_user','ocs_idu.group_ocs_outsourced_manager','ocs_idu.group_ocs_outsourced_reviewer','ocs.group_ocs_user','ocs.group_ocs_manager'],
             ),
         'partner_forwarded_id': fields.many2one('res.partner', 'Partner Forwarded',domain="[('supplier','=',True)]",readonly=True,states={'draft':[('readonly',False)],'open':[('readonly',False)],'rejected':[('readonly',False)]},
             write = ['ocs_idu.group_ocs_outsourced_user','ocs_idu.group_ocs_outsourced_manager','ocs.group_ocs_user','ocs.group_ocs_manager'],
-            read = ['ocs_idu.group_ocs_outsourced_user','ocs_idu.group_ocs_outsourced_manager','ocs_idu.group_ocs_outsourced_reviewer','ocs.group_ocs_user','ocs.group_ocs_manager'],
         ),
         'priority': fields.selection([('h','High'),('n','Normal'),('l','Low')], 'Priority', required=True, readonly=True),
         'date_deadline': fields.date('Deadline',readonly=True),

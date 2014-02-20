@@ -1,3 +1,21 @@
+* Fix: Corrección en tabla de localidad vs criterio
+
+openerp6.1-rev2014012101
+* Fix: Manejo de error en el sistema de puentes cuando geometria no es valida
+
+openerp6.1-rev2014012100
+* Fix: Reporte excluye los active = FALSE
+
+openerp6.1-rev2014011500
+* Fix: Obligar a tipificar PQRS radicadas via formulario web
+* New: Adicionado servicios para extraer datos geográficos del BMS
+
+openerp6.1-rev2013110600
+* New: Adicionado modulo para la gestión de puentes del IDU urban_bridge
+
+openerp6.1-rev2013100900
+* Fix: Gestor social no podia ver la solución de una PQR
+
 openerp6.1-rev2013091300
 * Update: en el listado de crm.claims para puntos CREA despliega name en lugar de contract
 * Fix: En el reporte crm_claim.rml la descripción de la PQR se despliega fuera de la tabla para soportar varias páginas cuando la descripción es muy larga

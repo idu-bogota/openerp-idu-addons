@@ -1,0 +1,36 @@
+<openerp>
+  <data>
+  <!-- Form View -->
+        <record id="view_urban_bridge_wizard_update_shape_form" model="ir.ui.view">
+            <field name="name">Update Shape with WKT</field>
+            <field name="model">urban_bridge.wizard.update_shape</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Structure Elements">
+                    <field name="bridge_id" readonly="1"/>
+                    <field name="srid" readonly="1"/>
+                    <group col="2" colspan="4">
+                        <field name="wkt"/>
+                    </group>
+                    <group col="4" colspan="4">
+                        <label string="" colspan="2"/>
+                        <button name="elem_create" string="OK" type="object" icon="gtk-ok"/>
+                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        
+<!-- Action View -->
+        <record id="action_urban_bridge_wizard_update_shape" model="ir.actions.act_window">
+            <field name="name">Elements</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">urban_bridge.wizard.update_shape</field>
+            <field name="src_model">urban_bridge.wizard.update_shape</field>
+            <field name="view_id" ref="view_urban_bridge_wizard_update_shape_form"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+</data>
+</openerp>

@@ -41,11 +41,19 @@
 			<![CDATA[SELECT
      ch."name" AS "canal_de_atencion",
      COUNT(c."id") AS total,
+<<<<<<< HEAD
      CAST ( COUNT(c."id") * 100::float / (SELECT COUNT(id) FROM crm_claim c WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}) AS NUMERIC(4,2) ) as porcentaje
 FROM
      "crm_case_channel" ch INNER JOIN "crm_claim" c ON ch."id" = c."channel"
 WHERE
      c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+=======
+     CAST ( COUNT(c."id") * 100::float / (SELECT COUNT(id) FROM crm_claim c WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin} AND c.active = TRUE) AS NUMERIC(4,2) ) as porcentaje
+FROM
+     "crm_case_channel" ch INNER JOIN "crm_claim" c ON ch."id" = c."channel"
+WHERE
+     c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin} AND c.active = TRUE
+>>>>>>> dev
 GROUP BY
     "canal_de_atencion"
 ORDER BY
@@ -72,12 +80,20 @@ ORDER BY
     CAST ( COUNT(c."id") * 100::float / (
         SELECT COUNT(c."id")
         FROM "crm_case_categ" t INNER JOIN "crm_claim" c ON t."id" = c."categ_id"
+<<<<<<< HEAD
         WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin} )
+=======
+        WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin} AND c.active = TRUE )
+>>>>>>> dev
     AS NUMERIC(4,2) ) as porcentaje
 FROM
     "crm_case_categ" t INNER JOIN "crm_claim" c ON t."id" = c."categ_id"
 WHERE
+<<<<<<< HEAD
     c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+=======
+    c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin} AND c.active = TRUE
+>>>>>>> dev
 GROUP BY
     "tipo_de_requerimiento"
 ORDER BY
@@ -102,13 +118,21 @@ ORDER BY
     COALESCE(l."name",'NO REPORTA') AS localidad,
     COUNT(c."id") AS total,
     CAST ( COUNT(c."id") * 100::float / (
+<<<<<<< HEAD
         SELECT COUNT(c."id") FROM "crm_claim" c LEFT JOIN "ocs_district" l ON l."id" = c."district_id" WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN  $P{fecha_ini} AND $P{fecha_fin}
+=======
+        SELECT COUNT(c."id") FROM "crm_claim" c LEFT JOIN "ocs_district" l ON l."id" = c."district_id" WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN  $P{fecha_ini} AND $P{fecha_fin}  AND c.active = TRUE
+>>>>>>> dev
     ) AS NUMERIC(4,2) ) as porcentaje
 FROM
     "crm_claim" c
     LEFT JOIN "ocs_district" l ON l."id" = c."district_id"
 WHERE
+<<<<<<< HEAD
     c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN  $P{fecha_ini} AND $P{fecha_fin}
+=======
+    c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN  $P{fecha_ini} AND $P{fecha_fin} AND c.active = TRUE
+>>>>>>> dev
 GROUP BY
     localidad
 ORDER BY
@@ -132,11 +156,19 @@ ORDER BY
 			<![CDATA[SELECT
     o."name" AS criterio,
     COUNT(c."id") AS total,
+<<<<<<< HEAD
     CAST ( COUNT(c."id") * 100::float / (SELECT COUNT(c."id") FROM "ocs_claim_classification" o INNER JOIN "crm_claim" c ON o."id" = c."classification_id" WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN  $P{fecha_ini} AND $P{fecha_fin} ) AS NUMERIC(4,2) ) as porcentaje
 FROM
     "ocs_claim_classification" o INNER JOIN "crm_claim" c ON o."id" = c."classification_id"
 WHERE
     c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN  $P{fecha_ini} AND $P{fecha_fin}
+=======
+    CAST ( COUNT(c."id") * 100::float / (SELECT COUNT(c."id") FROM "ocs_claim_classification" o INNER JOIN "crm_claim" c ON o."id" = c."classification_id" WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN  $P{fecha_ini} AND $P{fecha_fin}  AND c.active = TRUE ) AS NUMERIC(4,2) ) as porcentaje
+FROM
+    "ocs_claim_classification" o INNER JOIN "crm_claim" c ON o."id" = c."classification_id"
+WHERE
+    c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN  $P{fecha_ini} AND $P{fecha_fin} AND c.active = TRUE
+>>>>>>> dev
 GROUP BY
     criterio
 ORDER BY
@@ -168,12 +200,20 @@ FROM
      LEFT JOIN "crm_case_channel" ch ON ch."id" = c."channel"
      LEFT JOIN (
 	SELECT u.id id, COUNT(c.id) as orden FROM "crm_claim" c LEFT JOIN "res_users" u ON u."id" = c."user_id"
+<<<<<<< HEAD
 	WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN  $P{fecha_ini} AND $P{fecha_fin}
+=======
+	WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN  $P{fecha_ini} AND $P{fecha_fin} AND c.active = TRUE
+>>>>>>> dev
 	GROUP BY u.id
 	ORDER BY orden DESC
      ) as o ON o.id = u.id
 WHERE
+<<<<<<< HEAD
     c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+=======
+    c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin} AND c.active = TRUE
+>>>>>>> dev
 GROUP BY
     "funcionario","canal",o.orden
 ORDER BY orden DESC, funcionario ASC, total DESC]]>
@@ -211,7 +251,11 @@ FROM
      LEFT JOIN "ocs_district" l ON l."id" = c."district_id"
      LEFT JOIN (
 	SELECT o.id, COUNT(c.id) as orden FROM "crm_claim" c LEFT JOIN "ocs_claim_classification" o ON o."id" = c."classification_id"
+<<<<<<< HEAD
 	WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+=======
+	WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin} AND c.active = TRUE
+>>>>>>> dev
 	GROUP BY o.id
 	ORDER BY orden
      ) x ON x.id = o.id
@@ -219,13 +263,21 @@ FROM
 	SELECT o.id as id, ch.id as ch_id, COUNT(c.id) as orden_canal
 	FROM "crm_claim" c LEFT JOIN "ocs_claim_classification" o ON o."id" = c."classification_id"
 	LEFT JOIN "crm_case_channel" ch ON ch."id" = c."channel"
+<<<<<<< HEAD
 	WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+=======
+	WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin} AND c.active = TRUE
+>>>>>>> dev
 	GROUP BY o.id, ch.id
 	ORDER BY orden_canal
      ) y ON y.id = o.id AND y.ch_id = ch.id
 
 WHERE
+<<<<<<< HEAD
     c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+=======
+    c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin} AND c.active = TRUE
+>>>>>>> dev
 GROUP BY
     "criterio","canal","localidad",x.orden, y.orden_canal
 ORDER BY
@@ -267,12 +319,20 @@ FROM
      LEFT JOIN (
 	SELECT o.id as id, COUNT(c.id) as orden
 	FROM "crm_claim" c LEFT JOIN "ocs_claim_classification" o ON o."id" = c."classification_id"
+<<<<<<< HEAD
 	WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+=======
+	WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin} AND c.active = TRUE
+>>>>>>> dev
         GROUP BY o.id
         ORDER BY orden DESC
      ) x ON x.id = o.id
 WHERE
+<<<<<<< HEAD
     c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+=======
+    c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin} AND c.active = TRUE
+>>>>>>> dev
 GROUP BY
     "criterio","subcriterio", x.orden
 ORDER BY
@@ -305,20 +365,36 @@ ORDER BY
 FROM
      "crm_claim" c
      LEFT JOIN "ocs_district" l ON l."id" = c."district_id"
+<<<<<<< HEAD
      LEFT JOIN "ocs_claim_classification" su ON su."id" = c."sub_classification_id"
      LEFT JOIN (
 	SELECT l.id as id, COUNT(c.id) as orden
 	FROM "crm_claim" c LEFT JOIN "ocs_district" l ON l."id" = c."district_id"
 	WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+=======
+     LEFT JOIN "ocs_claim_classification" su ON su."id" = c."classification_id"
+     LEFT JOIN (
+	SELECT COALESCE(l.id,NULL) as id, COUNT(c.id) as orden
+	FROM "crm_claim" c LEFT JOIN "ocs_district" l ON l."id" = c."district_id"
+	WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin} AND c.active = TRUE
+>>>>>>> dev
         GROUP BY l.id
         ORDER BY orden DESC
      ) x ON x.id = l.id
 WHERE
+<<<<<<< HEAD
     c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin}
 GROUP BY
     "localidad","criterio", x.orden
 ORDER BY
     x.orden DESC, total DESC, "localidad",su.name]]>
+=======
+    c.state <> 'cancel' AND c.is_outsourced = FALSE AND c."create_date" BETWEEN $P{fecha_ini} AND $P{fecha_fin} AND c.active = TRUE
+GROUP BY
+    "localidad","criterio", x.orden
+ORDER BY
+    x.orden DESC, "localidad",total DESC, su.name;]]>
+>>>>>>> dev
 		</queryString>
 		<field name="localidad" class="java.lang.String"/>
 		<field name="criterio" class="java.lang.String"/>
@@ -331,16 +407,27 @@ ORDER BY
 			<groupExpression><![CDATA[$F{criterio}]]></groupExpression>
 		</group>
 	</subDataset>
+<<<<<<< HEAD
 	<parameter name="Fecha_Inicial" class="java.util.Date" isForPrompting="false">
 		<defaultValueExpression><![CDATA[(new SimpleDateFormat("yyyy-MM-dd")).parse("2013-04-01")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="Fecha_Final" class="java.util.Date" isForPrompting="false">
+=======
+	<parameter name="Fecha_Inicial" class="java.util.Date">
+		<defaultValueExpression><![CDATA[(new SimpleDateFormat("yyyy-MM-dd")).parse("2013-04-01")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Fecha_Final" class="java.util.Date">
+>>>>>>> dev
 		<defaultValueExpression><![CDATA[(new SimpleDateFormat("yyyy-MM-dd")).parse("2013-05-01")]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT COUNT(c.id) AS total
 FROM crm_claim c
+<<<<<<< HEAD
 WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c.create_date BETWEEN $P{Fecha_Inicial} AND $P{Fecha_Final}]]>
+=======
+WHERE c.state <> 'cancel' AND c.is_outsourced = FALSE AND c.create_date BETWEEN $P{Fecha_Inicial} AND $P{Fecha_Final} AND c.active = TRUE]]>
+>>>>>>> dev
 	</queryString>
 	<field name="total" class="java.lang.Long"/>
 	<background>

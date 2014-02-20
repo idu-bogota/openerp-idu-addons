@@ -2,6 +2,7 @@
 .~*
 *.pyc
 externals/
+docs/upmethodology/doc/upmethodology-doc
 phpWebServiceClient/config.inc.php
 .settings/
 src/stone_erp_idu/test_ws.py

@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="view_urban_bridge_wizard_import_elements_page_3" model="ir.ui.view">
+            <field name="name">Import Elements Select Fields</field>
+            <field name="model">urban_bridge.wizard.import_elements</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Import from elements">
+                    <field name="bridge_id" readonly="True"/>
+                    <group col="4" colspan="4">
+                        <button name="import_elements" string="Import Elements" type="object" icon="gtk-ok" context="{'id_wiz':id}"/>
+                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        
+        <record id="view_urban_bridge_wizard_import_elements_page_2" model="ir.ui.view">
+            <field name="name">Import Elements - Select WorkSheet</field>
+            <field name="model">urban_bridge.wizard.import_elements</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Import from elements">
+                    <field name="bridge_id" readonly="True"/>
+                    <group col="4" colspan="4">
+                        <button name="next_2" string="Next" type="object" icon="gtk-next"/>
+                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        
+        
+        <record id="view_urban_bridge_wizard_import_elements_form" model="ir.ui.view">
+            <field name="name">Import Elements Page Load XLS</field>
+            <field name="model">urban_bridge.wizard.import_elements</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Import from elements">
+                    <field name="bridge_id" readonly="True"/>
+                    <field name="srid" readonly="True"/>
+                    <field name="element" widget="selection"/>
+                    <field name="file"/>
+                    <group col="4" colspan="4">
+                        <button name="next_1" string="Next" type="object" icon="gtk-next"/>
+                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_urban_bridge_wizard_import_elements" model="ir.actions.act_window">
+            <field name="name">Elements Importation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">urban_bridge.wizard.import_elements</field>
+            <field name="src_model">urban_bridge.wizard.import_elements</field>
+            <field name="view_id" ref="view_urban_bridge_wizard_import_elements_form"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        
+    </data>
+</openerp>

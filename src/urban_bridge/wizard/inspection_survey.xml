@@ -1,0 +1,30 @@
+<openerp>
+  <data>
+        <record id="view_urban_bridge_wizard_inspection_survey_form" model="ir.ui.view">
+            <field name="name">Structure Element</field>
+            <field name="model">urban_bridge.wizard.inspection_survey</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Inspection Survey">
+                    <field name="bridge_id" readonly="True"/>
+                    <group col="4" colspan="4">
+                        <label string="" colspan="2"/>
+                        <button name="elem_create" string="Create" type="object" icon="gtk-ok"/>
+                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_urban_bridge_wizard_inspection_survey" model="ir.actions.act_window">
+            <field name="name">Elements</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">urban_bridge.wizard.inspection_survey</field>
+            <field name="src_model">urban_bridge.wizard.inspection_survey</field>
+            <field name="view_id" ref="view_urban_bridge_wizard_inspection_survey_form"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+</data>
+</openerp>
