@@ -4,6 +4,7 @@
 externals/
 phpWebServiceClient/config.inc.php
 .settings/
+src/stone_erp_idu/test_ws.py
 openerp-server.conf
 src/data_idu/sql/*.sql
 *.aux

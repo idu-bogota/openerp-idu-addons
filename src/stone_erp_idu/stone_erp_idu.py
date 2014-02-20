@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 #    Copyright (C) 2013 Instituto de Desarrollo Urbano (<http://www.idu.gov.co>). All Rights Reserved

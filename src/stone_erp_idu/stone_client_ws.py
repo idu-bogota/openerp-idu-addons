@@ -22,7 +22,7 @@
 #
 ##############################################################################
 from suds.client import Client
-#WSDL = "http://172.16.2.233:9763/services/ws_stone_plan_contratacion?wsdl"
+#WSDL = "http://172.16.2.233:9763/services/ws_stone?wsdl"
 
 def completar_datos_centro_costo(wsdl_url,centro_costo):
     """
@@ -74,37 +74,51 @@ def obtener_centros_costo(wsdl_url):
         raise e
     
     
-def obtener_giros(wsdl_url,cod_empr,pre_cont,con_cont,suf_cont,cod_bene):
+def obtener_giros(wsdl_url,prefijo_contrato,consecutivo_contrato,sufijo_contrato,codigo_beneficiario):
     """
-    Parámetros de entrada : 
-    
-    cod_empr short
-    pre_cont string
-    con_cont int
-    suf_cont string
-    cod_bene long
+    Parámetros de entrada :
+    Ejemplo de Contrato 
+    IDU-365-2013    
+    cod_empr short -- Codigo de empresa siempre 1
+    prefijo_contrato string -- Prefijo de Contrato, pre_cont = "IDU"
+    consecutivo_contrato int -- Consecutivo del Contrato, ejemplo = 365
+    sufijo_contrato string -- Sufijo del Contrato, ejemplo = "2013" 
+    codigo_beneficiario long -- Cédula del Beneficiario 
     
     Devuelve los giros de la siguiente manera:
-    {
-    1:{'pre_crp_numero':1251,'pre_crp_fecha':2013-03-18 00:00:00,'pre_op_numero':646,'pre_op_fecha[]':2013-04-08 00:00:00,'pre_crp_valor':15888633.0}
-    
-    } 
+    [
+    {'pre_crp_numero':1251,'pre_crp_fecha':2013-03-18 00:00:00,'pre_op_numero':646,'pre_op_fecha[]':2013-04-08 00:00:00,'pre_crp_valor':15888633.0}    
+    ] 
     """
     try:
+        cod_empr=1 #Código de empresa, siempre es 1 por que es idu//Siempre es IDU
         client = Client(wsdl_url)
-        planc = client.service.obtener_giros_X_crp(cod_empr,pre_cont,con_cont,suf_cont,cod_bene)
-        res={}
-        index = 0
-        for val in planc["pre_crp_numero"]:
-            d = {}
-            d["pre_crp_numero"] = val
-            d["pre_crp_fecha"] = planc["pre_crp_fecha"][index]
-            d["pre_op_numero"] = planc["pre_op_numero"][index]
-            d["pre_op_fecha"] = planc["pre_op_fecha"][index]
-            d["pre_crp_valor"] = planc["pre_crp_valor"][index]
-            res[index]=d
-            index = index + 1
+        planc = client.service.obtener_giros_X_crp(cod_empr,prefijo_contrato,consecutivo_contrato,sufijo_contrato,codigo_beneficiario)
+        res = []
+        if (len(planc)):
+            pre_crp_numero = planc["pre_crp_numero"]
+            print type(pre_crp_numero)
+            if (not isinstance(pre_crp_numero,(list,tuple))) and len(str(pre_crp_numero)) >0:#
+                d={}
+                d["pre_crp_numero"] = planc["pre_crp_numero"]
+                d["pre_crp_fecha"] = planc["pre_crp_fecha"]
+                d["pre_op_numero"] = planc["pre_op_numero"]
+                d["pre_op_fecha"] = planc["pre_op_fecha"]
+                d["pre_crp_valor"] = planc["pre_crp_valor"]
+                res.append(d)
+            elif (planc["pre_crp_numero"],(list,tuple)):
+                index = 0
+                n_elements = len(planc["pre_crp_numero"])
+                while index < n_elements:
+                    d = {}
+                    d["pre_crp_numero"] = planc["pre_crp_numero"][index]
+                    d["pre_crp_fecha"] = planc["pre_crp_fecha"][index]
+                    d["pre_op_numero"] = planc["pre_op_numero"][index]
+                    d["pre_op_fecha"] = planc["pre_op_fecha"][index]
+                    d["pre_crp_valor"] = planc["pre_crp_valor"][index]
+                    res.append(d)
+                    index = index + 1
         return res
     except Exception as e:
         raise e
-
+ 
