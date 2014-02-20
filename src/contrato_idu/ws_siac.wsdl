@@ -1,0 +1,114 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ns0="http://ws.wso2.org/dataservice" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://ws.wso2.org/dataservice">
+    <wsdl:documentation></wsdl:documentation>
+    <wsdl:types>
+        <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://ws.wso2.org/dataservice">
+            <xs:element name="DataServiceFault" type="xs:string"></xs:element>
+            <xs:element name="REQUEST_STATUS" type="xs:string"></xs:element>
+            <xs:element name="DATA_SERVICE_RESPONSE">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:any minOccurs="0"></xs:any>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="obtener_datos_contrato">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Contrato" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="CODIGO" type="ns0:CODIGO"></xs:element>
+            <xs:complexType name="CODIGO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="CODIGO" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="CRP_NUM" nillable="true" type="xs:integer"></xs:element>
+                    <xs:element minOccurs="0" name="FECHA_CRP" nillable="true" type="xs:dateTime"></xs:element>
+                    <xs:element minOccurs="0" name="NIT_CONTRATISTA" nillable="true" type="xs:decimal"></xs:element>
+                    <xs:element minOccurs="0" name="NOMBRE_CONTRATISTA" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="FECHA_ACTA_INICIO" nillable="true" type="xs:decimal"></xs:element>
+                    <xs:element minOccurs="0" name="FECHA_ACTA_LIQUIDACION" nillable="true" type="xs:dateTime"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="obtener_datos_contratoRequest">
+        <wsdl:part name="parameters" element="ns0:obtener_datos_contrato"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="obtener_datos_contratoResponse">
+        <wsdl:part name="parameters" element="ns0:CODIGO"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="DataServiceFault">
+        <wsdl:part name="parameters" element="ns0:DataServiceFault"></wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="ws_siacPortType">
+        <wsdl:operation name="obtener_datos_contrato">
+            <wsdl:documentation></wsdl:documentation>
+            <wsdl:input message="ns0:obtener_datos_contratoRequest" wsaw:Action="urn:obtener_datos_contrato"></wsdl:input>
+            <wsdl:output message="ns0:obtener_datos_contratoResponse" wsaw:Action="urn:obtener_datos_contratoResponse"></wsdl:output>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:obtener_datos_contratoDataServiceFault"></wsdl:fault>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="ws_siacSOAP11Binding" type="ns0:ws_siacPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"></soap:binding>
+        <wsdl:operation name="obtener_datos_contrato">
+            <soap:operation soapAction="urn:obtener_datos_contrato" style="document"></soap:operation>
+            <wsdl:input>
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"></soap:body>
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"></soap:fault>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ws_siacSOAP12Binding" type="ns0:ws_siacPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"></soap12:binding>
+        <wsdl:operation name="obtener_datos_contrato">
+            <soap12:operation soapAction="urn:obtener_datos_contrato" style="document"></soap12:operation>
+            <wsdl:input>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"></soap12:fault>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ws_siacHttpBinding" type="ns0:ws_siacPortType">
+        <http:binding verb="POST"></http:binding>
+        <wsdl:operation name="obtener_datos_contrato">
+            <http:operation location="obtener_datos_contrato"></http:operation>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="ws_siac">
+        <wsdl:port name="SOAP11Endpoint" binding="ns0:ws_siacSOAP11Binding">
+            <soap:address location="http://172.16.2.233:9763/services/ws_siac.SOAP11Endpoint/"></soap:address>
+        </wsdl:port>
+        <wsdl:port name="SecureSOAP11Endpoint" binding="ns0:ws_siacSOAP11Binding">
+            <soap:address location="https://172.16.2.233:9443/services/ws_siac.SecureSOAP11Endpoint/"></soap:address>
+        </wsdl:port>
+        <wsdl:port name="SecureSOAP12Endpoint" binding="ns0:ws_siacSOAP12Binding">
+            <soap12:address location="https://172.16.2.233:9443/services/ws_siac.SecureSOAP12Endpoint/"></soap12:address>
+        </wsdl:port>
+        <wsdl:port name="SOAP12Endpoint" binding="ns0:ws_siacSOAP12Binding">
+            <soap12:address location="http://172.16.2.233:9763/services/ws_siac.SOAP12Endpoint/"></soap12:address>
+        </wsdl:port>
+        <wsdl:port name="HTTPEndpoint" binding="ns0:ws_siacHttpBinding">
+            <http:address location="http://172.16.2.233:9763/services/ws_siac.HTTPEndpoint/"></http:address>
+        </wsdl:port>
+        <wsdl:port name="SecureHTTPEndpoint" binding="ns0:ws_siacHttpBinding">
+            <http:address location="https://172.16.2.233:9443/services/ws_siac.SecureHTTPEndpoint/"></http:address>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

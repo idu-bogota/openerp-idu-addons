@@ -1,1 +1,2 @@
-import contrato_idu
+import contratos_idu
+import siac_ws

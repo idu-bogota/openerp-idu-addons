@@ -21,5 +21,37 @@
 #    CIO: Gustavo Adolfo Velez Achury
 #
 ##############################################################################
+from suds.client import Client
 
-
+def obtener_datos_contrato(wsdl_url,numero_contrato):
+    """
+    Médodo que consulta información del Sistema de Integrado de Apoyo Contractual (SIAC) 
+    sobre los contratos:
+    
+    Entradas:  wsdl, ejemplo: http://172.16.2.233:9763/services/ws_siac?wsdl 
+               numero_contrato, ejemplo: IDU-375-2012 
+    
+    Salidas:
+            diccionario de la siguiente forma
+            {
+            'codigo_contrato':"IDU-365-2012",
+            'numero_crp':111,
+            'fechar-crp':2001 datetime.datetime(2013, 12, 2, 0, 0),
+            'nit_contratista':118822112
+            'fecha_acta_inicio':datetime.datetime(2013, 21, 2, 0, 0),
+            'fecha_acta_liquidacion':datetime.datetime(2013, 21, 2, 0, 0),
+            }
+    """
+    client = Client(wsdl_url)
+    contrato = client.service.obtener_datos_contrato(numero_contrato)
+    res={}
+    if (len(contrato)):
+        res["codigo_contrato"]=contrato["CODIGO"]
+        res["numero_crp"]=contrato["CRP_NUM"]
+        res["fechar_crp"]=contrato["FECHA_CRP"]
+        res["nit_contratista"]=contrato["NIT_CONTRATISTA"]
+        res["nombre_contratista"]=contrato["NOMBRE_CONTRATISTA"]
+        res["fecha_acta_inicio"]=contrato["FECHA_ACTA_INICIO"]
+        res["fecha_acta_liquidación"]=contrato["FECHA_ACTA_LIQUIDACION"]
+    return res
+    
