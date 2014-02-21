@@ -72,6 +72,7 @@
             <field name="arch" type="xml">
                <search string="Plan Contratación Items">
                     <field name="dependencia_id" string="Dependencia"/>
+                    <field name="localidad_id" string="Localidad"/>
                     <separator/>
                     <filter name="draft" string="Borrador" domain="[('state','=','draft')]" help="Estado del item en Borrador" icon="terp-check"/>
                     <filter name="estudios_previos" string="Estudios Previos" domain="[('state','=','estudios_previos')]" help="Estado del item en Estudios Previos" icon="terp-check"/>
@@ -85,6 +86,7 @@
                     <separator/>
                     <group expand="0" string="Group By...">
                         <filter string="Dependencia" name="group_dependencia_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'dependencia_id'}"/>
+                        <filter string="Localidad" name="group_localidad_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'localidad_id'}"/>
                         <filter string="Clasificación Proyecto" icon="terp-gnome-cpu-frequency-applet+" domain="[]" context="{'group_by':'clasificacion_id'}"/>
                         <filter string="Proyecto IDU" icon="terp-go-month" domain="[]" context="{'group_by':'nombre_proyecto_idu''}" groups="base.group_no_one"/>
                         <filter string="Fuente de Financiación" icon="terp-go-month" domain="[]" context="{'group_by':'fuente_id''}" groups="base.group_no_one"/>
@@ -151,6 +153,7 @@
                             <field name="proyecto_idu_nombre"/>
                             <field name="punto_inversion_codigo"/>
                             <field name="punto_inversion_nombre"/>
+                            <field name="localidad_id"/>
                             <separator colspan="4" />
                         </group>
                         <group>
@@ -556,54 +559,8 @@
                 <field name="name" position="before">
                     <field name="codigo"/>
                 </field>
-                <field name="manager_id" position="replace">
-                    <field name="sigla"/>
-                </field>
+                <field name="manager_id" position="replace" />
             </field>
         </record>
-
-        <record id="view_department_tree" model="ir.ui.view">
-            <field name="name">hr.department.tree</field>
-            <field name="model">hr.department</field>
-            <field name="field_parent">child_ids</field>
-            <field name="arch" type="xml">
-                <tree string="Companies">
-                    <field name="complete_name" position="replace">
-                        <field name="sigla"/>
-                    </field>
-                </tree>
-            </field>
-        </record>
-        <record id="view_department_filter" model="ir.ui.view">
-            <field name="name">Departments</field>
-            <field name="model">hr.department</field>
-            <field name="arch" type="xml">
-                <search string="Departments">
-                    <field name="name" string="Department"/>
-                    <field name="manager_id" />
-                </search>
-             </field>
-        </record>
-
-        <record id="open_module_tree_department" model="ir.actions.act_window">
-            <field name="name">Departments</field>
-            <field name="res_model">hr.department</field>
-            <field name="view_type">form</field>
-            <field name="search_view_id" ref="view_department_filter"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a department.
-              </p><p>
-                OpenERP's department structure is used to manage all documents
-                related to employees by departments: expenses, timesheets,
-                leaves and holidays, recruitments, etc.
-              </p>
-            </field>
-        </record>
-        
-         <!--  Acceso Menus -->
-<!--           <record model="ir.ui.menu" id="menu_plan_contratacion_idu_plan_tipo_proceso_seleccion_list">
-                <field eval="[(4, ref('group_plan_contratacion_idu_user'))]" name="groups_id"/>
-         </record> -->
     </data>
 </openerp>

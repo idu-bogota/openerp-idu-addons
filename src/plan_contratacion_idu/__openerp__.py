@@ -28,7 +28,7 @@
     'author': 'Instituto De Desarrollo Urbano',
     'website': 'http://www.idu.gov.co',
     'depends': [
-        'base','hr','contrato_idu', 'stone_erp_idu',
+        'base','hr','contrato_idu','stone_erp_idu','base_map'
     ],
     'data': [
         'plan_contratacion_idu_view.xml',
