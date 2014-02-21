@@ -200,12 +200,22 @@
                                             <field name="total_programado_rezago" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
                                      </group>
                                </group>
+                               <group name="giros_realizados">
+                                    <field name="plan_pagos_giro_ids" nolabel="1">
+                                    <tree string="Giros Realizados" editable="bottom">
+                                        <field name="date"/>
+                                        <field name="valor" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    </tree>
+                                    </field>   
+                               </group>
                             </page>
                             <page string="Información de Verificación">
-                                <group name="informacion_verificacion">
+                                <group name="informacion_verificacion" col="4" colspan="1">
                                     <field name="numero_orfeo" on_change="onchange_numero_orfeo(numero_orfeo)"/>
+                                    <field name="fecha_radicado_orfeo"/>
                                     <field name="numero_crp"/>
                                     <field name="numero_contrato"/>
+                                    <field name="nit_beneficiario"/>
                                     <field name="acta_inicio"/>
                                     <field name="acta_liquidacion"/>
                                 </group>
@@ -244,9 +254,7 @@
             <field name="type">notification</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="subject">Project Management application installed!</field>
-            <field name="body"><![CDATA[<p>Manage multi-level projects and tasks.  You can delegate tasks, track task work, and review your planning.</p>
-            <p>You can manage todo lists on tasks by installing the <i>Todo Lists</i> application, supporting the Getting Things Done (GTD) methodology.</p>
-            <p>You can also manage issues/bugs in projects by installing the "Issue Tracker" application.</p>]]></field>
+            <field name="body"><![CDATA[<p>Application for admission and monitoring recruitment plan.</p>]]></field>
         </record>
 
         <!-- Clasificador de Proyectos -->
@@ -433,6 +441,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="plan_contratacion_idu_plan_pagos_item_list"/>
         </record>
+
         <!-- Tipo de Proceso -->
         <record id="plan_contratacion_idu_plan_tipo_proceso_list" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.plan_tipo_proceso.list</field>
@@ -503,6 +512,95 @@
             parent="menu_plan_contratacion"
             sequence="0"/>
 
+        <!-- Giros Realizados -->
+        <record id="plan_contratacion_idu_plan_pagos_giro_list" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.plan_pagos_giro.list</field>
+            <field name="model">plan_contratacion_idu.plan_pagos_giro</field>
+            <field name="arch" type="xml" >
+                <tree string="Giros Realizados">
+                     <field name="currency_id" invisible="1"/>
+                    <field name="date"/>
+                    <field name="valor" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                </tree>
+            </field>
+        </record>
+        <record id="plan_contratacion_idu_plan_pagos_giro_form" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.plan_pagos_giro.form</field>
+            <field name="model">plan_contratacion_idu.plan_pagos_giro</field>
+            <field name="arch" type="xml">
+                <form string="Giros Realizados" version="7.0">
+                    <sheet>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="date"/>
+                        <field name="valor" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="plan_contratacion_idu_plan_pagos_giro_action" model="ir.actions.act_window">
+            <field name="name">Giros Realizados</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">plan_contratacion_idu.plan_pagos_giro</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="plan_contratacion_idu_plan_pagos_giro_list"/>
+        </record>
+
+        <!-- Dependencias IDU -->
+        <record id="view_department_form" model="ir.ui.view">
+            <field name="name">hr.department.form</field>
+            <field name="model">hr.department</field>
+            <field name="inherit_id" ref="hr.view_department_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="name" position="before">
+                    <field name="codigo"/>
+                </field>
+                <field name="manager_id" position="replace">
+                    <field name="sigla"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_department_tree" model="ir.ui.view">
+            <field name="name">hr.department.tree</field>
+            <field name="model">hr.department</field>
+            <field name="field_parent">child_ids</field>
+            <field name="arch" type="xml">
+                <tree string="Companies">
+                    <field name="complete_name" position="replace">
+                        <field name="sigla"/>
+                    </field>
+                </tree>
+            </field>
+        </record>
+        <record id="view_department_filter" model="ir.ui.view">
+            <field name="name">Departments</field>
+            <field name="model">hr.department</field>
+            <field name="arch" type="xml">
+                <search string="Departments">
+                    <field name="name" string="Department"/>
+                    <field name="manager_id" />
+                </search>
+             </field>
+        </record>
+
+        <record id="open_module_tree_department" model="ir.actions.act_window">
+            <field name="name">Departments</field>
+            <field name="res_model">hr.department</field>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="view_department_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a department.
+              </p><p>
+                OpenERP's department structure is used to manage all documents
+                related to employees by departments: expenses, timesheets,
+                leaves and holidays, recruitments, etc.
+              </p>
+            </field>
+        </record>
+        
          <!--  Acceso Menus -->
 <!--           <record model="ir.ui.menu" id="menu_plan_contratacion_idu_plan_tipo_proceso_seleccion_list">
                 <field eval="[(4, ref('group_plan_contratacion_idu_user'))]" name="groups_id"/>

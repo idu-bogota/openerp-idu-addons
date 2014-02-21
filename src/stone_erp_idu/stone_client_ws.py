@@ -122,3 +122,12 @@ def obtener_giros(wsdl_url,prefijo_contrato,consecutivo_contrato,sufijo_contrato
     except Exception as e:
         raise e
  
+if __name__ == "__main__":
+    wsdl_url = "http://172.16.2.233:9763/services/ws_stone?wsdl"
+    cod_empr= 1
+    pre_cont= "IDU"
+    con_cont=365
+    suf_cont="2013"
+    cod_bene=80849753
+    vals= obtener_giros(wsdl_url,cod_empr,pre_cont,con_cont,suf_cont,cod_bene)
+    print vals

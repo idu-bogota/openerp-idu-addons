@@ -249,6 +249,8 @@ class plan_contratacion_idu_item(osv.osv):
         'proyecto_idu_nombre':fields.related('centro_costo_id','proyecto_idu_nombre',type="char",relation="stone_erp_idu.centro_costo",string="Nombre Proyecto IDU", store=False,readonly=True),
         'punto_inversion_codigo':fields.related('centro_costo_id','punto_inversion_codigo',type="integer",relation="stone_erp_idu.centro_costo",string="Codigo Punto Inversion", store=False,readonly=True),
         'punto_inversion_nombre':fields.related('centro_costo_id','punto_inversion_nombre',type="char",relation="stone_erp_idu.centro_costo",string="Codigo Punto Inversion", store=False,readonly=True),
+        'fase_intervencion_id':fields.integer('Codigo Fase Intervención',readonly=True),
+        'fase_intervencion':fields.char('Nombre Fase Intervención', size=255, readonly=True),
         'fuente_id': fields.many2one('plan_contratacion_idu.fuente','Fuente de Financiación', select=True, ondelete='cascade', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'state':fields.selection([('draft', 'Borrador'),('estudios_previos', 'Estudios Previos'),('radicado', 'Radicado'),('suscrito', 'Contrato Suscrito'),('ejecucion', 'En ejecución'),
                                   ('ejecutado', 'Ejecutado'), ('no_realizado', 'No realizado')],'State',
@@ -268,6 +270,7 @@ class plan_contratacion_idu_item(osv.osv):
         'tipo_proceso_id': fields.many2one('plan_contratacion_idu.plan_tipo_proceso','Tipo Proceso', select=True, ondelete='cascade', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'tipo_proceso_seleccion_id': fields.many2one('plan_contratacion_idu.plan_tipo_proceso_seleccion','Tipo Proceso de Selección', select=True, ondelete='cascade', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'plan_pagos_item_ids': fields.one2many('plan_contratacion_idu.plan_pagos_item','plan_contratacion_item_id', 'Planificacion de Pagos', select=True, ondelete='cascade', readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+        'plan_pagos_giro_ids': fields.one2many('plan_contratacion_idu.plan_pagos_giro','plan_contratacion_item_id', 'Giros Realizados', select=True, ondelete='cascade', readonly=True),
         'total_pagos_programados': fields.function(_total_pagos_programados, type='float', multi="presupuesto", string='Total pagos programados', obj="res.currency", digits_compute=dp.get_precision('Account'),
              store={
                 'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_item_ids', 'presupuesto'], 10),
@@ -287,10 +290,12 @@ class plan_contratacion_idu_item(osv.osv):
             }),
         'numero_orfeo':fields.char('Número Radicado Orfeo', help='Validado desdes Orfeo', states={'estudios_previos':[('readonly',False)]}, readonly=True,
                                    track_visibility='onchange'),
+        'fecha_radicado_orfeo':fields.date('Fecha Radicado'),
         'numero_crp':fields.char('Numero CRP', help ='Validado desde Stone', states={'radicado':[('readonly',False)]}, readonly=True,
                                  track_visibility='onchange'),
         'numero_contrato': fields.char('Numero Contrato', help ='Validado desde SIAC', states={'suscrito':[('readonly',False)]}, readonly=True,
                                        track_visibility='onchange'),
+        'nit_beneficiario':fields.integer('Nit Beneficiario', help ='Validado desde SIAC', states={'suscrito':[('readonly',False)]}, readonly=True),
         'acta_inicio':fields.date('Fecha Acta de Inicio', help = 'Validador desde SIAC', readonly=True),
         'acta_liquidacion':fields.date('Fecha acta de Liquidacion', help = 'Validador desde SIAC',readonly =True),
         'progress_rate': fields.function(_progress_rate, multi="progress", string='Progreso (%)', type='float', group_operator="avg", help="Porcentaje de avance del item.",
@@ -375,7 +380,6 @@ class plan_contratacion_idu_item(osv.osv):
         vals = self.update_vals(cr,uid,vals,context=None)
         id_item = super(plan_contratacion_idu_item,self).create(cr,uid,vals,context=context)
         return id_item
-    
 
     def onchange_plan_pagos_item_ids(self, cr, uid, ids, pagos_ids, context=None):
         context = context or {}
@@ -562,6 +566,57 @@ class plan_contratacion_idu_plan_pagos_item(osv.osv):
 
 plan_contratacion_idu_plan_pagos_item()
 
+class plan_contratacion_idu_plan_pagos_giro(osv.osv):
+    _name = "plan_contratacion_idu.plan_pagos_giro"
+    _columns = {
+        'date':fields.datetime("Fecha"),
+        'valor':fields.integer("Valor"),
+        'plan_contratacion_item_id': fields.many2one('plan_contratacion_idu.item','Item Plan de Contratacion', select=True, ondelete='cascade'),
+        'currency_id': fields.related('plan_contratacion_item_id','currency_id',type='many2one',relation='res.currency',string='Company',store=True,readonly=True),
+    }
+
+    _order = 'date'
+
+    def obtener_pagos_realizados(self, cr, uid, context=None):
+        res = {}
+        vals={}
+        ir_obj = self.pool.get('plan_contratacion_idu.item')
+        ids = ir_obj.search(cr, uid,[('state', '=', 'ejecucion')],context=context)
+        records_plan_item = self.pool.get('plan_contratacion_idu.item').browse(cr, uid, ids, context=context)
+        wsdl = self.pool.get('ir.config_parameter').get_param(cr,uid,'stone_idu.webservice.wsdl',default=False,context=context)
+#  records = self.browse(cr, uid, ids, context=context)
+        for record_plan_item in records_plan_item:
+            nit = record_plan_item.nit_beneficiario
+            numero = record_plan_item.numero_contrato
+            numero = numero.split('-')
+            det_giros = stone_client_ws.obtener_giros(wsdl,1,numero[0],numero[1],numero[2],nit)
+            for k in det_giros:
+                vals[k]=det_giros[k]
+            for k in vals:
+                res[record_plan_item['id']]['date']= vals[k].pre_op_fecha
+                res[record_plan_item['id']]['valor']= vals[k].pre_crp_valor
+        return res
+
+plan_contratacion_idu_plan_pagos_giro()
+
+def _total_pagos_programados(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return res
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        records = self.browse(cr, uid, ids, context=context)
+        res = {}
+        for record in records:
+            sumatoria = 0
+            res[record['id']] = {}
+            for pago in record.plan_pagos_item_ids:
+                sumatoria += pago.valor
+            res[record['id']]['total_pagos_programados'] = sumatoria
+            res[record['id']]['presupuesto_rezago'] = record.presupuesto - sumatoria
+            res[record['id']]['total_programado_rezago'] = sumatoria + (record.presupuesto - sumatoria)
+        return res
+
 class plan_contratacion_idu_plan_tipo_proceso(osv.osv):
     _name = "plan_contratacion_idu.plan_tipo_proceso"
     _columns = {
@@ -620,4 +675,15 @@ class res_users(osv.osv):
     }
 
 res_users()
+
+class hr_department(osv.osv):
+    _name = "hr.department"
+    _inherit = ['hr.department']
+     
+    _columns = {
+        'codigo': fields.integer('Código Departamento', required=True),
+        'sigla': fields.char('Acrónimo Departamento', size=10, required=True),
+    }
+
+hr_department()
 
