@@ -74,8 +74,6 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
             if struct[key] == id:
                 if flag > -1:
                     return self.get_type(struct, key,flag -1)
-                else: 
-                    return flag
         return flag
 
     def save_info(self,struct,struct_type,outline_number ,data,task,add_days,name,parent_ids,outline_level,cr,uid,context,wizard,type):
@@ -135,8 +133,11 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
                     struct = self.put_tree_on_struct(tree)
                 for task in tree.iter('{http://schemas.microsoft.com/project}Task'):
                     outline_level = int(task.find('{http://schemas.microsoft.com/project}OutlineLevel').text)
-                    name = task.find('{http://schemas.microsoft.com/project}Name').text 
                     outline_number = task.find('{http://schemas.microsoft.com/project}OutlineNumber').text
+                    if task.find('{http://schemas.microsoft.com/project}Name') != None:
+                        name = task.find('{http://schemas.microsoft.com/project}Name').text
+                    else:
+                        name = ''
                     if wizard.include_wbs_outline_number:
                         name = '{0} {1}'.format(outline_number, name)
                     if outline_level <= wizard.max_level_evaluate:

@@ -208,7 +208,6 @@
                 </kanban>
             </field>
          </record>
-
         <record id="project_pmi_deliverable_gantt" model="ir.ui.view">
             <field name="name">project_pmi.wbs_item.gantt</field>
             <field name="model">project_pmi.wbs_item</field>
