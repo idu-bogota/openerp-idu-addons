@@ -28,41 +28,41 @@
 #
 #
 from osv import fields,osv
-from base_geoengine import geo_model
+#from base_geoengine import geo_model
 
-class base_map_district(geo_model.GeoModel):
+class base_map_district(osv.osv):
     _name="base_map.district"
     _columns = {
         'name':fields.char('District Name',size=256),
         'code':fields.char('District Code',size=256),
-        'shape':fields.geo_multi_polygon('Shape'),
+        #'shape':fields.geo_multi_polygon('Shape'),
     }
 base_map_district()
 
 
-class base_map_sub_district(geo_model.GeoModel):
+class base_map_sub_district(osv.osv):
     _name="base_map.sub_district"
     _columns={
-        'shape':fields.geo_multi_polygon('Shape'),
+        #'shape':fields.geo_multi_polygon('Shape'),
         'code':fields.char('Code',size=256),
         'name':fields.char('Name',size=256),
         'classification':fields.integer('Classification'),
     }
 base_map_sub_district()
 
-class base_map_neighborhood(geo_model.GeoModel):
+class base_map_neighborhood(osv.osv):
     """Contains geographic information about all neighborhoods in the city"""
     _name = 'base_map.neighborhood'
     _order = 'name asc'
     _columns = {
         'code': fields.char('Neighborhood Code',size=30,help='Identify a Neighborhood Code'),
         'name': fields.char('Neighborhood Name', size = 128),
-        'shape':fields.geo_multi_polygon('Geometry'),
+        #'shape':fields.geo_multi_polygon('Geometry'),
     }
 base_map_neighborhood()
 
 
-class base_map_cadastral_zone(geo_model.GeoModel):
+class base_map_cadastral_zone(osv.osv):
     """
     This layer must be re-factored
     """
@@ -77,30 +77,30 @@ class base_map_cadastral_zone(geo_model.GeoModel):
         'update_2':fields.date('Third Update'),
         'update_3':fields.date('Fourth Update'),
         'zone_code':fields.char('Zone Code', size=128),
-        'shape':fields.geo_multi_polygon('Shape'),
+        #'shape':fields.geo_multi_polygon('Shape'),
     }
 base_map_cadastral_zone()
 
-class base_map_micro_seismicity(geo_model.GeoModel):
+class base_map_micro_seismicity(osv.osv):
     _name="base_map.micro_seismicity"
     _columns={
         'zone_name':fields.char('Zone Name',size=128),
         'colour':fields.char('Colour', size=128),
         'micr_measure1':fields.float('Measure 1'),
         'micr_measure2':fields.float('Measure 2'),
-        'shape':fields.geo_multi_polygon('Shape'),
+        #'shape':fields.geo_multi_polygon('Shape'),
     }
 
-class base_map_geological_zone(geo_model.GeoModel):
+class base_map_geological_zone(osv.osv):
     _name="base_map.geological_zone"
     _columns={
         'name':fields.char('Geological Zone',size=256),
         'code':fields.char('Code',size=128),
-        'shape':fields.geo_multi_polygon('Shape'),
+        #'shape':fields.geo_multi_polygon('Shape'),
     }
 base_map_geological_zone()
 
-class base_map_road_section(geo_model.GeoModel):
+class base_map_road_section(osv.osv):
     """
     Road section basic data of rodways
     """
@@ -111,7 +111,7 @@ class base_map_road_section(geo_model.GeoModel):
         'start_edge':fields.char('Start Edge',size=128),
         'end_edge':fields.char('End edge',size=128),
         'road_hierarchy':fields.many2one('base_map.road_hierarchy','Road Hierarchy'),
-        'shape':fields.geo_multi_line('Shape'),
+        #'shape':fields.geo_multi_line('Shape'),
     }
 base_map_road_section()
 

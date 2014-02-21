@@ -13,6 +13,7 @@ Base Map _ District
 
 
 <!-- Geoengine View -->
+<!--  
 <record  model="ir.ui.view" id="ir_ui_view_base_map_district_OSM" >
             <field name="name">base_map.district.geo_view</field>
             <field name="arch"><![CDATA[
@@ -24,17 +25,18 @@ Base Map _ District
             <field name="type">geoengine</field>
             <field name="model">base_map.district</field>
 </record>
-
+-->
 <!-- Geoengine Base Raster -->
+<!-- 
 <record model="geoengine.raster.layer" id="geoengine_raster_layer_base_map_district">
             <field name="raster_type">osm</field>
             <field name="name">District OSM</field>
             <field name="view_id" ref="ir_ui_view_base_map_district_OSM"/>
             <field eval="0" name="overlay"/>
 </record>
-
+ -->
 <!-- Geoengine Vector Layer -->
-
+<!-- 
 <record  model="geoengine.vector.layer" id="geoengine_vector_layer_base_map_district_plain">
             <field name="geo_field_id" ref="base_map.field_base_map_district_shape"/>
             <field name="name">District</field>
@@ -43,7 +45,9 @@ Base Map _ District
             <field name="attribute_field_id" ref="base_map.field_base_map_district_code"/>
             <field name="begin_color">#FF680A</field>
 </record>
+ -->
 <!-- Form View -->
+
 <record model="ir.ui.view" id="view_base_map_district_form">
         <field name="name">base_map.district.form</field>
         <field name="model">base_map.district</field>
@@ -52,9 +56,11 @@ Base Map _ District
             <form string="Districts">
                 <field name="code"/>
                 <field name="name" select="1"/>
+                <!-- 
                 <group colspan="4" col="2">
                     <field name="shape" widget="geo_edit_map" readonly="True"/>
                 </group>
+                 -->
             </form>
         </field>
 </record>
@@ -84,6 +90,7 @@ Base Map _ District
 Sub Districts
 ==================================================================================== -->
 <!-- Geoengine View -->
+<!-- 
 <record  model="ir.ui.view" id="ir_ui_view_base_map_sub_district_OSM" >
             <field name="name">base_map.sub_district.geo_view</field>
             <field name="arch"><![CDATA[
@@ -95,17 +102,18 @@ Sub Districts
             <field name="type">geoengine</field>
             <field name="model">base_map.sub_district</field>
 </record>
-
+ -->
 <!-- Geoengine Base Raster -->
+<!-- 
 <record model="geoengine.raster.layer" id="geoengine_raster_layer_base_map_sub_district">
             <field name="raster_type">osm</field>
             <field name="name">Sub District OSM</field>
             <field name="view_id" ref="ir_ui_view_base_map_sub_district_OSM"/>
             <field eval="0" name="overlay"/>
 </record>
-
+ -->
 <!-- Geoengine Vector Layer -->
-
+<!-- 
 <record  model="geoengine.vector.layer" id="geoengine_vector_layer_base_map_sub_district_plain">
             <field name="geo_field_id" ref="base_map.field_base_map_sub_district_shape"/>
             <field name="name">Sub District</field>
@@ -115,7 +123,7 @@ Sub Districts
             <field name="begin_color">#FF680A</field>
 </record>
 
-
+ -->
 <!-- Form -->
 <record model="ir.ui.view" id="view_base_map_sub_district_form">
         <field name="name">base_map.sub_district.form</field>
@@ -126,9 +134,11 @@ Sub Districts
                 <field name="code"/>
                 <field name="name" select="1"/>
                 <field name="classification"/>
+                <!-- 
                 <group colspan="4" col="2">
                     <field name="shape" widget="geo_edit_map" readonly="True"/>
                 </group>
+                 -->
             </form>
         </field>
 </record>
@@ -161,6 +171,7 @@ Sub Districts
  Cadastral Zone
 =================================================================================================== -->
 <!-- Geoengine View -->
+<!-- 
 <record  model="ir.ui.view" id="ir_ui_view_base_map_cadastral_zone_OSM" >
             <field name="name">base_map.cadastral_zone.geo_view</field>
             <field name="arch"><![CDATA[
@@ -172,17 +183,18 @@ Sub Districts
             <field name="type">geoengine</field>
             <field name="model">base_map.cadastral_zone</field>
 </record>
-
+ -->
 <!-- Geoengine Base Raster -->
+<!-- 
 <record model="geoengine.raster.layer" id="geoengine_raster_layer_base_map_cadastral_zone">
             <field name="raster_type">osm</field>
             <field name="name">Cadastral Zone OSM</field>
             <field name="view_id" ref="ir_ui_view_base_map_cadastral_zone_OSM"/>
             <field eval="0" name="overlay"/>
 </record>
-
+ -->
 <!-- Geoengine Vector Layer -->
-
+<!-- 
 <record  model="geoengine.vector.layer" id="geoengine_vector_layer_base_map_cadastral_zone_plain">
             <field name="geo_field_id" ref="base_map.field_base_map_cadastral_zone_shape"/>
             <field name="name">Cadastral Zone</field>
@@ -192,7 +204,7 @@ Sub Districts
             <field name="begin_color">#FF680A</field>
 </record>
 
-
+ -->
 
 <!-- Form View -->
 <record model="ir.ui.view" id="view_base_map_cadastral_zone_form">
@@ -209,9 +221,11 @@ Sub Districts
                 <field name="update_2"/>
                 <field name="update_3"/>
                 <field name="zone_code"/>
+                <!-- 
                 <group colspan="4" col="2">
                     <field name="shape" widget="geo_edit_map" readonly="True"/>
                 </group>
+                 -->
             </form>
         </field>
 </record>
@@ -241,6 +255,7 @@ Neighborhood
 ========================================================================================================================== -->
 
 <!-- Geoengine View -->
+<!-- 
 <record  model="ir.ui.view" id="ir_ui_view_base_map_neighborhood_OSM" >
             <field name="name">base_map.neighborhood.geo_view</field>
             <field name="arch"><![CDATA[
@@ -252,17 +267,18 @@ Neighborhood
             <field name="type">geoengine</field>
             <field name="model">base_map.neighborhood</field>
 </record>
-
+ -->
 <!-- Geoengine Base Raster -->
+<!-- 
 <record model="geoengine.raster.layer" id="geoengine_raster_layer_base_map_neighborhood">
             <field name="raster_type">osm</field>
             <field name="name">Neighborhood OSM</field>
             <field name="view_id" ref="ir_ui_view_base_map_neighborhood_OSM"/>
             <field eval="0" name="overlay"/>
 </record>
-
+ -->
 <!-- Geoengine Vector Layer -->
-
+<!-- 
 <record  model="geoengine.vector.layer" id="geoengine_vector_layer_base_map_neighborhood_plain">
             <field name="geo_field_id" ref="base_map.field_base_map_neighborhood_shape"/>
             <field name="name">Neighborhood</field>
@@ -271,7 +287,7 @@ Neighborhood
             <field name="attribute_field_id" ref="base_map.field_base_map_neighborhood_code"/>
             <field name="begin_color">#FF680A</field>
 </record>
-
+ -->
 <!-- Form -->
 <record model="ir.ui.view" id="view_base_map_neighborhood_form">
         <field name="name">base_map.neighborhood.form</field>
@@ -281,9 +297,11 @@ Neighborhood
             <form string="Neighborhood">
                 <field name="code"/>
                 <field name="name" search="True"/>
+                <!--  
                 <group colspan="4" col="2">
                     <field name="shape" widget="geo_edit_map" readonly="True"/>
                 </group>
+                -->
             </form>
         </field>
 </record>
@@ -314,6 +332,7 @@ Micro Seismicity
  -->
  
  <!-- Geoengine View -->
+ <!-- 
 <record  model="ir.ui.view" id="ir_ui_view_base_map_micro_seismicity_OSM" >
             <field name="name">base_map.micro_seismicity.geo_view</field>
             <field name="arch"><![CDATA[
@@ -325,17 +344,18 @@ Micro Seismicity
             <field name="type">geoengine</field>
             <field name="model">base_map.micro_seismicity</field>
 </record>
-
+ -->
 <!-- Geoengine Base Raster -->
+<!-- 
 <record model="geoengine.raster.layer" id="geoengine_raster_layer_base_map_micro_seismicity">
             <field name="raster_type">osm</field>
             <field name="name">Micro Seismicity OSM</field>
             <field name="view_id" ref="ir_ui_view_base_map_micro_seismicity_OSM"/>
             <field eval="0" name="overlay"/>
 </record>
-
+ -->
 <!-- Geoengine Vector Layer -->
-
+<!-- 
 <record  model="geoengine.vector.layer" id="geoengine_vector_layer_base_map_micro_seismicity_plain">
             <field name="geo_field_id" ref="base_map.field_base_map_micro_seismicity_shape"/>
             <field name="name">Micro Seismicity</field>
@@ -344,7 +364,7 @@ Micro Seismicity
             <field name="attribute_field_id" ref="base_map.field_base_map_micro_seismicity_zone_name"/>
             <field name="begin_color">#FF680A</field>
 </record>
-
+ -->
 <!-- Form -->
 <record model="ir.ui.view" id="view_base_map_micro_seismicity_form">
         <field name="name">base_map.micro_seismicity.form</field>
@@ -356,9 +376,11 @@ Micro Seismicity
                 <field name="colour"/>
                 <field name ="micr_measure1"/>
                 <field name ="micr_measure2"/>
+                <!-- 
                 <group colspan="4" col="2">
                     <field name="shape" widget="geo_edit_map" readonly="True"/>
                 </group>
+                 -->
                 </form>
         </field>
 </record>
@@ -391,7 +413,7 @@ Geological Zone
  ===============================================================================================================================-->
  
  <!-- Geoengine View -->
-
+<!-- 
 <record  model="ir.ui.view" id="ir_ui_view_base_map_geological_zone_OSM" >
             <field name="name">base_map.geological_zone.geo_view</field>
             <field name="arch"><![CDATA[
@@ -403,17 +425,18 @@ Geological Zone
             <field name="type">geoengine</field>
             <field name="model">base_map.geological_zone</field>
 </record>
-
+ -->
 <!-- Geoengine Base Raster -->
+<!-- 
 <record model="geoengine.raster.layer" id="geoengine_raster_layer_base_map_geological_zone">
             <field name="raster_type">osm</field>
             <field name="name">Geological Zone OSM</field>
             <field name="view_id" ref="ir_ui_view_base_map_geological_zone_OSM"/>
             <field eval="0" name="overlay"/>
 </record>
-
+ -->
 <!-- Geoengine Vector Layer -->
-
+<!-- 
 <record  model="geoengine.vector.layer" id="geoengine_vector_layer_base_map_geological_zone_plain">
             <field name="geo_field_id" ref="base_map.field_base_map_geological_zone_shape"/>
             <field name="name">Geological Zone</field>
@@ -422,7 +445,7 @@ Geological Zone
             <field name="attribute_field_id" ref="base_map.field_base_map_geological_zone_code"/>
             <field name="begin_color">#FF680A</field>
 </record>
- 
+ -->
 <!-- Form -->
 <record model="ir.ui.view" id="view_base_geological_zone_form">
         <field name="name">base_map.geological_zone.form</field>
@@ -432,9 +455,11 @@ Geological Zone
             <form string="Geological Zone">
                 <field name="code"/>
                 <field name="name"/>
+                <!-- 
                 <group colspan="4" col="2">
                     <field name="shape" widget="geo_edit_map" readonly="True"/>
                 </group>
+                 -->
             </form>
         </field>
 </record>
@@ -464,7 +489,7 @@ Geological Zone
 Road Section
 ============================================================================================================== -->
 <!-- Geoengine View -->
-
+<!-- 
 <record  model="ir.ui.view" id="ir_ui_view_base_map_road_section_OSM" >
             <field name="name">base_map.road_section.geo_view</field>
             <field name="arch"><![CDATA[
@@ -476,14 +501,16 @@ Road Section
             <field name="type">geoengine</field>
             <field name="model">base_map.road_section</field>
 </record>
-
+ -->
+ <!-- 
 <record model="geoengine.raster.layer" id="geoengine_raster_layer_base_map_road_section">
             <field name="raster_type">osm</field>
             <field name="name">Road Section OSM</field>
             <field name="view_id" ref="ir_ui_view_base_map_road_section_OSM"/>
             <field eval="0" name="overlay"/>
 </record>
-
+ -->
+ <!-- 
 <record  model="geoengine.vector.layer" id="geoengine_vector_layer_base_map_road_section_plain">
             <field name="geo_field_id" ref="base_map.field_base_map_road_section_shape"/>
             <field name="name">Road Section</field>
@@ -492,7 +519,8 @@ Road Section
             <field name="attribute_field_id" ref="base_map.field_base_map_road_section_rsic"/>
             <field name="begin_color">#FFFF0A</field>
 </record>
-
+ -->
+ 
 <!-- Form View -->
 <record model="ir.ui.view" id="view_base_map_road_section_form">
         <field name="name">base_map.road_section.form</field>
@@ -505,15 +533,18 @@ Road Section
                 <field name="start_edge"/>
                 <field name="end_edge"/>
                 <field name="road_hierarchy" widget="selection"/>
+                <!-- 
                 <group colspan="4" col="4">
                     <notebook>
                         <page string="Geometry">
+                        
                             <group col="2" colspan="4">
                                 <field name="shape" widget="geo_edit_map" readonly="1"/>
                             </group>
                         </page>
                     </notebook>
                 </group>
+                 -->
             </form>
         </field>
 </record>
