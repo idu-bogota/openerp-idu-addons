@@ -33,6 +33,7 @@ This module customize project management for IDU
     ],
     'data': [
         'project_idu_view.xml',
+        'security/security.xml',
     ],
     'demo': [],
     'installable': True,
