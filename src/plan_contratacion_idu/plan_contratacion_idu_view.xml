@@ -107,9 +107,9 @@
                     <field name="dependencia_id"/>
                     <field name="fuente_id"/>
                     <field name="plazo_de_ejecucion"/>
-                    <field name="fecha_radicacion"/>
-                    <field name="fecha_crp"/>
-                    <field name="fecha_acta_inicio"/>
+                    <field name="fecha_programada_radicacion"/>
+                    <field name="fecha_programada_crp"/>
+                    <field name="fecha_programada_acta_inicio"/>
                     <field name="presupuesto"/>
                 </tree>
             </field>
@@ -153,7 +153,8 @@
                             <field name="proyecto_idu_nombre"/>
                             <field name="punto_inversion_codigo"/>
                             <field name="punto_inversion_nombre"/>
-                            <field name="localidad_id"/>
+                            <field name="localidad_id" attrs="{'readonly':[('entidad','=',True)]}"/>
+                            <field name="entidad" on_change="onchange_entidad(entidad)"/>
                             <separator colspan="4" />
                         </group>
                         <group>
@@ -173,7 +174,7 @@
                                 <group name="detalles">
                                     <field name="description"/>
                                     <field name="plazo_de_ejecucion" attrs="{'readonly':[('a_monto_agotable','=',True)]}"/>
-                                    <field name="a_monto_agotable" on_change="onchange_a_monto_agotable(a_monto_agotable)"/>/>
+                                    <field name="a_monto_agotable" on_change="onchange_a_monto_agotable(a_monto_agotable)"/>
                                     <field name="unidad_meta_fisica"/>
                                     <field name="cantidad_meta_fisica"/>
                                 </group>
@@ -181,18 +182,20 @@
                             <page string="Planificación de Fechas">
                                 <group name="fechas" string="Fechas Planificadas">
                                     <separator colspan="2"/>
-                                    <field name="fecha_radicacion"/>
-                                    <field name="fecha_crp"/>
-                                    <field name="fecha_acta_inicio"/>
+                                    <field name="fecha_programada_radicacion"/>
+                                    <field name="fecha_programada_crp"/>
+                                    <field name="fecha_programada_acta_inicio"/>
                                  </group>
                             </page>
-                            <page string="Planificación de Pagos">
-                                <field name="plan_pagos_item_ids" on_change="onchange_plan_pagos_item_ids(plan_pagos_item_ids)" nolabel="1">
-                                    <tree string="Plan de pagos" editable="bottom">
-                                        <field name="mes"/>
-                                        <field name="valor" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                    </tree>
-                                </field>
+                            <page string="Pagos">
+                                <group name="pagos_programados" string="Pagos Programados">
+                                    <field name="plan_pagos_item_ids" on_change="onchange_plan_pagos_item_ids(plan_pagos_item_ids)" nolabel="1">
+                                        <tree string="Plan de pagos" editable="bottom">
+                                            <field name="mes"/>
+                                            <field name="valor" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                        </tree>
+                                    </field>
+                                </group>
                                 <group>
                                      <group class="oe_subtotal_footer oe_right" name="total_pagos_programado_item">>
                                          <field name="total_pagos_programados" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
@@ -203,7 +206,7 @@
                                             <field name="total_programado_rezago" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
                                      </group>
                                </group>
-                               <group name="giros_realizados">
+                               <group name="giros_realizados" string="Giros Realizados">
                                     <field name="plan_pagos_giro_ids" nolabel="1">
                                     <tree string="Giros Realizados" editable="bottom">
                                         <field name="date"/>
@@ -219,13 +222,8 @@
                                     <field name="numero_crp"/>
                                     <field name="numero_contrato"/>
                                     <field name="nit_beneficiario"/>
-                                    <field name="acta_inicio"/>
-                                    <field name="acta_liquidacion"/>
-                                </group>
-                            </page>
-                            <page string="Pagos Realizados">
-                                <group col="2" colspan="1" name="pagos">
-                                    <separator colspan="2"/>
+                                    <field name="fecha_acta_inicio"/>
+                                    <field name="fecha_acta_liquidacion"/>
                                 </group>
                             </page>
                         </notebook>

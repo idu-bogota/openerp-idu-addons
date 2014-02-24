@@ -25,6 +25,7 @@ from stone_erp_idu import stone_client_ws
 wsdl_url_orfeo='http://gesdocpru/desarrollo/webServices/orfeoIduWebServices.php?wsdl'
 client = Client(wsdl_url_orfeo)
 orfeo_existe_radicado = getattr(client.service, 'OrfeoWs.existeRadicado')
+orfeo_fecha_radicado = getattr(client.service, 'OrfeoWs.fechaRadicado')
 
 class plan_contratacion_idu_plan(osv.osv):
     _name = "plan_contratacion_idu.plan"
@@ -154,10 +155,11 @@ class plan_contratacion_idu_item(osv.osv):
             ids = [ids]
         records = self.browse(cr, uid, ids, context=context)
         for record in records:
-            if record.fecha_crp >= record.fecha_radicacion and record.fecha_acta_inicio >= record.fecha_crp:
-                return True
-            else:
+            if (record.fecha_programada_crp and record.fecha_programada_radicacion and record.fecha_programada_crp < record.fecha_programada_radicacion):
                 return False
+            if (record.fecha_programada_crp and record.fecha_programada_acta_inicio and record.fecha_programada_acta_inicio < record.fecha_programada_crp):
+                return False
+        return True
 
     def _check_state_radicado(self,cr,uid,ids,context=None):
         """valida el cambio de estado y si existe el numero de radicado en orfeo"""
@@ -321,20 +323,22 @@ class plan_contratacion_idu_item(osv.osv):
              ('suscrito', 'Contrato Suscrito'),('ejecucion', 'En ejecución'),('ejecutado', 'Ejecutado'),
              ('no_realizado', 'No realizado')],'State',
              track_visibility='onchange', required=True),
-        'fecha_radicacion': fields.date ('Fecha Radicacion en DTPS y/o DTGC',
-             required=True,
+        'fecha_programada_radicacion': fields.date ('Fecha Radicacion en DTPS y/o DTGC',
+             required=False,
              select=True,
              readonly=True,
-             states={'draft':[('readonly',False), ('required',False)], 'estudios_previos':[('readonly',False), ('required',False)]}),
-        'fecha_crp': fields.date ('Fecha Programada CRP',
-             required=True, select=False,
+             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)],'radicado':[('required',True)]}),
+        'fecha_programada_crp': fields.date ('Fecha Programada CRP',
+             required=False,
+             select=False,
              help="CRP es Certificado Registro Presupuestal",
              readonly=True,
-             states={'draft':[('readonly',False), ('required',False)],'estudios_previos':[('readonly',False),('required',False)]}),
-        'fecha_acta_inicio': fields.date ('Fecha Aprobación Acta de Inicio',
-             required=True, select=True,
+             states={'draft':[('readonly',False)],'estudios_previos':[('readonly',False)],'radicado':[('required',True)]}),
+        'fecha_programada_acta_inicio': fields.date ('Fecha Aprobación Acta de Inicio',
+             required=False,
+             select=False,
              readonly=True,
-             states={'draft':[('readonly',False), ('required',False)],'estudios_previos':[('readonly',False),('required',False)]}),
+             states={'draft':[('readonly',False)],'estudios_previos':[('readonly',False)],'radicado':[('required',True)]}),
         'plan_id': fields.many2one('plan_contratacion_idu.plan','Plan contractual',
              select=True,
              ondelete='cascade',
@@ -368,11 +372,18 @@ class plan_contratacion_idu_item(osv.osv):
              size=255,
              readonly=True,
              states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
-        'localidad_id': fields.many2one('base_map.district','Localidad',
+        'localidad_id': fields.many2many('base_map.district','plan_contratacion_idu_localidad_item',
+             'base_localidad_id',
+             'plan_localidad_id',
+             'localidades del item',
              select=True,
              ondelete='cascade',
              readonly=True,
              states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+         'entidad':fields.boolean('Entidad',
+             help="cuando el item no aplica para localidad y se destina para la entidad",
+             readonly=True,
+             states={'draft':[('readonly',False)],'estudios_previos':[('readonly',False)]}),
         'currency_id': fields.related('plan_id','currency_id',
              type='many2one',
              relation='res.currency',
@@ -437,7 +448,7 @@ class plan_contratacion_idu_item(osv.osv):
              help='Validado desdes Orfeo',
              states={'estudios_previos':[('readonly',False)]}, readonly=True,
              track_visibility='onchange'),
-        'fecha_radicado_orfeo':fields.date('Fecha Radicado'),
+        'fecha_radicado_orfeo':fields.date('Fecha Radicado', readonly=True),
         'numero_crp':fields.char('Numero CRP',
              help ='Validado desde Stone',
              states={'radicado':[('readonly',False)]},
@@ -451,11 +462,11 @@ class plan_contratacion_idu_item(osv.osv):
         'nit_beneficiario':fields.integer('Nit Beneficiario',
              help ='Validado desde SIAC',
              states={'suscrito':[('readonly',False)]}, readonly=True),
-        'acta_inicio':fields.date('Fecha Acta de Inicio',
-             help = 'Validador desde SIAC',
+        'fecha_acta_inicio':fields.date('Fecha Acta de Inicio',
+             help = 'Validado desde SIAC',
              readonly=True),
-        'acta_liquidacion':fields.date('Fecha acta de Liquidacion',
-             help = 'Validador desde SIAC',
+        'fecha_acta_liquidacion':fields.date('Fecha acta de Liquidacion',
+             help = 'Validado desde SIAC',
              readonly =True),
         'progress_rate': fields.function(_progress_rate, multi="progress",
              string='Progreso (%)',
@@ -472,7 +483,7 @@ class plan_contratacion_idu_item(osv.osv):
 
     _constraints = [(_check_fechas_programadas,
                     "La fecha programada CRP debe ser posterior a la fecha programada de radicación y anterior a la fecha programada para la aprobación del acta de Inicio",
-                    ['fecha_crp','fecha_acta_inicio']),
+                    ['fecha_programada_crp','fecha_programada_acta_inicio']),
                     (_check_state_radicado,
                     "Para cambiar el estado a Radicado debe ingresar el un número válido de radicado Orfeo en información de verificación",
                     ['state', 'numero_orfeo']),
@@ -521,14 +532,15 @@ class plan_contratacion_idu_item(osv.osv):
         return res
 
     def update_vals(self,cr,uid,vals,context=None):
-        centro_costo = vals["centro_costo"]
-        centro_costo_obj=self.pool.get('stone_erp_idu.centro_costo')
-        ids = centro_costo_obj.search(cr,uid,[('codigo','=',centro_costo)])
-        if (ids.__len__()>0):
-            vals['centro_costo_id']=ids[0]
-        else:
-            #No permite que el centro de costo se guarde con un valor no válido
-            vals["centro_costo"]=False
+        if 'centro_costo' in vals:
+            centro_costo = vals["centro_costo"]
+            centro_costo_obj=self.pool.get('stone_erp_idu.centro_costo')
+            ids = centro_costo_obj.search(cr,uid,[('codigo','=',centro_costo)])
+            if (ids.__len__() > 0):
+                vals['centro_costo_id'] = ids[0]
+            else:
+                #No permite que el centro de costo se guarde con un valor no válido
+                vals["centro_costo"] = False
         return vals
 
     def write (self,cr,uid, ids, vals, context = None):
@@ -573,6 +585,12 @@ class plan_contratacion_idu_item(osv.osv):
             return {'value': {'plazo_de_ejecucion': 0}}
         else:
             return {'value': {'plazo_de_ejecucion': 0}}
+
+    def onchange_entidad(self, cr, uid, ids, entidad, context=None):
+        if entidad:
+            return {'value': {'localidad_id': False}}
+        else:
+            return {'value': {'localidad_id': False}}
 
     def onchange_numero_orfeo(self, cr, uid, ids, numero_orfeo, context=None):
         if orfeo_existe_radicado(numero_orfeo):
