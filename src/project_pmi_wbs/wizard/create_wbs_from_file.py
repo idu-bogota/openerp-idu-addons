@@ -84,6 +84,12 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
                     for key1 in struct_type:
                         if struct_type[struct[key]] == -1:
                             type = 0
+        elif type == -1 and wizard.take_leaves_as_tasks:
+            for key in struct:
+                if key == outline_number:
+                    for key1 in struct_type:
+                        if struct_type[struct[key]] == 0:
+                            type = 0
         if type == -1:
             data['type'] = 'deliverable'
         elif type == 0:
