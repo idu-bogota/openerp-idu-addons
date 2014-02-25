@@ -43,25 +43,29 @@
                 <xs:sequence>
                     <xs:element minOccurs="0" name="pre_crp_numero" nillable="true" type="xs:integer"></xs:element>
                     <xs:element minOccurs="0" name="pre_crp_fecha" nillable="true" type="xs:dateTime"></xs:element>
-                    <xs:element minOccurs="0" name="pre_crp_numero" nillable="true" type="xs:integer"></xs:element>
-                    <xs:element minOccurs="0" name="pre_crp_fecha" nillable="true" type="xs:dateTime"></xs:element>
+                    <xs:element minOccurs="0" name="pre_op_numero" nillable="true" type="xs:integer"></xs:element>
+                    <xs:element minOccurs="0" name="pre_op_fecha" nillable="true" type="xs:dateTime"></xs:element>
                     <xs:element minOccurs="0" name="pre_crp_valor" nillable="true" type="xs:decimal"></xs:element>
                 </xs:sequence>
             </xs:complexType>
             <xs:element name="obtener_proyecto_punto_inversion">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="cod_ccos" nillable="true" type="xs:short"></xs:element>
+                        <xs:element name="cod_centro_costo" nillable="true" type="xs:short"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="cod_ccos" type="ns0:cod_ccos"></xs:element>
             <xs:complexType name="cod_ccos">
                 <xs:sequence>
-                    <xs:element minOccurs="0" name="proyecto" nillable="true" type="xs:integer"></xs:element>
-                    <xs:element minOccurs="0" name="nombre_proyecto" nillable="true" type="xs:string"></xs:element>
-                    <xs:element minOccurs="0" name="punto" nillable="true" type="xs:integer"></xs:element>
-                    <xs:element minOccurs="0" name="nombre_punto" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="cod_proyecto_idu" nillable="true" type="xs:integer"></xs:element>
+                    <xs:element minOccurs="0" name="nombre_proyecto_idu" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="cod_punto_inversion" nillable="true" type="xs:integer"></xs:element>
+                    <xs:element minOccurs="0" name="nombre_punto_inversion" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="cod_zona_influencia_valorizacion" nillable="true" type="xs:integer"></xs:element>
+                    <xs:element minOccurs="0" name="nombre_zona_influencia_valorizacion" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="cod_fase_intervencion" nillable="true" type="xs:integer"></xs:element>
+                    <xs:element minOccurs="0" name="nombre_fase_intervencion" nillable="true" type="xs:string"></xs:element>
                 </xs:sequence>
             </xs:complexType>
             <xs:element name="obtener_centro_costo">
@@ -105,7 +109,7 @@
     <wsdl:message name="obtener_centro_costoResponse">
         <wsdl:part name="parameters" element="ns0:COD_CCOS"></wsdl:part>
     </wsdl:message>
-    <wsdl:portType name="ws_stone_plan_contratacionPortType">
+    <wsdl:portType name="ws_stonePortType">
         <wsdl:operation name="obtener_tramite_notarialXcorreo">
             <wsdl:documentation></wsdl:documentation>
             <wsdl:input message="ns0:obtener_tramite_notarialXcorreoRequest" wsaw:Action="urn:obtener_tramite_notarialXcorreo"></wsdl:input>
@@ -131,7 +135,7 @@
             <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:obtener_centro_costoDataServiceFault"></wsdl:fault>
         </wsdl:operation>
     </wsdl:portType>
-    <wsdl:binding name="ws_stone_plan_contratacionSOAP11Binding" type="ns0:ws_stone_plan_contratacionPortType">
+    <wsdl:binding name="ws_stoneSOAP11Binding" type="ns0:ws_stonePortType">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"></soap:binding>
         <wsdl:operation name="obtener_tramite_notarialXcorreo">
             <soap:operation soapAction="urn:obtener_tramite_notarialXcorreo" style="document"></soap:operation>
@@ -182,7 +186,7 @@
             </wsdl:fault>
         </wsdl:operation>
     </wsdl:binding>
-    <wsdl:binding name="ws_stone_plan_contratacionSOAP12Binding" type="ns0:ws_stone_plan_contratacionPortType">
+    <wsdl:binding name="ws_stoneSOAP12Binding" type="ns0:ws_stonePortType">
         <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"></soap12:binding>
         <wsdl:operation name="obtener_tramite_notarialXcorreo">
             <soap12:operation soapAction="urn:obtener_tramite_notarialXcorreo" style="document"></soap12:operation>
@@ -233,7 +237,7 @@
             </wsdl:fault>
         </wsdl:operation>
     </wsdl:binding>
-    <wsdl:binding name="ws_stone_plan_contratacionHttpBinding" type="ns0:ws_stone_plan_contratacionPortType">
+    <wsdl:binding name="ws_stoneHttpBinding" type="ns0:ws_stonePortType">
         <http:binding verb="POST"></http:binding>
         <wsdl:operation name="obtener_tramite_notarialXcorreo">
             <http:operation location="obtener_tramite_notarialXcorreo"></http:operation>
@@ -272,24 +276,24 @@
             </wsdl:output>
         </wsdl:operation>
     </wsdl:binding>
-    <wsdl:service name="ws_stone_plan_contratacion">
-        <wsdl:port name="SOAP11Endpoint" binding="ns0:ws_stone_plan_contratacionSOAP11Binding">
-            <soap:address location="http://172.16.2.233:9763/services/ws_stone_plan_contratacion.SOAP11Endpoint/"></soap:address>
+    <wsdl:service name="ws_stone">
+        <wsdl:port name="SOAP11Endpoint" binding="ns0:ws_stoneSOAP11Binding">
+            <soap:address location="http://172.16.2.233:9763/services/ws_stone.SOAP11Endpoint/"></soap:address>
         </wsdl:port>
-        <wsdl:port name="SecureSOAP11Endpoint" binding="ns0:ws_stone_plan_contratacionSOAP11Binding">
-            <soap:address location="https://172.16.2.233:9443/services/ws_stone_plan_contratacion.SecureSOAP11Endpoint/"></soap:address>
+        <wsdl:port name="SecureSOAP11Endpoint" binding="ns0:ws_stoneSOAP11Binding">
+            <soap:address location="https://172.16.2.233:9443/services/ws_stone.SecureSOAP11Endpoint/"></soap:address>
         </wsdl:port>
-        <wsdl:port name="SecureSOAP12Endpoint" binding="ns0:ws_stone_plan_contratacionSOAP12Binding">
-            <soap12:address location="https://172.16.2.233:9443/services/ws_stone_plan_contratacion.SecureSOAP12Endpoint/"></soap12:address>
+        <wsdl:port name="SecureSOAP12Endpoint" binding="ns0:ws_stoneSOAP12Binding">
+            <soap12:address location="https://172.16.2.233:9443/services/ws_stone.SecureSOAP12Endpoint/"></soap12:address>
         </wsdl:port>
-        <wsdl:port name="SOAP12Endpoint" binding="ns0:ws_stone_plan_contratacionSOAP12Binding">
-            <soap12:address location="http://172.16.2.233:9763/services/ws_stone_plan_contratacion.SOAP12Endpoint/"></soap12:address>
+        <wsdl:port name="SOAP12Endpoint" binding="ns0:ws_stoneSOAP12Binding">
+            <soap12:address location="http://172.16.2.233:9763/services/ws_stone.SOAP12Endpoint/"></soap12:address>
         </wsdl:port>
-        <wsdl:port name="HTTPEndpoint" binding="ns0:ws_stone_plan_contratacionHttpBinding">
-            <http:address location="http://172.16.2.233:9763/services/ws_stone_plan_contratacion.HTTPEndpoint/"></http:address>
+        <wsdl:port name="HTTPEndpoint" binding="ns0:ws_stoneHttpBinding">
+            <http:address location="http://172.16.2.233:9763/services/ws_stone.HTTPEndpoint/"></http:address>
         </wsdl:port>
-        <wsdl:port name="SecureHTTPEndpoint" binding="ns0:ws_stone_plan_contratacionHttpBinding">
-            <http:address location="https://172.16.2.233:9443/services/ws_stone_plan_contratacion.SecureHTTPEndpoint/"></http:address>
+        <wsdl:port name="SecureHTTPEndpoint" binding="ns0:ws_stoneHttpBinding">
+            <http:address location="https://172.16.2.233:9443/services/ws_stone.SecureHTTPEndpoint/"></http:address>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

@@ -25,9 +25,9 @@
                         <field name="codigo"/>
                         <field name="name"/>
                         <field name="proyecto_idu_id"/>
-                        <field name="proyecto_idu_nombre"/>
+                        <field name="nombre_proyecto_idu"/>
                         <field name="punto_inversion_id"/>
-                        <field name="punto_inversion_nombre"/>
+                        <field name="nombre_punto_inversion"/>
                 </form>
             </field>
         </record>

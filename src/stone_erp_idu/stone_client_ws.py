@@ -27,25 +27,34 @@ from suds.client import Client
 def completar_datos_centro_costo(wsdl_url,centro_costo):
     """
     Metodo que recibe como parámetro de entrada el wsdl del web service de conexión con
-    stone y devuelve un diccionario con información de los centros de costo de la siguiente manera:    
+    stone y devuelve un diccionario con información de los centros de costo de la siguiente manera:
+        
     {'nombre_centro_costo':--value--, 
-                        'nombre_proyecto':--value--, #Nombre del proyecto IDU
-                        'nombre_punto':--value--,  #Nombre del punto de Inversion
-                        'proyecto':--value-- #Código del proyecto IDU
-                        'punto':--value-- #Código del punto de inversión    
-    }    
+                        'cod_proyecto_idu':--value--, #Código de proyecto IDU
+                        'nombre_proyecto_idu':--value--,  #Nombre de Proyecto IDU
+                        'cod_punto_inversion':--value-- #Cödigo punto inversion
+                        'nombre_punto_inversion':--value-- #Nombre del punto de Inversion    
+                        'cod_zona_influencia_valorizacion':--value-- #Código de la zona de influencia de valorización
+                        'nombre_zona_influencia_valorizacion':--value-- #Nombre de la zona de influencia de valorización
+                        'cod_fase_intervencion':--value-- #Código Fase de intervención
+                        'nombre_fase_intervencion':--value-- #Nombre de la fase de intervención
+    }
     """
     client = Client(wsdl_url)
     res={}
     c_costo = int(centro_costo)
     punto_inversion = client.service.obtener_proyecto_punto_inversion(c_costo)
     res['centro_costo']=c_costo
-    res['proyecto_idu']=punto_inversion["nombre_proyecto"]
-    res['punto_inversion']=punto_inversion["nombre_punto"]
-    res['proyecto_idu_id']=punto_inversion["proyecto"]
-    res['punto_inversion_id']=punto_inversion["punto"]
+    res['cod_proyecto_idu']=punto_inversion["cod_proyecto_idu"]
+    res['nombre_proyecto_idu']=punto_inversion["nombre_proyecto_idu"]
+    res['cod_punto_inversion']=punto_inversion["cod_punto_inversion"]
+    res['nombre_punto_inversion']=punto_inversion["nombre_punto_inversion"]
+    res['cod_zona_influencia_valorizacion']=punto_inversion["cod_punto_inversion"]
+    res['nombre_zona_influencia_valorizacion']=punto_inversion["nombre_zona_influencia_valorizacion"]
+    res['cod_fase_intervencion']=punto_inversion["cod_fase_intervencion"]
+    res['nombre_fase_intervencion']=punto_inversion["nombre_fase_intervencion"]
     return res
-    
+
 
 def obtener_centros_costo(wsdl_url):
     """

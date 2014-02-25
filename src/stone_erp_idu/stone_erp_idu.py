@@ -30,10 +30,10 @@ class stone_erp_idu_centro_costo(osv.osv):
         'name':fields.char('Nombre', size=255, readonly=True, select=True),
         'proyecto_idu_id':fields.many2one('stone_erp_idu.proyecto_idu','Proyecto',readonly=True),
         'punto_inversion_id':fields.many2one('stone_erp_idu.punto_inversion','Punto de Inversion',readonly=True),
-        'punto_inversion_nombre':fields.related('punto_inversion_id','name',type="char",relation="stone_erp_idu.punto_inversion",string="Nombre Proyecto IDU", store=False,readonly=True),
-        'punto_inversion_codigo':fields.related('punto_inversion_id','codigo',type="integer",relation="stone_erp_idu.punto_inversion",string="Codigo Proyecto IDU", store=False,readonly=True),
-        'proyecto_idu_nombre':fields.related('proyecto_idu_id','name',type="char",relation="stone_erp_idu.proyecto_idu",string="Nombre Proyecto IDU", store=False,readonly=True),
-        'proyecto_idu_codigo':fields.related('proyecto_idu_id','codigo',type="integer",relation="stone_erp_idu.proyecto_idu",string="Nombre Proyecto IDU", store=False,readonly=True),
+        'nombre_punto_inversion':fields.related('punto_inversion_id','name',type="char",relation="stone_erp_idu.punto_inversion",string="Nombre Proyecto IDU", store=False,readonly=True),
+        'cod_punto_inversion':fields.related('punto_inversion_id','codigo',type="integer",relation="stone_erp_idu.punto_inversion",string="Codigo Proyecto IDU", store=False,readonly=True),
+        'nombre_proyecto_idu':fields.related('proyecto_idu_id','name',type="char",relation="stone_erp_idu.proyecto_idu",string="Nombre Proyecto IDU", store=False,readonly=True),
+        'cod_proyecto_idu':fields.related('proyecto_idu_id','codigo',type="integer",relation="stone_erp_idu.proyecto_idu",string="Nombre Proyecto IDU", store=False,readonly=True),
         
     }
     _sql_constraints=[
@@ -60,8 +60,8 @@ class stone_erp_idu_centro_costo(osv.osv):
         det_cc = stone_client_ws.completar_datos_centro_costo(wsdl, vals['codigo'])
         #Actualizar proyecto IDU Relacionado
         proyecto_idu_obj = self.pool.get('stone_erp_idu.proyecto_idu')
-        ids_proy_idu = proyecto_idu_obj.search(cr,uid,[('codigo','=',det_cc['proyecto_idu_id'])],context=context)
-        vals_proyecto_idu = {'codigo':det_cc['proyecto_idu_id'],'name':det_cc['proyecto_idu']}
+        ids_proy_idu = proyecto_idu_obj.search(cr,uid,[('codigo','=',det_cc['cod_proyecto_idu'])],context=context)
+        vals_proyecto_idu = {'codigo':det_cc['cod_proyecto_idu'],'name':det_cc['nombre_proyecto_idu']}
         id_proy_idu = 0
         if (ids_proy_idu.__len__()==0):
             #insertar
@@ -72,9 +72,9 @@ class stone_erp_idu_centro_costo(osv.osv):
             proyecto_idu_obj.write(cr,uid,id_proy_idu,vals_proyecto_idu,context)
             #Actualizar Punto de Inversion relacionado
         punto_inversion_obj=self.pool.get('stone_erp_idu.punto_inversion')
-        ids_punto_inversion=punto_inversion_obj.search(cr,uid,[('codigo','=',det_cc['punto_inversion_id'])],context=context) 
+        ids_punto_inversion=punto_inversion_obj.search(cr,uid,[('codigo','=',det_cc['cod_punto_inversion'])],context=context) 
         id_punto_inv = 0
-        vals_punto_inversion = {'codigo':det_cc['punto_inversion_id'],'name':det_cc['punto_inversion']}
+        vals_punto_inversion = {'codigo':det_cc['cod_punto_inversion'],'name':det_cc['nombre_punto_inversion']}
         if (ids_punto_inversion.__len__()==0):
             #insertar nuevo valor
             id_punto_inv = punto_inversion_obj.create(cr,uid,vals_punto_inversion,context)

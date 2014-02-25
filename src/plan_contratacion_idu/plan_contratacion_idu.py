@@ -288,28 +288,28 @@ class plan_contratacion_idu_item(osv.osv):
              string="Nombre Centro de Costo",
              store=False,
              readonly=True),
-        'proyecto_idu_codigo':fields.related('centro_costo_id','proyecto_idu_codigo',
+        'cod_proyecto_idu':fields.related('centro_costo_id','cod_proyecto_idu',
              type="integer",
              relation="stone_erp_idu.centro_costo",
              string="Codigo Proyecto IDU",
              store=False,
              readonly=True),
-        'proyecto_idu_nombre':fields.related('centro_costo_id','proyecto_idu_nombre',
+        'nombre_proyecto_idu':fields.related('centro_costo_id','nombre_proyecto_idu',
              type="char",
              relation="stone_erp_idu.centro_costo",
              string="Nombre Proyecto IDU",
              store=False,
              readonly=True),
-        'punto_inversion_codigo':fields.related('centro_costo_id','punto_inversion_codigo',
+        'cod_punto_inversion':fields.related('centro_costo_id','cod_punto_inversion',
              type="integer",
              relation="stone_erp_idu.centro_costo",
              string="Codigo Punto Inversion",
              store=False,
              readonly=True),
-        'punto_inversion_nombre':fields.related('centro_costo_id','punto_inversion_nombre',
+        'nombre_punto_inversion':fields.related('centro_costo_id','nombre_punto_inversion',
              type="char",
              relation="stone_erp_idu.centro_costo",
-             string="Codigo Punto Inversion",
+             string="Nombre Punto Inversion",
              store=False,
              readonly=True),
         'fase_intervencion_id':fields.integer('Codigo Fase Intervención',readonly=True),
@@ -511,24 +511,24 @@ class plan_contratacion_idu_item(osv.osv):
             if (det_cc == False):
                 raise osv.except_osv('Error','No existe el Centro de Costo')
             else :
-                stone_erp_idu_obj = self.pool.get('stone_erp_idu.centro_costo')
+                
                 #Mejor guardar provisionalmente y despues se hace la actualizacion y se le pone el nombre jaja
-                id_cc = stone_erp_idu_obj.create(cr,uid,{'codigo':det_cc['centro_costo'],'name':det_cc['centro_costo']})
-                stone_erp_idu_obj.actualizar_centros_costo(cr,uid,context)
+                id_cc = centro_costo_obj.create(cr,uid,{'codigo':det_cc['centro_costo'],'name':det_cc['centro_costo']})
+                centro_costo_obj.actualizar_centros_costo(cr,uid,context)
         else :
             id_cc = ids[0]
         #Actualiza valores completo centro de costo -> No se hace por defecto para evitar ralentizar la aplicacion"
         vals = centro_costo_obj.completar_centro_costo(cr,uid,{'codigo':centro_costo},context = context)
         centro_costo_obj.write(cr,uid,id_cc,vals,context = context)
         centro_costo = centro_costo_obj.browse(cr,uid,id_cc,context) 
-        #Completar Diccionario
+        #Completar Diccionarionombre_punto_inversion
         
         res = {'value':{'centro_costo_id':id_cc,
                         'centro_costo_nombre':centro_costo.name,
-                        'punto_inversion_codigo':centro_costo.punto_inversion_codigo,
-                        'punto_inversion_nombre':centro_costo.punto_inversion_nombre,
-                        'proyecto_idu_codigo':centro_costo.proyecto_idu_codigo,
-                        'proyecto_idu_nombre':centro_costo.proyecto_idu_nombre}}
+                        'cod_punto_inversion':centro_costo.cod_punto_inversion,
+                        'nombre_punto_inversion':centro_costo.nombre_punto_inversion,
+                        'cod_proyecto_idu':centro_costo.cod_proyecto_idu,
+                        'nombre_proyecto_idu':centro_costo.nombre_proyecto_idu}}
         return res
 
     def update_vals(self,cr,uid,vals,context=None):
