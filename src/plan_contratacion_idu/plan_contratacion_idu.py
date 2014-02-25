@@ -272,12 +272,16 @@ class plan_contratacion_idu_item(osv.osv):
         'description': fields.text('Objeto Contractual',
              readonly=True,
              states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
-        'name': fields.many2one('plan_contratacion_idu.plan','Plan contractual',
+        'name':fields.many2one('plan_contratacion_idu.plan','Plan contractual',
              select=True,
              ondelete='cascade',
              readonly=True,
+             help="Vigencia Plan Contractual",
              states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
-        'centro_costo':fields.char('Centro de Costo',size=512),
+        'centro_costo':fields.char('Centro de Costo',size=512,
+             readonly=True,
+             help="Ingrese el número del Centro de Costo para consultar la información",
+             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'centro_costo_id': fields.many2one('stone_erp_idu.centro_costo','Codigo Centro de Costo',
              readonly=True,
              select=True,
@@ -312,8 +316,8 @@ class plan_contratacion_idu_item(osv.osv):
              string="Nombre Punto Inversion",
              store=False,
              readonly=True),
-        'fase_intervencion_id':fields.integer('Codigo Fase Intervención',readonly=True),
-        'fase_intervencion':fields.char('Nombre Fase Intervención', size=255, readonly=True),
+        'cod_fase_intervencion':fields.integer('Codigo Fase Intervención',readonly=True),
+        'nombre_fase_intervencion':fields.char('Nombre Fase Intervención', size=255, readonly=True),
         'fuente_id': fields.many2one('plan_contratacion_idu.fuente','Fuente de Financiación',
              select=True,
              ondelete='cascade',
@@ -372,6 +376,12 @@ class plan_contratacion_idu_item(osv.osv):
              size=255,
              readonly=True,
              states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+        'localizacion':fields.selection([('entidad', '66-Entidad'),('metropolitana', '77-Metropolitana'),('localidad', 'Localidad')],
+             'localizacion',
+             select=True,
+             help="Localización del item",
+             readonly=True,
+             states={'draft':[('readonly',False)],'estudios_previos':[('readonly',False)]}),
         'localidad_id': fields.many2many('base_map.district','plan_contratacion_idu_localidad_item',
              'base_localidad_id',
              'plan_localidad_id',
@@ -380,10 +390,6 @@ class plan_contratacion_idu_item(osv.osv):
              ondelete='cascade',
              readonly=True,
              states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
-         'entidad':fields.boolean('Entidad',
-             help="cuando el item no aplica para localidad y se destina para la entidad",
-             readonly=True,
-             states={'draft':[('readonly',False)],'estudios_previos':[('readonly',False)]}),
         'currency_id': fields.related('plan_id','currency_id',
              type='many2one',
              relation='res.currency',
@@ -479,6 +485,7 @@ class plan_contratacion_idu_item(osv.osv):
     _defaults = {
         'state': 'draft',
         'progress_rate':0,
+        'localizacion': 'entidad'
     }
 
     _constraints = [(_check_fechas_programadas,
@@ -581,16 +588,7 @@ class plan_contratacion_idu_item(osv.osv):
         }
 
     def onchange_a_monto_agotable(self, cr, uid, ids, a_monto_agotable, context=None):
-        if a_monto_agotable:  
-            return {'value': {'plazo_de_ejecucion': 0}}
-        else:
-            return {'value': {'plazo_de_ejecucion': 0}}
-
-    def onchange_entidad(self, cr, uid, ids, entidad, context=None):
-        if entidad:
-            return {'value': {'localidad_id': False}}
-        else:
-            return {'value': {'localidad_id': False}}
+        return {'value': {'plazo_de_ejecucion': 0}}
 
     def onchange_numero_orfeo(self, cr, uid, ids, numero_orfeo, context=None):
         if orfeo_existe_radicado(numero_orfeo):

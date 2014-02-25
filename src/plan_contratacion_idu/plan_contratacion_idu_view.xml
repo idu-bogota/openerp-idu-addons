@@ -71,6 +71,7 @@
             <field name="model">plan_contratacion_idu.item</field>
             <field name="arch" type="xml">
                <search string="Plan Contratación Items">
+                    <filter icon="terp-check" string="Vigencia" name="name" domain="[('state', '=','open')]" help="Vigencia del Plan"/>
                     <field name="dependencia_id" string="Dependencia"/>
                     <field name="localidad_id" string="Localidad"/>
                     <separator/>
@@ -134,28 +135,9 @@
                         </header>
                     </group>
                     <sheet>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1>
-                                <field name="name" invisible="1"/>
-                            </h1>
-                        </div>
                         <group>
                             <field name="codigo_unspsc"/>
                             <field name="clasificacion_id"/>
-                        </group>
-                        <group col="4" colspan="4">
-                            <separator colspan="4"/>
-                            <field name="centro_costo" colspan="4" on_change="on_change_centro_costo(centro_costo)" />
-                            <field name="centro_costo_id"/>
-                            <field name="centro_costo_nombre" />
-                            <field name="cod_proyecto_idu"/>
-                            <field name="nombre_proyecto_idu"/>
-                            <field name="cod_punto_inversion"/>
-                            <field name="nombre_punto_inversion"/>
-                            <field name="localidad_id"/>
-                            <field name="entidad" on_change="onchange_entidad(entidad)"/>
-                            <separator colspan="4" />
                         </group>
                         <group>
                             <field name="currency_id" invisible="1"/>
@@ -170,22 +152,50 @@
                             <field name="progress_rate" widget="progressbar"/>
                         </group>
                         <notebook colspan="6">
+                            <page string="Información Centro de Costo">
+                                <header class="oe_edit_only">
+                                    <group col="2" colspan="2">
+                                        <field name="centro_costo" on_change="on_change_centro_costo(centro_costo)"/>
+                                    </group>
+                                </header>
+                                <group col="4" colspan="4">
+                                    <field name="centro_costo_id"/>
+                                    <field name="centro_costo_nombre" />
+                                    <field name="cod_proyecto_idu"/>
+                                    <field name="nombre_proyecto_idu"/>
+                                    <field name="cod_punto_inversion"/>
+                                    <field name="nombre_punto_inversion"/>
+                                    <field name="cod_fase_intervencion"/>
+                                    <field name="nombre_fase_intervencion"/>
+                                </group>
+                            </page>
                             <page string="Detalles">
                                 <group name="detalles">
+                                    <field name="localizacion"/>
+                                    <field name="localidad_id" attrs="{'invisible':[('localizacion','!=','localidad')]}"/>
                                     <field name="description"/>
-                                    <field name="plazo_de_ejecucion" attrs="{'readonly':[('a_monto_agotable','=',True)]}"/>
+                                    <field name="plazo_de_ejecucion" attrs="{'readonly':[('a_monto_agotable','=',True) or ('state','=','radicado')]}"/>
                                     <field name="a_monto_agotable" on_change="onchange_a_monto_agotable(a_monto_agotable)"/>
                                     <field name="unidad_meta_fisica"/>
                                     <field name="cantidad_meta_fisica"/>
                                 </group>
                             </page>
-                            <page string="Planificación de Fechas">
+                            <page string="Fechas">
                                 <group name="fechas" string="Fechas Planificadas">
                                     <separator colspan="2"/>
                                     <field name="fecha_programada_radicacion"/>
                                     <field name="fecha_programada_crp"/>
                                     <field name="fecha_programada_acta_inicio"/>
                                  </group>
+                                 <group name="informacion_verificacion" string="Fechas de Ejecución" col="4" colspan="1">
+                                    <field name="numero_orfeo" on_change="onchange_numero_orfeo(numero_orfeo)"/>
+                                    <field name="fecha_radicado_orfeo"/>
+                                    <field name="numero_crp"/>
+                                    <field name="numero_contrato"/>
+                                    <field name="nit_beneficiario"/>
+                                    <field name="fecha_acta_inicio"/>
+                                    <field name="fecha_acta_liquidacion"/>
+                                </group>
                             </page>
                             <page string="Pagos">
                                 <group name="pagos_programados" string="Pagos Programados">
@@ -206,7 +216,7 @@
                                             <field name="total_programado_rezago" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
                                      </group>
                                </group>
-                               <group name="giros_realizados" string="Giros Realizados">
+                               <group name="giros_realizados" string="Pagos Realizados">
                                     <field name="plan_pagos_giro_ids" nolabel="1">
                                     <tree string="Giros Realizados" editable="bottom">
                                         <field name="date"/>
@@ -214,17 +224,6 @@
                                     </tree>
                                     </field>   
                                </group>
-                            </page>
-                            <page string="Información de Verificación">
-                                <group name="informacion_verificacion" col="4" colspan="1">
-                                    <field name="numero_orfeo" on_change="onchange_numero_orfeo(numero_orfeo)"/>
-                                    <field name="fecha_radicado_orfeo"/>
-                                    <field name="numero_crp"/>
-                                    <field name="numero_contrato"/>
-                                    <field name="nit_beneficiario"/>
-                                    <field name="fecha_acta_inicio"/>
-                                    <field name="fecha_acta_liquidacion"/>
-                                </group>
                             </page>
                         </notebook>
                     </sheet>
