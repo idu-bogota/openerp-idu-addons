@@ -34,7 +34,9 @@ class stone_erp_idu_centro_costo(osv.osv):
         'cod_punto_inversion':fields.related('punto_inversion_id','codigo',type="integer",relation="stone_erp_idu.punto_inversion",string="Codigo Proyecto IDU", store=False,readonly=True),
         'nombre_proyecto_idu':fields.related('proyecto_idu_id','name',type="char",relation="stone_erp_idu.proyecto_idu",string="Nombre Proyecto IDU", store=False,readonly=True),
         'cod_proyecto_idu':fields.related('proyecto_idu_id','codigo',type="integer",relation="stone_erp_idu.proyecto_idu",string="Nombre Proyecto IDU", store=False,readonly=True),
-        
+        'fase_intervencion_id':fields.many2one('stone_erp.fase_intervencion','Fase de Intervencion',readonly=True),
+        'cod_fase_intervencion':fields.related('fase_intervencion_id','codigo',type="integer",relation='stone_erp.fase_intervencion',string="Código Fase de Intervencion"),
+        'nombre_fase_intervencion':fields.related('fase_intervencion_id','name',type="text",relation='stone_erp.fase_intervencion',string="Nombre Fase de Intervencion"),
     }
     _sql_constraints=[
         ('unique_codigu','unique(codigo)','El centro de costo qu8e intenta ingresar, ya se encuentra registrado'),
@@ -82,8 +84,19 @@ class stone_erp_idu_centro_costo(osv.osv):
                 #actualizar nuevo valor
             id_punto_inv = ids_punto_inversion[0]
             punto_inversion_obj.write(cr,uid,id_punto_inv,vals_punto_inversion,context)
+            
+        fase_intervencion_obj=self.pool.get('stone_erp.fase_intervencion')
+        ids_fase_intervencion = fase_intervencion_obj.search(cr,uid,[('codigo','=',det_cc['cod_fase_intervencion'])])
+        id_fase_interv = 0
+        vals_fase_interv = {'codigo':det_cc['cod_fase_intervencion'],'name':det_cc['nombre_fase_intervencion']}
+        if (ids_fase_intervencion.__len__()==0):
+            id_fase_interv=fase_intervencion_obj.create(cr,uid,vals_fase_interv,context)
+        else :
+            id_fase_interv=ids_fase_intervencion[0]
+            fase_intervencion_obj.write(cr,uid,id_fase_interv,vals_fase_interv,context)
         vals['proyecto_idu_id']=id_proy_idu
         vals['punto_inversion_id']=id_punto_inv
+        vals['fase_intervencion_id']=id_fase_interv
         return vals
 
 stone_erp_idu_centro_costo()
@@ -113,3 +126,17 @@ class stone_erp_proyecto_idu (osv.osv):
         ('unique_proyecto_idu_codigo','unique(codigo)','El Proyecto IDU que intenta ingresar, ya se encuentra registrado'),
     ]
 stone_erp_proyecto_idu()
+
+class stone_erp_fase_intervencion(osv.osv):
+    _name = "stone_erp.fase_intervencion"
+    _rec_name="codigo"
+    _columns = {
+        'codigo':fields.integer('Codigo'),
+        'name':fields.char('Nombre',size=1025),
+    }
+
+    _sql_constraints=[
+        ('unique_fase_intervencion','unique(codigo)','La fase de intervención que intenta ingresar, ya se encuentra registrado'),
+    ]
+    
+

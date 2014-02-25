@@ -28,6 +28,8 @@
                         <field name="nombre_proyecto_idu"/>
                         <field name="punto_inversion_id"/>
                         <field name="nombre_punto_inversion"/>
+                        <field name="fase_intervencion_id"/>
+                        <field name="nombre_fase_intervencion"/>
                 </form>
             </field>
         </record>
