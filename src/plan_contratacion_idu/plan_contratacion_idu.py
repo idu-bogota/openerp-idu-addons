@@ -66,8 +66,7 @@ class plan_contratacion_idu_plan(osv.osv):
              required=True),
         'active':fields.boolean('Activo'),
         'item_ids': fields.one2many('plan_contratacion_idu.item', 'plan_id', 'Items Plan de Contratacion'),
-        'name_items':fields.one2many('plan_contratacion_idu.item', 'name', 'Items Plan de Contratacion'),
-        'currency_id': fields.function(_get_currency,
+         'currency_id': fields.function(_get_currency,
              type='many2one',
              relation="res.currency",
              method=True,
@@ -138,6 +137,24 @@ class plan_contratacion_idu_item(osv.osv):
             res[record['id']]['total_programado_rezago'] = sumatoria + (record.presupuesto - sumatoria)
         return res
 
+    def _total_pagos_realizados(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return res
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        records = self.browse(cr, uid, ids, context=context)
+        res = {}
+        for record in records:
+            sumatoria = 0
+            res[record['id']] = {}
+            for pago in record.plan_pagos_giro_ids:
+                sumatoria += pago.valor
+            res[record['id']]['total_pagos_realizados'] = sumatoria
+            res[record['id']]['presupuesto_rezago_realizado'] = record.presupuesto - sumatoria
+            res[record['id']]['total_realizado_rezago'] = sumatoria + (record.presupuesto - sumatoria)
+        return res
+    
     def _get_plan_item_from_pago_records(self, cr, uid, pago_ids, context=None):
         """
         Retorna los IDs del plan_item a ser recalculados cuando cambia un pago_item
@@ -263,23 +280,21 @@ class plan_contratacion_idu_item(osv.osv):
         'codigo_unspsc': fields.char('Codigo UNSPSC',
              help='Codificación de bienes y servicios, Colombia compra eficiente',
              readonly=True,
+             required=True,
              states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'dependencia_id': fields.many2one('hr.department','Dependencia',
              select=True,
              ondelete='cascade',
+             required=True,
              readonly=True,
              states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'description': fields.text('Objeto Contractual',
              readonly=True,
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
-        'name':fields.many2one('plan_contratacion_idu.plan','Plan contractual',
-             select=True,
-             ondelete='cascade',
-             readonly=True,
-             help="Vigencia Plan Contractual",
+             required=True,
              states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'centro_costo':fields.char('Centro de Costo',size=512,
              readonly=True,
+             required=True,
              help="Ingrese el número del Centro de Costo para consultar la información",
              states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'centro_costo_id': fields.many2one('stone_erp_idu.centro_costo','Codigo Centro de Costo',
@@ -316,17 +331,29 @@ class plan_contratacion_idu_item(osv.osv):
              string="Nombre Punto Inversion",
              store=False,
              readonly=True),
-        'cod_fase_intervencion':fields.integer('Codigo Fase Intervención',readonly=True),
-        'nombre_fase_intervencion':fields.char('Nombre Fase Intervención', size=255, readonly=True),
+        'cod_fase_intervencion':fields.related('centro_costo_id','cod_fase_intervencion',
+             type="integer",
+             relation="stone_erp_idu.centro_costo",
+             string="Codigo Fase Intervención",
+             store=False,
+             readonly=True),
+        'nombre_fase_intervencion':fields.related('centro_costo_id','nombre_fase_intervencion',
+             type="char",
+             relation="stone_erp_idu.centro_costo",
+             string="Nombre Fase Intervencion",
+             store=False,
+             readonly=True),
         'fuente_id': fields.many2one('plan_contratacion_idu.fuente','Fuente de Financiación',
              select=True,
              ondelete='cascade',
              readonly=True,
+             required=True,
              states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'state':fields.selection([('draft', 'Borrador'),('estudios_previos', 'Estudios Previos'),('radicado', 'Radicado'),
              ('suscrito', 'Contrato Suscrito'),('ejecucion', 'En ejecución'),('ejecutado', 'Ejecutado'),
              ('no_realizado', 'No realizado')],'State',
-             track_visibility='onchange', required=True),
+             track_visibility='onchange',
+             required=True),
         'fecha_programada_radicacion': fields.date ('Fecha Radicacion en DTPS y/o DTGC',
              required=False,
              select=True,
@@ -347,11 +374,13 @@ class plan_contratacion_idu_item(osv.osv):
              select=True,
              ondelete='cascade',
              readonly=True,
+             required=True,
              states={'draft':[('readonly',False)],'estudios_previos':[('readonly',False)]}),
         'clasificacion_id': fields.many2one('plan_contratacion_idu.clasificador_proyectos','Clasificación Proyecto',
              select=True,
              ondelete='cascade',
              readonly=True,
+             required=True,
              states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'presupuesto': fields.float ('Presupuesto',
              required=True,
@@ -376,11 +405,12 @@ class plan_contratacion_idu_item(osv.osv):
              size=255,
              readonly=True,
              states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
-        'localizacion':fields.selection([('entidad', '66-Entidad'),('metropolitana', '77-Metropolitana'),('localidad', 'Localidad')],
-             'localizacion',
+        'localizacion':fields.selection([('entidad', '66 - Entidad'),('metropolitana', '77 - Metropolitana'),('localidad', 'Localidad')],
+             'Localizacion',
              select=True,
              help="Localización del item",
              readonly=True,
+             required=True,
              states={'draft':[('readonly',False)],'estudios_previos':[('readonly',False)]}),
         'localidad_id': fields.many2many('base_map.district','plan_contratacion_idu_localidad_item',
              'base_localidad_id',
@@ -398,12 +428,14 @@ class plan_contratacion_idu_item(osv.osv):
              readonly=True),
         'tipo_proceso_id': fields.many2one('plan_contratacion_idu.plan_tipo_proceso','Tipo Proceso',
              select=True,
+             required=True,
              ondelete='cascade',
              readonly=True,
              states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'tipo_proceso_seleccion_id': fields.many2one('plan_contratacion_idu.plan_tipo_proceso_seleccion','Tipo Proceso de Selección',
              select=True,
              ondelete='cascade',
+             required=True,
              readonly=True,
              states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'plan_pagos_item_ids': fields.one2many('plan_contratacion_idu.plan_pagos_item','plan_contratacion_item_id',
@@ -411,6 +443,7 @@ class plan_contratacion_idu_item(osv.osv):
              select=True,
              ondelete='cascade',
              readonly=True,
+             required=True,
              states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'plan_pagos_giro_ids': fields.one2many('plan_contratacion_idu.plan_pagos_giro',
              'plan_contratacion_item_id',
@@ -450,6 +483,38 @@ class plan_contratacion_idu_item(osv.osv):
                 'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['presupuesto', 'presupuesto'], 10),
                 'plan_contratacion_idu.plan_pagos_item': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
             }),
+        'total_pagos_realizados': fields.function(_total_pagos_realizados,
+             type='float',
+             multi="presupuesto",
+             string='Total pagos realizados',
+             obj="res.currency",
+             digits_compute=dp.get_precision('Account'),
+             store={
+                'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_giro_ids', 'presupuesto'], 10),
+                'plan_contratacion_idu.plan_pagos_giro': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
+            }),
+        'presupuesto_rezago_realizado': fields.function(_total_pagos_realizados,
+             type='float',
+             multi="presupuesto",
+             string='Rezago',
+             obj="res.currency",
+             digits_compute=dp.get_precision('Account'),
+             store={
+                'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_giro_ids', 'presupuesto'], 10),
+                'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['presupuesto', 'presupuesto'], 10),
+                'plan_contratacion_idu.plan_pagos_giro': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
+            }),
+        'total_realizado_rezago': fields.function(_total_pagos_realizados,
+             type='float',
+             multi="presupuesto",
+             string='Total',
+             obj="res.currency",
+             digits_compute=dp.get_precision('Account'),
+             store={
+                'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_giro_ids', 'presupuesto'], 10),
+                'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['presupuesto', 'presupuesto'], 10),
+                'plan_contratacion_idu.plan_pagos_giro': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
+            }),
         'numero_orfeo':fields.char('Número Radicado Orfeo',
              help='Validado desdes Orfeo',
              states={'estudios_previos':[('readonly',False)]}, readonly=True,
@@ -485,23 +550,22 @@ class plan_contratacion_idu_item(osv.osv):
     _defaults = {
         'state': 'draft',
         'progress_rate':0,
-        'localizacion': 'entidad'
     }
 
     _constraints = [(_check_fechas_programadas,
                     "La fecha programada CRP debe ser posterior a la fecha programada de radicación y anterior a la fecha programada para la aprobación del acta de Inicio",
                     ['fecha_programada_crp','fecha_programada_acta_inicio']),
                     (_check_state_radicado,
-                    "Para cambiar el estado a Radicado debe ingresar el un número válido de radicado Orfeo en información de verificación",
+                    "Para cambiar el estado a Radicado debe ingresar el un número válido de radicado Orfeo en Fechas de Ejecución",
                     ['state', 'numero_orfeo']),
                     (_check_state_suscrito,
-                    "Para cambiar el estado a Contrato Suscrito debe ingresar el número CRP en información de verificación",
+                    "Para cambiar el estado a Contrato Suscrito debe ingresar el número CRP en Fechas de Ejecución",
                     ['state']),
                     (_check_state_ejecucion,
-                    "Para cambiar el estado a Ejecucion debe ingresar el número del contrato en información de verificación",
+                    "Para cambiar el estado a Ejecucion debe ingresar el número del contrato en Fechas de Ejecución",
                     ['state']),
                     (_check_state_ejecutado,
-                    "Para cambiar el estado a Ejecutado debe ingresar el número del contrato en información de verificación",
+                    "Para cambiar el estado a Ejecutado debe ingresar el número del contrato en Fechas de Ejecución",
                     ['state']),
                     ]
 
@@ -535,7 +599,9 @@ class plan_contratacion_idu_item(osv.osv):
                         'cod_punto_inversion':centro_costo.cod_punto_inversion,
                         'nombre_punto_inversion':centro_costo.nombre_punto_inversion,
                         'cod_proyecto_idu':centro_costo.cod_proyecto_idu,
-                        'nombre_proyecto_idu':centro_costo.nombre_proyecto_idu}}
+                        'nombre_proyecto_idu':centro_costo.nombre_proyecto_idu,
+                        'cod_fase_intervencion':centro_costo.cod_fase_intervencion,
+                        'nombre_fase_intervencion':centro_costo.nombre_fase_intervencion}}
         return res
 
     def update_vals(self,cr,uid,vals,context=None):

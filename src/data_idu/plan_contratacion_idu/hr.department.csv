@@ -1,17 +1,34 @@
-id,company_id/id,parent_id/id,child_ids/id,manager_id/id,name,note
-__export__.hr_department_10,base.main_company,,,,DTE,
-__export__.hr_department_11,base.main_company,,,,DTAV,
-__export__.hr_department_12,base.main_company,,,,DTGC,
-__export__.hr_department_15,base.main_company,,,,DTGJ,
-__export__.hr_department_17,base.main_company,,,,STRT,
-__export__.hr_department_174,base.main_company,,,,DTP,
-__export__.hr_department_20,base.main_company,,,,DTAI,
-__export__.hr_department_24,base.main_company,,,,STRF,
-__export__.hr_department_29,base.main_company,,,,OAP,
-__export__.hr_department_299,base.main_company,,,,OTC,
-__export__.hr_department_32,base.main_company,,,,DTM,
-__export__.hr_department_36,base.main_company,,,,DTD,
-__export__.hr_department_66,base.main_company,,,,DTDP,
-__export__.hr_department_72,base.main_company,,,,DTC,
-__export__.hr_department_9,base.main_company,,,,STRH,
-__export__.hr_department_1,base.main_company,,,,OAC,
+id,company_id/id,codigo,parent_id/id,name
+__export__.hr_department_1,base.main_company,105,,DG - DIRECCIÓN GENERAL                       
+__export__.hr_department_2,base.main_company,115,__export__.hr_department_1,OAP - OFICINA ASESORA DE PLANEACIÓN           
+__export__.hr_department_3,base.main_company,125,__export__.hr_department_1,OTC - OFICINA ATENCIÓN AL CIUDADANO           
+__export__.hr_department_4,base.main_company,135,__export__.hr_department_1,OCI - OFICINA DE CONTROL INTERNO              
+__export__.hr_department_5,base.main_company,145,__export__.hr_department_1,OAC - OFICINA ASESORA DE COMUNICACIONES       
+__export__.hr_department_6,base.main_company,155,__export__.hr_department_1,OCD - OFICINA DE CONTROL DISCIPLINARIO        
+__export__.hr_department_7,base.main_company,205,__export__.hr_department_1,SGDU - SUBDIRECCIÓN GENERAL DESARROLLO URBANO  
+__export__.hr_department_8,base.main_company,215,__export__.hr_department_7,DTE - DIRECCIÓN TÉCNICA ESTRATEGICA           
+__export__.hr_department_9,base.main_company,225,__export__.hr_department_7,DTP - DIRECCIÓN TÉCNICA DE PROYECTOS          
+__export__.hr_department_10,base.main_company,305,__export__.hr_department_1,SGI - SUBDIRECCIÓN GRAL DE INFRAESTRUCTURA    
+__export__.hr_department_11,base.main_company,315,__export__.hr_department_10,DTD - DIRECCIÓN TÉCNICA DE DISEÑO DE PROYECTOS
+__export__.hr_department_12,base.main_company,325,__export__.hr_department_10,DTDP - DIRECCIÓN TÉCNICA DE PREDIOS            
+__export__.hr_department_13,base.main_company,335,__export__.hr_department_10,DTC - DIRECCIÓN TÉCNICA DE CONSTRUCCIONES     
+__export__.hr_department_14,base.main_company,336,__export__.hr_department_13,STESV - S. T. DE EJECUCIÓN SUBSISTEMA VIAL      
+__export__.hr_department_15,base.main_company,346,__export__.hr_department_13,STEST - S.T. EJECUCIÓN SUBSISTEMA TRANSPORTE    
+__export__.hr_department_16,base.main_company,355,__export__.hr_department_10,DTM - DIRECCIÓN TÉCNICA DE MANTENIMIENTO      
+__export__.hr_department_17,base.main_company,356,__export__.hr_department_16,STMSV - S.T. DE MANTENIMIENTO SUBSISTEMA VIAL   
+__export__.hr_department_18,base.main_company,366,__export__.hr_department_16,STMST - S.T. DE MANTENIMIENTO SUBSISTEMA TRANSPO
+__export__.hr_department_19,base.main_company,375,__export__.hr_department_10,DTAI - D. TÉCNICA DE ADMON INFRAESTRUCTURA     
+__export__.hr_department_20,base.main_company,405,__export__.hr_department_1,SGJ - SUBDIRECCIÓN GENERAL JURIDICA           
+__export__.hr_department_21,base.main_company,415,__export__.hr_department_20,DTPS - DIRECCIÓN TÉCNICA DE PROCESOS SELECTIVOS
+__export__.hr_department_22,base.main_company,425,__export__.hr_department_20,DTGJ - DIRECCIÓN TÉCNICA DE GESTIÓN JUDICIAL   
+__export__.hr_department_23,base.main_company,435,__export__.hr_department_20,DTGC - DIRECCIÓN TÉCNICA DE GESTION CONTRACTUAL
+__export__.hr_department_24,base.main_company,505,__export__.hr_department_1,SGGC - SUBDIRECCIÓN GRAL DE GESTIÓN CORPORATIVA
+__export__.hr_department_25,base.main_company,515,__export__.hr_department_24,DTAF - DIRECCIÓN TÉC ADMINISTRATIVA Y FINANCIER
+__export__.hr_department_26,base.main_company,516,__export__.hr_department_25,STRH - S.T. DE RECURSOS HUMANOS                
+__export__.hr_department_27,base.main_company,526,__export__.hr_department_25,STRF - S.T. DE RECURSOS FISICOS                
+__export__.hr_department_28,base.main_company,536,__export__.hr_department_25,STRT - S.T. DE RECURSOS TECNOLÓGICOS           
+__export__.hr_department_29,base.main_company,546,__export__.hr_department_25,STPC - S.T. PRESUPUESTO Y CONTABLILIDAD        
+__export__.hr_department_30,base.main_company,556,__export__.hr_department_25,STTR - S.T. DE TESORERIA Y RECAUDO             
+__export__.hr_department_31,base.main_company,565,__export__.hr_department_24,DTAV - DIRECCIÓN TÉCNICA APOYO ALA VALORIZACION
+__export__.hr_department_32,base.main_company,566,__export__.hr_department_31,STJEF - S.T. JURIDICA Y EJECUCIONES FISCALES    
+__export__.hr_department_33,base.main_company,576,__export__.hr_department_31,STOP - S.T. DE OPERACIONES  

@@ -71,9 +71,12 @@
             <field name="model">plan_contratacion_idu.item</field>
             <field name="arch" type="xml">
                <search string="Plan Contratación Items">
-                    <filter icon="terp-check" string="Vigencia" name="name" domain="[('state', '=','open')]" help="Vigencia del Plan"/>
+                    <filter icon="terp-check" string="Vigencia" name="plan_id" domain="[('state', '=','open')]" help="Vigencia del Plan"/>
+                    <separator/>
                     <field name="dependencia_id" string="Dependencia"/>
+                    <field name="localizacion" string="Localización"/>
                     <field name="localidad_id" string="Localidad"/>
+                    <field name="plan_id" string="Vigencia"/>
                     <separator/>
                     <filter name="draft" string="Borrador" domain="[('state','=','draft')]" help="Estado del item en Borrador" icon="terp-check"/>
                     <filter name="estudios_previos" string="Estudios Previos" domain="[('state','=','estudios_previos')]" help="Estado del item en Estudios Previos" icon="terp-check"/>
@@ -136,6 +139,7 @@
                     </group>
                     <sheet>
                         <group>
+                            <field name="plan_id"/>
                             <field name="codigo_unspsc"/>
                             <field name="clasificacion_id"/>
                         </group>
@@ -223,6 +227,16 @@
                                         <field name="valor" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     </tree>
                                     </field>   
+                               </group>
+                               <group>
+                                     <group class="oe_subtotal_footer oe_right" name="total_pagos_realizados_item">>
+                                         <field name="total_pagos_realizados" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                         <label for="presupuesto_rezago_realizado"/>
+                                            <div>
+                                                <field name="presupuesto_rezago_realizado" string="Rezago" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                            </div>
+                                            <field name="total_realizado_rezago" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
+                                     </group>
                                </group>
                             </page>
                         </notebook>
