@@ -34,7 +34,7 @@
                             <field name="state" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                             <field name="active" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                         </group>
-                        <field name="item_ids"/>
+                        <field name="item_ids" context="{'plan_id': active_id}" />
                          <field name="currency_id" invisible="1"/>
                         <group>
                             <group class="oe_subtotal_footer oe_right" name="total_pagos_programado_item">>
