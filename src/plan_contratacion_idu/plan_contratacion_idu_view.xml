@@ -137,7 +137,7 @@
                     </group>
                     <sheet>
                         <group>
-                            <field name="plan_id"/>
+                            <field name="plan_id" readonly="1" />
                             <field name="codigo_unspsc"/>
                             <field name="clasificacion_id"/>
                         </group>
