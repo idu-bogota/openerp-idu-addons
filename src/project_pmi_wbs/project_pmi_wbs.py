@@ -108,7 +108,7 @@ class project_pmi_wbs_item(osv.osv):
         # compute planned_hours, total_hours, effective_hours specific to each project
         cr.execute("""
             SELECT
-                wbs_item.id, COALESCE(wbs_item.quantity, 0.0), COALESCE(SUM(wr.quantity), 0.0), wbs_item.type, wbs_item.tracking_type, COUNT(t.id), SUM(t.progress),wbs_item.state
+                wbs_item.id, COALESCE(wbs_item.quantity, 0.0), COALESCE(SUM(wr.quantity), 0.0), wbs_item.type,wbs_item.weight, wbs_item.tracking_type, COUNT(t.id), SUM(t.progress),wbs_item.state
             FROM
                 project_pmi_wbs_item wbs_item
                 LEFT JOIN project_pmi_wbs_work_record wr ON wr.wbs_item_id = wbs_item.id
@@ -121,11 +121,14 @@ class project_pmi_wbs_item(osv.osv):
         res = dict([(id, {'progress_rate':0.0,'planned_quantity':0.0,'effective_quantity':0.0,'excess_progress':0.0}) for id in child_parent])
         all_records = cr.fetchall()
 
-        for id, planned, effective, type, tracking_type, task_count, task_progress, state in all_records:
+        for id, planned, effective, type, weight, tracking_type, task_count, task_progress, state in all_records:
             res[id]['type'] = type
             res[id]['state'] = state
+            res[id]['progress_rate'] = 0
             task_progress = task_progress or 0
             # add the values specific to id to all parent wbs_items of id in the result
+            if(not 'weight' in res[id] and weight != None ):
+                res[id]['weight'] = (weight/100)
             if res[id]['type'] == 'work_package' and tracking_type == 'tasks':
                 planned += task_count * 100
                 effective += task_progress
@@ -136,33 +139,52 @@ class project_pmi_wbs_item(osv.osv):
         for id in sorted(child_parent.keys(), reverse=True):
             progress = 0.0
             value = 1
-            while id:
-                if res[id]['planned_quantity'] and res[id]['type'] == 'work_package':
-                    progress = round(100.0 * res[id]['effective_quantity'] / res[id]['planned_quantity'], 2)
-                    if progress > 99.99:
-                        res[id]['excess_progress'] = progress - 99.99
-                        progress = 99.99
-                        if res[id]['state'] == 'done':
-                            res[id]['progress_rate'] = 100.0
-                        else:
-                            res[id]['progress_rate'] = progress
+            if id == 895:
+                value = 1
+            #while id:
+            if res[id]['planned_quantity'] and res[id]['type'] == 'work_package':
+                progress = round(100.0 * res[id]['effective_quantity'] / res[id]['planned_quantity'], 2)
+                if progress > 99.99:
+                    res[id]['excess_progress'] = progress - 99.99
+                    progress = 99.99
+                    if res[id]['state'] == 'done':
+                        res[id]['progress_rate'] = 100.0
                     else:
                         res[id]['progress_rate'] = progress
                 else:
-                    number = self._get_values_dictionary(child_parent,id)
-                    if number > 0:
-                        value *= number
-                    res[id]['progress_rate'] += progress / value
-                id = child_parent[id]
+                    res[id]['progress_rate'] = progress
+                if('weight' in res[id]):
+                    id_parent = child_parent[id]
+                    if id_parent:
+                        if ('progress_rate' in res[id_parent]):
+                            res[id_parent]['progress_rate'] += round(progress * res[id]['weight'], 2)
+            else:
+                if('weight' in res[id]):
+                    id_parent = child_parent[id]
+                    if id_parent == 893:
+                        value = 1
+                    if id_parent:
+                        if ('progress_rate' in res[id_parent]):
+                            res[id_parent]['progress_rate'] += round(res[id]['progress_rate'] * res[id]['weight'], 2)
+#                 else:
+#                     if(not 'weight' in res[id]):
+#                         number = self._get_values_dictionary(child_parent,id)
+#                         if number > 0:
+#                             value *= number
+#                         res[id]['progress_rate'] = progress / value 
+#                     else:
+#                         res[id]['progress_rate'] += round(progress * res[id]['weight'], 2)
+            #id = child_parent[id]
         if len(res) == 1:
             if len(child_parent) == 1:
                 for val in res:
-                    if res[val]['state'] == 'done':#
-                        task_id = self.pool.get('project.task').search(cr, uid, [('wbs_item_id','=',val)], context=context)
-                        if res[val]['type'] == 'work_package' and len(task_id) == 0:
-                            res[val]['progress_rate'] = 100.0
-                            res[val]['planned_quantity'] = 100.0
-                            res[val]['effective_quantity'] = 100.0
+                    if (not 'state' in res[val]):
+                        if res[val]['state'] == 'done':#
+                            task_id = self.pool.get('project.task').search(cr, uid, [('wbs_item_id','=',val)], context=context)
+                            if res[val]['type'] == 'work_package' and len(task_id) == 0:
+                                res[val]['progress_rate'] = 100.0
+                                res[val]['planned_quantity'] = 100.0
+                                res[val]['effective_quantity'] = 100.0
         return res
 
     def _get_values_dictionary(self,my_dictionary,my_value):
@@ -275,6 +297,7 @@ class project_pmi_wbs_item(osv.osv):
          ),
         'work_record_ids': fields.one2many('project_pmi.wbs_work_record', 'wbs_item_id', 'Work done'),
         'task_ids': fields.one2many('project.task', 'wbs_item_id', 'Tasks'),
+        'weight': fields.float('Weight'),
     }
     _defaults = {
         'active': True,
@@ -343,13 +366,33 @@ class project_pmi_wbs_item(osv.osv):
                         return False
         return True
 
+    def _check_weight_sibling(self, cr, uid, ids, context=None):
+        is_valid_data = True
+        for obj in self.browse(cr,uid,ids,context=None):
+            if obj.state == 'draft' and (obj.weight < 0 or obj.weight > 100):
+                return False
+            if obj.state != 'draft' and (obj.weight <= 0 or obj.weight > 100):
+                return False
+            if obj.parent_id:
+                weight = 0
+                for sibling in obj.parent_id.child_ids:
+                    if obj.state != 'cancelled':
+                        weight += sibling.weight
+                if weight != 100:# and obj.type != 'task':
+                    is_valid_data = False
+            elif obj.weight != 100:
+                is_valid_data = False
+
+        return is_valid_data
+
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive wbs items.', ['parent_id']),
-        (_check_no_childs, 'Error ! A work package cannot have children.', ['type']),
+        #(_check_no_childs, 'Error ! A work package cannot have children.', ['type']),
         (_check_no_work_or_taks, 'Error ! a Deliverable cannot have neither unit tracking, tasks nor work_records.', ['type']),
         (_check_unit_measure_work_package, 'Error ! Please select unit of measure.', ['tracking_type']),
         (_check_work_unit_no_task, 'Error ! You cannot change tracking type.', ['tracking_type']),
         (_check_no_task_finished, 'Error ! You finish first the children tasks.', ['state']),
+        #(_check_weight_sibling, 'Error ! Weight must be between 1 and 100 or must be 100 if it\'s a root deliverable.', ['weight','state']),
     ]
 
     def child_get(self, cr, uid, ids):

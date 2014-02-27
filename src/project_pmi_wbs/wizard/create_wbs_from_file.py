@@ -76,20 +76,27 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
                     return self.get_type(struct, key,flag -1)
         return flag
 
-    def save_info(self,struct,struct_type,outline_number ,data,task,add_days,name,parent_ids,outline_level,cr,uid,context,wizard,type):
-        data_task_create = False
-        if type == 1 and wizard.take_leaves_as_tasks:
+    def validate_type(self,type,struct,struct_type,outline_number):
+        #un deliverable no tenga hijos task
+        if type == 1:
             for key in struct:
                 if key == outline_number:
                     for key1 in struct_type:
                         if struct_type[struct[key]] == -1:
-                            type = 0
-        elif type == -1 and wizard.take_leaves_as_tasks:
+                            return 0
+        #un workpackage no tenga hijos deliverables
+        elif type == -1:
             for key in struct:
                 if key == outline_number:
                     for key1 in struct_type:
                         if struct_type[struct[key]] == 0:
-                            type = 0
+                            return 0
+        return type
+
+    def save_info(self,struct,struct_type,outline_number ,data,task,add_days,name,parent_ids,outline_level,cr,uid,context,wizard,type):
+        data_task_create = False
+        if type != 0 and wizard.take_leaves_as_tasks:
+            type = self.validate_type(type, struct, struct_type, outline_number)
         if type == -1:
             data['type'] = 'deliverable'
         elif type == 0:

@@ -97,6 +97,7 @@
                             <field name="type" />
                             <field name="tracking_type" attrs="{'invisible': [('type','!=','work_package')],'required':[('type','=','work_package')]}"/>
                             <field name="description"/>
+                            <field name="weight"/>
                             <field name="progress_rate" widget="progressbar"/>
                             <field name="parent_id" />
                         </group>
