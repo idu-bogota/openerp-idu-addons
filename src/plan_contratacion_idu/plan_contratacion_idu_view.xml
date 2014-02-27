@@ -9,7 +9,7 @@
             <field name="model">plan_contratacion_idu.plan</field>
             <field name="arch" type="xml">
                 <tree string="Plan de contratación">
-                    <field name="name"/>
+                    <field name="vigencia"/>
                     <field name="state" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                     <field name="active" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                     <field name="item_ids"/>
@@ -24,11 +24,10 @@
             <field name="model">plan_contratacion_idu.plan</field>
             <field name="arch" type="xml">
                 <form string="Plan de contratación" version="7.0">
-                    <sheet>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
+                            <label for="vigencia" class="oe_edit_only"/>
                             <h1>
-                                <field name="name"/>
+                                <field name="vigencia"/>
                             </h1>
                         </div>
                         <group name="detalles">
@@ -47,7 +46,6 @@
                                 <field name="total_rezago_plan" widget='monetary' options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
                             </group>
                         </group>
-                    </sheet>
                 </form>
             </field>
         </record>

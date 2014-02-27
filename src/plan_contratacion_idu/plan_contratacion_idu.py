@@ -59,8 +59,9 @@ class plan_contratacion_idu_plan(osv.osv):
             res[record['id']]['total_rezago_plan'] = sumatoria_presupuesto - sumatoria
         return res
 
+    _rec_name = 'vigencia'
     _columns = {
-        'name': fields.char('Vigencia', size=255, required=True, select=True),
+        'vigencia': fields.integer('Vigencia', required=True, select=True),
         'state':fields.selection([('borrador', 'Borrador'),('progreso', 'En Progreso'),
              ('finalizado', 'Finalizado')],
              'State',
