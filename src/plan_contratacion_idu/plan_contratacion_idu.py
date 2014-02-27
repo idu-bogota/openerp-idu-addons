@@ -102,7 +102,7 @@ class plan_contratacion_idu_plan(osv.osv):
      
     _defaults = {
         'active': True,
-        'state': 'draft'
+        'state': 'borrador'
     }
 
 plan_contratacion_idu_plan()
@@ -665,8 +665,12 @@ class plan_contratacion_idu_item(osv.osv):
         return {'value': {'plazo_de_ejecucion': 0}}
 
     def onchange_no_aplica_unidad_mf(self, cr, uid, ids, no_aplica_unidad_mf, context=None):
-        return {'value': {'unidad_meta_fisica': False},
-                'value': {'cantidad_meta_fisica': False}}
+        return {
+            'value': {
+                'unidad_meta_fisica': False,
+                'cantidad_meta_fisica': False
+            }
+        }
 
     def onchange_numero_orfeo(self, cr, uid, ids, numero_orfeo, context=None):
         if orfeo_existe_radicado(numero_orfeo):
