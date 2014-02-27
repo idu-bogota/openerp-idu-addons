@@ -61,8 +61,9 @@ class plan_contratacion_idu_plan(osv.osv):
 
     _columns = {
         'name': fields.char('Vigencia', size=255, required=True, select=True),
-        'state':fields.selection([('draft', 'Draft'),('open', 'In Progress'),('cancel', 'Cancelled'),
-             ('done', 'Done'),('pending', 'Pending')],'State',
+        'state':fields.selection([('borrador', 'Borrador'),('progreso', 'En Progreso'),
+             ('finalizado', 'Finalizado')],
+             'State',
              required=True),
         'active':fields.boolean('Activo'),
         'item_ids': fields.one2many('plan_contratacion_idu.item', 'plan_id', 'Items Plan de Contratacion'),
@@ -294,9 +295,9 @@ class plan_contratacion_idu_item(osv.osv):
              states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'centro_costo':fields.char('Centro de Costo',size=512,
              readonly=True,
-             required=True,
+             required=False,
              help="Ingrese el número del Centro de Costo para consultar la información",
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False),('required',True)]}),
         'centro_costo_id': fields.many2one('stone_erp_idu.centro_costo','Codigo Centro de Costo',
              readonly=True,
              select=True,
@@ -347,41 +348,42 @@ class plan_contratacion_idu_item(osv.osv):
              select=True,
              ondelete='cascade',
              readonly=True,
-             required=True,
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+             required=False,
+             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False),('required',True)]}),
         'state':fields.selection([('draft', 'Borrador'),('estudios_previos', 'Estudios Previos'),('radicado', 'Radicado'),
              ('suscrito', 'Contrato Suscrito'),('ejecucion', 'En ejecución'),('ejecutado', 'Ejecutado'),
              ('no_realizado', 'No realizado')],'State',
              track_visibility='onchange',
              required=True),
         'fecha_programada_radicacion': fields.date ('Fecha Radicacion en DTPS y/o DTGC',
+             help="Fecha estimada de inicio de proceso de selección",
              required=False,
              select=True,
              readonly=True,
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)],'radicado':[('required',True)]}),
+             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False),('required',True)]}),
         'fecha_programada_crp': fields.date ('Fecha Programada CRP',
              required=False,
              select=False,
              help="CRP es Certificado Registro Presupuestal",
              readonly=True,
-             states={'draft':[('readonly',False)],'estudios_previos':[('readonly',False)],'radicado':[('required',True)]}),
+             states={'draft':[('readonly',False)],'estudios_previos':[('readonly',False),('required',True)]}),
         'fecha_programada_acta_inicio': fields.date ('Fecha Aprobación Acta de Inicio',
              required=False,
              select=False,
              readonly=True,
-             states={'draft':[('readonly',False)],'estudios_previos':[('readonly',False)],'radicado':[('required',True)]}),
+             states={'draft':[('readonly',False)],'estudios_previos':[('readonly',False),('required',True)]}),
         'plan_id': fields.many2one('plan_contratacion_idu.plan','Plan contractual',
              select=True,
              ondelete='cascade',
              readonly=True,
              required=True,
-             states={'draft':[('readonly',False)],'estudios_previos':[('readonly',False)]}),
+             states={'draft':[('readonly',False)]}),
         'clasificacion_id': fields.many2one('plan_contratacion_idu.clasificador_proyectos','Clasificación Proyecto',
              select=True,
              ondelete='cascade',
              readonly=True,
-             required=True,
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+             required=False,
+             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False), ('required',True)]}),
         'presupuesto': fields.float ('Presupuesto',
              required=True,
              select=True,
@@ -397,10 +399,16 @@ class plan_contratacion_idu_item(osv.osv):
              help="plazo de ejecución a monto agotable",
              readonly=True,
              states={'draft':[('readonly',False)],'estudios_previos':[('readonly',False)]}),
-        'unidad_meta_fisica': fields.char('Unidad Meta Física',
-             size=255,
+        'unidad_meta_fisica': fields.many2one('product.uom',
+            'Unidad Meta Física',
+             select=True,
+             ondelete='cascade',
              readonly=True,
              states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+        'no_aplica_unidad_mf':fields.boolean('No aplica unidad de meta física',
+             help="Seleccionar cuando no aplica la unidad de meta física",
+             readonly=True,
+             states={'draft':[('readonly',False)],'estudios_previos':[('readonly',False)]}),
         'cantidad_meta_fisica': fields.char ('Cantidad Metas Físicas',
              size=255,
              readonly=True,
@@ -656,12 +664,18 @@ class plan_contratacion_idu_item(osv.osv):
     def onchange_a_monto_agotable(self, cr, uid, ids, a_monto_agotable, context=None):
         return {'value': {'plazo_de_ejecucion': 0}}
 
+    def onchange_no_aplica_unidad_mf(self, cr, uid, ids, no_aplica_unidad_mf, context=None):
+        return {'value': {'unidad_meta_fisica': False},
+                'value': {'cantidad_meta_fisica': False}}
+
     def onchange_numero_orfeo(self, cr, uid, ids, numero_orfeo, context=None):
         if orfeo_existe_radicado(numero_orfeo):
+            self.write(cr, uid, ids, {"fecha_radicado_orfeo": orfeo_fecha_radicado(numero_orfeo).FECHA})
             return True
         else:
-            return {'warning': {'message': 'El número de radicado Orfeo ingresado no existe'},
-                    'value': {'numero_orfeo': False}}
+            self.write(cr, uid, ids, {"fecha_radicado_orfeo": False})
+            return {'value': {'numero_orfeo': False},
+                    'warning': {'message': 'El número de radicado Orfeo ingresado no existe'}}
 
     def action_invoice_sent(self, cr, uid, ids, context=None):
         '''

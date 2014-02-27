@@ -176,12 +176,13 @@
                             <page string="Detalles">
                                 <group name="detalles">
                                     <field name="localizacion"/>
-                                    <field name="localidad_id" attrs="{'invisible':[('localizacion','!=','localidad')]}"/>
+                                    <field name="localidad_id" attrs="{'invisible':[('localizacion','!=','localidad')], 'required':[('localizacion', '=','localidad')]}"/>
                                     <field name="description"/>
-                                    <field name="plazo_de_ejecucion" attrs="{'readonly':[('a_monto_agotable','=',True) or ('state','=','radicado')]}"/>
+                                    <field name="plazo_de_ejecucion" attrs="{'readonly':[('a_monto_agotable','=',True) or ('state','=','radicado')], 'required':[('a_monto_agotable','=',False)]}"/>
                                     <field name="a_monto_agotable" on_change="onchange_a_monto_agotable(a_monto_agotable)"/>
-                                    <field name="unidad_meta_fisica"/>
-                                    <field name="cantidad_meta_fisica"/>
+                                    <field name="no_aplica_unidad_mf" on_change="onchange_no_aplica_unidad_mf(no_aplica_unidad_mf)"/>
+                                    <field name="unidad_meta_fisica" attrs="{'readonly':[('no_aplica_unidad_mf','=',True) or ('state','=','radicado')], 'required':[('no_aplica_unidad_mf','=',False)]}"/>
+                                    <field name="cantidad_meta_fisica" attrs="{'readonly':[('no_aplica_unidad_mf','=',True) or ('state','=','radicado')], 'required':[('no_aplica_unidad_mf','=',False)]}"/>
                                 </group>
                             </page>
                             <page string="Fechas">
