@@ -112,7 +112,7 @@
                     <field name="fecha_programada_radicacion"/>
                     <field name="fecha_programada_crp"/>
                     <field name="fecha_programada_acta_inicio"/>
-                    <field name="presupuesto"/>
+                    <field name="presupuesto" sum="Presupuesto"/>
                 </tree>
             </field>
         </record>
