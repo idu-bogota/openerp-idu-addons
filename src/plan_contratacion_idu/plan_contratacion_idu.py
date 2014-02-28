@@ -556,9 +556,13 @@ class plan_contratacion_idu_item(osv.osv):
             store = True),
     }
 
+    def _default_dependencia_id(self, cr, uid, context):
+        return self.pool.get('res.users').browse(cr, uid, uid, context=context).department_ids
+
     _defaults = {
         'state': 'draft',
         'progress_rate':0,
+        'dependencia_id': _default_dependencia_id,
         #Asigna por defecto el plan contractual pasado en el contexto
         'plan_id' : lambda self, cr, uid, context : context['plan_id'] if context and 'plan_id' in context else None,
     }
