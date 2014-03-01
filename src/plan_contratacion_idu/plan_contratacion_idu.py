@@ -30,6 +30,13 @@ orfeo_fecha_radicado = getattr(client.service, 'OrfeoWs.fechaRadicado')
 class plan_contratacion_idu_plan(osv.osv):
     _name = "plan_contratacion_idu.plan"
 
+    def _get_name(self, cr, uid, ids, field, args, context=None):
+        res = {}
+        records = self.pool.get('plan_contratacion_idu.plan').read(cr, uid, ids, ['vigencia'])
+        for record in records:
+            res[record['id']] = "Plan Vigencia {0}".format(record['vigencia'])
+        return res
+
     def _get_currency(self, cr, uid, ids, field, args, context=None):
         res = {}
         company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'plan_contratacion_idu.plan', context=context)
@@ -59,43 +66,50 @@ class plan_contratacion_idu_plan(osv.osv):
             res[record['id']]['total_rezago_plan'] = sumatoria_presupuesto - sumatoria
         return res
 
-    _rec_name = 'vigencia'
     _columns = {
+        'name': fields.function(_get_name,
+             type='char',
+             string='Nombre',
+             readonly=True,
+             store= True,
+        ),
         'vigencia': fields.integer('Vigencia', required=True, select=True),
-        'state':fields.selection([('borrador', 'Borrador'),('progreso', 'En Progreso'),
+        'state':fields.selection([('borrador', 'Borrador'),('en_progreso', 'En Progreso'),
              ('finalizado', 'Finalizado')],
              'State',
-             required=True),
+             required=True
+         ),
         'active':fields.boolean('Activo'),
         'item_ids': fields.one2many('plan_contratacion_idu.item', 'plan_id', 'Items Plan de Contratacion'),
-         'currency_id': fields.function(_get_currency,
+        'currency_id': fields.function(_get_currency,
              type='many2one',
              relation="res.currency",
              method=True,
              string='Currency',
-             readonly=True),
+             readonly=True
+         ),
         'total_pagos_presupuestado_plan': fields.function(_total_pagos_plan,
              type='float',
              multi="total_pagos_programados",
              string='Total Presupuestado',
              digits_compute=dp.get_precision('Account'),
              readonly = True,
-             store={
-             }),
+             store= True
+         ),
         'total_pagos_programados_plan': fields.function(_total_pagos_plan,
              type='float',
              multi="total_pagos_programados",
              string='Total Pagos Programados',
              digits_compute=dp.get_precision('Account'),
-             store={
-             }),
+             store=True
+         ),
         'total_rezago_plan': fields.function(_total_pagos_plan,
              type='float',
              multi="total_pagos_programados",
              string='Total Rezago',
              digits_compute=dp.get_precision('Account'),
-             store={
-             }),
+             store=True
+         ),
     }
     _sql_constraints =[
         ('unique_name','unique(name)','El año del plan debe ser único')
