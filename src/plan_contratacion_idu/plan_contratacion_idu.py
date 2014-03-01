@@ -580,7 +580,7 @@ class plan_contratacion_idu_item(osv.osv):
             return context['plan_id']
         else:
             return self.pool.get('plan_contratacion_idu.plan').search(cr, uid,
-                ['|',('state','=','borrador'),('state','=','en_progreso')],
+                [('state','=','borrador')],
                 limit=1,
                 context=context
             )
