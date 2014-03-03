@@ -356,37 +356,25 @@ class project_pmi_wbs_item(osv.osv):
     def _check_weight_sibling(self, cr, uid, ids, context=None):
         is_valid_data = True
         for obj in self.browse(cr,uid,ids,context=None):
-            if obj.state == 'draft' and (obj.weight < 0 or obj.weight > 100):
-                return False
-            if obj.state != 'draft' and (obj.weight <= 0 or obj.weight > 100):
-                return False
-            if obj.parent_id and obj.state != 'draft':
+            if obj.parent_id and obj.state in ['open','done','pending']:#Checks siblings weight doesn't add up more than 100
                 weight = 0
                 for sibling in obj.parent_id.child_ids:
                     if obj.state != 'cancelled':
                         weight += sibling.weight
-                if weight > 100:
+                if weight != 100:
                     is_valid_data = False
-                elif weight == 100:
-                    return True
             elif obj.weight != 100 and obj.state != 'draft':
                 is_valid_data = False
         return is_valid_data
-    
-    def _check_weight_children(self,cr,uid,ids,context=None):
-        res = {}
-        records = self.read(cr, uid, ids, ['child_ids'], context=context)
-        for record in records:
-            weight = 0
-            res[record['id']] = True
-            for item in record['child_ids']:
-                childs = self.read(cr, uid, item, ['weight'], context=context)
-                for child in childs:
-                    if child == 'weight':
-                        weight += childs['weight']
-            if weight != 100 and record['child_ids']:
-                res[record['id']] = False
-        return reduce(lambda x, y: x and y, res.values())
+
+    def _check_weight(self, cr, uid, ids, context=None):
+        is_valid_data = True
+        for obj in self.browse(cr,uid,ids,context=None):
+            if obj.state == 'draft' and (obj.weight < 0 or obj.weight > 100):#Checks positive numbers from 0 to 100
+                is_valid_data = False
+            if obj.state != 'draft' and (obj.weight <= 0 or obj.weight > 100):#Checks positive numbers from 1 to 100
+                is_valid_data = False
+        return is_valid_data
 
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive wbs items.', ['parent_id']),
@@ -395,8 +383,8 @@ class project_pmi_wbs_item(osv.osv):
         (_check_unit_measure_work_package, 'Error ! Please select unit of measure.', ['tracking_type']),
         (_check_work_unit_no_task, 'Error ! You cannot change tracking type.', ['tracking_type']),
         (_check_no_task_finished, 'Error ! You finish first the children tasks.', ['state']),
-        (_check_weight_sibling, 'Error ! Weight must be between 1 and 100 or must be 100 if it\'s a root deliverable.', ['weight','state']),
-        (_check_weight_children, 'Error ! Weight must be 100 on childrens', ['weight','state']),
+        (_check_weight, 'Error ! Weight must be between 1 and 100, 0 is valid in a draft', ['weight']),
+        (_check_weight_sibling, 'Error ! Mine and my sibling\'s weight must add up to 100, also my children\'s weight must add up to 100', ['weight','state']),
     ]
 
     def child_get(self, cr, uid, ids):

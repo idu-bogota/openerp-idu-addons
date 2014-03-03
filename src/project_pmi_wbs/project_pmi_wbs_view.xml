@@ -44,6 +44,7 @@
                     <field name="date_end"/>
                     <field name="state"/>
                     <field name="active"/>
+                    <field name="weight"/>
                     <field name="progress_rate"/>
                 </tree>
             </field>
@@ -63,6 +64,7 @@
                     <field name="date_end"/>
                     <field name="progress_rate"/>
                     <field name="progress_rate" widget="progressbar"/>
+                    <field name="weight"/>
                     <field name="state"/>
                     <field name="active"/>
                 </tree>
@@ -148,6 +150,7 @@
                                     <field name="date_deadline"/>
                                     <field name="progress_rate" widget="progressbar"/>
                                     <field name="state"/>
+                                    <field name="weight" sum="Weight"/>
                                 </tree>
                            </field>
                         </group>
