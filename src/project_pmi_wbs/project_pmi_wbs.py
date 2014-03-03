@@ -256,28 +256,28 @@ class project_pmi_wbs_item(osv.osv):
         'date_end': fields.date('Ending Date'),
         'excess_progress': fields.function(_progress_rate, multi="progress", string='Excess Progress', type='float', group_operator="avg",
              help="Total work quantity planned", store = {
-                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity','state'], 10),
+                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity','state','weight'], 10),
                 'project_pmi.wbs_work_record': (_get_wbs_item_from_work_records, ['wbs_item_id', 'quantity'], 20),
                 'project.task': (_get_wbs_item_from_tasks, ['wbs_item_id', 'work_ids', 'remaining_hours', 'planned_hours','state'], 30),
             }
          ),
         'planned_quantity': fields.function(_progress_rate, multi="progress", string='Planned Quantity', type='float', group_operator="avg",
              help="Total work quantity planned", store = {
-                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity','state'], 10),
+                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity','state','weight'], 10),
                 'project_pmi.wbs_work_record': (_get_wbs_item_from_work_records, ['wbs_item_id', 'quantity'], 20),
                 'project.task': (_get_wbs_item_from_tasks, ['wbs_item_id', 'work_ids', 'remaining_hours', 'planned_hours','state'], 30),
             }
          ),
         'effective_quantity': fields.function(_progress_rate, multi="progress", string='Effective Quantity', type='float', group_operator="avg",
              help="Percent of progress according to the total of work recorded.", store = {
-                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity','state'], 10),
+                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity','state','weight'], 10),
                 'project_pmi.wbs_work_record': (_get_wbs_item_from_work_records, ['wbs_item_id', 'quantity'], 20),
                 'project.task': (_get_wbs_item_from_tasks, ['wbs_item_id', 'work_ids', 'remaining_hours', 'planned_hours','state'], 30),
             }
          ),
         'progress_rate': fields.function(_progress_rate, multi="progress", string='Progress', type='float', group_operator="avg",
              help="Percent of progress according to the total of work recorded.", store = {
-                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity','state'], 10),
+                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity','state','weight'], 10),
                 'project_pmi.wbs_work_record': (_get_wbs_item_from_work_records, ['wbs_item_id', 'quantity'], 20),
                 'project.task': (_get_wbs_item_from_tasks, ['wbs_item_id', 'work_ids', 'remaining_hours', 'planned_hours','state'], 30),
             }
