@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--=============================================================================
+                Group Definitions
+        ;=============================================================================-->
+
+        <record id="group_stone_idu" model="res.groups">
+            <field name="name">Stone User</field>
+        </record>
+
+   </data>
+</openerp>

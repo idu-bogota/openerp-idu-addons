@@ -34,9 +34,9 @@ class stone_erp_idu_centro_costo(osv.osv):
         'cod_punto_inversion':fields.related('punto_inversion_id','codigo',type="integer",relation="stone_erp_idu.punto_inversion",string="Codigo Proyecto IDU", store=False,readonly=True),
         'nombre_proyecto_idu':fields.related('proyecto_idu_id','name',type="char",relation="stone_erp_idu.proyecto_idu",string="Nombre Proyecto IDU", store=False,readonly=True),
         'cod_proyecto_idu':fields.related('proyecto_idu_id','codigo',type="integer",relation="stone_erp_idu.proyecto_idu",string="Nombre Proyecto IDU", store=False,readonly=True),
-        'fase_intervencion_id':fields.many2one('stone_erp.fase_intervencion','Fase de Intervencion',readonly=True),
-        'cod_fase_intervencion':fields.related('fase_intervencion_id','codigo',type="integer",relation='stone_erp.fase_intervencion',string="Código Fase de Intervencion"),
-        'nombre_fase_intervencion':fields.related('fase_intervencion_id','name',type="text",relation='stone_erp.fase_intervencion',string="Nombre Fase de Intervencion"),
+        'fase_intervencion_id':fields.many2one('stone_erp_idu.fase_intervencion','Fase de Intervencion',readonly=True),
+        'cod_fase_intervencion':fields.related('fase_intervencion_id','codigo',type="integer",relation='stone_erp_idu.fase_intervencion',string="Código Fase de Intervencion"),
+        'nombre_fase_intervencion':fields.related('fase_intervencion_id','name',type="text",relation='stone_erp_idu.fase_intervencion',string="Nombre Fase de Intervencion"),
     }
     _sql_constraints=[
         ('unique_codigu','unique(codigo)','El centro de costo qu8e intenta ingresar, ya se encuentra registrado'),
@@ -114,7 +114,7 @@ class stone_erp_idu_punto_inversion (osv.osv):
     ]
 stone_erp_idu_punto_inversion()
 
-class stone_erp_proyecto_idu (osv.osv):
+class stone_erp_idu_proyecto_idu (osv.osv):
     _name = "stone_erp_idu.proyecto_idu"
     _rec_name="codigo"
     _columns = {
@@ -125,10 +125,10 @@ class stone_erp_proyecto_idu (osv.osv):
     _sql_constraints=[
         ('unique_proyecto_idu_codigo','unique(codigo)','El Proyecto IDU que intenta ingresar, ya se encuentra registrado'),
     ]
-stone_erp_proyecto_idu()
+stone_erp_idu_proyecto_idu()
 
-class stone_erp_fase_intervencion(osv.osv):
-    _name = "stone_erp.fase_intervencion"
+class stone_erp_idu_fase_intervencion(osv.osv):
+    _name = "stone_erp_idu.fase_intervencion"
     _rec_name="codigo"
     _columns = {
         'codigo':fields.integer('Codigo'),
@@ -138,5 +138,4 @@ class stone_erp_fase_intervencion(osv.osv):
     _sql_constraints=[
         ('unique_fase_intervencion','unique(codigo)','La fase de intervención que intenta ingresar, ya se encuentra registrado'),
     ]
-    
-
+stone_erp_idu_fase_intervencion()

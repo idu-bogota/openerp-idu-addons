@@ -35,7 +35,8 @@
     ],
     'init_xml' : ['stone_erp_idu_view.xml'],
     'demo': [],
-    'update_xml': [
+    'update_xml': ['security/stone_idu_security.xml',
+                   'security/ir.model.access.csv',
                    'stone_erp_idu_view.xml',
                ],
     'installable': True,
