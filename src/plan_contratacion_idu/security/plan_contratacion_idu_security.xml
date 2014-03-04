@@ -7,17 +7,17 @@
          ================================================================================-->
 
         <record id="group_plan_contratacion_idu_user" model="res.groups">
-            <field name="implied_ids" eval="[(4, ref('stone_erp_idu.group_stone_idu'))]"/>
+            <field name="implied_ids" eval="[(4, ref('stone_erp_idu.group_stone_idu')),(4,ref('base_map.group_base_map_reader'))]"/>
             <field name="name">Plan Contratacion User</field>
         </record>
 
         <record id="group_plan_contratacion_idu_manager" model="res.groups">
-            <field name="implied_ids" eval="[(4, ref('stone_erp_idu.group_stone_idu'))]"/>
+            <field name="implied_ids" eval="[(4, ref('stone_erp_idu.group_stone_idu')),(4,ref('base_map.group_base_map_reader'))]"/>
             <field name="name">Plan Contratacion Manager</field>
         </record>
 
         <record id="group_plan_contratacion_idu_analyst" model="res.groups">
-            <field name="implied_ids" eval="[(4, ref('stone_erp_idu.group_stone_idu'))]"/>
+            <field name="implied_ids" eval="[(4, ref('stone_erp_idu.group_stone_idu')),(4,ref('base_map.group_base_map_reader'))]"/>
             <field name="name">Plan Contratacion Analyst</field>
         </record>
 
@@ -28,11 +28,15 @@
         <record model="ir.ui.menu" id="menu_plan_contratacion">
                 <field eval="[(4, ref('group_plan_contratacion_idu_user')),(4, ref('group_plan_contratacion_idu_manager')),(4, ref('group_plan_contratacion_idu_analyst'))]" name="groups_id"/>
         </record>
+        
+        <record model="ir.ui.menu" id="menu_plan_contratacion_plan_list">
+                <field eval="[(4, ref('group_plan_contratacion_idu_user')),(4, ref('group_plan_contratacion_idu_manager')),(4, ref('group_plan_contratacion_idu_analyst'))]" name="groups_id"/>
+        </record>
 
 
-        <!-- =============================================================================
+<!-- =============================================================================
                                 Domain Constraints
-            ;============================================================================= -->
+;============================================================================= -->
 
         <record id="plan_contratacion_rule_user_plan" model="ir.rule">
             <field name="name">Item Plan Contratacion</field>
