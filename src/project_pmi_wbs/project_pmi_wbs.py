@@ -285,10 +285,12 @@ class project_pmi_wbs_item(osv.osv):
         'work_record_ids': fields.one2many('project_pmi.wbs_work_record', 'wbs_item_id', 'Work done'),
         'task_ids': fields.one2many('project.task', 'wbs_item_id', 'Tasks'),
         'weight': fields.float('Weight'),
+        'use_weight': fields.boolean('Use weight?',help='If active, weight is used to calculate progress rate'),
     }
     _defaults = {
         'active': True,
         'state': 'draft',
+        'use_weight': False,
         'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'project_pmi.wbs'),
         'project_id' : lambda self, cr, uid, context : context['project_id'] if context and 'project_id' in context else None, #Set by default the project given in the context
         'phase_id' : lambda self, cr, uid, context : context['phase_id'] if context and 'phase_id' in context else None,
@@ -445,7 +447,7 @@ class project_pmi_wbs_item(osv.osv):
                     else:
                         self.pool.get('project.task').write(cr, uid, task_ids, {'project_id': read['project_id'][0]}, context)
             else:
-                raise osv.except_osv('Debe seleccionar un proyecto','Error')
+                raise osv.except_osv('You must set a project first','Error')
         return True
 
     def set_draft(self, cr, uid, ids, context=None):
@@ -463,6 +465,15 @@ class project_pmi_wbs_item(osv.osv):
     def set_done(self, cr, uid, ids, context=None):
         item_ids = self.search(cr, uid, [('child_ids','child_of',ids)], context=context)
         return self.write(cr, uid, item_ids, {'state': 'done'}, context)
+
+    def set_weight_on(self, cr, uid, ids, context=None):
+        item_ids = self.search(cr, uid, [('child_ids','child_of',ids)], context=context)
+        return self.write(cr, uid, item_ids, {'use_weight': True}, context)
+
+    def set_weight_off(self, cr, uid, ids, context=None):
+        item_ids = self.search(cr, uid, [('child_ids','child_of',ids)], context=context)
+        return self.write(cr, uid, item_ids, {'use_weight': False}, context)
+
 
 project_pmi_wbs_item()
 
