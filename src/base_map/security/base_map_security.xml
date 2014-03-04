@@ -17,7 +17,7 @@
         
         
         <record model="ir.ui.menu" id="base_map.base_map_main">
-                <field eval="[(4, ref('group_base_map_manager')),(4, ref('group_base_map_reader'))]" name="groups_id"/>
+                <field eval="[(4, ref('group_base_map_manager'))]" name="groups_id"/>
         </record>
     </data>
 </openerp>
