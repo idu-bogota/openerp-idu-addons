@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <menuitem name="Plan de Contratacion" id="menu_plan_contratacion" parent="base.menu_main_contrato_idu"/>
-
+        <menuitem name="Exportar a Excel" id="reporte_exportar_a_excel" parent="menu_plan_contratacion" action="plan_contratacion_idu.action_plan_contratacion_idu_wizard_reporte"/>
         <!-- Plan de contratacion -->
         <record id="plan_contratacion_idu_list" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.plan.list</field>

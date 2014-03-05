@@ -1,0 +1,30 @@
+<?xml version="1.0"?>   
+<openerp>
+<data>
+
+        <record id="view_plan_contratacion_idu_wizard_reporte_form" model="ir.ui.view">
+            <field name="name">Exportar Plan Contratacion a Excel</field>
+            <field name="model">plan_contratacion_idu.wizard.reporte</field>
+            <field name="arch" type="xml">
+                <form string="Exportar a Excel Centro de Costo">
+                        <field name="plan_contratacion"/>
+                        <field name="dependencia"/>
+                        <button name="generar" string="Export" type="object" icon="gtk-ok"/>
+                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_plan_contratacion_idu_wizard_reporte" model="ir.actions.act_window">
+            <field name="name">Exportar Plan Contratacion a Excel</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">plan_contratacion_idu.wizard.reporte</field>
+            <field name="src_model">plan_contratacion_idu.wizard.reporte</field>
+            <field name="view_id" ref="view_plan_contratacion_idu_wizard_reporte_form"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+</data>
+</openerp>

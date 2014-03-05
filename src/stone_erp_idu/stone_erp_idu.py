@@ -85,7 +85,7 @@ class stone_erp_idu_centro_costo(osv.osv):
             id_punto_inv = ids_punto_inversion[0]
             punto_inversion_obj.write(cr,uid,id_punto_inv,vals_punto_inversion,context)
             
-        fase_intervencion_obj=self.pool.get('stone_erp.fase_intervencion')
+        fase_intervencion_obj=self.pool.get('stone_erp_idu.fase_intervencion')
         ids_fase_intervencion = fase_intervencion_obj.search(cr,uid,[('codigo','=',det_cc['cod_fase_intervencion'])])
         id_fase_interv = 0
         vals_fase_interv = {'codigo':det_cc['cod_fase_intervencion'],'name':det_cc['nombre_fase_intervencion']}
