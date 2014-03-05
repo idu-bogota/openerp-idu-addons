@@ -13,6 +13,7 @@
 
         <record id="group_plan_contratacion_idu_manager" model="res.groups">
             <field name="implied_ids" eval="[(4, ref('stone_erp_idu.group_stone_idu')),(4,ref('base_map.group_base_map_reader'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
             <field name="name">Plan Contratacion Manager</field>
         </record>
 
