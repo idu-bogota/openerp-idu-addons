@@ -571,7 +571,11 @@ class plan_contratacion_idu_item(osv.osv):
     }
 
     def _default_dependencia_id(self, cr, uid, context):
-        return self.pool.get('res.users').browse(cr, uid, uid, context=context).department_ids
+        department_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).department_ids
+        if department_ids:
+            return department_ids
+        return None
+
 
     def _default_plan_id(self, cr, uid, context):
         if context and 'plan_id' in context:
@@ -581,7 +585,7 @@ class plan_contratacion_idu_item(osv.osv):
                 [('state','=','borrador')],
                 limit=1,
                 context=context
-            )
+            )[0]
 
     _defaults = {
         'state': 'draft',
