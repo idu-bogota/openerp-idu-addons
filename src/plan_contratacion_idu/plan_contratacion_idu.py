@@ -303,7 +303,7 @@ class plan_contratacion_idu_item(osv.osv):
              ondelete='cascade',
              required=True,
              readonly=False,
-             write = ['plan_contratacion_idu.group_plan_contratacion_idu_manager']),
+         ),
         'description': fields.text('Objeto Contractual',
              readonly=True,
              required=True,
