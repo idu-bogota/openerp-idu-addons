@@ -242,7 +242,7 @@ class plan_contratacion_idu_item(osv.osv):
         is_valid = True
         for record in records:
             if record.state == 'ejecucion':
-                if record.numero_crp:
+                if record.fecha_acta_inicio:
                     is_valid = True
                 else:
                     is_valid = False
@@ -296,8 +296,8 @@ class plan_contratacion_idu_item(osv.osv):
         'codigo_unspsc': fields.char('Codigo UNSPSC',
              help='Codificación de bienes y servicios, Colombia compra eficiente',
              readonly=True,
-             required=True,
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+             required=False,
+             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False), ('required',True)]}),
         'dependencia_id': fields.many2one('hr.department','Dependencia',
              select=True,
              ondelete='cascade',
@@ -365,8 +365,8 @@ class plan_contratacion_idu_item(osv.osv):
              select=True,
              ondelete='cascade',
              readonly=True,
-             required=False,
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False),('required',True)]}),
+             required=True,
+             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'state':fields.selection([('draft', 'Borrador'),('estudios_previos', 'Estudios Previos'),('radicado', 'Radicado'),
              ('suscrito', 'Contrato Suscrito'),('ejecucion', 'En ejecución'),('ejecutado', 'Ejecutado'),
              ('no_realizado', 'No realizado')],'State',
@@ -399,8 +399,8 @@ class plan_contratacion_idu_item(osv.osv):
              select=True,
              ondelete='cascade',
              readonly=True,
-             required=False,
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False), ('required',True)]}),
+             required=True,
+             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
         'presupuesto': fields.float ('Presupuesto',
              required=True,
              select=True,
@@ -552,7 +552,7 @@ class plan_contratacion_idu_item(osv.osv):
              track_visibility='onchange'),
         'numero_contrato': fields.char('Numero Contrato',
              help ='Validado desde SIAC',
-             states={'suscrito':[('readonly',False)]},
+             states={'radicado':[('readonly',False)]},
              readonly=True,
              track_visibility='onchange'),
         'nit_beneficiario':fields.integer('Nit Beneficiario',

@@ -210,8 +210,8 @@
                                  <group name="informacion_verificacion" string="Fechas de Ejecución" col="4" colspan="1">
                                     <field name="numero_orfeo" on_change="onchange_numero_orfeo(numero_orfeo)"/>
                                     <field name="fecha_radicado_orfeo"/>
-                                    <field name="numero_crp"/>
                                     <field name="numero_contrato"/>
+                                    <field name="numero_crp"/>
                                     <field name="nit_beneficiario"/>
                                     <field name="fecha_acta_inicio"/>
                                     <field name="fecha_acta_liquidacion"/>
