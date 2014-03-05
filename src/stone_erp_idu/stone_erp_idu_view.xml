@@ -8,7 +8,7 @@
             <field name="name">stone_erp_idu.centro_costo.list</field>
             <field name="model">stone_erp_idu.centro_costo</field>
             <field name="arch" type="xml" >
-                <tree string="Centro de Costo IDU">
+                <tree string="Centro de Costo IDU" create="0">
                     <field name="codigo"/>
                     <field name="name"/>
                     <field name="proyecto_idu_id"/>
