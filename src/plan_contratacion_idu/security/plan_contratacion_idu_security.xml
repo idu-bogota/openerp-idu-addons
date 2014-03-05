@@ -33,6 +33,21 @@
                 <field eval="[(4, ref('group_plan_contratacion_idu_user')),(4, ref('group_plan_contratacion_idu_manager')),(4, ref('group_plan_contratacion_idu_analyst'))]" name="groups_id"/>
         </record>
 
+        <record model="ir.ui.menu" id="menu_plan_contratacion_plan_fuente_list">
+                <field eval="[(3, ref('group_plan_contratacion_idu_user')),(4, ref('group_plan_contratacion_idu_manager')),(4, ref('group_plan_contratacion_idu_analyst'))]" name="groups_id"/>
+        </record>
+
+        <record model="ir.ui.menu" id="menu_plan_contratacion_idu_plan_tipo_proceso_list">
+                <field eval="[(3, ref('group_plan_contratacion_idu_user')),(4, ref('group_plan_contratacion_idu_manager')),(4, ref('group_plan_contratacion_idu_analyst'))]" name="groups_id"/>
+        </record>
+
+        <record model="ir.ui.menu" id="menu_plan_contratacion_idu_plan_tipo_proceso_seleccion_list">
+                <field eval="[(3, ref('group_plan_contratacion_idu_user')),(4, ref('group_plan_contratacion_idu_manager')),(4, ref('group_plan_contratacion_idu_analyst'))]" name="groups_id"/>
+        </record>
+
+        <record model="ir.ui.menu" id="plan_contratacion_idu_clasificador_proyectos_tree_menu">
+                <field eval="[(3, ref('group_plan_contratacion_idu_user')),(4, ref('group_plan_contratacion_idu_manager')),(4, ref('group_plan_contratacion_idu_analyst'))]" name="groups_id"/>
+        </record>
 
 <!-- =============================================================================
                                 Domain Constraints

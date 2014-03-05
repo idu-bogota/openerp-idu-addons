@@ -8,6 +8,5 @@
         <record id="group_stone_idu" model="res.groups">
             <field name="name">Stone User</field>
         </record>
-
    </data>
 </openerp>
