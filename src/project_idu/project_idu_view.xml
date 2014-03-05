@@ -73,10 +73,21 @@
             <field name="arch" type="xml">
                 <field name="type" position="after">
                     <field name="opportunity_evaluation" invisible="1"/>
+                    <field name="etapa_nombre" invisible="1"/>
                 </field>
                 <xpath expr="//tree" position="attributes">
                     <attribute name="colors">orange:opportunity_evaluation=='is_late';green:opportunity_evaluation=='is_on_time';red:opportunity_evaluation=='is_not_finished'</attribute>
                 </xpath>
+            </field>
+        </record>
+        <record id="view_project_phase_list" model="ir.ui.view">
+            <field name="name">project.phase.list</field>
+            <field name="model">project.phase</field>
+            <field name="inherit_id" ref="project_long_term.view_project_phase_list"/>
+            <field name="arch" type="xml">
+                <field name="state" position="after">
+                    <field name="etapa_nombre" invisible="1"/>
+                </field>
             </field>
         </record>
         <record id="project_pmi_deliverable_list" model="ir.ui.view">
@@ -86,6 +97,7 @@
             <field name="arch" type="xml">
                 <field name="type" position="after">
                     <field name="opportunity_evaluation" invisible="1"/>
+                    <field name="etapa_nombre" invisible="1"/>
                 </field>
                 <xpath expr="//tree" position="attributes">
                     <attribute name="colors">orange:opportunity_evaluation=='is_late';green:opportunity_evaluation=='is_on_time';red:opportunity_evaluation=='is_not_finished'</attribute>
@@ -104,6 +116,16 @@
                     <field name="numero_convocados" attrs="{'invisible': [('participacion_ciudadana','=',False)],'required': [('participacion_ciudadana','=',True)]}"/>
                     <field name="numero_asistentes" attrs="{'invisible': [('participacion_ciudadana','=',False)],'required': [('participacion_ciudadana','=',True)]}"/>
                     <field name="producto_intermedio_id" />
+                </field>
+            </field>
+        </record>
+        <record id="view_task_tree2" model="ir.ui.view">
+            <field name="name">project.task.tree</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_tree2"/>
+            <field name="arch" type="xml">
+                <field name="state" position="after">
+                    <field name="etapa_nombre" invisible="1"/>
                 </field>
             </field>
         </record>
