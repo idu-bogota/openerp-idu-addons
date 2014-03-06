@@ -154,23 +154,6 @@
                             <field name="progress_rate" widget="progressbar"/>
                         </group>
                         <notebook colspan="6">
-                            <page string="Información Centro de Costo">
-                                <header class="oe_edit_only">
-                                    <group col="2" colspan="2">
-                                        <field name="centro_costo" on_change="on_change_centro_costo(centro_costo)"/>
-                                    </group>
-                                </header>
-                                <group col="4" colspan="4">
-                                    <field name="centro_costo_id"/>
-                                    <field name="centro_costo_nombre" />
-                                    <field name="cod_proyecto_idu"/>
-                                    <field name="nombre_proyecto_idu"/>
-                                    <field name="cod_punto_inversion"/>
-                                    <field name="nombre_punto_inversion"/>
-                                    <field name="cod_fase_intervencion"/>
-                                    <field name="nombre_fase_intervencion"/>
-                                </group>
-                            </page>
                             <page string="Detalles">
                                 <group name="detalles">
                                     <field name="localizacion"/>
@@ -198,6 +181,23 @@
                                             'invisible':[('no_aplica_unidad_mf','=',True)],
                                         }"
                                     />
+                                </group>
+                            </page>
+                            <page string="Información Centro de Costo">
+                                <header class="oe_edit_only">
+                                    <group col="2" colspan="2">
+                                        <field name="centro_costo" on_change="on_change_centro_costo(centro_costo)"/>
+                                    </group>
+                                </header>
+                                <group col="4" colspan="4">
+                                    <field name="centro_costo_id"/>
+                                    <field name="centro_costo_nombre" />
+                                    <field name="cod_proyecto_idu"/>
+                                    <field name="nombre_proyecto_idu"/>
+                                    <field name="cod_punto_inversion"/>
+                                    <field name="nombre_punto_inversion"/>
+                                    <field name="cod_fase_intervencion"/>
+                                    <field name="nombre_fase_intervencion"/>
                                 </group>
                             </page>
                             <page string="Fechas">
