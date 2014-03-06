@@ -20,7 +20,7 @@
 
 from openerp.osv import fields, osv
 import time
-from datetime import datetime
+from datetime import datetime,date,timedelta
 from osv import osv
 
 class project(osv.osv):
@@ -161,7 +161,7 @@ class project_pmi_wbs_item(osv.osv):
                                     progress = 0
                                 else:
                                     res[id_parent]['progress_rate'] += round(res[id]['progress_rate'] * res[id]['weight'], 2)
-                        id = child_parent[id] 
+                        id = child_parent[id]
         if len(res) == 1:
             if len(child_parent) == 1:
                 for val in res:
@@ -430,6 +430,31 @@ class project_pmi_wbs_item(osv.osv):
     def set_template(self, cr, uid, ids, context=None):
         item_ids = self.search(cr, uid, [('child_ids','child_of',ids)], context=context)
         return self.write(cr, uid, item_ids, {'state': 'template'}, context)
+
+    def calculate_days(self,date1,date2):
+        date_start = date(int(date1[0:4]), int(date1[5:7]), int(date1[8:10]))
+        date_end = date(int(date2[0:4]), int(date2[5:7]), int(date2[8:10]))
+        days = date_end - date_start
+        return days.days
+
+    def weight_assigned_by_duration(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr,uid,ids,context=None):
+            weight_sum = 0.0
+            weight = 0.0
+            #realiza la sumatoria
+            try:
+                if obj.parent_id and obj.state in ['open','done','pending','draft']:
+                    for sibling in obj.parent_id.child_ids:
+                        if sibling.state != 'cancelled':
+                            weight_sum += self.calculate_days(sibling.date_start, sibling.date_end)
+                #calcula el %
+                if obj.parent_id and obj.state in ['open','done','pending','draft']:
+                    for sibling in obj.parent_id.child_ids:
+                        if sibling.state != 'cancelled':
+                            weight = (self.calculate_days(sibling.date_start, sibling.date_end) / weight_sum) * 100
+                            self.write(cr, uid,sibling.id, {'weight': weight} , context)
+            except Exception as e:
+                raise osv.except_osv('Error calculating weight', str(e))
 
     def set_bulk_project(self, cr, uid, ids, context=None):
         item_ids = self.search(cr, uid, [('child_ids','child_of',ids)], context=context)
