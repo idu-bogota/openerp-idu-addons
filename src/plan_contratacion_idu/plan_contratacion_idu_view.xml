@@ -264,6 +264,20 @@
                 </form>
             </field>
         </record>
+
+        <!-- Cambios que aplican solo para el grupo de usuarios del plan-->
+        <record id="plan_contratacion_idu_item_form_for_users" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.item.form</field>
+            <field name="model">plan_contratacion_idu.item</field>
+            <field name="inherit_id" ref="plan_contratacion_idu_item_form"/>
+            <field name="groups_id" eval="[(6, 0, [ref('plan_contratacion_idu.group_plan_contratacion_idu_user') ])]"/>
+            <field name="arch" type="xml">
+                <field name="dependencia_id" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </field>
+            </field>
+        </record>
+
         <record id="plan_contratacion_idu_item_action" model="ir.actions.act_window">
             <field name="name">Item Plan Contratación</field>
             <field name="type">ir.actions.act_window</field>
