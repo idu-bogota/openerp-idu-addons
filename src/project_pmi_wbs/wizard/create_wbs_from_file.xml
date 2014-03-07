@@ -14,7 +14,9 @@
                         <field name="assign_task_to_current_user" colspan="4" />
                         <field name="file" colspan="4"/>
                     </group>
-
+                        <group name="work_package_measure" string="Work" attrs="{'invisible': [('take_leaves_as_tasks','!=','leaves_as_workpackages_unit')]}">
+                            <field name="uom_id" attrs="{'required': [('take_leaves_as_tasks','=','leaves_as_workpackages_unit')]}"/>
+                        </group>
                     <footer>
                         <button name="action_create" string="Create WBS" type="object" class="oe_highlight" /> or 
                         <button string="Cancel" class="oe_link" special="cancel" />
