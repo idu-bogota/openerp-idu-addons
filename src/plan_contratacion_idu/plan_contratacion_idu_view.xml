@@ -11,7 +11,7 @@
                 <tree string="Plan de contratación">
                     <field name="vigencia"/>
                     <field name="state" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
-                    <field name="active" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                    <field name="open_close_plan" on_change="onchange_open_close_plan(open_close_plan)" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                     <field name="item_ids"/>
                     <field name="total_pagos_presupuestado_plan"/>
                     <field name="total_pagos_programados_plan"/>
@@ -30,9 +30,13 @@
                                 <field name="vigencia"/>
                             </h1>
                         </div>
-                        <group name="detalles">
+                        <group name="estado">
                             <field name="state" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
-                            <field name="active" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                            <field name="active" groups="base.group_erp_manager"/>
+                        </group>
+                        <group col="2" colspan="1">
+                            <button name="wkf_open" string="Abrir" type="object" icon="gtk-yes" states="borrador, en_progreso" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                            <button name="wkf_close" string="Cerrar" type="object" icon="gtk-no" states="borrador, en_progreso" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                         </group>
                         <field name="item_ids" context="{'plan_id': active_id}" />
                          <field name="currency_id" invisible="1"/>
@@ -76,8 +80,8 @@
                     <field name="localidad_id" string="Localidad"/>
                     <field name="plan_id" string="Vigencia"/>
                     <separator/>
-                    <filter name="draft" string="Borrador" domain="[('state','=','draft')]" help="Estado del item en Borrador" icon="terp-check"/>
-                    <filter name="estudios_previos" string="Estudios Previos" domain="[('state','=','estudios_previos')]" help="Estado del item en Estudios Previos" icon="terp-check"/>
+                    <filter name="draft" string="Versión Inicial" domain="[('state','=','draft')]" help="Estado del item en Versión Inicial" icon="terp-check"/>
+                    <filter name="estudios_previos" string="Aprobado" domain="[('state','=','estudios_previos')]" help="Estado del item en Aprobado" icon="terp-check"/>
                     <filter name="radicado" string="Radicado" domain="[('state','=','radicado')]" help="Estado del item Radicado" icon="terp-check"/>
                     <filter name="suscrito" string="Contrato Suscrito" domain="[('state','=','suscrito')]" help="Estado del item Contrato Suscrito" icon="terp-check"/>
                     <filter name="ejecucion" string="Ejecución" domain="[('state','=','ejecucion')]" help="Estado del item en Ejecución" icon="terp-check"/>
@@ -88,7 +92,7 @@
                     <separator/>
                     <group expand="0" string="Group By...">
                         <filter string="Dependencia" name="group_dependencia_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'dependencia_id'}"/>
-                        <filter string="Localidad" name="group_localidad_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'localidad_id'}"/>
+                        <filter string="Localización" name="group_localizacion" icon="terp-folder-violet" domain="[]" context="{'group_by':'localizacion'}"/>
                         <filter string="Clasificación Proyecto" icon="terp-gnome-cpu-frequency-applet+" domain="[]" context="{'group_by':'clasificacion_id'}"/>
                         <filter string="Proyecto IDU" icon="terp-go-month" domain="[]" context="{'group_by':'nombre_proyecto_idu''}" groups="base.group_no_one"/>
                         <filter string="Fuente de Financiación" icon="terp-go-month" domain="[]" context="{'group_by':'fuente_id''}" groups="base.group_no_one"/>
@@ -104,6 +108,7 @@
             <field name="model">plan_contratacion_idu.item</field>
             <field name="arch" type="xml">
                 <tree string="Item Plan de contratación">
+                    <field name="is_editable"/>
                     <field name="clasificacion_id"/>
                     <field name="state"/>
                     <field name="dependencia_id"/>
@@ -126,20 +131,20 @@
                     </header>
                     <group col="1" colspan="1">
                         <header>
-                           <button name="wkf_draft" string="Borrador" type="object" icon="gtk-ok" states="estudios_previos"/>
-                           <button name="wkf_estudios_previos" string="Estudios Previos" type="object" icon="gtk-ok" states="draft,suscrito,radicado,no_realizado"/>
-                           <button name="wkf_radicado" string="Radicar" type="object" icon="gtk-ok" states="estudios_previos"/>
-                           <button name="wkf_suscrito" string="Contrato Suscrito" type="object" icon="gtk-ok" states="radicado, estudios_previos"/>
-                           <button name="wkf_ejecucion" string="Iniciar ejecución" type="object" icon="gtk-ok" states="suscrito"/>
-                           <button name="wkf_ejecutado" string="Finalizar Ejecución" type="object" icon="gtk-ok" states="ejecucion"/>
-                           <button name="wkf_no_realizado" string="No Realizado" icon="gtk-cancel" type="object" states="estudios_previos"/>
+                           <button name="wkf_draft" string="Versión Inicial" type="object" icon="gtk-dnd" states="estudios_previos" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                           <button name="wkf_estudios_previos" string="Aprobado" type="object" icon="gtk-apply" states="draft,suscrito,radicado,no_realizado" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                           <button name="wkf_radicado" string="Radicar" type="object" icon="gtk-index" states="estudios_previos" groups="base.group_erp_manager"/>
+                           <button name="wkf_suscrito" string="Contrato Suscrito" type="object" icon="gtk-edit" states="radicado, estudios_previos" groups="base.group_erp_manager"/>
+                           <button name="wkf_ejecucion" string="Iniciar ejecución" type="object" icon="gtk-yes" states="suscrito" groups="base.group_erp_manager"/>
+                           <button name="wkf_ejecutado" string="Finalizar Ejecución" type="object" icon="kanban-stop" states="ejecucion" groups="base.group_erp_manager"/>
+                           <button name="wkf_no_realizado" string="No Realizado" icon="gtk-cancel" type="object" states="estudios_previos" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                         </header>
                     </group>
                     <sheet>
                         <group>
                             <field name="plan_id" readonly="1" />
-                            <field name="codigo_unspsc"/>
-                            <field name="clasificacion_id"/>
+                            <field name="codigo_unspsc" attrs="{'readonly': [('is_editable','=',False)]}"/>
+                            <field name="clasificacion_id" attrs="{'readonly': [('is_editable','=',False)]}"/>
                         </group>
                         <group>
                             <field name="currency_id" invisible="1"/>

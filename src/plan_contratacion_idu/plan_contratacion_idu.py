@@ -74,12 +74,13 @@ class plan_contratacion_idu_plan(osv.osv):
              store= True,
         ),
         'vigencia': fields.integer('Vigencia', required=True, select=True),
-        'state':fields.selection([('borrador', 'Borrador'),('en_progreso', 'En Progreso'),
+        'state':fields.selection([('borrador', 'Inicial'),('en_progreso', 'Ejecución'),
              ('finalizado', 'Finalizado')],
              'State',
              required=True
          ),
         'active':fields.boolean('Activo'),
+        'open_close_plan':fields.boolean('Abierto'),
         'item_ids': fields.one2many('plan_contratacion_idu.item', 'plan_id', 'Items Plan de Contratacion'),
         'currency_id': fields.function(_get_currency,
              type='many2one',
@@ -120,6 +121,15 @@ class plan_contratacion_idu_plan(osv.osv):
         'state': 'borrador'
     }
 
+    def onchange_open_close_plan(self, cr, uid, ids, numero_orfeo, context=None):
+        self.pool.get('plan_contratacion_idu.item')._check_is_editable()
+
+    def wkf_open(self, cr, uid, ids, plan_items, context=None):
+        self.write(cr, uid, ids, {"open_close_plan": True})
+
+    def wkf_close(self, cr, uid, ids, plan_items, context=None):
+        self.write(cr, uid, ids, {"open_close_plan": False})
+
 plan_contratacion_idu_plan()
 
 class plan_contratacion_idu_item(osv.osv):
@@ -134,6 +144,19 @@ class plan_contratacion_idu_item(osv.osv):
             'plan_contratacion_idu.item.mt_ejecutado': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['ejecutado'],
         },
     }
+
+    def _check_is_editable(self,cr,uid,ids,fieldname,arg,context=None):
+        res = {}
+        plan_obj=self.pool.get('plan_contratacion_idu.plan').search(cr,uid,[('state','=','borrador'), ('state','=','en_progreso')])
+        for plan in plan_obj:
+            status = plan.open_close_plan
+            for item in self.browse(cr, uid, ids, context=context):
+                item.is_editable = True
+                if status:
+                    res[item.is_editable] = True
+                else:
+                    res[item.is_editable] = False
+        return  res
 
     def _total_pagos_programados(self, cr, uid, ids, name, args, context=None):
         res = {}
@@ -293,11 +316,15 @@ class plan_contratacion_idu_item(osv.osv):
 
 
     _columns = {
+        'is_editable':fields.function(_check_is_editable,
+             type='boolean',
+             string='Verifica si el item del plan es editable',
+             method=True),
         'codigo_unspsc': fields.char('Codigo UNSPSC',
              help='Codificación de bienes y servicios, Colombia compra eficiente',
-             readonly=True,
+             readonly=False,
              required=False,
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False), ('required',True)]}),
+             states={'estudios_previos':[('readonly',True),('required',True)]}),
         'dependencia_id': fields.many2one('hr.department','Dependencia',
              select=True,
              ondelete='cascade',
@@ -365,8 +392,8 @@ class plan_contratacion_idu_item(osv.osv):
              readonly=True,
              required=True,
              states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
-        'state':fields.selection([('draft', 'Borrador'),('estudios_previos', 'Estudios Previos'),('radicado', 'Radicado'),
-             ('suscrito', 'Contrato Suscrito'),('ejecucion', 'En ejecución'),('ejecutado', 'Ejecutado'),
+        'state':fields.selection([('draft', 'Versión Inicial'),('estudios_previos', 'Aprobado'),('radicado', 'Radicado'),
+             ('suscrito', 'Contrato Suscrito'),('ejecucion', 'Ejecución'),('ejecutado', 'Ejecutado'),
              ('no_realizado', 'No realizado')],'State',
              track_visibility='onchange',
              required=True),
@@ -569,6 +596,7 @@ class plan_contratacion_idu_item(osv.osv):
              help="Porcentaje de avance del item.",
             store = True),
     }
+    
 
     def _default_dependencia_id(self, cr, uid, context):
         department_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).department_ids
@@ -593,6 +621,7 @@ class plan_contratacion_idu_item(osv.osv):
         'dependencia_id': _default_dependencia_id,
         #Asigna por defecto el plan contractual pasado en el contexto
         'plan_id' : _default_plan_id,
+        'is_editable': True,
     }
 
     _constraints = [(_check_fechas_programadas,
