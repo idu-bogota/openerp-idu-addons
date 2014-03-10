@@ -139,29 +139,55 @@ class project_pmi_wbs_item(osv.osv):
         # compute progress rates
         for id in sorted(child_parent.keys(), reverse=True):
             progress = 0.0
-            if self._get_values_dictionary(child_parent,id) == 0:
-                if res[id]['planned_quantity'] and res[id]['type'] == 'work_package':
-                    progress = round(100.0 * res[id]['effective_quantity'] / res[id]['planned_quantity'], 2)
-                    if progress > 99.99:
-                        res[id]['excess_progress'] = progress - 99.99
-                        progress = 99.99
-                        if res[id]['state'] == 'done':
-                            res[id]['progress_rate'] = 100.0
+            records = {}
+            if child_parent[id]:
+                records = self.read(cr, uid, child_parent[id], ['use_weight'], context=context)
+            else:
+                records['use_weight'] = False
+            if records['use_weight']:
+                if self._get_values_dictionary(child_parent,id) == 0:
+                    if res[id]['planned_quantity'] and res[id]['type'] == 'work_package':
+                        progress = round(100.0 * res[id]['effective_quantity'] / res[id]['planned_quantity'], 2)
+                        if progress > 99.99:
+                            res[id]['excess_progress'] = progress - 99.99
+                            progress = 99.99
+                            if res[id]['state'] == 'done':
+                                res[id]['progress_rate'] = 100.0
+                            else:
+                                res[id]['progress_rate'] = progress
+                        else:
+                            if (progress):
+                                res[id]['progress_rate'] = progress
+                        while id:
+                            id_parent = child_parent[id]
+                            if id_parent:
+                                if ('progress_rate' in res[id_parent]):
+                                    if(progress):
+                                        res[id_parent]['progress_rate'] += round(progress * res[id]['weight'], 2)
+                                        progress = 0
+                                    else:
+                                        res[id_parent]['progress_rate'] += round(res[id]['progress_rate'] * res[id]['weight'], 2)
+                            id = child_parent[id]
+            else:
+                value = 1
+                while id:
+                    if res[id]['planned_quantity'] and res[id]['type'] == 'work_package':
+                        progress = round(100.0 * res[id]['effective_quantity'] / res[id]['planned_quantity'], 2)
+                        if progress > 99.99:
+                            res[id]['excess_progress'] = progress - 99.99
+                            progress = 99.99
+                            if res[id]['state'] == 'done':
+                                res[id]['progress_rate'] = 100.0
+                            else:
+                                res[id]['progress_rate'] = progress
                         else:
                             res[id]['progress_rate'] = progress
                     else:
-                        if (progress):
-                            res[id]['progress_rate'] = progress
-                    while id:
-                        id_parent = child_parent[id]
-                        if id_parent:
-                            if ('progress_rate' in res[id_parent]):
-                                if(progress):
-                                    res[id_parent]['progress_rate'] += round(progress * res[id]['weight'], 2)
-                                    progress = 0
-                                else:
-                                    res[id_parent]['progress_rate'] += round(res[id]['progress_rate'] * res[id]['weight'], 2)
-                        id = child_parent[id]
+                        number = self._get_values_dictionary(child_parent,id)
+                        if number > 0:
+                            value *= number
+                        res[id]['progress_rate'] += progress / value
+                    id = child_parent[id]
         if len(res) == 1:
             if len(child_parent) == 1:
                 for val in res:
@@ -256,28 +282,28 @@ class project_pmi_wbs_item(osv.osv):
         'date_end': fields.date('Ending Date'),
         'excess_progress': fields.function(_progress_rate, multi="progress", string='Excess Progress', type='float', group_operator="avg",
              help="Total work quantity planned", store = {
-                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity','state','weight'], 10),
+                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity','state','weight','use_weight'], 10),
                 'project_pmi.wbs_work_record': (_get_wbs_item_from_work_records, ['wbs_item_id', 'quantity'], 20),
                 'project.task': (_get_wbs_item_from_tasks, ['wbs_item_id', 'work_ids', 'remaining_hours', 'planned_hours','state'], 30),
             }
          ),
         'planned_quantity': fields.function(_progress_rate, multi="progress", string='Planned Quantity', type='float', group_operator="avg",
              help="Total work quantity planned", store = {
-                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity','state','weight'], 10),
+                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity','state','weight','use_weight'], 10),
                 'project_pmi.wbs_work_record': (_get_wbs_item_from_work_records, ['wbs_item_id', 'quantity'], 20),
                 'project.task': (_get_wbs_item_from_tasks, ['wbs_item_id', 'work_ids', 'remaining_hours', 'planned_hours','state'], 30),
             }
          ),
         'effective_quantity': fields.function(_progress_rate, multi="progress", string='Effective Quantity', type='float', group_operator="avg",
              help="Percent of progress according to the total of work recorded.", store = {
-                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity','state','weight'], 10),
+                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity','state','weight','use_weight'], 10),
                 'project_pmi.wbs_work_record': (_get_wbs_item_from_work_records, ['wbs_item_id', 'quantity'], 20),
                 'project.task': (_get_wbs_item_from_tasks, ['wbs_item_id', 'work_ids', 'remaining_hours', 'planned_hours','state'], 30),
             }
          ),
         'progress_rate': fields.function(_progress_rate, multi="progress", string='Progress', type='float', group_operator="avg",
              help="Percent of progress according to the total of work recorded.", store = {
-                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity','state','weight'], 10),
+                'project_pmi.wbs_item': (_get_wbs_item_and_parents, ['parent_id', 'child_ids','quantity','state','weight','use_weight'], 10),
                 'project_pmi.wbs_work_record': (_get_wbs_item_from_work_records, ['wbs_item_id', 'quantity'], 20),
                 'project.task': (_get_wbs_item_from_tasks, ['wbs_item_id', 'work_ids', 'remaining_hours', 'planned_hours','state'], 30),
             }
@@ -446,7 +472,11 @@ class project_pmi_wbs_item(osv.osv):
                 if obj.parent_id and obj.state in ['open','done','pending','draft']:
                     for sibling in obj.parent_id.child_ids:
                         if sibling.state != 'cancelled':
-                            weight_sum += self.calculate_days(sibling.date_start, sibling.date_end)
+                            is_date = isinstance(sibling.date_start,date) and isinstance(sibling.date_end,date)
+                            if is_date:
+                                weight_sum += self.calculate_days(sibling.date_start, sibling.date_end)
+                            else:
+                                raise osv.except_osv('Error','Wrong data type')
                 #calcula el %
                 if obj.parent_id and obj.state in ['open','done','pending','draft']:
                     for sibling in obj.parent_id.child_ids:
