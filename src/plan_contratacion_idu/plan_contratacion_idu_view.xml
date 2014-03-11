@@ -11,7 +11,7 @@
                 <tree string="Plan de contratación">
                     <field name="vigencia"/>
                     <field name="state" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
-                    <field name="open_close_plan" on_change="onchange_open_close_plan(open_close_plan)" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                    <field name="open_close_plan" on_change="_onchange_open_close_plan(open_close_plan)" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                     <field name="item_ids"/>
                     <field name="total_pagos_presupuestado_plan"/>
                     <field name="total_pagos_programados_plan"/>
@@ -31,6 +31,8 @@
                             </h1>
                         </div>
                         <group name="estado">
+                            <field name="open_close_plan" invisible="1"/>
+                            <field name="version"/>
                             <field name="state" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                             <field name="active" groups="base.group_erp_manager"/>
                         </group>
@@ -108,7 +110,7 @@
             <field name="model">plan_contratacion_idu.item</field>
             <field name="arch" type="xml">
                 <tree string="Item Plan de contratación">
-                    <field name="is_editable"/>
+                    <field name="is_editable" invisible="1"/>
                     <field name="clasificacion_id"/>
                     <field name="state"/>
                     <field name="dependencia_id"/>
@@ -142,6 +144,7 @@
                     </group>
                     <sheet>
                         <group>
+                            <field name="is_editable" invisible="1" />
                             <field name="plan_id" readonly="1" />
                             <field name="codigo_unspsc" attrs="{'readonly': [('is_editable','=',False)]}"/>
                             <field name="clasificacion_id" attrs="{'readonly': [('is_editable','=',False)]}"/>
@@ -151,37 +154,37 @@
                         </group>
                         <group col="4" colspan="1">
                             
-                            <field name="dependencia_id"/>
-                            <field name="fuente_id"/>
-                            <field name="tipo_proceso_id"/>
-                            <field name="tipo_proceso_seleccion_id"/>
-                            <field name="presupuesto" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="dependencia_id" attrs="{'readonly': [('is_editable','=',False)]}"/>
+                            <field name="fuente_id" attrs="{'readonly': [('is_editable','=',False)]}"/>
+                            <field name="tipo_proceso_id" attrs="{'readonly': [('is_editable','=',False)]}"/>
+                            <field name="tipo_proceso_seleccion_id" attrs="{'readonly': [('is_editable','=',False)]}"/>
+                            <field name="presupuesto" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('is_editable','=',False)]}"/>
                             <field name="progress_rate" widget="progressbar"/>
                         </group>
                         <notebook colspan="6">
                             <page string="Detalles">
                                 <group name="detalles">
-                                    <field name="localizacion"/>
+                                    <field name="localizacion" attrs="{'readonly': [('is_editable','=',False)]}"/>
                                     <field name="localidad_id" attrs="{'invisible':[('localizacion','!=','localidad')], 'required':[('localizacion', '=','localidad')]}"/>
-                                    <field name="description"/>
+                                    <field name="description" attrs="{'readonly': [('is_editable','=',False)]}"/>
                                     <field name="plazo_de_ejecucion"
                                         attrs="{
-                                            'readonly':[('a_monto_agotable','=',True) or ('state','=','radicado')],
+                                            'readonly':['|', ('a_monto_agotable','=',True), ('state','=','radicado'), ('is_editable','=',False)],
                                             'required':[('a_monto_agotable','=',False)]
                                         }"
                                     />
-                                    <field name="a_monto_agotable" on_change="onchange_a_monto_agotable(a_monto_agotable)"/>
-                                    <field name="no_aplica_unidad_mf" on_change="onchange_no_aplica_unidad_mf(no_aplica_unidad_mf)"/>
+                                    <field name="a_monto_agotable" on_change="onchange_a_monto_agotable(a_monto_agotable)" attrs="{'readonly': [('is_editable','=',False)]}"/>
+                                    <field name="no_aplica_unidad_mf" on_change="onchange_no_aplica_unidad_mf(no_aplica_unidad_mf)" attrs="{'readonly': [('is_editable','=',False)]}"/>
                                     <field name="unidad_meta_fisica"
                                         attrs="{
-                                            'readonly':[('no_aplica_unidad_mf','=',True) or ('state','=','radicado')],
+                                            'readonly':['|',('no_aplica_unidad_mf','=',True),'|',('state','=','radicado'),('is_editable','=',False)],
                                             'required':[('no_aplica_unidad_mf','=',False)],
                                             'invisible':[('no_aplica_unidad_mf','=',True)],
                                         }"
                                     />
                                     <field name="cantidad_meta_fisica"
                                         attrs="{
-                                            'readonly':[('no_aplica_unidad_mf','=',True) or ('state','=','radicado')],
+                                            'readonly':['|',('no_aplica_unidad_mf','=',True), ('state','=','radicado'), ('is_editable','=',False)],
                                             'required':[('no_aplica_unidad_mf','=',False)],
                                             'invisible':[('no_aplica_unidad_mf','=',True)],
                                         }"
@@ -191,7 +194,7 @@
                             <page string="Información Centro de Costo">
                                 <header class="oe_edit_only">
                                     <group col="2" colspan="2">
-                                        <field name="centro_costo" on_change="on_change_centro_costo(centro_costo)"/>
+                                        <field name="centro_costo" on_change="on_change_centro_costo(centro_costo)" attrs="{'readonly': [('is_editable','=',False)]}"/>
                                     </group>
                                 </header>
                                 <group col="4" colspan="4">
@@ -208,9 +211,9 @@
                             <page string="Fechas">
                                 <group name="fechas" string="Fechas Planificadas">
                                     <separator colspan="2"/>
-                                    <field name="fecha_programada_radicacion"/>
-                                    <field name="fecha_programada_crp"/>
-                                    <field name="fecha_programada_acta_inicio"/>
+                                    <field name="fecha_programada_radicacion" attrs="{'readonly': [('is_editable','=',False)]}"/>
+                                    <field name="fecha_programada_crp" attrs="{'readonly': [('is_editable','=',False)]}"/>
+                                    <field name="fecha_programada_acta_inicio" attrs="{'readonly': [('is_editable','=',False)]}"/>
                                  </group>
                                  <group name="informacion_verificacion" string="Fechas de Ejecución" col="4" colspan="1">
                                     <field name="numero_orfeo" on_change="onchange_numero_orfeo(numero_orfeo)"/>
@@ -226,8 +229,8 @@
                                 <group name="pagos_programados" string="Pagos Programados">
                                     <field name="plan_pagos_item_ids" on_change="onchange_plan_pagos_item_ids(plan_pagos_item_ids)" nolabel="1">
                                         <tree string="Plan de pagos" editable="bottom">
-                                            <field name="mes"/>
-                                            <field name="valor" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                            <field name="mes" attrs="{'readonly': [('is_editable','=',False)]}"/>
+                                            <field name="valor" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('is_editable','=',False)]}"/>
                                         </tree>
                                     </field>
                                 </group>

@@ -31,20 +31,12 @@
         'base','hr','contrato_idu','stone_erp_idu','base_map'
     ],
     'data': [
-        'plan_contratacion_idu_view.xml',
         'plan_contratacion_idu_data.xml',
+        'wizard/reporte_excel_view.xml',
+        'security/plan_contratacion_idu_security.xml',
+        'security/ir.model.access.csv',
+        'plan_contratacion_idu_view.xml',
     ],
-    'init_xml' : [
-                  #'wizard/get_centro_costo_view.xml',
-                  'plan_contratacion_idu_view.xml',
-                  ],
-    'demo': [],
-    'update_xml': ['wizard/reporte_excel_view.xml',
-                   'security/plan_contratacion_idu_security.xml',
-                   'security/ir.model.access.csv',
-                   'plan_contratacion_idu_view.xml',
-                   #'plan_contratacion_idu_workflow.xml',
-                  ],
     'installable': True,
     'auto_install': False,
 }

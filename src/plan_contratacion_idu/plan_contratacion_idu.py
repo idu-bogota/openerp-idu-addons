@@ -82,6 +82,9 @@ class plan_contratacion_idu_plan(osv.osv):
         'active':fields.boolean('Activo'),
         'open_close_plan':fields.boolean('Abierto'),
         'item_ids': fields.one2many('plan_contratacion_idu.item', 'plan_id', 'Items Plan de Contratacion'),
+        'version': fields.integer('Versión',
+             help="Versión del archivo para exportar, conteo de versiones del plan",
+             readonly=False),
         'currency_id': fields.function(_get_currency,
              type='many2one',
              relation="res.currency",
@@ -118,16 +121,22 @@ class plan_contratacion_idu_plan(osv.osv):
      
     _defaults = {
         'active': True,
-        'state': 'borrador'
+        'state': 'borrador',
+        'open_close_plan': True,
+        'version': 1
     }
 
     def onchange_open_close_plan(self, cr, uid, ids, numero_orfeo, context=None):
         self.pool.get('plan_contratacion_idu.item')._check_is_editable()
 
-    def wkf_open(self, cr, uid, ids, plan_items, context=None):
+    def wkf_open(self, cr, uid, ids,context=None):
         self.write(cr, uid, ids, {"open_close_plan": True})
 
-    def wkf_close(self, cr, uid, ids, plan_items, context=None):
+    def wkf_close(self, cr, uid, ids, context=None):
+        records = self.read(cr, uid, ids, ['version'],context=context)
+        for record in records:
+            contador = record['version'] + 1
+        self.write(cr, uid, ids, {"version": contador})
         self.write(cr, uid, ids, {"open_close_plan": False})
 
 plan_contratacion_idu_plan()
@@ -147,15 +156,13 @@ class plan_contratacion_idu_item(osv.osv):
 
     def _check_is_editable(self,cr,uid,ids,fieldname,arg,context=None):
         res = {}
-        plan_obj=self.pool.get('plan_contratacion_idu.plan').search(cr,uid,[('state','=','borrador'), ('state','=','en_progreso')])
-        for plan in plan_obj:
-            status = plan.open_close_plan
-            for item in self.browse(cr, uid, ids, context=context):
-                item.is_editable = True
-                if status:
-                    res[item.is_editable] = True
-                else:
-                    res[item.is_editable] = False
+        records = self.browse(cr, uid, ids, context=context)
+        for record in records:
+            plan_record = record.plan_id
+            if plan_record.open_close_plan and record.state=='draft':
+                res[record.id] = True
+            else:
+                res[record.id] = False
         return  res
 
     def _total_pagos_programados(self, cr, uid, ids, name, args, context=None):
@@ -324,7 +331,7 @@ class plan_contratacion_idu_item(osv.osv):
              help='Codificación de bienes y servicios, Colombia compra eficiente',
              readonly=False,
              required=False,
-             states={'estudios_previos':[('readonly',True),('required',True)]}),
+             states={'estudios_previos':[('required',True)]}),
         'dependencia_id': fields.many2one('hr.department','Dependencia',
              select=True,
              ondelete='cascade',
@@ -332,14 +339,13 @@ class plan_contratacion_idu_item(osv.osv):
              readonly=False,
          ),
         'description': fields.text('Objeto Contractual',
-             readonly=True,
-             required=True,
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+             readonly=False,
+             required=True),
         'centro_costo':fields.char('Centro de Costo',size=512,
-             readonly=True,
+             readonly=False,
              required=False,
              help="Ingrese el número del Centro de Costo para consultar la información",
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False),('required',True)]}),
+             states={'estudios_previos':[('required',True)]}),
         'centro_costo_id': fields.many2one('stone_erp_idu.centro_costo','Codigo Centro de Costo',
              readonly=True,
              select=True,
@@ -389,9 +395,8 @@ class plan_contratacion_idu_item(osv.osv):
         'fuente_id': fields.many2one('plan_contratacion_idu.fuente','Fuente de Financiación',
              select=True,
              ondelete='cascade',
-             readonly=True,
-             required=True,
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+             readonly=False,
+             required=True),
         'state':fields.selection([('draft', 'Versión Inicial'),('estudios_previos', 'Aprobado'),('radicado', 'Radicado'),
              ('suscrito', 'Contrato Suscrito'),('ejecucion', 'Ejecución'),('ejecutado', 'Ejecutado'),
              ('no_realizado', 'No realizado')],'State',
@@ -401,19 +406,19 @@ class plan_contratacion_idu_item(osv.osv):
              help="Fecha estimada de inicio de proceso de selección",
              required=False,
              select=True,
-             readonly=True,
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False),('required',True)]}),
+             readonly=False,
+             states={'estudios_previos':[('required',True)]}),
         'fecha_programada_crp': fields.date ('Fecha Programada CRP',
              required=False,
              select=False,
              help="CRP es Certificado Registro Presupuestal",
-             readonly=True,
-             states={'draft':[('readonly',False)],'estudios_previos':[('readonly',False),('required',True)]}),
+             readonly=False,
+             states={'estudios_previos':[('required',True)]}),
         'fecha_programada_acta_inicio': fields.date ('Fecha Aprobación Acta de Inicio',
              required=False,
              select=False,
-             readonly=True,
-             states={'draft':[('readonly',False)],'estudios_previos':[('readonly',False),('required',True)]}),
+             readonly=False,
+             states={'estudios_previos':[('required',True)]}),
         'plan_id': fields.many2one('plan_contratacion_idu.plan','Plan contractual',
              select=True,
              ondelete='cascade',
@@ -423,53 +428,45 @@ class plan_contratacion_idu_item(osv.osv):
         'clasificacion_id': fields.many2one('plan_contratacion_idu.clasificador_proyectos','Clasificación Proyecto',
              select=True,
              ondelete='cascade',
-             readonly=True,
-             required=True,
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+             readonly=False,
+             required=True),
         'presupuesto': fields.float ('Presupuesto',
              required=True,
              select=True,
              obj="res.currency",
              track_visibility='onchange',
-             readonly=True,
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+             readonly=False),
         'plazo_de_ejecucion': fields.integer('Plazo de Ejecución (meses)',
              select=True,
              help="Tiempo estimado en meses",
-             readonly=True, states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+             readonly=False),
         'a_monto_agotable':fields.boolean('A monto agotable',
              help="plazo de ejecución a monto agotable",
-             readonly=True,
-             states={'draft':[('readonly',False)],'estudios_previos':[('readonly',False)]}),
+             readonly=False),
         'unidad_meta_fisica': fields.many2one('product.uom',
             'Unidad Meta Física',
              select=True,
              ondelete='cascade',
-             readonly=True,
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+             readonly=False),
         'no_aplica_unidad_mf':fields.boolean('No aplica unidad de meta física',
              help="Seleccionar cuando no aplica la unidad de meta física",
-             readonly=True,
-             states={'draft':[('readonly',False)],'estudios_previos':[('readonly',False)]}),
+             readonly=False),
         'cantidad_meta_fisica': fields.char ('Cantidad Metas Físicas',
              size=255,
-             readonly=True,
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+             readonly=False),
         'localizacion':fields.selection([('entidad', '66 - Entidad'),('metropolitana', '77 - Metropolitana'),('localidad', 'Localidad')],
              'Localizacion',
              select=True,
              help="Localización del item",
-             readonly=True,
-             required=True,
-             states={'draft':[('readonly',False)],'estudios_previos':[('readonly',False)]}),
+             readonly=False,
+             required=True),
         'localidad_id': fields.many2many('base_map.district','plan_contratacion_idu_localidad_item',
              'base_localidad_id',
              'plan_localidad_id',
              'localidades del item',
              select=True,
              ondelete='cascade',
-             readonly=True,
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+             readonly=False),
         'currency_id': fields.related('plan_id','currency_id',
              type='many2one',
              relation='res.currency',
@@ -480,21 +477,18 @@ class plan_contratacion_idu_item(osv.osv):
              select=True,
              required=True,
              ondelete='cascade',
-             readonly=True,
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+             readonly=False),
         'tipo_proceso_seleccion_id': fields.many2one('plan_contratacion_idu.plan_tipo_proceso_seleccion','Tipo Proceso de Selección',
              select=True,
              ondelete='cascade',
              required=True,
-             readonly=True,
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+             readonly=False),
         'plan_pagos_item_ids': fields.one2many('plan_contratacion_idu.plan_pagos_item','plan_contratacion_item_id',
              'Planificacion de Pagos',
              select=True,
              ondelete='cascade',
-             readonly=True,
-             required=True,
-             states={'draft':[('readonly',False)], 'estudios_previos':[('readonly',False)]}),
+             readonly=False,
+             required=True),
         'plan_pagos_giro_ids': fields.one2many('plan_contratacion_idu.plan_pagos_giro',
              'plan_contratacion_item_id',
              'Giros Realizados',
@@ -594,7 +588,7 @@ class plan_contratacion_idu_item(osv.osv):
              type='float',
              group_operator="avg",
              help="Porcentaje de avance del item.",
-            store = True),
+             store = True),
     }
     
 
