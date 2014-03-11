@@ -311,7 +311,7 @@ class project_pmi_wbs_item(osv.osv):
         'work_record_ids': fields.one2many('project_pmi.wbs_work_record', 'wbs_item_id', 'Work done'),
         'task_ids': fields.one2many('project.task', 'wbs_item_id', 'Tasks'),
         'weight': fields.float('Weight'),
-        'use_weight': fields.boolean('Use weight?',help='If active, weight is used to calculate progress rate'),
+        'use_weight': fields.boolean('Uses weight?',help='If active, weight is used to calculate progress rate'),
     }
     _defaults = {
         'active': True,

@@ -44,8 +44,9 @@
                     <field name="date_end"/>
                     <field name="state"/>
                     <field name="active"/>
-                    <field name="weight"/>
                     <field name="progress_rate"/>
+                    <field name="weight"/>
+                    <field name="use_weight"/>
                 </tree>
             </field>
         </record>
@@ -64,8 +65,9 @@
                     <field name="date_end"/>
                     <field name="progress_rate"/>
                     <field name="progress_rate" widget="progressbar"/>
+                    <field name="weight"/>
+                    <field name="use_weight"/>
                     <field name="state"/>
-                    <field name="active"/>
                 </tree>
             </field>
         </record>
@@ -158,6 +160,7 @@
                                     <field name="progress_rate" widget="progressbar"/>
                                     <field name="state"/>
                                     <field name="weight" sum="Weight"/>
+                                    <field name="use_weight"/>
                                 </tree>
                            </field>
                         </group>
