@@ -9,13 +9,14 @@
                     <group col="4">
                         <field name="max_level_evaluate" colspan="4"/>
                         <field name="take_leaves_as_tasks" colspan="4" />
-                        <field name="min_level_task" colspan="4" attrs="{'invisible': [('take_leaves_as_tasks','=',True)]}" />
+                        <field name="min_level_task" colspan="4" attrs="{'invisible': [('take_leaves_as_tasks','!=',False)]}" />
                         <field name="include_wbs_outline_number" colspan="4" />
                         <field name="assign_task_to_current_user" colspan="4" />
                         <field name="file" colspan="4"/>
                     </group>
                         <group name="work_package_measure" string="Work" attrs="{'invisible': [('take_leaves_as_tasks','!=','leaves_as_workpackages_unit')]}">
                             <field name="uom_id" attrs="{'required': [('take_leaves_as_tasks','=','leaves_as_workpackages_unit')]}"/>
+                            <field name="quantity" attrs="{'required': [('take_leaves_as_tasks','=','leaves_as_workpackages_unit')]}"/>
                         </group>
                     <footer>
                         <button name="action_create" string="Create WBS" type="object" class="oe_highlight" /> or 

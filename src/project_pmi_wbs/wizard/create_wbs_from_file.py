@@ -36,8 +36,9 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
         'include_wbs_outline_number': fields.boolean("Include the wbs assigned code in the name?", required=False),
         'assign_task_to_current_user': fields.boolean("Assign new tasks to current user? otherwise they will be unassigned", required=False),
 #         'take_leaves_as_tasks': fields.boolean("Take leaves as tasks", required=False),
-        'take_leaves_as_tasks': fields.selection([('leaves_as_tasks', 'leaves as tasks'),('leaves_as_workpackages_unit', 'leaves as workpackages unit')],'Leaves as'),
+        'take_leaves_as_tasks': fields.selection([('leaves_as_tasks', 'leaves as workpackage tasks'),('leaves_as_workpackages_unit', 'leaves as workpackages unit')],'Leaves as'),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', help="Default Unit of Measure used"),
+        'quantity': fields.float('Quantity'),
     }
 
     def calculate_days(self,date1):
@@ -131,7 +132,7 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
             date_deadline = self.get_date(task.find('{http://schemas.microsoft.com/project}Finish').text) - timedelta(days=add_days)
             data['type'] = 'work_package'
             data['tracking_type'] = 'units'
-            data['quantity'] = 100
+            data['quantity'] = wizard.quantity
             data['date_start'] = date_start.strftime('%Y-%m-%d')
             data['date_deadline'] = date_deadline.strftime('%Y-%m-%d')
             data['uom_id'] = wizard.uom_id.id
