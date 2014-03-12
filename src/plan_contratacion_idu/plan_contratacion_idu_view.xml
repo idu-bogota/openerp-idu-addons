@@ -10,8 +10,8 @@
             <field name="arch" type="xml">
                 <tree string="Plan de contratación">
                     <field name="vigencia"/>
-                    <field name="state" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
-                    <field name="open_close_plan" on_change="_onchange_open_close_plan(open_close_plan)" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                    <field name="state" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager, base.group_erp_manager"/>
+                    <field name="open_close_plan" on_change="_onchange_open_close_plan(open_close_plan)" invisible="0"/>
                     <field name="item_ids"/>
                     <field name="total_pagos_presupuestado_plan"/>
                     <field name="total_pagos_programados_plan"/>
@@ -31,14 +31,14 @@
                             </h1>
                         </div>
                         <group name="estado">
-                            <field name="open_close_plan" invisible="1"/>
+                            <field name="open_close_plan" invisible="0"/>
                             <field name="version"/>
                             <field name="state" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                             <field name="active" groups="base.group_erp_manager"/>
                         </group>
                         <group col="2" colspan="1">
-                            <button name="wkf_open" string="Abrir" type="object" icon="gtk-yes" states="borrador, en_progreso" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
-                            <button name="wkf_close" string="Cerrar" type="object" icon="gtk-no" states="borrador, en_progreso" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                            <button name="wkf_open" string="Abrir" type="object" icon="gtk-yes" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager" attrs="{'invisible': [('open_close_plan','=',True)]}"/>
+                            <button name="wkf_close" string="Cerrar" type="object" icon="gtk-no" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager" attrs="{'invisible': [('open_close_plan','=',False)]}"/>
                         </group>
                         <field name="item_ids" context="{'plan_id': active_id}" />
                          <field name="currency_id" invisible="1"/>
@@ -75,15 +75,15 @@
             <field name="model">plan_contratacion_idu.item</field>
             <field name="arch" type="xml">
                <search string="Plan Contratación Items">
-                    <filter icon="terp-check" string="Vigencia Actual" name="vigencia_actual" domain="['|',('plan_id.state', '=','borrador'),('plan_id.state', '=','en_progreso')]" help="Vigencia del Plan"/>
+                    <filter icon="terp-check" string="Vigencia Actual" name="vigencia_actual" domain="['|',('plan_id.state', '=','inicial'),('plan_id.state', '=','en_ejecucion')]" help="Vigencia del Plan"/>
                     <separator/>
                     <field name="dependencia_id" string="Dependencia"/>
                     <field name="localizacion" string="Localización"/>
                     <field name="localidad_id" string="Localidad"/>
                     <field name="plan_id" string="Vigencia"/>
                     <separator/>
-                    <filter name="draft" string="Versión Inicial" domain="[('state','=','draft')]" help="Estado del item en Versión Inicial" icon="terp-check"/>
-                    <filter name="estudios_previos" string="Aprobado" domain="[('state','=','estudios_previos')]" help="Estado del item en Aprobado" icon="terp-check"/>
+                    <filter name="version_inicial" string="Versión Inicial" domain="[('state','=','version_inicial')]" help="Estado del item en Versión Inicial" icon="terp-check"/>
+                    <filter name="aprobado" string="Aprobado" domain="[('state','=','aprobado')]" help="Estado del item en Aprobado" icon="terp-check"/>
                     <filter name="radicado" string="Radicado" domain="[('state','=','radicado')]" help="Estado del item Radicado" icon="terp-check"/>
                     <filter name="suscrito" string="Contrato Suscrito" domain="[('state','=','suscrito')]" help="Estado del item Contrato Suscrito" icon="terp-check"/>
                     <filter name="ejecucion" string="Ejecución" domain="[('state','=','ejecucion')]" help="Estado del item en Ejecución" icon="terp-check"/>
@@ -110,7 +110,7 @@
             <field name="model">plan_contratacion_idu.item</field>
             <field name="arch" type="xml">
                 <tree string="Item Plan de contratación">
-                    <field name="is_editable" invisible="1"/>
+                    <field name="is_editable" invisible="0"/>
                     <field name="clasificacion_id"/>
                     <field name="state"/>
                     <field name="dependencia_id"/>
@@ -119,7 +119,7 @@
                     <field name="fecha_programada_radicacion"/>
                     <field name="fecha_programada_crp"/>
                     <field name="fecha_programada_acta_inicio"/>
-                    <field name="presupuesto" sum="Presupuesto"/>
+                    <field name="presupuesto" sum="Presupuesto" on_change="onchange_presupuesto(presupuesto)"/>
                 </tree>
             </field>
         </record>
@@ -133,18 +133,18 @@
                     </header>
                     <group col="1" colspan="1">
                         <header>
-                           <button name="wkf_draft" string="Versión Inicial" type="object" icon="gtk-dnd" states="estudios_previos" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
-                           <button name="wkf_estudios_previos" string="Aprobado" type="object" icon="gtk-apply" states="draft,suscrito,radicado,no_realizado" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
-                           <button name="wkf_radicado" string="Radicar" type="object" icon="gtk-index" states="estudios_previos" groups="base.group_erp_manager"/>
-                           <button name="wkf_suscrito" string="Contrato Suscrito" type="object" icon="gtk-edit" states="radicado, estudios_previos" groups="base.group_erp_manager"/>
+                           <button name="wkf_version_inicial" string="Versión Inicial" type="object" icon="gtk-dnd" states="aprobado" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                           <button name="wkf_aprobado" string="Aprobado" type="object" icon="gtk-apply" states="version_inicial,suscrito,radicado,no_realizado" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                           <button name="wkf_radicado" string="Radicar" type="object" icon="gtk-index" states="aprobado" groups="base.group_erp_manager"/>
+                           <button name="wkf_suscrito" string="Contrato Suscrito" type="object" icon="gtk-edit" states="radicado, aprobado" groups="base.group_erp_manager"/>
                            <button name="wkf_ejecucion" string="Iniciar ejecución" type="object" icon="gtk-yes" states="suscrito" groups="base.group_erp_manager"/>
                            <button name="wkf_ejecutado" string="Finalizar Ejecución" type="object" icon="kanban-stop" states="ejecucion" groups="base.group_erp_manager"/>
-                           <button name="wkf_no_realizado" string="No Realizado" icon="gtk-cancel" type="object" states="estudios_previos" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                           <button name="wkf_no_realizado" string="No Realizado" icon="gtk-cancel" type="object" states="aprobado" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                         </header>
                     </group>
                     <sheet>
                         <group>
-                            <field name="is_editable" invisible="1" />
+                            <field name="is_editable" invisible="0" />
                             <field name="plan_id" readonly="1" />
                             <field name="codigo_unspsc" attrs="{'readonly': [('is_editable','=',False)]}"/>
                             <field name="clasificacion_id" attrs="{'readonly': [('is_editable','=',False)]}"/>
@@ -227,10 +227,10 @@
                             </page>
                             <page string="Pagos">
                                 <group name="pagos_programados" string="Pagos Programados">
-                                    <field name="plan_pagos_item_ids" on_change="onchange_plan_pagos_item_ids(plan_pagos_item_ids)" nolabel="1">
+                                    <field name="plan_pagos_item_ids" on_change="onchange_plan_pagos_item_ids(plan_pagos_item_ids)" nolabel="1" attrs="{'readonly': [('is_editable','=',False)]}">
                                         <tree string="Plan de pagos" editable="bottom">
-                                            <field name="mes" attrs="{'readonly': [('is_editable','=',False)]}"/>
-                                            <field name="valor" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('is_editable','=',False)]}"/>
+                                            <field name="mes"/>
+                                            <field name="valor" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                         </tree>
                                     </field>
                                 </group>
@@ -265,6 +265,11 @@
                             </page>
                         </notebook>
                     </sheet>
+                    <header class="oe_edit_only">
+                        <group col="1" colspan="1">
+                            <button name="solicitar_cambio" string="Solicitud Modificación" type="object" icon="gtk-dnd" attrs="{'invisible': [('is_editable','=',False)]}"/>
+                        </group>
+                    </header>
                     <div class="oe_chatter">
                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
                        <field name="message_ids" widget="mail_thread"/>

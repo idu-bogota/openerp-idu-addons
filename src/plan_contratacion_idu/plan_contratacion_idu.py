@@ -21,6 +21,7 @@ import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv
 from suds.client import Client
 from stone_erp_idu import stone_client_ws
+from openerp import SUPERUSER_ID
 
 wsdl_url_orfeo='http://gesdocpru/desarrollo/webServices/orfeoIduWebServices.php?wsdl'
 client = Client(wsdl_url_orfeo)
@@ -52,7 +53,7 @@ class plan_contratacion_idu_plan(osv.osv):
             return res
         if isinstance(ids, (long, int)):
             ids = [ids]
-        records = self.browse(cr, uid, ids, context=context)
+        records = self.browse(cr, SUPERUSER_ID, ids, context=context)
         res = {}
         for record in records:
             sumatoria = 0
@@ -66,6 +67,14 @@ class plan_contratacion_idu_plan(osv.osv):
             res[record['id']]['total_rezago_plan'] = sumatoria_presupuesto - sumatoria
         return res
 
+    def _get_plan_ids_from_items (self, cr, uid, ids, context=None):
+        """
+        Retorna IDs del plan_item modificados
+        """
+        records = self.pool.get('plan_contratacion_idu.item').browse(cr, uid, ids, context=context)
+        plan_item_ids = [record.id for record in records if record.id]
+        return plan_item_ids
+
     _columns = {
         'name': fields.function(_get_name,
              type='char',
@@ -73,8 +82,8 @@ class plan_contratacion_idu_plan(osv.osv):
              readonly=True,
              store= True,
         ),
-        'vigencia': fields.integer('Vigencia', required=True, select=True),
-        'state':fields.selection([('borrador', 'Inicial'),('en_progreso', 'Ejecución'),
+        'vigencia': fields.char('Vigencia', required=True, select=True),
+        'state':fields.selection([('inicial', 'Inicial'),('en_ejecucion', 'Ejecución'),
              ('finalizado', 'Finalizado')],
              'State',
              required=True
@@ -98,7 +107,10 @@ class plan_contratacion_idu_plan(osv.osv):
              string='Total Presupuestado',
              digits_compute=dp.get_precision('Account'),
              readonly = True,
-             store= True
+             store= {
+                'plan_contratacion_idu.plan': (lambda self, cr, uid, ids, ctx={}: ids, ['item_ids'], 10),
+                'plan_contratacion_idu.item': (_get_plan_ids_from_items, ['presupuesto', 'plan_pagos_item_ids'], 20),
+            }
          ),
         'total_pagos_programados_plan': fields.function(_total_pagos_plan,
              type='float',
@@ -121,7 +133,7 @@ class plan_contratacion_idu_plan(osv.osv):
      
     _defaults = {
         'active': True,
-        'state': 'borrador',
+        'state': 'inicial',
         'open_close_plan': True,
         'version': 1
     }
@@ -159,7 +171,7 @@ class plan_contratacion_idu_item(osv.osv):
         records = self.browse(cr, uid, ids, context=context)
         for record in records:
             plan_record = record.plan_id
-            if plan_record.open_close_plan and record.state=='draft':
+            if plan_record.open_close_plan and record.state=='version_inicial':
                 res[record.id] = True
             else:
                 res[record.id] = False
@@ -305,9 +317,9 @@ class plan_contratacion_idu_item(osv.osv):
         records = self.browse(cr, uid, ids, context=context)
         for record in records:
             res[record['id']] = {}
-            if record.state == 'draft':
+            if record.state == 'version_inicial':
                 res[record['id']]['progress_rate']=10
-            if record.state == 'estudios_previos':
+            if record.state == 'aprobado':
                 res[record['id']]['progress_rate']=20
             if record.state == 'radicado':
                 res[record['id']]['progress_rate']=30
@@ -319,8 +331,7 @@ class plan_contratacion_idu_item(osv.osv):
                 res[record['id']]['progress_rate']=100
             if record.state == 'no_realizado':
                 res[record['id']]['progress_rate']=0
-        return res 
-
+        return res
 
     _columns = {
         'is_editable':fields.function(_check_is_editable,
@@ -331,7 +342,7 @@ class plan_contratacion_idu_item(osv.osv):
              help='Codificación de bienes y servicios, Colombia compra eficiente',
              readonly=False,
              required=False,
-             states={'estudios_previos':[('required',True)]}),
+             states={'aprobado':[('required',True)]}),
         'dependencia_id': fields.many2one('hr.department','Dependencia',
              select=True,
              ondelete='cascade',
@@ -345,7 +356,7 @@ class plan_contratacion_idu_item(osv.osv):
              readonly=False,
              required=False,
              help="Ingrese el número del Centro de Costo para consultar la información",
-             states={'estudios_previos':[('required',True)]}),
+             states={'aprobado':[('required',True)]}),
         'centro_costo_id': fields.many2one('stone_erp_idu.centro_costo','Codigo Centro de Costo',
              readonly=True,
              select=True,
@@ -397,9 +408,9 @@ class plan_contratacion_idu_item(osv.osv):
              ondelete='cascade',
              readonly=False,
              required=True),
-        'state':fields.selection([('draft', 'Versión Inicial'),('estudios_previos', 'Aprobado'),('radicado', 'Radicado'),
+        'state':fields.selection([('version_inicial', 'Versión Inicial'),('aprobado', 'Aprobado'),('radicado', 'Radicado'),
              ('suscrito', 'Contrato Suscrito'),('ejecucion', 'Ejecución'),('ejecutado', 'Ejecutado'),
-             ('no_realizado', 'No realizado')],'State',
+             ('no_realizado', 'No realizado'), ('solicitud_cambio', 'Solicitud de Cambio')],'State',
              track_visibility='onchange',
              required=True),
         'fecha_programada_radicacion': fields.date ('Fecha Radicacion en DTPS y/o DTGC',
@@ -407,24 +418,24 @@ class plan_contratacion_idu_item(osv.osv):
              required=False,
              select=True,
              readonly=False,
-             states={'estudios_previos':[('required',True)]}),
+             states={'aprobado':[('required',True)]}),
         'fecha_programada_crp': fields.date ('Fecha Programada CRP',
              required=False,
              select=False,
              help="CRP es Certificado Registro Presupuestal",
              readonly=False,
-             states={'estudios_previos':[('required',True)]}),
+             states={'aprobado':[('required',True)]}),
         'fecha_programada_acta_inicio': fields.date ('Fecha Aprobación Acta de Inicio',
              required=False,
              select=False,
              readonly=False,
-             states={'estudios_previos':[('required',True)]}),
+             states={'aprobado':[('required',True)]}),
         'plan_id': fields.many2one('plan_contratacion_idu.plan','Plan contractual',
              select=True,
              ondelete='cascade',
              readonly=True,
              required=True,
-             states={'draft':[('readonly',False)]}),
+             states={'version_inicial':[('readonly',False)]}),
         'clasificacion_id': fields.many2one('plan_contratacion_idu.clasificador_proyectos','Clasificación Proyecto',
              select=True,
              ondelete='cascade',
@@ -561,7 +572,7 @@ class plan_contratacion_idu_item(osv.osv):
             }),
         'numero_orfeo':fields.char('Número Radicado Orfeo',
              help='Validado desdes Orfeo',
-             states={'estudios_previos':[('readonly',False)]}, readonly=True,
+             states={'aprobado':[('readonly',False)]}, readonly=True,
              track_visibility='onchange'),
         'fecha_radicado_orfeo':fields.date('Fecha Radicado', readonly=True),
         'numero_crp':fields.char('Numero CRP',
@@ -604,13 +615,13 @@ class plan_contratacion_idu_item(osv.osv):
             return context['plan_id']
         else:
             return self.pool.get('plan_contratacion_idu.plan').search(cr, uid,
-                [('state','=','borrador')],
+                [('state','=','inicial')],
                 limit=1,
                 context=context
             )[0]
 
     _defaults = {
-        'state': 'draft',
+        'state': 'version_inicial',
         'progress_rate':0,
         'dependencia_id': _default_dependencia_id,
         #Asigna por defecto el plan contractual pasado en el contexto
@@ -635,6 +646,7 @@ class plan_contratacion_idu_item(osv.osv):
                     ['state']),
                     ]
 
+#FIXME: Aqui esta llamando al centro_costo.write y create, esto centralizarse solo en strone_erp_idu.
     def on_change_centro_costo(self,cr,uid,ids,centro_costo,context=None):
         centro_costo_obj=self.pool.get('stone_erp_idu.centro_costo')
         #Verificacion que el centro de costo este guardado en la base de datos
@@ -650,14 +662,14 @@ class plan_contratacion_idu_item(osv.osv):
             else :
                 
                 #Mejor guardar provisionalmente y despues se hace la actualizacion y se le pone el nombre jaja
-                id_cc = centro_costo_obj.create(cr,uid,{'codigo':det_cc['centro_costo'],'name':det_cc['centro_costo']})
+                id_cc = centro_costo_obj.create(cr,1,{'codigo':det_cc['centro_costo'],'name':det_cc['centro_costo']})
                 centro_costo_obj.actualizar_centros_costo(cr,uid,context)
         else :
             id_cc = ids[0]
         #Actualiza valores completo centro de costo -> No se hace por defecto para evitar ralentizar la aplicacion"
-        vals = centro_costo_obj.completar_centro_costo(cr,uid,{'codigo':centro_costo},context = context)
-        centro_costo_obj.write(cr,uid,id_cc,vals,context = context)
-        centro_costo = centro_costo_obj.browse(cr,uid,id_cc,context) 
+        vals = centro_costo_obj.completar_centro_costo(cr,1,{'codigo':centro_costo},context = context)
+        centro_costo_obj.write(cr,1,id_cc,vals,context = context)
+        centro_costo = centro_costo_obj.browse(cr,1,id_cc,context) 
         #Completar Diccionarionombre_punto_inversion
         
         res = {'value':{'centro_costo_id':id_cc,
@@ -719,6 +731,10 @@ class plan_contratacion_idu_item(osv.osv):
             'value': res
         }
 
+    def onchange_presupuesto(self, cr, uid, ids, presupuesto, context=None):
+        self.pool.get('plan_contratacion_idu.item')._total_pagos_realizados()
+        self.pool.get('plan_contratacion_idu.plan')._total_pagos_plan()
+
     def onchange_a_monto_agotable(self, cr, uid, ids, a_monto_agotable, context=None):
         return {'value': {'plazo_de_ejecucion': 0}}
 
@@ -733,6 +749,7 @@ class plan_contratacion_idu_item(osv.osv):
     def onchange_numero_orfeo(self, cr, uid, ids, numero_orfeo, context=None):
         if orfeo_existe_radicado(numero_orfeo):
             self.write(cr, uid, ids, {"fecha_radicado_orfeo": orfeo_fecha_radicado(numero_orfeo).FECHA})
+            self.write(cr, uid, ids, {"state": "radicado"})
             return True
         else:
             self.write(cr, uid, ids, {"fecha_radicado_orfeo": False})
@@ -773,11 +790,11 @@ class plan_contratacion_idu_item(osv.osv):
             'context': ctx,
         }
 
-    def wkf_draft(self, cr, uid, ids, plan_items, context=None):
-        self.write(cr, uid, ids, {"state": "draft"})
+    def wkf_version_inicial(self, cr, uid, ids, plan_items, context=None):
+        self.write(cr, uid, ids, {"state": "version_inicial"})
 
-    def wkf_estudios_previos(self, cr, uid, ids, plan_items, context=None):
-        self.write(cr, uid, ids, {"state": "estudios_previos","numero_orfeo":None,
+    def wkf_aprobado(self, cr, uid, ids, plan_items, context=None):
+        self.write(cr, uid, ids, {"state": "aprobado","numero_orfeo":None,
                                   "numero_crp":None, "numero_contrato":None})
 
     def wkf_radicado(self, cr, uid, ids, plan_items, context=None):

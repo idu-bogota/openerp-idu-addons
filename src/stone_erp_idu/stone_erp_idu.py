@@ -51,10 +51,10 @@ class stone_erp_idu_centro_costo(osv.osv):
             vals = {'codigo':c_costo,'name':c_costo_dict[c_costo]}
             if (ids_centro_costo.__len__() == 0):
                 #insertar
-                centro_costo_obj.create(cr,uid,vals,context=None)
+                centro_costo_obj.create(cr,1,vals,context=None)
             else :
                 #actualizar#
-                centro_costo_obj.write(cr,uid,ids_centro_costo,vals)
+                centro_costo_obj.write(cr,1,ids_centro_costo,vals)
         return True
 
     def completar_centro_costo(self,cr,uid,vals,context=None):
