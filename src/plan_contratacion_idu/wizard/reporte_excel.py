@@ -38,13 +38,13 @@ class plan_contratacion_idu_wizard_reporte(osv.osv_memory):
                    'PROCESO',
                    'COD PROY INV',
                    'NOMBRE PROY INVERSION',
-                   'COD PROYECTO PRIORITARIO',#6
-                   'NOMBRE PROYECTO PRIORITARIO',#6
-                   'CODIGO PROYECTO',#7
-                   'NOMBRE PROYECTO',#8
-                   'CENTRO COSTO',#9
-                   'CODIGO PUNTO INVERSION',#10
-                   'NOMBRE PUNTO INVERSION',#11
+                   'COD PROYECTO PRIORITARIO',
+                   'NOMBRE PROYECTO PRIORITARIO',
+                   'CODIGO PROYECTO',
+                   'NOMBRE PROYECTO',
+                   'CENTRO COSTO',
+                   'CODIGO PUNTO INVERSION',
+                   'NOMBRE PUNTO INVERSION',
                    'DEPENDENCIA',#12
                    'PRESUPUESTO',#13
                    'CODIGO FUENTE FINANCIACION',#16
@@ -92,6 +92,11 @@ class plan_contratacion_idu_wizard_reporte(osv.osv_memory):
     _defaults = {
               'filename': 'report.xls',
     }
+    
+    def _format_item (self,item):
+        res = "" if (type(item) == bool and item == False) else item
+        return res
+    
     
     def crear_reporte(self,cr,uid,ids,context):
         """
@@ -146,40 +151,37 @@ class plan_contratacion_idu_wizard_reporte(osv.osv_memory):
             items_plan = plan_contratacion_idu_item_obj.browse(cr,uid,id_items,context)
             row_index = 2
             for item in items_plan:
-                ws.write(row_index,headers.index("CODIGO UNPSC"),item.codigo_unspsc)
-                ws.write(row_index,headers.index("ESTADO"),item.state)
-                ws.write(row_index,headers.index("PROCESO"),item.tipo_proceso_id.name)
+                ws.write(row_index,headers.index("CODIGO UNPSC"),self._format_item(item.codigo_unspsc))
+                ws.write(row_index,headers.index("ESTADO"),self._format_item(item.state))
+                ws.write(row_index,headers.index("PROCESO"),self._format_item(item.tipo_proceso_id.name))
                 # proyecto_inversion
-                ws.write(row_index,headers.index('COD PROYECTO PRIORITARIO'),item.clasificacion_id.codigo)
-                ws.write(row_index,headers.index('NOMBRE PROYECTO PRIORITARIO'),item.clasificacion_id.name)
-                ws.write(row_index,headers.index('COD PROY INV'),item.clasificacion_id.parent_id.codigo)
-                ws.write(row_index,headers.index('NOMBRE PROY INVERSION'),item.clasificacion_id.parent_id.name)
-                # proyecto prioritario
-               
-                # codigo proyecto prioritario
-                ws.write(row_index,headers.index('CODIGO PROYECTO'),item.cod_proyecto_idu)
-                ws.write(row_index,headers.index('NOMBRE PROYECTO'),item.nombre_proyecto_idu)
-                ws.write(row_index,headers.index('CENTRO COSTO'),item.centro_costo)
-                ws.write(row_index,headers.index('CODIGO PUNTO INVERSION'),item.cod_punto_inversion)
-                ws.write(row_index,headers.index('NOMBRE PUNTO INVERSION'),item.nombre_punto_inversion)
-                ws.write(row_index,headers.index('DEPENDENCIA'),item.dependencia_id.name)
-                ws.write(row_index,headers.index('PRESUPUESTO'),item.presupuesto)
-                ws.write(row_index,headers.index('CODIGO FUENTE FINANCIACION'),item.fuente_id.codigo_fuente)
-                ws.write(row_index,headers.index('FUENTE FINANCIACION'),item.fuente_id.name)
-                ws.write(row_index,headers.index('CODIGO FUENTE FINANCIACION SEGPOAI'),item.fuente_id.codigo_fuente_sdh)
-                ws.write(row_index,headers.index('FUENTE FINANCIACION SEGPOAI'),item.fuente_id.nombre_fuente_sdh)
-                ws.write(row_index,headers.index('FUENTE SDH'),item.fuente_id.nombre_detalle_fuente_sdh)
+                ws.write(row_index,headers.index('COD PROYECTO PRIORITARIO'),self._format_item(item.clasificacion_id.codigo))
+                ws.write(row_index,headers.index('NOMBRE PROYECTO PRIORITARIO'),self._format_item(item.clasificacion_id.name))
+                ws.write(row_index,headers.index('COD PROY INV'),self._format_item(item.clasificacion_id.parent_id.codigo))
+                ws.write(row_index,headers.index('NOMBRE PROY INVERSION'),self._format_item(item.clasificacion_id.parent_id.name))
+                ws.write(row_index,headers.index('CODIGO PROYECTO'),self._format_item(item.cod_proyecto_idu))
+                ws.write(row_index,headers.index('NOMBRE PROYECTO'),self._format_item(item.nombre_proyecto_idu))
+                ws.write(row_index,headers.index('CENTRO COSTO'),self._format_item(item.centro_costo))
+                ws.write(row_index,headers.index('CODIGO PUNTO INVERSION'),self._format_item(item.cod_punto_inversion))
+                ws.write(row_index,headers.index('NOMBRE PUNTO INVERSION'),self._format_item(item.nombre_punto_inversion))
+                ws.write(row_index,headers.index('DEPENDENCIA'),self._format_item(item.dependencia_id.name))
+                ws.write(row_index,headers.index('PRESUPUESTO'),self._format_item(item.presupuesto))
+                ws.write(row_index,headers.index('CODIGO FUENTE FINANCIACION'),self._format_item(item.fuente_id.codigo_fuente))
+                ws.write(row_index,headers.index('FUENTE FINANCIACION'),self._format_item(item.fuente_id.name))
+                ws.write(row_index,headers.index('CODIGO FUENTE FINANCIACION SEGPOAI'),self._format_item(item.fuente_id.codigo_fuente_sdh))
+                ws.write(row_index,headers.index('FUENTE FINANCIACION SEGPOAI'),self._format_item(item.fuente_id.nombre_fuente_sdh))
+                ws.write(row_index,headers.index('FUENTE SDH'),self._format_item(item.fuente_id.nombre_detalle_fuente_sdh))
                 if (item.a_monto_agotable):
                     ws.write(row_index,headers.index('PLAZO EJECUCION ESTIMADO SEGUN DTP'),"A monto agotable")
                 else:
-                    ws.write(row_index,headers.index('PLAZO EJECUCION ESTIMADO SEGUN DTP'),item.plazo_de_ejecucion)
+                    ws.write(row_index,headers.index('PLAZO EJECUCION ESTIMADO SEGUN DTP'),self._format_item(item.plazo_de_ejecucion))
 
-                ws.write(row_index,headers.index('CODIGO FASE DE INTERVENCION'),item.cod_fase_intervencion)
-                ws.write(row_index,headers.index('FASE DE INTERVENCION'),item.nombre_fase_intervencion)
+                ws.write(row_index,headers.index('CODIGO FASE DE INTERVENCION'),self._format_item(item.cod_fase_intervencion))
+                ws.write(row_index,headers.index('FASE DE INTERVENCION'),self._format_item(item.nombre_fase_intervencion))
                 #Meta física 
                 if not (item.no_aplica_unidad_mf):
-                    ws.write(row_index,headers.index('UNIDAD METAS FISICAS'),item.unidad_meta_fisica.name)
-                    ws.write(row_index,headers.index('CANTIDAD METAS FISICAS'),item.cantidad_meta_fisica)
+                    ws.write(row_index,headers.index('UNIDAD METAS FISICAS'),self._format_item(item.unidad_meta_fisica.name))
+                    ws.write(row_index,headers.index('CANTIDAD METAS FISICAS'),self._format_item(item.cantidad_meta_fisica))
                 #Localidad 
                 localizacion = ""
                 for val in item._model._columns["localizacion"].selection:
@@ -188,8 +190,8 @@ class plan_contratacion_idu_wizard_reporte(osv.osv_memory):
                 #Todo cuando se actualice el codigo quitar la comparacion con entidad o metropolitana
                 if ((item.localizacion=='entidad' or item.localizacion == 'metropolitana') or (item.localizacion=='66' or item.localizacion == '77')):
                     #Si localizacion localidad = entidad o metropolitana, entonces la celda localidad = entidad o metropolitana
-                    ws.write(row_index,headers.index('CODIGO LOC'),item.localizacion)
-                    ws.write(row_index,headers.index('LOCALIDAD'),localizacion)
+                    ws.write(row_index,headers.index('CODIGO LOC'),self._format_item(item.localizacion))
+                    ws.write(row_index,headers.index('LOCALIDAD'),self._format_item(localizacion))
                 elif (item.localizacion=="localidad"):
                     #Si localizacion = localidad, listar cada una de las localidades.
                     str_loc = ""
@@ -200,15 +202,15 @@ class plan_contratacion_idu_wizard_reporte(osv.osv_memory):
                     ws.write(row_index,headers.index('CODIGO LOC'),cod_loc)
                     ws.write(row_index,headers.index('LOCALIDAD'),str_loc)
                 #Fecha de Radicacion en Segun DTS, Fecha CRP, Tipo proceso seleccion
-                ws.write(row_index,headers.index('FECHA RADICACION DTPS SEGUN DTD'),item.fecha_programada_radicacion,date_style)
-                ws.write(row_index,headers.index('FECHA PROGRAMADA CRP ESTIMACION DTD'),item.fecha_programada_crp,date_style)
-                ws.write(row_index,headers.index('CRP'),str(item.numero_crp))
-                ws.write(row_index,headers.index('TIPO DE PROCESO DE SELECCION'),item.tipo_proceso_seleccion_id.name)
-                ws.write(row_index,headers.index('No CONTRATO'),item.numero_contrato)
+                ws.write(row_index,headers.index('FECHA RADICACION DTPS SEGUN DTD'),self._format_item(item.fecha_programada_radicacion),date_style)
+                ws.write(row_index,headers.index('FECHA PROGRAMADA CRP ESTIMACION DTD'),self._format_item(item.fecha_programada_crp),date_style)
+                ws.write(row_index,headers.index('CRP'),self._format_item(item.numero_crp))
+                ws.write(row_index,headers.index('TIPO DE PROCESO DE SELECCION'),self._format_item(item.tipo_proceso_seleccion_id.name))
+                ws.write(row_index,headers.index('No CONTRATO'),self._format_item(item.numero_contrato))
                 for pago in item.plan_pagos_item_ids:
-                    ws.write(row_index,headers.index('ENERO')+(pago.mes-1),pago.valor)
-                ws.write(row_index,headers.index('TOTAL'),item.total_pagos_realizados)
-                ws.write(row_index,headers.index('REZAGO'),item.total_programado_rezago)
+                    ws.write(row_index,headers.index('ENERO')+(pago.mes-1),self._format_item(pago.valor))
+                ws.write(row_index,headers.index('TOTAL'),self._format_item(item.total_pagos_programados))
+                ws.write(row_index,headers.index('REZAGO'),self._format_item(item.presupuesto_rezago))
                 row_index = row_index+1
         wb.save(xlsfile)
         out = encodestring(xlsfile.getvalue())
