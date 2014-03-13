@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2014 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,12 +18,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-#
-#
-#
-#    Autor: Andres Ignacio Báez Alba
-#
-#
-##########################################################################################
-import generador_xml
-import openerp_server_proxy
+import xmlrpclib
+from xlrd import open_workbook
+
+
+
+openerp_server = "I1608"
+pwd = "sigidu"
+user = "admin"
+port ="8069"
+
+
+
+
