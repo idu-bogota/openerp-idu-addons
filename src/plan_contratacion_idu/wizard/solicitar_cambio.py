@@ -77,9 +77,9 @@ class plan_contratacion_idu_wizard_solicitar_cambio(osv.osv_memory):
         }
 
         if form.tipo == 'modificar':
-            vals['item_nuevo_id'] = plan_item_pool.copy(cr, uid, form.plan_item_id.id, default={'message_ids':[], 'state': 'solicitud_cambio'}, context=context)
+            vals['item_nuevo_id'] = plan_item_pool.copy(cr, uid, form.plan_item_id.id, default={'message_ids':[], 'state': 'solicitud_cambio', 'is_editable': 'True'}, context=context)
         elif form.tipo == 'adicionar':
-            vals['item_nuevo_id'] = plan_item_pool.create(cr, uid, {'plan_id':form.plan_id.id, 'state': 'solicitud_cambio'}, context=context)
+            vals['item_nuevo_id'] = plan_item_pool.create(cr, uid, {'plan_id':form.plan_id.id, 'state': 'version_inicial', 'is_editable':'True'}, context=context)
 
         id = solicitud_cambio_pool.create(cr, uid, vals, context=context)
 

@@ -171,7 +171,7 @@ class plan_contratacion_idu_item(osv.osv):
         records = self.browse(cr, uid, ids, context=context)
         for record in records:
             plan_record = record.plan_id
-            if plan_record.open_close_plan and record.state=='version_inicial':
+            if plan_record.open_close_plan and (record.state=='version_inicial' or record.state=='solicitud_cambio'):
                 res[record.id] = True
             else:
                 res[record.id] = False
@@ -235,6 +235,23 @@ class plan_contratacion_idu_item(osv.osv):
             if (record.fecha_programada_crp and record.fecha_programada_acta_inicio and record.fecha_programada_acta_inicio < record.fecha_programada_crp):
                 return False
         return True
+
+    def _check_state_aprobado(self,cr,uid,ids,context=None):
+        """valida el cambio de estado por los campos requeridos"""
+        res = {}
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return res
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        records = self.browse(cr, uid, ids, context=context)
+        is_valid = True
+        for record in records:
+            if record.state == 'aprobado':
+                if record.codigo_unspsc and record.centro_costo:
+                    is_valid = True
+                else:
+                    is_valid = False
+        return is_valid
 
     def _check_state_radicado(self,cr,uid,ids,context=None):
         """valida el cambio de estado y si existe el numero de radicado en orfeo"""
@@ -341,22 +358,22 @@ class plan_contratacion_idu_item(osv.osv):
         'codigo_unspsc': fields.char('Codigo UNSPSC',
              help='Codificación de bienes y servicios, Colombia compra eficiente',
              readonly=False,
-             required=False,
-             states={'aprobado':[('required',True)]}),
+             required=False),
         'dependencia_id': fields.many2one('hr.department','Dependencia',
              select=True,
              ondelete='cascade',
              required=True,
              readonly=False,
+             states={'solicitud_cambio':[('required',False)]}
          ),
         'description': fields.text('Objeto Contractual',
              readonly=False,
-             required=True),
+             required=False,
+             states={'version_inicial':[('required',True)]}),
         'centro_costo':fields.char('Centro de Costo',size=512,
              readonly=False,
              required=False,
-             help="Ingrese el número del Centro de Costo para consultar la información",
-             states={'aprobado':[('required',True)]}),
+             help="Ingrese el número del Centro de Costo para consultar la información"),
         'centro_costo_id': fields.many2one('stone_erp_idu.centro_costo','Codigo Centro de Costo',
              readonly=True,
              select=True,
@@ -407,29 +424,28 @@ class plan_contratacion_idu_item(osv.osv):
              select=True,
              ondelete='cascade',
              readonly=False,
-             required=True),
+             required=False,
+             states={'version_inicial':[('required',True)]}),
         'state':fields.selection([('version_inicial', 'Versión Inicial'),('aprobado', 'Aprobado'),('radicado', 'Radicado'),
              ('suscrito', 'Contrato Suscrito'),('ejecucion', 'Ejecución'),('ejecutado', 'Ejecutado'),
              ('no_realizado', 'No realizado'), ('solicitud_cambio', 'Solicitud de Cambio')],'State',
              track_visibility='onchange',
-             required=True),
+             required=True,
+             states={'solicitud_cambio':[('required',False)]}),
         'fecha_programada_radicacion': fields.date ('Fecha Radicacion en DTPS y/o DTGC',
              help="Fecha estimada de inicio de proceso de selección",
              required=False,
              select=True,
-             readonly=False,
-             states={'aprobado':[('required',True)]}),
+             readonly=False),
         'fecha_programada_crp': fields.date ('Fecha Programada CRP',
              required=False,
              select=False,
              help="CRP es Certificado Registro Presupuestal",
-             readonly=False,
-             states={'aprobado':[('required',True)]}),
+             readonly=False),
         'fecha_programada_acta_inicio': fields.date ('Fecha Aprobación Acta de Inicio',
              required=False,
              select=False,
-             readonly=False,
-             states={'aprobado':[('required',True)]}),
+             readonly=False),
         'plan_id': fields.many2one('plan_contratacion_idu.plan','Plan contractual',
              select=True,
              ondelete='cascade',
@@ -440,13 +456,15 @@ class plan_contratacion_idu_item(osv.osv):
              select=True,
              ondelete='cascade',
              readonly=False,
-             required=True),
+             required=False,
+             states={'version_inicial':[('required',True)]}),
         'presupuesto': fields.float ('Presupuesto',
-             required=True,
              select=True,
              obj="res.currency",
              track_visibility='onchange',
-             readonly=False),
+             readonly=False,
+             required=False,
+             states={'version_inicial':[('required',True)]}),
         'plazo_de_ejecucion': fields.integer('Plazo de Ejecución (meses)',
              select=True,
              help="Tiempo estimado en meses",
@@ -465,12 +483,13 @@ class plan_contratacion_idu_item(osv.osv):
         'cantidad_meta_fisica': fields.char ('Cantidad Metas Físicas',
              size=255,
              readonly=False),
-        'localizacion':fields.selection([('entidad', '66 - Entidad'),('metropolitana', '77 - Metropolitana'),('localidad', 'Localidad')],
+        'localizacion':fields.selection([('66', '66 - Entidad'),('77', '77 - Metropolitana'),('localidad', 'Localidad')],
              'Localizacion',
              select=True,
              help="Localización del item",
              readonly=False,
-             required=True),
+             required=False,
+             states={'version_inicial':[('required',True)]}),
         'localidad_id': fields.many2many('base_map.district','plan_contratacion_idu_localidad_item',
              'base_localidad_id',
              'plan_localidad_id',
@@ -486,20 +505,23 @@ class plan_contratacion_idu_item(osv.osv):
              readonly=True),
         'tipo_proceso_id': fields.many2one('plan_contratacion_idu.plan_tipo_proceso','Tipo Proceso',
              select=True,
-             required=True,
              ondelete='cascade',
-             readonly=False),
+             readonly=False,
+             required=False,
+             states={'version_inicial':[('required',True)]}),
         'tipo_proceso_seleccion_id': fields.many2one('plan_contratacion_idu.plan_tipo_proceso_seleccion','Tipo Proceso de Selección',
              select=True,
              ondelete='cascade',
-             required=True,
-             readonly=False),
+             readonly=False,
+             required=False,
+             states={'version_inicial':[('required',True)]}),
         'plan_pagos_item_ids': fields.one2many('plan_contratacion_idu.plan_pagos_item','plan_contratacion_item_id',
              'Planificacion de Pagos',
              select=True,
              ondelete='cascade',
              readonly=False,
-             required=True),
+             required=False,
+             states={'version_inicial':[('required',True)]}),
         'plan_pagos_giro_ids': fields.one2many('plan_contratacion_idu.plan_pagos_giro',
              'plan_contratacion_item_id',
              'Giros Realizados',
@@ -638,6 +660,9 @@ class plan_contratacion_idu_item(osv.osv):
     _constraints = [(_check_fechas_programadas,
                     "La fecha programada CRP debe ser posterior a la fecha programada de radicación y anterior a la fecha programada para la aprobación del acta de Inicio",
                     ['fecha_programada_crp','fecha_programada_acta_inicio']),
+                    (_check_state_aprobado,
+                    "Para cambiar el estado a Aprobado debe ingresar los campos requeridos",
+                    ['state', 'codigo_unspsc', 'centro_costo']),
                     (_check_state_radicado,
                     "Para cambiar el estado a Radicado debe ingresar el un número válido de radicado Orfeo en Fechas de Ejecución",
                     ['state', 'numero_orfeo']),

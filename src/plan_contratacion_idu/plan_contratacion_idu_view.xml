@@ -146,6 +146,9 @@
                            <button name="wkf_no_realizado" string="No Realizado" icon="gtk-cancel" type="object" states="aprobado" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                            <button name="%(plan_contratacion_idu.action_plan_contratacion_idu_wizard_solicitud_cambio)d" string="Solicitar Cambio"
                               type="action" icon="gtk-ok" context="{'plan_item_id': id, 'plan_id': plan_id, }"
+                              groups="plan_contratacion_idu.group_plan_contratacion_idu_user,
+                              plan_contratacion_idu.group_plan_contratacion_idu_manager,
+                              base.group_erp_manager"
                            />
                         </header>
                     </group>
@@ -176,7 +179,7 @@
                                     <field name="description" attrs="{'readonly': [('is_editable','=',False)]}"/>
                                     <field name="plazo_de_ejecucion"
                                         attrs="{
-                                            'readonly':['|', ('a_monto_agotable','=',True), ('state','=','radicado'), ('is_editable','=',False)],
+                                            'readonly':['|', ('a_monto_agotable','=',True),'|',('state','=','radicado'), ('is_editable','=',False)],
                                             'required':[('a_monto_agotable','=',False)]
                                         }"
                                     />
@@ -191,7 +194,7 @@
                                     />
                                     <field name="cantidad_meta_fisica"
                                         attrs="{
-                                            'readonly':['|',('no_aplica_unidad_mf','=',True), ('state','=','radicado'), ('is_editable','=',False)],
+                                            'readonly':['|',('no_aplica_unidad_mf','=',True),'|',('state','=','radicado'), ('is_editable','=',False)],
                                             'required':[('no_aplica_unidad_mf','=',False)],
                                             'invisible':[('no_aplica_unidad_mf','=',True)],
                                         }"
