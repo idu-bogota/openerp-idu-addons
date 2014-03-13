@@ -2,7 +2,6 @@
 <openerp>
     <data>
         <menuitem name="Plan de Contratacion" id="menu_plan_contratacion" parent="base.menu_main_contrato_idu"/>
-        <menuitem name="Exportar a Excel" id="reporte_exportar_a_excel" parent="menu_plan_contratacion" action="plan_contratacion_idu.action_plan_contratacion_idu_wizard_reporte"/>
         <!-- Plan de contratacion -->
         <record id="plan_contratacion_idu_list" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.plan.list</field>
@@ -39,6 +38,9 @@
                         <group col="2" colspan="1">
                             <button name="wkf_open" string="Abrir" type="object" icon="gtk-yes" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager" attrs="{'invisible': [('open_close_plan','=',True)]}"/>
                             <button name="wkf_close" string="Cerrar" type="object" icon="gtk-no" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager" attrs="{'invisible': [('open_close_plan','=',False)]}"/>
+                            <button name="%(plan_contratacion_idu.action_plan_contratacion_idu_wizard_solicitud_cambio)d" string="Solicitar adición de un nuevo item"
+                               type="action" icon="gtk-ok" context="{'plan_id': id, }"
+                            />
                         </group>
                         <field name="item_ids" context="{'plan_id': active_id}" />
                          <field name="currency_id" invisible="1"/>
@@ -82,6 +84,8 @@
                     <field name="localidad_id" string="Localidad"/>
                     <field name="plan_id" string="Vigencia"/>
                     <separator/>
+                    <filter name="items_activos" string="Item activos" domain="['!',('state','in',('solicitud_cambio','no_realizado','ejecutado'))]" help="Items activos" icon="terp-check"/>
+                    <filter name="solicitud_cambio" string="Solicitudes de cambio" domain="[('state','=','solicitud_cambio')]" help="Items activos" icon="terp-check"/>
                     <filter name="version_inicial" string="Versión Inicial" domain="[('state','=','version_inicial')]" help="Estado del item en Versión Inicial" icon="terp-check"/>
                     <filter name="aprobado" string="Aprobado" domain="[('state','=','aprobado')]" help="Estado del item en Aprobado" icon="terp-check"/>
                     <filter name="radicado" string="Radicado" domain="[('state','=','radicado')]" help="Estado del item Radicado" icon="terp-check"/>
@@ -129,7 +133,7 @@
             <field name="arch" type="xml">
                 <form string="Item plan de contratación" version="7.0">
                     <header>
-                       <field name="state" widget="statusbar" colors="blue:state" clickabe= 'True'/>
+                       <field name="state" widget="statusbar" colors="blue:state" clickable= 'False'/>
                     </header>
                     <group col="1" colspan="1">
                         <header>
@@ -140,6 +144,9 @@
                            <button name="wkf_ejecucion" string="Iniciar ejecución" type="object" icon="gtk-yes" states="suscrito" groups="base.group_erp_manager"/>
                            <button name="wkf_ejecutado" string="Finalizar Ejecución" type="object" icon="kanban-stop" states="ejecucion" groups="base.group_erp_manager"/>
                            <button name="wkf_no_realizado" string="No Realizado" icon="gtk-cancel" type="object" states="aprobado" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                           <button name="%(plan_contratacion_idu.action_plan_contratacion_idu_wizard_solicitud_cambio)d" string="Solicitar Cambio"
+                              type="action" icon="gtk-ok" context="{'plan_item_id': id, 'plan_id': plan_id, }"
+                           />
                         </header>
                     </group>
                     <sheet>
@@ -263,13 +270,13 @@
                                      </group>
                                </group>
                             </page>
+                            <page string="Solicitudes de cambio">
+                                <group col="4" colspan="4">
+                                    <field name="solicitud_cambio_ids" nolabel="1" readonly="1"/>
+                                </group>
+                            </page>
                         </notebook>
                     </sheet>
-                    <header class="oe_edit_only">
-                        <group col="1" colspan="1">
-                            <button name="solicitar_cambio" string="Solicitud Modificación" type="object" icon="gtk-dnd" attrs="{'invisible': [('is_editable','=',False)]}"/>
-                        </group>
-                    </header>
                     <div class="oe_chatter">
                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
                        <field name="message_ids" widget="mail_thread"/>
@@ -297,7 +304,7 @@
             <field name="res_model">plan_contratacion_idu.item</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_vigencia_actual':1}</field>
+            <field name="context">{'search_default_vigencia_actual':1, 'search_default_items_activos':1}</field>
             <field name="view_id" ref="plan_contratacion_idu_item_list"/>
         </record>
         <menuitem

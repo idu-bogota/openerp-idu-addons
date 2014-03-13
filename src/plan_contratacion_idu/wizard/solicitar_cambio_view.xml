@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+        <!-- View Form Wizard -->
+        <record id="view_plan_contratacion_idu_wizard_solicitud_cambio" model="ir.ui.view">
+            <field name="name">Solicitar cambio</field>
+            <field name="model">plan_contratacion_idu.wizard.solicitud_cambio</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Solicitar cambio" version="7.0">
+                    <group col="4">
+                        <field name="plan_id" colspan="4" readonly="1"/>
+                        <field name="tipo" colspan="4"/>
+                        <field name="plan_item_id" colspan="4" readonly="1"/>
+                    </group>
+                    <footer>
+                        <button name="action_radicar" string="Radicar solicitud" type="object" class="oe_highlight" />
+                            or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action  -->
+        <record id="action_plan_contratacion_idu_wizard_solicitud_cambio" model="ir.actions.act_window">
+            <field name="name">Solicitar cambio</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">plan_contratacion_idu.wizard.solicitud_cambio</field>
+            <field name="src_model">plan_contratacion_idu.wizard.solicitud_cambio</field>
+            <field name="view_id" ref="view_plan_contratacion_idu_wizard_solicitud_cambio"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record>
+
+</data>
+</openerp>

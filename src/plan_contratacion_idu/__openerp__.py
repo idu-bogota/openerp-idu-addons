@@ -33,6 +33,7 @@
     'data': [
         'plan_contratacion_idu_data.xml',
         'wizard/reporte_excel_view.xml',
+        'wizard/solicitar_cambio_view.xml',
         'security/plan_contratacion_idu_security.xml',
         'security/ir.model.access.csv',
         'plan_contratacion_idu_view.xml',

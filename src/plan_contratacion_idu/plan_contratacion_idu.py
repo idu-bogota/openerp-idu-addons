@@ -599,7 +599,13 @@ class plan_contratacion_idu_item(osv.osv):
              type='float',
              group_operator="avg",
              help="Porcentaje de avance del item.",
-             store = True),
+             store = True
+        ),
+        'solicitud_cambio_ids': fields.one2many(
+            'plan_contratacion_idu.item_solicitud_cambio',
+            'plan_item_id',
+            string='Solicitudes de cambio',
+        ),
     }
     
 
@@ -1085,3 +1091,39 @@ class hr_department(osv.osv):
 
 hr_department()
 
+class plan_contratacion_idu_item_solicitud_cambio(osv.osv):
+    _name = "plan_contratacion_idu.item_solicitud_cambio"
+
+    _rec_name = 'tipo'
+    _columns = {
+        'tipo':fields.selection([
+                ('modificar', 'Modificar el item'),
+                ('eliminar', 'Eliminar el item'),
+                ('adicionar', 'Crear un nuevo item'),
+            ],
+            'Tipo de cambio'
+        ),
+        'state':fields.selection([
+                ('borrador', 'Inicial'),
+                ('radicado', 'Radicado y pendiente de revisión'),
+                ('rechazado', 'Rechazado'),
+                ('aprobado', 'Aprobado')
+            ],
+            'Estado',
+             required=True
+         ),
+        'plan_id': fields.many2one('plan_contratacion_idu.plan','Plan en el que se radica la solicitud de cambio',
+             select=True,
+             required=True,
+         ),
+        'plan_item_id': fields.many2one('plan_contratacion_idu.item','Item a cambiar',
+             select=True,
+             required=False,
+         ),
+        'item_nuevo_id': fields.many2one('plan_contratacion_idu.item','Item con los cambios solicitados',
+             select=True,
+             required=False,
+        ),
+    }
+
+plan_contratacion_idu_item_solicitud_cambio()
