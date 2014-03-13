@@ -1,0 +1,88 @@
+Instrucciones para cargar localidades
+fichero base_map_district.sql
+============================================
+
+1. Verificar que este postgis habilitado en la base de datos:
+============================================
+
+Para verificar si la base de datos tiene postgis instalado ejecute a través de
+pgadmin o por comandos en sql ejecutar la siguiente consulta:
+
+select postgis_full_version();
+
+
+
+2. Instalacion de Postgis:
+=================================================
+
+Si su maquina no tiene postgis instalado, ejecute el siguiente comando:
+
+sudo apt-get install postgresql-9.1-postgis2
+
+Esto instala la postgis version 2.0
+
+El script de localidades funciona bien con la version 2 o version 1.5
+
+
+3. Habilitar base de datos para postgis
+=================================================
+
+3.1 Se tiene instalado la version Postgis 2.0
+=============================================
+
+Ejecute en pgadmin o por consola las siguientes consultas;
+
+create extension postgis;
+create extension postgis_topology;
+
+
+3.2. Se tiene instalada la version Postgis 1.5
+===============================================
+
+Ejecute la siguiente instruccion por consola de comandos:
+
+
+
+sudo su postgres
+cd /usr/share/postgresql/9.1/contrib/postgis-1.5/
+psql -d database -f postgis.sql
+psql -d database -f spatial_ref_sys.sql
+
+OJO-> database es el nombre de la base de datos dondes se tiene el repositorio de openerp, por tanto reemplazar por el nombre real.
+
+
+4. Habilitar componente espacial para la tabla base map district
+================================================
+
+En pgadmin o por consola de comandos ejecute la siguiente instruccion
+
+select addgeometrycolumn('base_map_district','shape',900913,'MULTIPOLYGON',2);
+
+
+5. Cargar script con datos:
+==================================
+
+Ubicarse en el directorio donde se encuentra el fichero de cargue base_map_district.sql
+
+Ejecutar el siguiente script
+
+sudo su postgres
+psql -d database -f base_map_district.sql 
+
+OJO-> database es el nombre de la base de datos dondes se tiene el repositorio de openerp, por tanto reemplazar por el nombre real.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
