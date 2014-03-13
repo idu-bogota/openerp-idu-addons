@@ -94,7 +94,7 @@ class plan_contratacion_idu_wizard_reporte(osv.osv_memory):
     }
     
     def _format_item (self,item):
-        res = "" if (type(item) == bool and item == False) else item
+        res = "" if (type(item) == bool and item == False) else str(item).decode('utf8')#Cuando vienen tildes entonces para que no afecte al excel
         return res
     
     
@@ -152,7 +152,14 @@ class plan_contratacion_idu_wizard_reporte(osv.osv_memory):
             row_index = 2
             for item in items_plan:
                 ws.write(row_index,headers.index("CODIGO UNPSC"),self._format_item(item.codigo_unspsc))
-                ws.write(row_index,headers.index("ESTADO"),self._format_item(item.state))
+                
+                estado = ""
+             
+                for val in item._model._columns["state"].selection:
+                    if val[0] == item.state :
+                        estado = val[1]
+
+                ws.write(row_index,headers.index("ESTADO"),self._format_item(estado))
                 ws.write(row_index,headers.index("PROCESO"),self._format_item(item.tipo_proceso_id.name))
                 # proyecto_inversion
                 ws.write(row_index,headers.index('COD PROYECTO PRIORITARIO'),self._format_item(item.clasificacion_id.codigo))
