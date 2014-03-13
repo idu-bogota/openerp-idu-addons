@@ -22,6 +22,7 @@ from openerp.osv import fields, osv
 import time
 from datetime import datetime,date,timedelta
 from osv import osv
+from chardet.test import count
 
 class project(osv.osv):
     _name = "project.project"
@@ -463,26 +464,74 @@ class project_pmi_wbs_item(osv.osv):
         days = date_end - date_start
         return days.days
 
+    def calculate_weith(self, obj,cr,uid,context):
+        weight_sum = 0.0
+        weight = 0.0
+        #realiza la sumatoria
+        if obj.parent_id and obj.state in ['open','done','pending','draft']:
+            for sibling in obj.parent_id.child_ids:
+                if sibling.date_start and sibling.date_end and  sibling.state != 'cancelled':
+                    weight_sum += self.calculate_days(sibling.date_start, sibling.date_end)
+                else:
+                    min_max_date = self.get_min_max_date(sibling.child_ids)
+                    weight_sum += self.calculate_days(min_max_date['min_date'], min_max_date['max_date']) 
+        #calcula el %
+        if obj.parent_id and obj.state in ['open','done','pending','draft']:
+            for sibling in obj.parent_id.child_ids:
+                if sibling.state != 'cancelled' and sibling.type != 'deliverable':
+                    weight = (self.calculate_days(sibling.date_start, sibling.date_end) / weight_sum) * 100
+                    self.write(cr, uid,sibling.id, {'weight': weight} , context)
+
+    def get_min_max_date(self,child_ids):
+        min_date = '9999-01-01' 
+        max_date = '1900-01-01'
+        for child in child_ids:
+            if child.date_start and child.date_start < min_date:
+                min_date = child.date_start
+            if child.date_end and child.date_end > max_date:
+                max_date = child.date_end
+        return {'min_date':min_date,'max_date':max_date}
+
+    def calcule_weight_deliverable(self,temp,cr,uid,context):
+        weight_sum = 0.0
+        weight = 0.0
+        min_max_date = {}
+        deliverable_dur ={}
+        if temp.parent_id and temp.state in ['open','done','pending','draft']:
+            for sibling in temp.parent_id.child_ids:
+                if sibling.state != 'cancelled':
+                    if sibling.type == 'deliverable':
+                        min_max_date = self.get_min_max_date(sibling.child_ids)
+                        duration = self.calculate_days(min_max_date['min_date'], min_max_date['max_date']) 
+                        deliverable_dur[sibling.id] = duration
+                    else:
+                        duration = self.calculate_days(sibling.date_start, sibling.date_end)
+                        deliverable_dur[sibling.id] = duration
+        for k,v in deliverable_dur.items():
+            weight_sum += v
+        for k,v in deliverable_dur.items():
+            weight = (v / weight_sum) * 100
+            self.write(cr, uid,k, {'weight': weight} , context)
+
     def weight_assigned_by_duration(self, cr, uid, ids, context=None):
         for obj in self.browse(cr,uid,ids,context=None):
-            weight_sum = 0.0
-            weight = 0.0
-            #realiza la sumatoria
+            nodes = []
+            child_parent = self._get_wbs_item_and_children(cr, uid, {obj.id}, context)
             try:
-                if obj.parent_id and obj.state in ['open','done','pending','draft']:
-                    for sibling in obj.parent_id.child_ids:
-                        if sibling.state != 'cancelled':
-                            is_date = isinstance(sibling.date_start,date) and isinstance(sibling.date_end,date)
-                            if is_date:
-                                weight_sum += self.calculate_days(sibling.date_start, sibling.date_end)
-                            else:
-                                raise osv.except_osv('Error','Wrong data type')
-                #calcula el %
-                if obj.parent_id and obj.state in ['open','done','pending','draft']:
-                    for sibling in obj.parent_id.child_ids:
-                        if sibling.state != 'cancelled':
-                            weight = (self.calculate_days(sibling.date_start, sibling.date_end) / weight_sum) * 100
-                            self.write(cr, uid,sibling.id, {'weight': weight} , context)
+                for id in sorted(child_parent.keys(), reverse=True):
+                    if self._get_values_dictionary(child_parent,id) == 0 and id not in nodes:
+                        self.calculate_weith(self.browse(cr,uid,id,context=None), cr, uid, context)
+                        while id:
+                            id_parent = child_parent[id]
+                            if id_parent not in nodes:
+                                if id_parent and id_parent != obj.id:
+                                    temp = self.browse(cr,uid,id_parent,context=None)
+                                    if temp.type == 'deliverable':
+                                        self.calcule_weight_deliverable(temp,cr,uid,context)
+                                    else:
+                                        self.calculate_weith(temp, cr, uid, context)
+                                nodes.append(id_parent)
+                            id = child_parent[id]
             except Exception as e:
                 raise osv.except_osv('Error calculating weight', str(e))
 
