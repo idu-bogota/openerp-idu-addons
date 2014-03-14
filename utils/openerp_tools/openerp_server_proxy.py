@@ -24,7 +24,7 @@
 import xmlrpclib
 
 class openerp_proxy():
-    def __int__(self,openerp_server,port,user,passwd,dbname):
+    def __init__(self,openerp_server,port,user,passwd,dbname):
         self._openerp_server = openerp_server
         self._port = port
         self._user = user
@@ -37,10 +37,10 @@ class openerp_proxy():
     def __login(self):
         #Hace loggin automaticamente en openerp
         print "Haciendo loggin en openerp"
-        sock_login = xmlrpclib.ServerProxy(self.openerp_server_url+"common")
+        sock_login = xmlrpclib.ServerProxy(self._openerp_server_url+"common")
         uid = sock_login.login(self._dbname,self._user,self._passwd)
         print "hecho"
-        if self.uid == 0:
+        if uid == 0:
             raise Exception ("No se puede hacer loggin en openerp")
         else:
             self._isLoggedIn = True
@@ -50,44 +50,44 @@ class openerp_proxy():
         #Ejecuta un metodo crear en openerp
         if not self._isLoggedIn:
             self.__login()
-        print "Creando objeto "+object+"en openerp"
+        print "Creando objeto "+object+" en openerp"
         sock = xmlrpclib.ServerProxy(self._openerp_server_url+"object")
         id_object = xmlrpclib.execute(self._dbname,self._uid,self._passwd,object,'create',vals)
         print "hecho"
         return id_object
 
-    def write(self, object,id,vasl):
+    def write(self, object,id,vals):
         if not self._isLoggedIn:
             self.__login()
-        print "Actualizando objeto "+object+"en openerp"
+        print "Actualizando objeto "+object+" en openerp"
         sock = xmlrpclib.ServerProxy(self._openerp_server_url+"object")
-        result = xmlrpclib.execute(self._dbname,self._uid,self._passwd,object,'write',id,vals)
+        result = sock.execute(self._dbname,self._uid,self._passwd,object,'write',id,vals)
         print "hecho"
         return result
 
     def search (self,object,args):
         if not self._isLoggedIn:
             self.__login()
-        print "Buscando objeto "+object+"en openerp"+args
+        print "Buscando objeto "+object+" en openerp"+str(args)
         sock = xmlrpclib.ServerProxy(self._openerp_server_url+"object")
-        id_object = xmlrpclib.execute(self._dbname,self._uid,self._passwd,object,'search',args)
+        id_object = sock.execute(self._dbname,self._uid,self._passwd,object,'search',args)
         print "hecho"
-        return True
+        return id_object
     
     def unlink (self,object,ids):
         if not self._isLoggedIn:
             self.__login()
-        print "Buscando objeto "+object+"en openerp"+args
+        print "Buscando objeto "+object+" en openerp"+args
         sock = xmlrpclib.ServerProxy(self._openerp_server_url+"object")
-        id_object = xmlrpclib.execute(self._dbname,self._uid,self._passwd,object,'unlink',ids)
+        id_object = sock.execute(self._dbname,self._uid,self._passwd,object,'unlink',ids)
         print "hecho"
-        return True
+        return id_object
     
     def execute_method(self,object,method,args):
         if not self._isLoggedIn:
             self.__login()
-        print "Ejecutando método "+method+" en objeto "+object+"en openerp"
+        print "Ejecutando método "+method+" en objeto "+object+" en openerp"
         sock = xmlrpclib.ServerProxy(self._openerp_server_url+"object")
-        id_object = xmlrpclib.execute(self._dbname,self._uid,self._passwd,object,method,args)
+        id_object = sock.execute(self._dbname,self._uid,self._passwd,object,method,args)
         print "hecho"
-        return True
+        return id_object
