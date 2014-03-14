@@ -15,8 +15,6 @@
                     </group>
                     <footer>
                         <button name="action_radicar" string="Radicar solicitud" type="object" class="oe_highlight" />
-                            or
-                        <button string="Cancel" class="oe_link" special="cancel" />
                     </footer>
                 </form>
             </field>
