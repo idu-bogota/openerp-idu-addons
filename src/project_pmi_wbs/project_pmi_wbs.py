@@ -20,9 +20,12 @@
 
 from openerp.osv import fields, osv
 import time
+import logging
 from datetime import datetime,date,timedelta
 from osv import osv
 from chardet.test import count
+
+_logger = logging.getLogger(__name__)
 
 class project(osv.osv):
     _name = "project.project"
@@ -535,6 +538,7 @@ class project_pmi_wbs_item(osv.osv):
                                 nodes.append(id_parent)
                             id = child_parent[id]
             except Exception as e:
+                _logger.exception('Error calculating weight')
                 raise osv.except_osv('Error calculating weight', str(e))
 
     def set_bulk_project(self, cr, uid, ids, context=None):
