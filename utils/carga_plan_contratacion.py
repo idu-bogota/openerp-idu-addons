@@ -36,6 +36,11 @@ print "SCRIPT DE CARGA DE DATOS A OPENERP PLAN CONTRATACION"
 print "ANDRES DE EJECUTAR SCRIPT ASEGURESE DE QUE EL EXCEL ESTE EN FORMATO EXCEL 2003-2007, ya que la libreria"
 print "XLRD solo soporta hasta Excel 2007"
 
+print "openerp server :" + openerp_server
+print "port :"+port
+print "excel path :"+path_excel
+
+
 
 def cargar_fichero_excel(_path_excel,_index_hoja,_row_index_header):
     """
@@ -218,7 +223,7 @@ def exportar_datos_openerp(_plan_contratacion,_openerp_server,_port, _dbname,_us
         for _m in meses:
             vmes = _m['vmes']
             if (vmes != ""):
-                __val = str(float(vmes))
+                __val = str(float(vmes))#Especie de validacion para garantizar que vengan numeros
                 pagos.append([0,False,{'mes':_m['id'],'valor':__val}])#Clave con la que entran los pagos al openerp
         if (pagos.__len__()>0):
             vals["plan_pagos_item_ids"] = pagos
