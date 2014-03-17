@@ -32,13 +32,18 @@ path_excel = "/home/cabaezal1/proyectos/pc2014.xls"
 index_hoja = 9
 index_header = 1
 
+print "SCRIPT DE CARGA DE DATOS A OPENERP PLAN CONTRATACION"
+print "ANDRES DE EJECUTAR SCRIPT ASEGURESE DE QUE EL EXCEL ESTE EN FORMATO EXCEL 2003-2007, ya que la libreria"
+print "XLRD solo soporta hasta Excel 2007"
+
 
 def cargar_fichero_excel(_path_excel,_index_hoja,_row_index_header):
     """
     Crea un diccionario a partir del fichero excel de la forma
     [{'header_col1':value_col1_row1,'header_col2',value_col2_row1},{header_col1':value_col1_row2,'header_col2',value_col2__row2}]
     
-    """ 
+    """
+    print "Leyendo fichero excel" 
     wb = open_workbook(_path_excel)
     hoja_datos = wb.sheet_by_index(_index_hoja)
     print hoja_datos.name
