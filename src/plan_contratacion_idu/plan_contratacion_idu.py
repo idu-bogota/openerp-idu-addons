@@ -832,17 +832,18 @@ class plan_contratacion_idu_item(osv.osv):
             raise osv.except_osv('Error','No existe información para este número de contrato')
         return res
 
-    def obtener_datos_contrato(self, cr, uid, ids, context=None):
+    def obtener_datos_contrato(self, cr, uid, ids=None, context=None):
+        print "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
         wsdl_url = self.pool.get('ir.config_parameter').get_param(cr,uid,'siac_idu.webservice.wsdl',default=False,context=context)
         id_records = self.search(cr, uid,[('state', '=', 'suscrito')],context=context)
-        for record in self.browse(cr,uid,id_records,context):
-            datos_contrato = siac_ws.obtener_datos_contrato(wsdl_url,record.numero_contrato)
+        for record in self.browse(cr, uid, id_records, context):
+            datos_contrato = siac_ws.obtener_datos_contrato(wsdl_url, record.numero_contrato)
             if (datos_contrato):
-                self.write(cr, uid, ids, {"fecha_acta_inicio": datos_contrato['fecha_acta_inicio']})
-                self.write(cr, uid, ids, {"state": "ejecucion"})
+                self.write(cr, uid, record.id, {"fecha_acta_inicio": datos_contrato['fecha_acta_inicio']})
+                self.write(cr, uid, record.id, {"state": "ejecucion"})
                 if datos_contrato['fecha_acta_liquidacion']:
-                    self.write(cr, uid, ids, {"fecha_acta_liquidacion": datos_contrato['fecha_acta_liquidacion']})
-                    self.write(cr, uid, ids, {"state": "ejecutado"})
+                    self.write(cr, uid, record.id, {"fecha_acta_liquidacion": datos_contrato['fecha_acta_liquidacion']})
+                    self.write(cr, uid, record.id, {"state": "ejecutado"})
 
     def action_invoice_sent(self, cr, uid, ids, context=None):
         '''
@@ -1005,7 +1006,7 @@ class plan_contratacion_idu_plan_pagos_item(osv.osv):
         records = self.browse(cr, uid, ids, context=context)
         is_valid = True
         for record in records:
-            if record.mes and record.valor > 0:
+            if record.valor > 0:
                 is_valid = True
             else:
                 is_valid = False
@@ -1014,7 +1015,7 @@ class plan_contratacion_idu_plan_pagos_item(osv.osv):
     _columns = {
         'mes': fields.selection([(1,'Enero'), (2,'Febrero'), (3,'Marzo'), (4,'Abril'),
             (5,'Mayo'), (6,'Junio'), (7,'Julio'), (8,'Agosto'), (9,'Septiembre'),
-            (10,'Octubre'), (11,'Noviembre'), (12,'Diciembre')],'Mes'),
+            (10,'Octubre'), (11,'Noviembre'), (12,'Diciembre')],'Mes', required=True),
         'valor': fields.float('Valor', select=True, obj="res.currency"),
         'plan_contratacion_item_id': fields.many2one('plan_contratacion_idu.item','Item Plan de Contratacion',
             select=True,
@@ -1029,8 +1030,16 @@ class plan_contratacion_idu_plan_pagos_item(osv.osv):
 
     _sql_constraints =[
         ('unique_mes','unique(mes,plan_contratacion_item_id)','El mes debe ser único'),
-       #(_check_pagos_programados,"Para cambiar el estado a Aprobado debe ingresar los campos requeridos",['valor', 'mes']),
     ]
+
+    _constraints = [
+        (_check_pagos_programados, 'Error ! Necesita adicionar un valor.', ['valor']),
+    ]
+
+    _defaults = {
+        'mes': 1,
+    }
+
 
     _order = 'mes'
 
