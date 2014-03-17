@@ -75,7 +75,8 @@ class plan_contratacion_idu_wizard_solicitar_cambio(osv.osv_memory):
             'plan_item_id': form.plan_item_id.id,
             'state': 'radicado',
         }
-
+        #pregunta solicitudes existesn abiertas para el tipo solicitado
+        #raise osv_exception()
         if form.tipo == 'modificar':
             vals['item_nuevo_id'] = plan_item_pool.copy(cr, uid, form.plan_item_id.id, default={'message_ids':[], 'state': 'solicitud_cambio', 'is_editable': 'True'}, context=context)
         elif form.tipo == 'adicionar':

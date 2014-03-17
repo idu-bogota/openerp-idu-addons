@@ -36,7 +36,7 @@ def obtener_datos_contrato(wsdl_url,numero_contrato):
             {
             'codigo_contrato':"IDU-365-2012",
             'numero_crp':111,
-            'fechar-crp':2001 datetime.datetime(2013, 12, 2, 0, 0),
+            'fecha_crp':2001 datetime.datetime(2013, 12, 2, 0, 0),
             'nit_contratista':118822112
             'fecha_acta_inicio':datetime.datetime(2013, 21, 2, 0, 0),
             'fecha_acta_liquidacion':datetime.datetime(2013, 21, 2, 0, 0),
@@ -48,10 +48,10 @@ def obtener_datos_contrato(wsdl_url,numero_contrato):
     if (len(contrato)):
         res["codigo_contrato"]=contrato["CODIGO"]
         res["numero_crp"]=contrato["CRP_NUM"]
-        res["fechar_crp"]=contrato["FECHA_CRP"]
+        res["fecha_crp"]=contrato["FECHA_CRP"]
         res["nit_contratista"]=contrato["NIT_CONTRATISTA"]
         res["nombre_contratista"]=contrato["NOMBRE_CONTRATISTA"]
         res["fecha_acta_inicio"]=contrato["FECHA_ACTA_INICIO"]
-        res["fecha_acta_liquidación"]=contrato["FECHA_ACTA_LIQUIDACION"]
+        res["fecha_acta_liquidacion"]=contrato["FECHA_ACTA_LIQUIDACION"]
     return res
     

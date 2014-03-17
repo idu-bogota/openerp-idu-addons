@@ -40,6 +40,7 @@
                             <button name="wkf_close" string="Cerrar" type="object" icon="gtk-no" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager" attrs="{'invisible': [('open_close_plan','=',False)]}"/>
                             <button name="%(plan_contratacion_idu.action_plan_contratacion_idu_wizard_solicitud_cambio)d" string="Solicitar adición de un nuevo item"
                                type="action" icon="gtk-ok" context="{'plan_id': id, }"
+                               attrs="{'invisible': [('open_close_plan','=',False)]}"
                             />
                         </group>
                         <field name="item_ids" context="{'plan_id': active_id}" />
@@ -228,7 +229,7 @@
                                  <group name="informacion_verificacion" string="Fechas de Ejecución" col="4" colspan="1">
                                     <field name="numero_orfeo" on_change="onchange_numero_orfeo(numero_orfeo)"/>
                                     <field name="fecha_radicado_orfeo"/>
-                                    <field name="numero_contrato"/>
+                                    <field name="numero_contrato" on_change="onchange_numero_contrato(numero_contrato)"/>
                                     <field name="numero_crp"/>
                                     <field name="nit_beneficiario"/>
                                     <field name="fecha_acta_inicio"/>
@@ -470,7 +471,7 @@
         <record id="plan_contratacion_idu_plan_pagos_item_list" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.plan_pagos_item.list</field>
             <field name="model">plan_contratacion_idu.plan_pagos_item</field>
-            <field name="arch" type="xml" >
+            <field name="arch" type="xml">
                 <tree string="Planificación de Pagos">
                      <field name="currency_id" invisible="1"/>
                     <field name="mes"/>

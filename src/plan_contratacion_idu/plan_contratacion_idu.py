@@ -22,6 +22,7 @@ from openerp.osv import fields, osv
 from suds.client import Client
 from stone_erp_idu import stone_client_ws
 from openerp import SUPERUSER_ID
+from contrato_idu import siac_ws
 
 wsdl_url_orfeo='http://gesdocpru/desarrollo/webServices/orfeoIduWebServices.php?wsdl'
 client = Client(wsdl_url_orfeo)
@@ -38,16 +39,16 @@ class plan_contratacion_idu_plan(osv.osv):
             res[record['id']] = "Plan Vigencia {0}".format(record['vigencia'])
         return res
 
-    def _get_currency(self, cr, uid, ids, field, args, context=None):
+    def _get_currency(self, cr,SUPERUSER_ID, ids, field, args, context=None):
         res = {}
-        company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'plan_contratacion_idu.plan', context=context)
-        company = self.pool.get('res.company').read(cr, uid, company_id, ['currency_id'])
+        company_id = self.pool.get('res.company')._company_default_get(cr, SUPERUSER_ID, 'plan_contratacion_idu.plan', context=context)
+        company = self.pool.get('res.company').read(cr, SUPERUSER_ID, company_id, ['currency_id'])
         currency_id = company['currency_id'][0]
         for plan_id in ids:
             res[plan_id] = currency_id
         return res
 
-    def _total_pagos_plan(self, cr, uid, ids, name, args, context=None):
+    def _total_pagos_plan(self, cr, SUPERUSER_ID, ids, name, args, context=None):
         res = {}
         if isinstance(ids, (list, tuple)) and not len(ids):
             return res
@@ -67,11 +68,11 @@ class plan_contratacion_idu_plan(osv.osv):
             res[record['id']]['total_rezago_plan'] = sumatoria_presupuesto - sumatoria
         return res
 
-    def _get_plan_ids_from_items (self, cr, uid, ids, context=None):
+    def _get_plan_ids_from_items (self, cr, SUPERUSER_ID, ids, context=None):
         """
         Retorna IDs del plan_item modificados
         """
-        records = self.pool.get('plan_contratacion_idu.item').browse(cr, uid, ids, context=context)
+        records = self.pool.get('plan_contratacion_idu.item').browse(cr, SUPERUSER_ID, ids, context=context)
         plan_item_ids = [record.id for record in records if record.id]
         return plan_item_ids
 
@@ -108,7 +109,7 @@ class plan_contratacion_idu_plan(osv.osv):
              digits_compute=dp.get_precision('Account'),
              readonly = True,
              store= {
-                'plan_contratacion_idu.plan': (lambda self, cr, uid, ids, ctx={}: ids, ['item_ids'], 10),
+                'plan_contratacion_idu.plan': (lambda self, cr, SUPERUSER_ID, ids, ctx={}: ids, ['item_ids'], 10),
                 'plan_contratacion_idu.item': (_get_plan_ids_from_items, ['presupuesto', 'plan_pagos_item_ids'], 20),
             }
          ),
@@ -117,14 +118,20 @@ class plan_contratacion_idu_plan(osv.osv):
              multi="total_pagos_programados",
              string='Total Pagos Programados',
              digits_compute=dp.get_precision('Account'),
-             store=True
+             store= {
+                'plan_contratacion_idu.plan': (lambda self, cr, SUPERUSER_ID, ids, ctx={}: ids, ['item_ids'], 10),
+                'plan_contratacion_idu.item': (_get_plan_ids_from_items, ['presupuesto', 'plan_pagos_item_ids'], 20),
+            }
          ),
         'total_rezago_plan': fields.function(_total_pagos_plan,
              type='float',
              multi="total_pagos_programados",
              string='Total Rezago',
              digits_compute=dp.get_precision('Account'),
-             store=True
+             store= {
+                'plan_contratacion_idu.plan': (lambda self, cr, SUPERUSER_ID, ids, ctx={}: ids, ['item_ids'], 10),
+                'plan_contratacion_idu.item': (_get_plan_ids_from_items, ['presupuesto', 'plan_pagos_item_ids'], 20),
+            }
          ),
     }
     _sql_constraints =[
@@ -284,7 +291,7 @@ class plan_contratacion_idu_item(osv.osv):
         is_valid = True
         for record in records:
             if record.state == 'suscrito':
-                if record.numero_crp:
+                if record.numero_contrato and record.numero_crp:
                     is_valid = True
                 else:
                     is_valid = False
@@ -319,7 +326,7 @@ class plan_contratacion_idu_item(osv.osv):
         is_valid = True
         for record in records:
             if record.state == 'ejecutado':
-                if record.numero_crp:
+                if record.fecha_acta_liquidacion:
                     is_valid = True
                 else:
                     is_valid = False
@@ -613,13 +620,13 @@ class plan_contratacion_idu_item(osv.osv):
                 'plan_contratacion_idu.plan_pagos_giro': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
             }),
         'numero_orfeo':fields.char('Número Radicado Orfeo',
-             help='Validado desdes Orfeo',
+             help='Validado desde Orfeo',
              states={'aprobado':[('readonly',False)]}, readonly=True,
              track_visibility='onchange'),
-        'fecha_radicado_orfeo':fields.date('Fecha Radicado', readonly=True),
+        'fecha_radicado_orfeo':fields.date('Fecha Radicado', readonly=True,
+             help='Validado desde Orfeo',),
         'numero_crp':fields.char('Numero CRP',
-             help ='Validado desde Stone',
-             states={'radicado':[('readonly',False)]},
+             help ='Validado desde SIAC',
              readonly=True,
              track_visibility='onchange'),
         'numero_contrato': fields.char('Numero Contrato',
@@ -627,9 +634,9 @@ class plan_contratacion_idu_item(osv.osv):
              states={'radicado':[('readonly',False)]},
              readonly=True,
              track_visibility='onchange'),
-        'nit_beneficiario':fields.integer('Nit Beneficiario',
+        'nit_beneficiario':fields.float('Nit Beneficiario',
              help ='Validado desde SIAC',
-             states={'suscrito':[('readonly',False)]}, readonly=True),
+             readonly=True),
         'fecha_acta_inicio':fields.date('Fecha Acta de Inicio',
              help = 'Validado desde SIAC',
              readonly=True),
@@ -688,13 +695,13 @@ class plan_contratacion_idu_item(osv.osv):
                     ['state', 'numero_orfeo']),
                     (_check_state_suscrito,
                     "Para cambiar el estado a Contrato Suscrito debe ingresar el número CRP en Fechas de Ejecución",
-                    ['state']),
+                    ['state', 'numero_contrato']),
                     (_check_state_ejecucion,
                     "Para cambiar el estado a Ejecucion debe ingresar el número del contrato en Fechas de Ejecución",
-                    ['state']),
+                    ['state', 'fecha_acta_inicio']),
                     (_check_state_ejecutado,
                     "Para cambiar el estado a Ejecutado debe ingresar el número del contrato en Fechas de Ejecución",
-                    ['state']),
+                    ['state', 'fecha_acta_liquidacion']),
                     ]
 
 #FIXME: Aqui esta llamando al centro_costo.write y create, esto centralizarse solo en strone_erp_idu.
@@ -783,7 +790,7 @@ class plan_contratacion_idu_item(osv.osv):
         }
 
     def onchange_presupuesto(self, cr, uid, ids, presupuesto, context=None):
-        self.pool.get('plan_contratacion_idu.item')._total_pagos_realizados()
+        self.pool.get('plan_contratacion_idu.item')._total_pagos_programados
         self.pool.get('plan_contratacion_idu.plan')._total_pagos_plan()
 
     def onchange_a_monto_agotable(self, cr, uid, ids, a_monto_agotable, context=None):
@@ -806,6 +813,36 @@ class plan_contratacion_idu_item(osv.osv):
             self.write(cr, uid, ids, {"fecha_radicado_orfeo": False})
             return {'value': {'numero_orfeo': False},
                     'warning': {'message': 'El número de radicado Orfeo ingresado no existe'}}
+
+    def onchange_numero_contrato(self, cr, uid, ids, numero_contrato, context=None):
+        res={}
+        wsdl_url = self.pool.get('ir.config_parameter').get_param(cr,uid,'siac_idu.webservice.wsdl',default=False,context=context)
+        datos_contrato = siac_ws.obtener_datos_contrato(wsdl_url,numero_contrato)
+        if (datos_contrato):
+            res = {'value':{'numero_crp':datos_contrato['numero_crp'],
+                   'numero_contrato':datos_contrato['codigo_contrato'],
+                   'nit_beneficiario': datos_contrato['nit_contratista']
+                   }}
+            self.write(cr, uid, ids, {"state": "suscrito"})
+        else :
+            res = {'value':{'numero_crp':"",
+                   'numero_contrato':"",
+                   'nit_beneficiario':False
+                   }}
+            raise osv.except_osv('Error','No existe información para este número de contrato')
+        return res
+
+    def obtener_datos_contrato(self, cr, uid, ids, context=None):
+        wsdl_url = self.pool.get('ir.config_parameter').get_param(cr,uid,'siac_idu.webservice.wsdl',default=False,context=context)
+        id_records = self.search(cr, uid,[('state', '=', 'suscrito')],context=context)
+        for record in self.browse(cr,uid,id_records,context):
+            datos_contrato = siac_ws.obtener_datos_contrato(wsdl_url,record.numero_contrato)
+            if (datos_contrato):
+                self.write(cr, uid, ids, {"fecha_acta_inicio": datos_contrato['fecha_acta_inicio']})
+                self.write(cr, uid, ids, {"state": "ejecucion"})
+                if datos_contrato['fecha_acta_liquidacion']:
+                    self.write(cr, uid, ids, {"fecha_acta_liquidacion": datos_contrato['fecha_acta_liquidacion']})
+                    self.write(cr, uid, ids, {"state": "ejecutado"})
 
     def action_invoice_sent(self, cr, uid, ids, context=None):
         '''
@@ -957,11 +994,28 @@ plan_contratacion_idu_fuente()
 
 class plan_contratacion_idu_plan_pagos_item(osv.osv):
     _name = "plan_contratacion_idu.plan_pagos_item"
+
+    def _check_pagos_programados(self,cr,uid,ids,context=None):
+        """valida si los datos son ingresados"""
+        res = {}
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return res
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        records = self.browse(cr, uid, ids, context=context)
+        is_valid = True
+        for record in records:
+            if record.mes and record.valor > 0:
+                is_valid = True
+            else:
+                is_valid = False
+        return is_valid
+
     _columns = {
         'mes': fields.selection([(1,'Enero'), (2,'Febrero'), (3,'Marzo'), (4,'Abril'),
             (5,'Mayo'), (6,'Junio'), (7,'Julio'), (8,'Agosto'), (9,'Septiembre'),
-            (10,'Octubre'), (11,'Noviembre'), (12,'Diciembre')], 'Mes', required=True),
-        'valor': fields.float('Valor', required=True, select=True, obj="res.currency"),
+            (10,'Octubre'), (11,'Noviembre'), (12,'Diciembre')],'Mes'),
+        'valor': fields.float('Valor', select=True, obj="res.currency"),
         'plan_contratacion_item_id': fields.many2one('plan_contratacion_idu.item','Item Plan de Contratacion',
             select=True,
             ondelete='cascade'),
@@ -974,7 +1028,8 @@ class plan_contratacion_idu_plan_pagos_item(osv.osv):
     }
 
     _sql_constraints =[
-        ('unique_mes','unique(mes,plan_contratacion_item_id)','El mes debe ser único')
+        ('unique_mes','unique(mes,plan_contratacion_item_id)','El mes debe ser único'),
+       #(_check_pagos_programados,"Para cambiar el estado a Aprobado debe ingresar los campos requeridos",['valor', 'mes']),
     ]
 
     _order = 'mes'
@@ -1008,7 +1063,6 @@ class plan_contratacion_idu_plan_pagos_giro(osv.osv):
         ids = ir_obj.search(cr, uid,[('state', '=', 'ejecucion')],context=context)
         records_plan_item = self.pool.get('plan_contratacion_idu.item').browse(cr, uid, ids, context=context)
         wsdl = self.pool.get('ir.config_parameter').get_param(cr,uid,'stone_idu.webservice.wsdl',default=False,context=context)
-#  records = self.browse(cr, uid, ids, context=context)
         for record_plan_item in records_plan_item:
             nit = record_plan_item.nit_beneficiario
             numero = record_plan_item.numero_contrato
@@ -1023,13 +1077,13 @@ class plan_contratacion_idu_plan_pagos_giro(osv.osv):
 
 plan_contratacion_idu_plan_pagos_giro()
 
-def _total_pagos_programados(self, cr, uid, ids, name, args, context=None):
+def _total_pagos_programados(self, cr, SUPERUSER_ID, ids, name, args, context=None):
         res = {}
         if isinstance(ids, (list, tuple)) and not len(ids):
             return res
         if isinstance(ids, (long, int)):
             ids = [ids]
-        records = self.browse(cr, uid, ids, context=context)
+        records = self.browse(cr, SUPERUSER_ID, ids, context=context)
         res = {}
         for record in records:
             sumatoria = 0
@@ -1063,21 +1117,21 @@ class plan_contratacion_idu_plan_tipo_proceso_seleccion(osv.osv):
         ('unique_name','unique(name)','El tipo de proceso debe ser único')
     ]
 
-def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
+def resolve_o2m_operations(cr, SUPERUSER_ID, target_osv, operations, fields, context):
     results = []
     for operation in operations:
         result = None
         if not isinstance(operation, (list, tuple)):
-            result = target_osv.read(cr, uid, operation, fields, context=context)
+            result = target_osv.read(cr, SUPERUSER_ID, operation, fields, context=context)
         elif operation[0] == 0:
             # may be necessary to check if all the fields are here and get the default values?
             result = operation[2]
         elif operation[0] == 1:
-            result = target_osv.read(cr, uid, operation[1], fields, context=context)
+            result = target_osv.read(cr, SUPERUSER_ID, operation[1], fields, context=context)
             if not result: result = {}
             result.update(operation[2])
         elif operation[0] == 4:
-            result = target_osv.read(cr, uid, operation[1], fields, context=context)
+            result = target_osv.read(cr, SUPERUSER_ID, operation[1], fields, context=context)
         if result != None:
             results.append(result)
     return results
