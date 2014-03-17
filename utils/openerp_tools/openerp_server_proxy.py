@@ -52,7 +52,7 @@ class openerp_proxy():
             self.__login()
         print "Creando objeto "+object+" en openerp"
         sock = xmlrpclib.ServerProxy(self._openerp_server_url+"object")
-        id_object = xmlrpclib.execute(self._dbname,self._uid,self._passwd,object,'create',vals)
+        id_object = sock.execute(self._dbname,self._uid,self._passwd,object,'create',vals)
         print "hecho"
         return id_object
 
