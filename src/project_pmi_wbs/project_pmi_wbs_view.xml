@@ -67,7 +67,7 @@
                     <field name="progress_rate" widget="progressbar"/>
                     <field name="weight"/>
                     <field name="use_weight"/>
-                    <field name="child_use_weight"/>
+                    <field name="children_use_weight"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -87,10 +87,10 @@
                     <button name="set_bulk_project" string="Bulk project and phase assignation" type="object" states="draft" groups="base.group_user"/>
                     <button name="weight_assigned_by_duration" string="weight assigned by duration" type="object" states="draft,done" groups="base.group_user"/>
                     <button name="set_weight_on" string="Use weight in children" type="object" groups="base.group_user" 
-                        attrs="{'invisible': ['|',('child_use_weight','=',True),('type','!=','deliverable')]}"
+                        attrs="{'invisible': ['|',('children_use_weight','=',True),('type','!=','deliverable')]}"
                     />
                     <button name="set_weight_off" string="Deactivate weight in children" type="object" groups="base.group_user" 
-                        attrs="{'invisible': ['|',('child_use_weight','=',False),('type','!=','deliverable')]}"
+                        attrs="{'invisible': ['|',('children_use_weight','=',False),('type','!=','deliverable')]}"
                     />
                     <field name="state" widget="statusbar"/>
                 </header>
@@ -109,7 +109,7 @@
                             <field name="tracking_type" attrs="{'invisible': [('type','!=','work_package')],'required':[('type','=','work_package')]}"/>
                             <field name="description"/>
                             <field name="use_weight" invisible="1"/>
-                            <field name="child_use_weight" invisible="1"/>
+                            <field name="children_use_weight" invisible="1"/>
                             <field name="weight" attrs="{'invisible': [('use_weight','=',False)]}"/>
                             <field name="progress_rate" widget="progressbar"/>
                             <field name="parent_id" />

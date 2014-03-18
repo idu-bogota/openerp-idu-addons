@@ -260,6 +260,15 @@ class project_pmi_wbs_item(osv.osv):
             res.update(ids)
         return list(res)
 
+    def _get_children_use_weight(self,cr, uid, ids,names, arg, context=None):
+        items = self.browse(cr,uid,ids,context=None)
+        res={}
+        for item in items:
+            res[item.id] = True
+            for child in item.child_ids:
+                res[item.id] = res[item.id] and child.use_weight
+        return res
+
     _columns = {
         'project_id': fields.many2one('project.project','Project'),
         'phase_id': fields.many2one('project.phase','Phase', domain="[('project_id','=',project_id)]"),
@@ -316,13 +325,14 @@ class project_pmi_wbs_item(osv.osv):
         'task_ids': fields.one2many('project.task', 'wbs_item_id', 'Tasks'),
         'weight': fields.float('Weight'),
         'use_weight': fields.boolean('Uses weight?',help='If active, weight is used to calculate progress rate'),
-        'child_use_weight': fields.boolean('child_use_weight uses weight',help='If active, weight is used to calculate progress rate'),
+#         'child_use_weight': fields.boolean('child_use_weight uses weight',store=False, help='If active, weight is used to calculate progress rate'),
+        'children_use_weight': fields.function(_get_children_use_weight,type='boolean',store=False),
     }
     _defaults = {
         'active': True,
         'state': 'draft',
         'use_weight': False,
-        'child_use_weight': False,
+        'children_use_weight': False,
         'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'project_pmi.wbs'),
         'project_id' : lambda self, cr, uid, context : context['project_id'] if context and 'project_id' in context else None, #Set by default the project given in the context
         'phase_id' : lambda self, cr, uid, context : context['phase_id'] if context and 'phase_id' in context else None,
@@ -579,13 +589,11 @@ class project_pmi_wbs_item(osv.osv):
     def set_weight_on(self, cr, uid, ids, context=None):
         item_ids = self.search(cr, uid, [('child_ids','child_of',ids)], context=context)
         for item in ids:item_ids.remove(item) 
-        self.write(cr, uid, ids, {'child_use_weight': True}, context)
         return self.write(cr, uid, item_ids, {'use_weight': True}, context)
 
     def set_weight_off(self, cr, uid, ids, context=None):
         item_ids = self.search(cr, uid, [('child_ids','child_of',ids)], context=context)
         for item in ids:item_ids.remove(item)
-        self.write(cr, uid, ids, {'child_use_weight': False}, context)
         return self.write(cr, uid, item_ids, {'use_weight': False}, context)
 
 
