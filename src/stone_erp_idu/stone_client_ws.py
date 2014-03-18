@@ -99,7 +99,7 @@ def obtener_giros(wsdl_url,prefijo_contrato,consecutivo_contrato,sufijo_contrato
     try:
         cod_empr=1 #Código de empresa, siempre es 1 por que es idu//Siempre es IDU
         client = Client(wsdl_url)
-        planc = client.service.obtener_giros_X_crp(cod_empr,prefijo_contrato,consecutivo_contrato,sufijo_contrato,codigo_beneficiario)
+        planc = client.service.obtener_giros_X_crp(cod_empr,prefijo_contrato,consecutivo_contrato,sufijo_contrato,int(codigo_beneficiario))
         res = []
         if (len(planc)):
             pre_crp_numero = planc["pre_crp_numero"]
@@ -132,8 +132,8 @@ if __name__ == "__main__":
     wsdl_url = "http://172.16.2.233:9763/services/ws_stone?wsdl"
     cod_empr= 1
     pre_cont= "IDU"
-    con_cont=365
+    con_cont=1916
     suf_cont="2013"
-    cod_bene=80849753
-    vals= obtener_giros(wsdl_url,cod_empr,pre_cont,con_cont,suf_cont,cod_bene)
+    cod_bene=30230686
+    vals= obtener_giros(wsdl_url,pre_cont,con_cont,suf_cont,cod_bene)
     print vals

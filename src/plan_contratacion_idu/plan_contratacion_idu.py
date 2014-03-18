@@ -224,8 +224,8 @@ class plan_contratacion_idu_item(osv.osv):
         """
         Retorna los IDs del plan_item a ser recalculados cuando cambia un pago_item
         """
-        pago_records = self.pool.get('plan_contratacion_idu.plan_pagos_item').browse(cr, uid, pago_ids, context=context)
-        plan_item_ids = [pago.plan_contratacion_item_id.id for pago in pago_records if pago.plan_contratacion_item_id]
+        plan_item_ids = self.pool.get('plan_contratacion_idu.plan_pagos_item').read(cr, uid, pago_ids, ['plan_contratacion_item_id'], context=context)
+        plan_item_ids = list(set(plan_item_ids)) #obtiene solo valores unicos
         return plan_item_ids
 
     def _check_fechas_programadas(self,cr,uid,ids,context=None):
@@ -275,7 +275,7 @@ class plan_contratacion_idu_item(osv.osv):
                     try:
                         is_valid = orfeo_existe_radicado(record.numero_orfeo)
                     except Exception as e:
-                        raise Exception.message('Error al consultar servicio web ORFEO', str(e))
+                        raise Exception.message('Error al consultar servicio web OFRFEO', str(e))
                 else:
                     is_valid = False
         return is_valid
@@ -491,7 +491,7 @@ class plan_contratacion_idu_item(osv.osv):
              help="plazo de ejecución a monto agotable",
              readonly=False,
              track_visibility='onchange'),
-        'unidad_meta_fisica': fields.many2one('product.uom',
+        'unidad_meta_fisica_id': fields.many2one('product.uom',
             'Unidad Meta Física',
              select=True,
              ondelete='cascade',
@@ -513,7 +513,7 @@ class plan_contratacion_idu_item(osv.osv):
              required=False,
              states={'version_inicial':[('required',True)]},
              track_visibility='onchange'),
-        'localidad_id': fields.many2many('base_map.district','plan_contratacion_idu_localidad_item',
+        'localidad_ids': fields.many2many('base_map.district','plan_contratacion_idu_localidad_item',
              'base_localidad_id',
              'plan_localidad_id',
              'localidades del item',
@@ -695,7 +695,7 @@ class plan_contratacion_idu_item(osv.osv):
                     ['state', 'numero_orfeo']),
                     (_check_state_suscrito,
                     "Para cambiar el estado a Contrato Suscrito debe ingresar el número CRP en Fechas de Ejecución",
-                    ['state', 'numero_contrato']),
+                    ['state', 'numero_contrato','numero_crp']),
                     (_check_state_ejecucion,
                     "Para cambiar el estado a Ejecucion debe ingresar el número del contrato en Fechas de Ejecución",
                     ['state', 'fecha_acta_inicio']),
@@ -799,41 +799,68 @@ class plan_contratacion_idu_item(osv.osv):
     def onchange_no_aplica_unidad_mf(self, cr, uid, ids, no_aplica_unidad_mf, context=None):
         return {
             'value': {
-                'unidad_meta_fisica': False,
+                'unidad_meta_fisica_id': False,
                 'cantidad_meta_fisica': False
             }
         }
 
     def onchange_numero_orfeo(self, cr, uid, ids, numero_orfeo, context=None):
+        res={}
         if orfeo_existe_radicado(numero_orfeo):
-            self.write(cr, uid, ids, {"fecha_radicado_orfeo": orfeo_fecha_radicado(numero_orfeo).FECHA})
-            self.write(cr, uid, ids, {"state": "radicado"})
-            return True
+            self.write(cr, uid, ids, {"state": "radicado",
+                                      "numero_orfeo":numero_orfeo,
+                                      "fecha_radicado_orfeo":orfeo_fecha_radicado(numero_orfeo).FECHA,
+                       }
+            )
+            res = {'value': {
+                       'fecha_radicado_orfeo': orfeo_fecha_radicado(numero_orfeo).FECHA,
+                       'numero_orfeo': numero_orfeo,
+                       'state': 'radicado',
+                   },
+                   'warning': {
+                        'message': 'Número de radicado Orfeo encontrado'
+                   }
+           }
         else:
-            self.write(cr, uid, ids, {"fecha_radicado_orfeo": False})
-            return {'value': {'numero_orfeo': False},
-                    'warning': {'message': 'El número de radicado Orfeo ingresado no existe'}}
+            res = {'value':{
+                        'fecha_radicado_orfeo':False,
+                        'numero_orfeo':False
+                    },
+                   'warning': {
+                       'message': 'El número de radicado Orfeo ingresado no existe'
+                    }
+            }
+        return res
 
     def onchange_numero_contrato(self, cr, uid, ids, numero_contrato, context=None):
         res={}
         wsdl_url = self.pool.get('ir.config_parameter').get_param(cr,uid,'siac_idu.webservice.wsdl',default=False,context=context)
         datos_contrato = siac_ws.obtener_datos_contrato(wsdl_url,numero_contrato)
         if (datos_contrato):
-            res = {'value':{'numero_crp':datos_contrato['numero_crp'],
-                   'numero_contrato':datos_contrato['codigo_contrato'],
-                   'nit_beneficiario': datos_contrato['nit_contratista']
-                   }}
-            self.write(cr, uid, ids, {"state": "suscrito"})
+            self.write(cr, uid, ids, {"state": "suscrito",
+                                      "numero_crp":datos_contrato['numero_crp'],
+                                      "numero_contrato":datos_contrato['codigo_contrato'],
+                                      "nit_beneficiario": datos_contrato['nit_contratista']
+                       }
+            )
+            res = {'value':{
+                       'numero_crp':datos_contrato['numero_crp'],
+                       'numero_contrato':datos_contrato['codigo_contrato'],
+                       'nit_beneficiario': datos_contrato['nit_contratista'],
+                       'state': 'suscrito'
+                   }
+            }
         else :
-            res = {'value':{'numero_crp':"",
-                   'numero_contrato':"",
-                   'nit_beneficiario':False
-                   }}
+            res = {'value':{
+                       'numero_crp':"",
+                       'numero_contrato':"",
+                       'nit_beneficiario':False
+                   }
+            }
             raise osv.except_osv('Error','No existe información para este número de contrato')
         return res
 
     def obtener_datos_contrato(self, cr, uid, ids=None, context=None):
-        print "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
         wsdl_url = self.pool.get('ir.config_parameter').get_param(cr,uid,'siac_idu.webservice.wsdl',default=False,context=context)
         id_records = self.search(cr, uid,[('state', '=', 'suscrito')],context=context)
         for record in self.browse(cr, uid, id_records, context):
@@ -844,6 +871,27 @@ class plan_contratacion_idu_item(osv.osv):
                 if datos_contrato['fecha_acta_liquidacion']:
                     self.write(cr, uid, record.id, {"fecha_acta_liquidacion": datos_contrato['fecha_acta_liquidacion']})
                     self.write(cr, uid, record.id, {"state": "ejecutado"})
+
+    def obtener_pagos_realizados(self, cr, uid, ids=None, context=None):
+        dato_giros={}
+        ids = self.search(cr, uid,[('state', '=', 'ejecucion')],context=context)
+        records_plan_item = self.browse(cr, uid, ids, context=context)
+        wsdl = self.pool.get('ir.config_parameter').get_param(cr,uid,'stone_idu.webservice.wsdl',default=False,context=context)
+        pago_realizado_pool = self.pool.get('plan_contratacion_idu.plan_pagos_giro')
+        for record_plan_item in records_plan_item:
+            nit = record_plan_item.nit_beneficiario
+            numero = record_plan_item.numero_contrato
+            numero = numero.split('-')
+            dato_giros = stone_client_ws.obtener_giros(wsdl,numero[0],numero[1],numero[2],nit)
+
+            for k in dato_giros:
+                vals = {
+                    'plan_contratacion_item_id': record_plan_item.id,
+                    'date': k['pre_op_fecha'],
+                    'valor': k['pre_crp_valor'],
+                    'currency_id': record_plan_item.id
+                }
+                pago_realizado_pool.create(cr, uid, vals, context=context)
 
     def action_invoice_sent(self, cr, uid, ids, context=None):
         '''
@@ -880,26 +928,68 @@ class plan_contratacion_idu_item(osv.osv):
         }
 
     def wkf_version_inicial(self, cr, uid, ids, plan_items, context=None):
-        self.write(cr, uid, ids, {"state": "version_inicial"})
+        self.write(cr, uid, ids, {
+                                  "state": "version_inicial",
+                                  "numero_orfeo": None,
+                                  "fecha_radicado_orfeo": None,
+                                  "numero_crp": None,
+                                  "numero_contrato": None,
+                                  "nit_beneficiario": None,
+                                  "fecha_acta_inicio": None,
+                                  "fecha_acta_liquidacion": None
+                    }
+        )
 
     def wkf_aprobado(self, cr, uid, ids, plan_items, context=None):
-        self.write(cr, uid, ids, {"state": "aprobado","numero_orfeo":None,
-                                  "numero_crp":None, "numero_contrato":None})
+        self.write(cr, uid, ids, {
+                                  "state": "aprobado",
+                                  "numero_orfeo": None,
+                                  "fecha_radicado_orfeo": None,
+                                  "numero_crp": None,
+                                  "numero_contrato": None,
+                                  "nit_beneficiario": None,
+                                  "fecha_acta_inicio": None,
+                                  "fecha_acta_liquidacion": None
+                    }
+        )
 
     def wkf_radicado(self, cr, uid, ids, plan_items, context=None):
-        self.write(cr, uid, ids, {"state": "radicado"})
+        self.write(cr, uid, ids, {
+                                  "state": "radicado",
+                                  "numero_contrato": None,
+                                  "numero_crp": None,
+                                  "nit_beneficiario": None,
+                                  "fecha_acta_inicio": None,
+                                  "fecha_acta_liquidacion":None
+                    }
+        )
 
     def wkf_no_realizado(self, cr, uid, ids, plan_items, context=None):
-        self.write(cr, uid, ids, {"state": "no_realizado"})
+        self.write(cr, uid, ids, {
+                                  "state": "no_realizado"
+                    }
+        )
 
     def wkf_suscrito(self, cr, uid, ids, plan_items, context=None):
-        self.write(cr, uid, ids, {"state": "suscrito"})
+        self.write(cr, uid, ids, {
+                                  "state": "suscrito",
+                                  "fecha_acta_inicio": None,
+                                  "fecha_acta_liquidacion": None
+                    }
+        )
 
     def wkf_ejecucion(self, cr, uid, ids, plan_items, context=None):
-        self.write(cr, uid, ids, {"state": "ejecucion"})
+        self.write(cr, uid, ids, {
+                                  "state": "ejecucion",
+                                  "fecha_acta_inicio": None
+                    }
+        )
 
     def wkf_ejecutado(self, cr, uid, ids, plan_items, context=None):
-        self.write(cr, uid, ids, {"state": "ejecutado"})
+        self.write(cr, uid, ids, {
+                                  "state": "ejecutado"
+                    }
+        )
 
 plan_contratacion_idu_item()
 
@@ -1033,7 +1123,7 @@ class plan_contratacion_idu_plan_pagos_item(osv.osv):
     ]
 
     _constraints = [
-        (_check_pagos_programados, 'Error ! Necesita adicionar un valor.', ['valor']),
+        (_check_pagos_programados, 'Error! Necesita adicionar un valor mayor que $0.', ['valor']),
     ]
 
     _defaults = {
@@ -1064,25 +1154,6 @@ class plan_contratacion_idu_plan_pagos_giro(osv.osv):
     }
 
     _order = 'date'
-
-    def obtener_pagos_realizados(self, cr, uid, context=None):
-        res = {}
-        vals={}
-        ir_obj = self.pool.get('plan_contratacion_idu.item')
-        ids = ir_obj.search(cr, uid,[('state', '=', 'ejecucion')],context=context)
-        records_plan_item = self.pool.get('plan_contratacion_idu.item').browse(cr, uid, ids, context=context)
-        wsdl = self.pool.get('ir.config_parameter').get_param(cr,uid,'stone_idu.webservice.wsdl',default=False,context=context)
-        for record_plan_item in records_plan_item:
-            nit = record_plan_item.nit_beneficiario
-            numero = record_plan_item.numero_contrato
-            numero = numero.split('-')
-            det_giros = stone_client_ws.obtener_giros(wsdl,1,numero[0],numero[1],numero[2],nit)
-            for k in det_giros:
-                vals[k]=det_giros[k]
-            for k in vals:
-                res[record_plan_item['id']]['date']= vals[k].pre_op_fecha
-                res[record_plan_item['id']]['valor']= vals[k].pre_crp_valor
-        return res
 
 plan_contratacion_idu_plan_pagos_giro()
 
@@ -1254,11 +1325,11 @@ class plan_contratacion_idu_item_solicitud_cambio(osv.osv):
             'fuente_id',
             'tipo_proceso_id',
             'tipo_proceso_seleccion_id',
-            'unidad_meta_fisica',
+            'unidad_meta_fisica_id',
         ]
 
         m2m_fields = [
-            'localidad_id'
+            'localidad_ids'
         ]
 
         records = self.browse(cr, uid, ids, context=context)

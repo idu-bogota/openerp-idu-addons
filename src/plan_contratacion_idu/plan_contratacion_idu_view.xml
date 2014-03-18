@@ -82,7 +82,7 @@
                     <separator/>
                     <field name="dependencia_id" string="Dependencia"/>
                     <field name="localizacion" string="Localización"/>
-                    <field name="localidad_id" string="Localidad"/>
+                    <field name="localidad_ids" string="Localidad"/>
                     <field name="plan_id" string="Vigencia"/>
                     <separator/>
                     <filter name="items_activos" string="Item activos" domain="['!',('state','in',('solicitud_cambio','no_realizado','ejecutado'))]" help="Items activos" icon="terp-check"/>
@@ -138,15 +138,16 @@
                     </header>
                     <group col="1" colspan="1">
                         <header>
-                           <button name="wkf_version_inicial" string="Versión Inicial" type="object" icon="gtk-dnd" states="aprobado" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
-                           <button name="wkf_aprobado" string="Aprobado" type="object" icon="gtk-apply" states="version_inicial,suscrito,radicado,no_realizado" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
-                           <button name="wkf_radicado" string="Radicar" type="object" icon="gtk-index" states="aprobado" groups="base.group_erp_manager"/>
-                           <button name="wkf_suscrito" string="Contrato Suscrito" type="object" icon="gtk-edit" states="radicado, aprobado" groups="base.group_erp_manager"/>
-                           <button name="wkf_ejecucion" string="Iniciar ejecución" type="object" icon="gtk-yes" states="suscrito" groups="base.group_erp_manager"/>
-                           <button name="wkf_ejecutado" string="Finalizar Ejecución" type="object" icon="kanban-stop" states="ejecucion" groups="base.group_erp_manager"/>
-                           <button name="wkf_no_realizado" string="No Realizado" icon="gtk-cancel" type="object" states="aprobado" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                           <button name="wkf_version_inicial" string="Versión Inicial" type="object" icon="gtk-dnd" groups="base.group_erp_manager"/>
+                           <button name="wkf_aprobado" string="Aprobado" type="object" icon="gtk-apply" states="version_inicial" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager, base.group_erp_manager"/>
+                           <button name="wkf_radicado" string="Radicar" type="object" icon="gtk-index" groups="base.group_erp_manager"/>
+                           <button name="wkf_suscrito" string="Contrato Suscrito" type="object" icon="gtk-edit" groups="base.group_erp_manager"/>
+                           <button name="wkf_ejecucion" string="Iniciar ejecución" type="object" icon="gtk-yes" groups="base.group_erp_manager"/>
+                           <button name="wkf_ejecutado" string="Finalizar Ejecución" type="object" icon="kanban-stop" groups="base.group_erp_manager"/>
+                           <button name="wkf_no_realizado" string="No Realizado" icon="gtk-cancel" type="object" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager, base.group_erp_manager"/>
                            <button name="%(plan_contratacion_idu.action_plan_contratacion_idu_wizard_solicitud_cambio)d" string="Solicitar Cambio"
                               type="action" icon="gtk-ok" context="{'plan_item_id': id, 'plan_id': plan_id, }"
+                              states="aprobado, radicado, suscrito"
                            />
                         </header>
                     </group>
@@ -173,7 +174,7 @@
                             <page string="Detalles">
                                 <group name="detalles">
                                     <field name="localizacion" attrs="{'readonly': [('is_editable','=',False)]}"/>
-                                    <field name="localidad_id" attrs="{'invisible':[('localizacion','!=','localidad')], 'required':[('localizacion', '=','localidad')]}"/>
+                                    <field name="localidad_ids" attrs="{'invisible':[('localizacion','!=','localidad')], 'required':[('localizacion', '=','localidad')]}"/>
                                     <field name="description" attrs="{'readonly': [('is_editable','=',False)]}"/>
                                     <field name="plazo_de_ejecucion"
                                         attrs="{
@@ -183,7 +184,7 @@
                                     />
                                     <field name="a_monto_agotable" on_change="onchange_a_monto_agotable(a_monto_agotable)" attrs="{'readonly': [('is_editable','=',False)]}"/>
                                     <field name="no_aplica_unidad_mf" on_change="onchange_no_aplica_unidad_mf(no_aplica_unidad_mf)" attrs="{'readonly': [('is_editable','=',False)]}"/>
-                                    <field name="unidad_meta_fisica"
+                                    <field name="unidad_meta_fisica_id"
                                         attrs="{
                                             'readonly':['|',('no_aplica_unidad_mf','=',True),'|',('state','=','radicado'),('is_editable','=',False)],
                                             'required':[('no_aplica_unidad_mf','=',False)],
@@ -231,7 +232,6 @@
                                     <field name="nit_beneficiario"/>
                                     <field name="fecha_acta_inicio"/>
                                     <field name="fecha_acta_liquidacion"/>
-                                    <button name="obtener_datos_contrato" string="datos" icon="gtk-cancel" type="object"/>
                                 </group>
                             </page>
                             <page string="Pagos">
@@ -260,6 +260,7 @@
                                         <field name="valor" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     </tree>
                                     </field>   
+                               <button name="obtener_pagos_realizados" string="Pagos" icon="gtk-cancel" type="object"/>
                                </group>
                                <group>
                                      <group class="oe_subtotal_footer oe_right" name="total_pagos_realizados_item">>
