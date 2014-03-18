@@ -187,7 +187,7 @@ class plan_contratacion_idu_wizard_reporte(osv.osv_memory):
                 ws.write(row_index,headers.index('FASE DE INTERVENCION'),self._format_item(item.nombre_fase_intervencion))
                 #Meta física 
                 if not (item.no_aplica_unidad_mf):
-                    ws.write(row_index,headers.index('UNIDAD METAS FISICAS'),self._format_item(item.unidad_meta_fisica.name))
+                    ws.write(row_index,headers.index('UNIDAD METAS FISICAS'),self._format_item(item.unidad_meta_fisica_id.name))
                     ws.write(row_index,headers.index('CANTIDAD METAS FISICAS'),self._format_item(item.cantidad_meta_fisica))
                 #Localidad 
                 localizacion = ""
@@ -203,7 +203,7 @@ class plan_contratacion_idu_wizard_reporte(osv.osv_memory):
                     #Si localizacion = localidad, listar cada una de las localidades.
                     str_loc = ""
                     cod_loc = ""
-                    for localidad in item.localidad_id:
+                    for localidad in item.localidad_ids:
                         cod_loc = cod_loc + str(localidad.code) + ","
                         str_loc = str_loc + localidad.name + ","
                     ws.write(row_index,headers.index('CODIGO LOC'),cod_loc)
