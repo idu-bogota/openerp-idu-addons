@@ -147,9 +147,6 @@
                            <button name="wkf_no_realizado" string="No Realizado" icon="gtk-cancel" type="object" states="aprobado" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                            <button name="%(plan_contratacion_idu.action_plan_contratacion_idu_wizard_solicitud_cambio)d" string="Solicitar Cambio"
                               type="action" icon="gtk-ok" context="{'plan_item_id': id, 'plan_id': plan_id, }"
-                              groups="plan_contratacion_idu.group_plan_contratacion_idu_user,
-                              plan_contratacion_idu.group_plan_contratacion_idu_manager,
-                              base.group_erp_manager"
                            />
                         </header>
                     </group>
@@ -619,5 +616,37 @@
                 <field name="manager_id" position="replace" />
             </field>
         </record>
+
+        <!-- Solicitud Cambio -->
+        <record id="plan_contratacion_idu_item_solicitud_cambio_form" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.item_solicitud_cambio.form</field>
+            <field name="model">plan_contratacion_idu.item_solicitud_cambio</field>
+            <field name="arch" type="xml">
+                <form string="Item plan de contratación" version="7.0">
+                    <header>
+                       <field name="state" widget="statusbar" colors="blue:state" clickable= 'False'/>
+                    </header>
+                    <group col="1" colspan="1">
+                        <header>
+                           <button name="aplicar_cambio" string="Aprobado" type="object" icon="gtk-apply" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                        </header>
+                    </group>
+                    <sheet>
+                        <group>
+                            <field name="tipo"/>
+                            <field name="state"/>
+                            <field name="plan_id"/>
+                            <field name="plan_item_id"/>
+                            <field name="item_nuevo_id"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                       <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                       <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
     </data>
 </openerp>

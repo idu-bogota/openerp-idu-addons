@@ -1201,6 +1201,7 @@ hr_department()
 
 class plan_contratacion_idu_item_solicitud_cambio(osv.osv):
     _name = "plan_contratacion_idu.item_solicitud_cambio"
+    _inherit = ['mail.thread']
 
     _rec_name = 'tipo'
     _columns = {
@@ -1233,5 +1234,44 @@ class plan_contratacion_idu_item_solicitud_cambio(osv.osv):
              required=False,
         ),
     }
+
+    def aplicar_cambio(self, cr, uid, ids, context=None):
+        plain_fields = [
+            'a_monto_agotable',
+            'cantidad_meta_fisica',
+            'codigo_unspsc',
+            'description',
+            'fecha_programada_acta_inicio',
+            'fecha_programada_crp',
+            'fecha_programada_radicacion',
+            'localizacion',
+            'no_aplica_unidad_mf',
+            'plazo_de_ejecucion',
+            'presupuesto',
+        ]
+        o2m_fields = [
+            'centro_costo_id',
+            'fuente_id',
+            'tipo_proceso_id',
+            'tipo_proceso_seleccion_id',
+            'unidad_meta_fisica',
+        ]
+
+        m2m_fields = [
+            'localidad_id'
+        ]
+
+        records = self.browse(cr, uid, ids, context=context)
+        for record in records:
+            values = {}
+            item = record.plan_item_id
+            cambio = record.item_nuevo_id
+            for field in plain_fields:
+                if getattr(item, field) != getattr(cambio, field):
+                    values[field] = getattr(cambio, field)
+            for field in o2m_fields:
+                if getattr(item, field).id != getattr(cambio, field).id:
+                    values[field] = getattr(cambio, field).id
+            print values
 
 plan_contratacion_idu_item_solicitud_cambio()
