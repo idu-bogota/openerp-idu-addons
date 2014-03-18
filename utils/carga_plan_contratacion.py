@@ -154,7 +154,7 @@ def exportar_datos_openerp(_plan_contratacion,_openerp_server,_port, _dbname,_us
                     if (ids_localidad.__len__()==0):
                         raise Exception ("La localidad no esta definida, revisar fila "+str(item['Fila_excel']))
                     localidad_ids.append(ids_localidad[0])
-            vals['localidad_id']=[[6,False,localidad_ids]]
+            vals['localidad_ids']=[[6,False,localidad_ids]]
         vals['description']=item['OBJETO CONTRACTUAL - ESTIMACIÓN DTD']
         #Plazo de ejecucion o monto agotable
         plazo_ejecucion = item['PLAZO DE EJECUCIÓN - ESTIMADO SEGÚN DTP']
@@ -175,9 +175,9 @@ def exportar_datos_openerp(_plan_contratacion,_openerp_server,_port, _dbname,_us
             if (cod_unidad_mf_ids.__len__()==0):
                 umf = {'name':unidad_metas_f,'active':True,'rounding':1.0,'factor':1.0,'category_id':1,'uom_type':'reference'}
                 id_unidad_mf = openerp.create('product.uom',umf)
-                vals["unidad_meta_fisica"]=id_unidad_mf
+                vals["unidad_meta_fisica_id"]=id_unidad_mf
             else :
-                vals["unidad_meta_fisica"]=cod_unidad_mf_ids[0]
+                vals["unidad_meta_fisica_id"]=cod_unidad_mf_ids[0]
             cantidad_mf = item["CANTIDAD METAS FISICAS "]
             try:
                 vals["cantidad_meta_fisica"]=float(cantidad_mf)
