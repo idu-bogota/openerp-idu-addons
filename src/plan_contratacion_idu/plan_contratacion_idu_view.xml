@@ -115,7 +115,7 @@
             <field name="model">plan_contratacion_idu.item</field>
             <field name="arch" type="xml">
                 <tree string="Item Plan de contratación">
-                    <field name="is_editable" invisible="0"/>
+                    <field name="is_editable" invisible="1"/>
                     <field name="clasificacion_id"/>
                     <field name="state"/>
                     <field name="dependencia_id"/>
@@ -261,7 +261,6 @@
                                             <field name="valor" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                         </tree>
                                     </field>
-                               <button name="obtener_pagos_realizados" string="Pagos" icon="gtk-cancel" type="object"/>
                                </group>
                                <group>
                                      <group class="oe_subtotal_footer oe_right" name="total_pagos_realizados_item">>
@@ -647,7 +646,8 @@
                     </header>
                     <group col="1" colspan="1">
                         <header>
-                           <button name="aplicar_cambio" string="Aprobado" type="object" icon="gtk-apply" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                           <button name="aplicar_cambio" string="Aprobado" type="object" icon="gtk-apply" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager" states="radicado"/>
+                           <button name="aplicar_cambio" string="Rechazado" type="object" icon="gtk-cancel" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager" states="radicado"/>
                         </header>
                     </group>
                     <sheet>

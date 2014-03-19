@@ -232,12 +232,13 @@ class plan_contratacion_idu_item(osv.osv):
             res[record['id']]['presupuesto_rezago_realizado'] = record.presupuesto - sumatoria
             res[record['id']]['total_realizado_rezago'] = sumatoria + (record.presupuesto - sumatoria)
         return res
-    
+
     def _get_plan_item_from_pago_records(self, cr, uid, pago_ids, context=None):
         """
         Retorna los IDs del plan_item a ser recalculados cuando cambia un pago_item
         """
         plan_item_ids = self.pool.get('plan_contratacion_idu.plan_pagos_item').read(cr, uid, pago_ids, ['plan_contratacion_item_id'], context=context)
+        plan_item_ids = [ i['plan_contratacion_item_id'][0] for i in plan_item_ids if 'plan_contratacion_item_id' in plan_item_ids ] 
         plan_item_ids = list(set(plan_item_ids)) #obtiene solo valores unicos
         return plan_item_ids
 
@@ -391,7 +392,7 @@ class plan_contratacion_idu_item(osv.osv):
              ondelete='cascade',
              required=True,
              readonly=False,
-             states={'solicitud_cambio':[('required',False)]},
+             states={'solicitud_cambio':[('required',False)], 'borrador':[('required',False)]},
              track_visibility='onchange'
          ),
         'description': fields.text('Objeto Contractual',
@@ -917,19 +918,20 @@ class plan_contratacion_idu_item(osv.osv):
         wsdl = self.pool.get('ir.config_parameter').get_param(cr,uid,'stone_idu.webservice.wsdl',default=False,context=context)
         pago_realizado_pool = self.pool.get('plan_contratacion_idu.plan_pagos_giro')
         for record_plan_item in records_plan_item:
+            records_pago_realizado = pago_realizado_pool.search(cr, uid, [('plan_contratacion_item_id','=', record_plan_item.id)])
+            pago_realizado_pool.unlink(cr, uid, records_pago_realizado, context=context)
             nit = record_plan_item.nit_beneficiario
             numero = record_plan_item.numero_contrato
             numero = numero.split('-')
             dato_giros = stone_client_ws.obtener_giros(wsdl,numero[0],numero[1],numero[2],nit)
-
             for k in dato_giros:
-                vals = {
-                    'plan_contratacion_item_id': record_plan_item.id,
-                    'date': k['pre_op_fecha'],
-                    'valor': k['pre_crp_valor'],
-                    'currency_id': record_plan_item.id
-                }
-                pago_realizado_pool.create(cr, uid, vals, context=context)
+                    vals = {
+                        'plan_contratacion_item_id': record_plan_item.id,
+                        'date': k['pre_op_fecha'].strftime('%m-%d-%Y'),
+                        'valor': k['pre_crp_valor'],
+                        'currency_id': record_plan_item.id
+                    }
+                    pago_realizado_pool.create(cr, uid, vals, context=context)
 
     def action_invoice_sent(self, cr, uid, ids, context=None):
         '''
