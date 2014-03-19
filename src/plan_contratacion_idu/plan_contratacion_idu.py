@@ -1307,6 +1307,25 @@ class plan_contratacion_idu_item_solicitud_cambio(osv.osv):
     }
 
     def aplicar_cambio(self, cr, uid, ids, context=None):
+        records = self.browse(cr, uid, ids, context=context)
+        plan_item_pool = self.pool.get('plan_contratacion_idu.item')
+        for record in records:
+            if record.tipo == 'modificar':
+                self._aplicar_modificacion(cr, uid, record, context=context)
+            elif record.tipo == 'eliminar':
+                plan_item_pool.write(cr, uid, [record.plan_item_id.id], {'state': 'no_realizado'}, context=context)
+                plan_item_pool.message_post(cr, uid, [record.plan_item_id.id], 
+                    'Eliminado', 'Eliminado de acuerdo a la solicitud de cambio id:{0}'.format(record.id), context=context)
+            elif record.tipo == 'adicionar':
+                plan_item_pool.write(cr, uid, [record.plan_item_id.id], {'state': 'aprobado'}, context=context)
+                plan_item_pool.message_post(cr, uid, [record.plan_item_id.id], 
+                    'Aprobado', 'Aprobador de acuerdo a la solicitud de cambio id:{0}'.format(record.id), context=context)
+
+        return {
+            'type': 'ir.actions.act_window_close',
+         }
+
+    def _aplicar_modificacion(self, cr, uid, solicitud, context=None):
         plain_fields = [
             'a_monto_agotable',
             'cantidad_meta_fisica',
@@ -1327,35 +1346,25 @@ class plan_contratacion_idu_item_solicitud_cambio(osv.osv):
             'tipo_proceso_seleccion_id',
             'unidad_meta_fisica_id',
         ]
-
         m2m_fields = [
             'localidad_ids'
         ]
-
-        records = self.browse(cr, uid, ids, context=context)
+        values = {}
         plan_item_pool = self.pool.get('plan_contratacion_idu.item')
-        for record in records:
-            values = {}
-            item = record.plan_item_id
-            cambio = record.item_nuevo_id
-            for field in plain_fields:
-                if getattr(item, field) != getattr(cambio, field):
-                    values[field] = getattr(cambio, field)
-            for field in o2m_fields:
-                if getattr(item, field).id != getattr(cambio, field).id:
-                    values[field] = getattr(cambio, field).id
-            for field in m2m_fields:
-                m2m_origen_ids = [ i.id for i in getattr(item, field)]
-                m2m_cambio_ids = [ i.id for i in getattr(cambio, field)]
-                if set(m2m_origen_ids) != set(m2m_cambio_ids):
-                    values[field] = [(6, 0, m2m_cambio_ids)]#http://stackoverflow.com/a/9387447
-            print values
-            plan_item_pool.write(cr, uid, [item.id], values, context=context)
-            self.write(cr, uid, [record.id], {'state': 'aprobado'}, context=context)
-
-        return {
-            'type': 'ir.actions.act_window_close',
-            'values': { 'state': 'aprobado'}
-         }
+        item = solicitud.plan_item_id
+        cambio = solicitud.item_nuevo_id
+        for field in plain_fields:
+            if getattr(item, field) != getattr(cambio, field):
+                values[field] = getattr(cambio, field)
+        for field in o2m_fields:
+            if getattr(item, field).id != getattr(cambio, field).id:
+                values[field] = getattr(cambio, field).id
+        for field in m2m_fields:
+            m2m_origen_ids = [ i.id for i in getattr(item, field)]
+            m2m_cambio_ids = [ i.id for i in getattr(cambio, field)]
+            if set(m2m_origen_ids) != set(m2m_cambio_ids):
+                values[field] = [(6, 0, m2m_cambio_ids)]#http://stackoverflow.com/a/9387447
+        plan_item_pool.write(cr, uid, [item.id], values, context=context)
+        self.write(cr, uid, [solicitud.id], {'state': 'aprobado'}, context=context)
 
 plan_contratacion_idu_item_solicitud_cambio()
