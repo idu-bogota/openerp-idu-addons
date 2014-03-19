@@ -23,7 +23,6 @@ import time
 import logging
 from datetime import datetime,date,timedelta
 from osv import osv
-from chardet.test import count
 
 _logger = logging.getLogger(__name__)
 
@@ -348,7 +347,7 @@ class project_pmi_wbs_item(osv.osv):
             level -= 1
         return True
 
-    def _check_no_childs(self,cr,uid,ids,context=None):
+    def  _check_no_childs(self,cr,uid,ids,context=None):
         res = {}
         records = self.read(cr, uid, ids, ['type','tracking_type','progress','child_ids','task_ids','work_record_ids'], context=context)
         for record in records:
@@ -422,7 +421,7 @@ class project_pmi_wbs_item(osv.osv):
 
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive wbs items.', ['parent_id']),
-        (_check_no_childs, 'Error ! A work package cannot have children.', ['type']),
+#         (_check_no_childs, 'Error ! A work package cannot have children.', ['type']),
         (_check_no_work_or_taks, 'Error ! a Deliverable cannot have neither unit tracking, tasks nor work_records.', ['type']),
         (_check_unit_measure_work_package, 'Error ! Please select unit of measure.', ['tracking_type']),
         (_check_work_unit_no_task, 'Error ! You cannot change tracking type.', ['tracking_type']),
@@ -485,8 +484,8 @@ class project_pmi_wbs_item(osv.osv):
         #realiza la sumatoria
         if obj.parent_id and obj.state in ['open','done','pending','draft']:
             for sibling in obj.parent_id.child_ids:
-                if sibling.date_start and sibling.date_end and  sibling.state != 'cancelled':
-                    weight_sum += self.calculate_days(sibling.date_start, sibling.date_end)
+                if sibling.date_start and sibling.date_deadline and  sibling.state != 'cancelled':
+                    weight_sum += self.calculate_days(sibling.date_start, sibling.date_deadline)
                 else:
                     min_max_date = self.get_min_max_date(sibling.child_ids)
                     weight_sum += self.calculate_days(min_max_date['min_date'], min_max_date['max_date']) 
@@ -494,7 +493,7 @@ class project_pmi_wbs_item(osv.osv):
         if obj.parent_id and obj.state in ['open','done','pending','draft']:
             for sibling in obj.parent_id.child_ids:
                 if sibling.state != 'cancelled' and sibling.type != 'deliverable':
-                    weight = (self.calculate_days(sibling.date_start, sibling.date_end) / weight_sum) * 100
+                    weight = (self.calculate_days(sibling.date_start, sibling.date_deadline) / weight_sum) * 100
                     self.write(cr, uid,sibling.id, {'weight': weight} , context)
 
     def get_min_max_date(self,child_ids):
@@ -503,8 +502,8 @@ class project_pmi_wbs_item(osv.osv):
         for child in child_ids:
             if child.date_start and child.date_start < min_date:
                 min_date = child.date_start
-            if child.date_end and child.date_end > max_date:
-                max_date = child.date_end
+            if child.date_deadline and child.date_deadline > max_date:
+                max_date = child.date_deadline
         return {'min_date':min_date,'max_date':max_date}
 
     def calcule_weight_deliverable(self,temp,cr,uid,context):
@@ -520,7 +519,7 @@ class project_pmi_wbs_item(osv.osv):
                         duration = self.calculate_days(min_max_date['min_date'], min_max_date['max_date']) 
                         deliverable_dur[sibling.id] = duration
                     else:
-                        duration = self.calculate_days(sibling.date_start, sibling.date_end)
+                        duration = self.calculate_days(sibling.date_start, sibling.date_deadline)
                         deliverable_dur[sibling.id] = duration
         for k,v in deliverable_dur.items():
             weight_sum += v

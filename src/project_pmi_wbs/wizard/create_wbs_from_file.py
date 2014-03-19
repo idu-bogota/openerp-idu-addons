@@ -32,13 +32,15 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
     _columns = {
         'file':fields.binary('File'),
         'max_level_evaluate': fields.integer(string="Maximum level to evaluate", required=True),
-        'min_level_task': fields.integer(string="Level to start generating tasks", required=True),
         'include_wbs_outline_number': fields.boolean("Include the wbs assigned code in the name?", required=False),
         'assign_task_to_current_user': fields.boolean("Assign new tasks to current user? otherwise they will be unassigned", required=False),
-#         'take_leaves_as_tasks': fields.boolean("Take leaves as tasks", required=False),
-        'take_leaves_as_tasks': fields.selection([('leaves_as_tasks', 'leaves as workpackage tasks'),('leaves_as_workpackages_unit', 'leaves as workpackages unit')],'Leaves as'),
+        'take_leaves_as_tasks': fields.selection([('leaves_as_tasks', 'leaves as tasks'),('leaves_as_workpackage_tasks', 'leaves as workpackage tasks'),('leaves_as_workpackages_unit', 'leaves as workpackages unit')],'Leaves as',required=True),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', help="Default Unit of Measure used"),
         'quantity': fields.float('Quantity'),
+    }
+    
+    _defaults = {
+        'take_leaves_as_tasks': 'leaves_as_tasks',
     }
 
     def calculate_days(self,date1):
@@ -140,22 +142,33 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
                 data['user_id'] = None
         parent_ids.insert(outline_level, self.pool.get('project_pmi.wbs_item').create(cr, uid, data, context))
 
-    def take_leaves_as_tasks(self,struct,struct_type,outline_number,task,parent_ids,outline_level,context,data,name,cr,uid,add_days,wizard):
+    def save_info_leave_task(self,struct,struct_type,outline_number ,data,task,add_days,name,parent_ids,outline_level,cr,uid,context,wizard,type):
+        if type != 0:
+            type = self.validate_type(type, struct, struct_type, outline_number)
+        if type != 1:
+            data['type'] = 'deliverable'
+        else:
+            date_start = self.get_date(task.find('{http://schemas.microsoft.com/project}Start').text) + timedelta(days=add_days)
+            date_deadline = self.get_date(task.find('{http://schemas.microsoft.com/project}Finish').text) - timedelta(days=add_days)
+            data['type'] = 'work_package'
+            data['tracking_type'] = 'tasks'
+            data['date_start'] = date_start.strftime('%Y-%m-%d')
+            data['date_deadline'] = date_deadline.strftime('%Y-%m-%d')
+            if not wizard.assign_task_to_current_user:
+                data['user_id'] = None
+        parent_ids.insert(outline_level, self.pool.get('project_pmi.wbs_item').create(cr, uid, data, context))
+
+    def take_leaves_as_workpackage_tasks(self,struct,struct_type,outline_number,task,parent_ids,outline_level,context,data,name,cr,uid,add_days,wizard):
         type = self.get_type(struct, outline_number, 1)
         self.save_info(struct,struct_type, outline_number ,data, task, add_days, name, parent_ids, outline_level, cr, uid, context, wizard, type)
 
-    def take_leaves_as_workpackage(self,struct,struct_type,outline_number,task,parent_ids,outline_level,context,data,name,cr,uid,add_days,wizard):
+    def take_leaves_as_workpackage_unit(self,struct,struct_type,outline_number,task,parent_ids,outline_level,context,data,name,cr,uid,add_days,wizard):
         type = self.get_type(struct, outline_number, 1)
         self.save_info_leave_workpackage(struct,struct_type, outline_number ,data, task, add_days, name, parent_ids, outline_level, cr, uid, context, wizard, type)
 
-    def create_normal_tree(self,struct,outline_level,wizard,task,add_days,data,name,parent_ids,cr,uid,context):
-        if outline_level < wizard.min_level_task -1:
-            type = -1
-        elif outline_level == wizard.min_level_task - 1:
-            type = 0
-        else:
-            type = 1
-        self.save_info(struct,struct,-1,data, task, add_days, name, parent_ids, outline_level, cr, uid, context, wizard, type)
+    def take_leaves_as_tasks(self,struct,struct_type,outline_number,task,parent_ids,outline_level,context,data,name,cr,uid,add_days,wizard):
+        type = self.get_type(struct, outline_number, 1)
+        self.save_info_leave_task(struct,struct_type, outline_number ,data, task, add_days, name, parent_ids, outline_level, cr, uid, context, wizard, type)
 
     def action_create(self, cr, uid, ids, context=None):
         wizards = self.pool.get('project_pmi_wbs.wizard.create_wbs_from_file').browse(cr,uid,ids,context=None)
@@ -183,13 +196,12 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
                                 'parent_id':parent_ids[outline_level -1],
                                 'state': 'draft',
                                 }
-                        if wizard.take_leaves_as_tasks == 'leaves_as_tasks':
-                            self.take_leaves_as_tasks(struct,struct_type, outline_number, task, parent_ids, outline_level, context, data, name, cr, uid, add_days,wizard)
+                        if wizard.take_leaves_as_tasks == 'leaves_as_workpackage_tasks':
+                            self.take_leaves_as_workpackage_tasks(struct,struct_type, outline_number, task, parent_ids, outline_level, context, data, name, cr, uid, add_days,wizard)
                         elif wizard.take_leaves_as_tasks == 'leaves_as_workpackages_unit':
-                            self.take_leaves_as_workpackage(struct, struct_type, outline_number, task, parent_ids, outline_level, context, data, name, cr, uid, add_days, wizard)
-                        else :
-                            self.create_normal_tree(struct,outline_level, wizard, task, add_days, data, name, parent_ids, cr, uid, context)
-
+                            self.take_leaves_as_workpackage_unit(struct, struct_type, outline_number, task, parent_ids, outline_level, context, data, name, cr, uid, add_days, wizard)
+                        else:
+                            self.take_leaves_as_tasks(struct, struct_type, outline_number, task, parent_ids, outline_level, context, data, name, cr, uid, add_days, wizard)
 #                     print outline_number + ' - '  + name
         except Exception as e:
             raise osv.except_osv('Error loading the tree', str(e))
