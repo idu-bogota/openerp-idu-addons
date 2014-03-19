@@ -255,11 +255,11 @@
                                </group>
                                <group name="giros_realizados" string="Pagos Realizados">
                                     <field name="plan_pagos_giro_ids" nolabel="1">
-                                    <tree string="Giros Realizados" editable="bottom">
-                                        <field name="date"/>
-                                        <field name="valor" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                    </tree>
-                                    </field>   
+                                        <tree string="Giros Realizados" editable="bottom">
+                                            <field name="date"/>
+                                            <field name="valor" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                        </tree>
+                                    </field>
                                <button name="obtener_pagos_realizados" string="Pagos" icon="gtk-cancel" type="object"/>
                                </group>
                                <group>
@@ -273,7 +273,7 @@
                                      </group>
                                </group>
                             </page>
-                            <page string="Solicitudes de cambio">
+                            <page string="Solicitudes de cambio" attrs="{'invisible': [('state','=','solicitud_cambio')]}">
                                 <group col="4" colspan="4">
                                     <field name="solicitud_cambio_ids" nolabel="1" readonly="1"/>
                                 </group>
