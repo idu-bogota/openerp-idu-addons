@@ -652,10 +652,27 @@ class plan_contratacion_idu_item(osv.osv):
              help="Porcentaje de avance del item.",
              store = True
         ),
-        'solicitud_cambio_ids': fields.one2many(
-            'plan_contratacion_idu.item_solicitud_cambio',
+        'solicitud_cambio_ids': fields.one2many('plan_contratacion_idu.item_solicitud_cambio',
             'plan_item_id',
-            string='Solicitudes de cambio',
+            string='Solicitudes de cambio',#plan item a solicitud de cambio
+        ),
+        'solicitud_cambio_id': fields.one2many('plan_contratacion_idu.item_solicitud_cambio',
+            'item_nuevo_id',
+            string='Solicitud de cambio',#de solicitud de cambio a plan_item
+        ),
+        'cambios_propuestos_ids': fields.many2many('plan_contratacion_idu.item','plan_contratacion_idu_item_solicitud_cambio',
+             'plan_item_id',
+             'item_nuevo_id',
+             'Items con los cambios propuestos',
+             readonly=True,
+             track_visibility='onchange'
+        ),
+        'item_a_cambiar': fields.related('solicitud_cambio_id',
+            'plan_item_id',
+            type="many2one",
+            relation="plan_contratacion_idu.item",
+            string="Item del plan a ser cambiado",
+            store=False
         ),
     }
     

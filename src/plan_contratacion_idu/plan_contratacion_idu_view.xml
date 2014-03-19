@@ -153,7 +153,8 @@
                     </group>
                     <sheet>
                         <group>
-                            <field name="is_editable" invisible="0" />
+                            <field name="is_editable" invisible="1" />
+                            <field name="item_a_cambiar" attrs="{'invisible': [('state','!=','solicitud_cambio')]}"/>
                             <field name="plan_id" readonly="1" />
                             <field name="codigo_unspsc" attrs="{'readonly': [('is_editable','=',False)]}"/>
                             <field name="clasificacion_id" attrs="{'readonly': [('is_editable','=',False)]}"/>
@@ -274,7 +275,10 @@
                                </group>
                             </page>
                             <page string="Solicitudes de cambio" attrs="{'invisible': [('state','=','solicitud_cambio')]}">
-                                <group col="4" colspan="4">
+                                <group col="4" colspan="4" string="Items con los cambios propuestos">
+                                    <field name="cambios_propuestos_ids" nolabel="1" readonly="1"/>
+                                </group>
+                                <group col="4" colspan="4" groups="base.group_erp_manager" string="Solicitudes de cambio">
                                     <field name="solicitud_cambio_ids" nolabel="1" readonly="1"/>
                                 </group>
                             </page>
