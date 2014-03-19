@@ -1333,6 +1333,7 @@ class plan_contratacion_idu_item_solicitud_cambio(osv.osv):
         ]
 
         records = self.browse(cr, uid, ids, context=context)
+        plan_item_pool = self.pool.get('plan_contratacion_idu.item')
         for record in records:
             values = {}
             item = record.plan_item_id
@@ -1343,6 +1344,18 @@ class plan_contratacion_idu_item_solicitud_cambio(osv.osv):
             for field in o2m_fields:
                 if getattr(item, field).id != getattr(cambio, field).id:
                     values[field] = getattr(cambio, field).id
+            for field in m2m_fields:
+                m2m_origen_ids = [ i.id for i in getattr(item, field)]
+                m2m_cambio_ids = [ i.id for i in getattr(cambio, field)]
+                if set(m2m_origen_ids) != set(m2m_cambio_ids):
+                    values[field] = [(6, 0, m2m_cambio_ids)]#http://stackoverflow.com/a/9387447
             print values
+            plan_item_pool.write(cr, uid, [item.id], values, context=context)
+            self.write(cr, uid, [record.id], {'state': 'aprobado'}, context=context)
+
+        return {
+            'type': 'ir.actions.act_window_close',
+            'values': { 'state': 'aprobado'}
+         }
 
 plan_contratacion_idu_item_solicitud_cambio()

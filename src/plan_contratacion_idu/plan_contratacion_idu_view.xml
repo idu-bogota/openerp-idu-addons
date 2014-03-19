@@ -619,6 +619,19 @@
         </record>
 
         <!-- Solicitud Cambio -->
+        <record id="plan_contratacion_idu_item_solicitud_cambio_list" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.item_solicitud_cambio.list</field>
+            <field name="model">plan_contratacion_idu.item_solicitud_cambio</field>
+            <field name="arch" type="xml">
+                <tree string="Solicitudes de cambio">
+                    <field name="tipo"/>
+                    <field name="plan_id"/>
+                    <field name="plan_item_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="plan_contratacion_idu_item_solicitud_cambio_form" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.item_solicitud_cambio.form</field>
             <field name="model">plan_contratacion_idu.item_solicitud_cambio</field>
@@ -635,7 +648,6 @@
                     <sheet>
                         <group>
                             <field name="tipo"/>
-                            <field name="state"/>
                             <field name="plan_id"/>
                             <field name="plan_item_id"/>
                             <field name="item_nuevo_id"/>
@@ -648,6 +660,19 @@
                 </form>
             </field>
         </record>
-
+        <record id="plan_contratacion_idu_item_solicitud_cambio_action" model="ir.actions.act_window">
+            <field name="name">Solicitud de Cambio</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">plan_contratacion_idu.item_solicitud_cambio</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="plan_contratacion_idu_item_solicitud_cambio_list"/>
+        </record>
+        <menuitem
+            action="plan_contratacion_idu_item_solicitud_cambio_action"
+            id="menu_plan_contratacion_plan_item_solicitud_cambio_list"
+            parent="menu_plan_contratacion"
+            sequence="0"
+        />
     </data>
 </openerp>
