@@ -173,6 +173,19 @@ class plan_contratacion_idu_item(osv.osv):
         },
     }
 
+    def _get_name(self, cr, uid, ids, field, args, context=None):
+        res = {}
+        records = self.pool.get('plan_contratacion_idu.item').browse(cr, uid, ids, context=context)
+        for record in records:
+            res[record['id']] = "[{4}-{0}-{1}] {2} / {3} ({5})".format(record.dependencia_id.abreviatura,
+                 record.id,
+                 record.tipo_proceso_id.name,
+                 record.tipo_proceso_seleccion_id.name,
+                 record.plan_id.vigencia,
+                 record.state,
+             )
+        return res
+
     def _check_is_editable(self,cr,uid,ids,fieldname,arg,context=None):
         res = {}
         records = self.browse(cr, uid, ids, context=context)
@@ -358,6 +371,12 @@ class plan_contratacion_idu_item(osv.osv):
         return res
 
     _columns = {
+        'name': fields.function(_get_name,
+             type='char',
+             string='Nombre',
+             readonly=True,
+             store=False,
+        ),
         'is_editable':fields.function(_check_is_editable,
              type='boolean',
              string='Verifica si el item del plan es editable',
@@ -1284,7 +1303,8 @@ class hr_department(osv.osv):
         return dict(res)
 
     _columns = {
-        'codigo': fields.integer('Código Departamento', required=True),
+        'codigo': fields.integer('Código Dependencia', required=True),
+        'abreviatura': fields.char('Abreviatura', size=20, required=True),
     }
 
 hr_department()

@@ -616,6 +616,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="name" position="before">
+                    <field name="abreviatura"/>
                     <field name="codigo"/>
                 </field>
                 <field name="manager_id" position="replace" />
