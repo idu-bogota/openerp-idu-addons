@@ -1,0 +1,8 @@
+.openerp .oe_form_field_progressbar.ui-progressbar{
+	font-size: 10px;
+}
+
+.openerp .oe_form_field_progressbar.ui-progressbar .ui-widget-header 
+{
+	background: none repeat-x scroll 50% 50% #9bbbe4;
+}
