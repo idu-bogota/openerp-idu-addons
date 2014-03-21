@@ -23,10 +23,11 @@
             <field name="model">plan_contratacion_idu.wizard.reporte</field>
             <field name="arch" type="xml">
                 <form string="Exportar a Excel Centro de Costo">
-                        <field name="plan_contratacion"/>
-                        <field name="dependencia"/>
-                        <button name="generar" string="Export" type="object" icon="gtk-ok"/>
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                        <field name="plan_contratacion" on_change="onchange_plan_contratacion(plan_contratacion)"/>
+                        <group col="4" colspan="1">
+                            <button name="generar" string="Export" type="object" icon="gtk-ok"/>
+                            <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                        </group>
                 </form>
             </field>
         </record>

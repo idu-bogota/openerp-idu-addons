@@ -46,7 +46,7 @@
                         <field name="item_ids" context="{'plan_id': active_id}" />
                          <field name="currency_id" invisible="1"/>
                         <group>
-                            <group class="oe_subtotal_footer oe_right" name="total_pagos_programado_item">>
+                            <group class="oe_subtotal_footer oe_right" name="total_pagos_programado_item">
                                 <field name="total_pagos_presupuestado_plan" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
                                 <label for="total_pagos_programados_plan"/>
                                     <div>

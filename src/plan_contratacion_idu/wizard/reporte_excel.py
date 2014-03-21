@@ -30,6 +30,23 @@ from base64 import encodestring
 
 class plan_contratacion_idu_wizard_reporte(osv.osv_memory):
 
+    def _obtener_nombre(self, cr, uid, ids, plan_contratacion, args, context=None):
+        context = context or {}
+        res ={}
+        plan_pool = self.pool.get('plan_contratacion_idu.plan')
+        plan_id = plan_pool.search(cr, uid, [('id','=',plan_contratacion)])
+        plan_records = plan_pool.browse(cr, uid, plan_id, context)
+        for record in plan_records:
+            nombre = record.name
+            version = record.version
+        res = {'value':{
+                 'filename': nombre + "_version_"+ str(version) + ".xls"
+             }
+        }
+        return res
+        #return self.write(cr, uid, ids, {"filename": nombre + " version "+ str(version) + ".xls"})
+
+
     def get_headers(self):
         "Define los encabezados del fichero de excel"
         headers = ['CODIGO UNPSC',
@@ -85,19 +102,21 @@ class plan_contratacion_idu_wizard_reporte(osv.osv_memory):
     _description="Crea un reporte con el plan de contratacion"
     _columns={
               'plan_contratacion':fields.many2one('plan_contratacion_idu.plan','Plan de Contratacion',required=True),
-              'dependencia':fields.many2one('hr.department','Dependencia'),
               'data':fields.binary('Archivo',readonly=True,filters="xls"),
-              'filename':fields.char('Nombre de Archivo',size=40,readonly=True)
+              #'filename':fields.char('Nombre de Archivo',size=40,readonly=True),
+              'filename':fields.function(_obtener_nombre, stype="string", string='Nombre de Archivo')
     }
+
     _defaults = {
-              'filename': 'report.xls',
+                 'filename': 'report.xls',
     }
-    
+
+
     def _format_item (self,item):
         res = "" if (type(item) == bool and item == False) else str(item).decode('utf8')#Cuando vienen tildes entonces para que no afecte al excel
         return res
-    
-    
+
+
     def crear_reporte(self,cr,uid,ids,context):
         """
         Genera el reporte de excel
@@ -237,7 +256,7 @@ class plan_contratacion_idu_wizard_reporte(osv.osv_memory):
                 'type':'ir.actions.act_window',
                 'view_id':view_ids[0]
         }
-    
+
     def default_get(self,cr,uid,fields,context=None):
         res = super(plan_contratacion_idu_wizard_reporte,self).default_get(cr,uid,fields,context=context)
         if 'active_id' in context:
@@ -246,10 +265,10 @@ class plan_contratacion_idu_wizard_reporte(osv.osv_memory):
                 res['data']=wizard.data
                 res['filename']=wizard.filename
         return res
-    
-    
+
+    def onchange_plan_contratacion(self, cr, uid, ids, plan_contratacion, context=None):
+        self._obtener_nombre(cr, uid, 1, plan_contratacion, context)
+        return True
+
 plan_contratacion_idu_wizard_reporte()
-    
-    
-    
-    
+

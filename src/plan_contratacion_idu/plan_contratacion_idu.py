@@ -39,7 +39,7 @@ class plan_contratacion_idu_plan(osv.osv):
             res[record['id']] = "Plan Vigencia {0}".format(record['vigencia'])
         return res
 
-    def _get_currency(self, cr,SUPERUSER_ID, ids, field, args, context=None):
+    def _get_currency(self, cr, uid, ids, field, args, context=None):
         res = {}
         company_id = self.pool.get('res.company')._company_default_get(cr, SUPERUSER_ID, 'plan_contratacion_idu.plan', context=context)
         company = self.pool.get('res.company').read(cr, SUPERUSER_ID, company_id, ['currency_id'])
@@ -48,32 +48,35 @@ class plan_contratacion_idu_plan(osv.osv):
             res[plan_id] = currency_id
         return res
 
-    def _total_pagos_plan(self, cr, SUPERUSER_ID, ids, name, args, context=None):
+    def _total_pagos_plan(self, cr, uid, ids, name, args, context=None):
         res = {}
         if isinstance(ids, (list, tuple)) and not len(ids):
             return res
         if isinstance(ids, (long, int)):
             ids = [ids]
-        records = self.browse(cr, SUPERUSER_ID, ids, context=context)
-        res = {}
-        for record in records:
-            sumatoria = 0
-            sumatoria_presupuesto = 0
-            res[record['id']] = {}
-            for pago in record.item_ids:
-                sumatoria += pago.total_pagos_programados
-                sumatoria_presupuesto += pago.presupuesto
-            res[record['id']]['total_pagos_presupuestado_plan'] = sumatoria_presupuesto
-            res[record['id']]['total_pagos_programados_plan'] = sumatoria
-            res[record['id']]['total_rezago_plan'] = sumatoria_presupuesto - sumatoria
+        plan_item_pool = self.pool.get('plan_contratacion_idu.item')
+        item_ids = plan_item_pool.search(cr, SUPERUSER_ID,
+              [('plan_id','in',ids),'!' ,('state','in',('solicitud_cambio','no_realizado'))],
+              context=context,
+        )
+        for record in plan_item_pool.browse(cr, SUPERUSER_ID, item_ids, context=context):
+            plan_id = record.plan_id.id
+            if not plan_id in res:
+                res[plan_id] = {'total_pagos_presupuestado_plan':0,
+                                'total_pagos_programados_plan':0,
+                                'total_rezago_plan':0}
+            res[plan_id]['total_pagos_presupuestado_plan'] += record.presupuesto
+            for pago in record.plan_pagos_item_ids:
+                res[plan_id]['total_pagos_programados_plan'] += pago.valor
+        res[plan_id]['total_rezago_plan'] = res[plan_id]['total_pagos_presupuestado_plan'] - res[plan_id]['total_pagos_programados_plan']
         return res
 
-    def _get_plan_ids_from_items (self, cr, SUPERUSER_ID, ids, context=None):
+    def _get_plan_ids_from_items (self, cr, uid, ids, context=None):
         """
         Retorna IDs del plan_item modificados
         """
         records = self.pool.get('plan_contratacion_idu.item').browse(cr, SUPERUSER_ID, ids, context=context)
-        plan_item_ids = [record.id for record in records if record.id]
+        plan_item_ids = [record.plan_id.id for record in records if record.id]
         return plan_item_ids
 
     _columns = {
@@ -1197,23 +1200,29 @@ class plan_contratacion_idu_plan_pagos_giro(osv.osv):
 
 plan_contratacion_idu_plan_pagos_giro()
 
-def _total_pagos_programados(self, cr, SUPERUSER_ID, ids, name, args, context=None):
-        res = {}
-        if isinstance(ids, (list, tuple)) and not len(ids):
-            return res
-        if isinstance(ids, (long, int)):
-            ids = [ids]
-        records = self.browse(cr, SUPERUSER_ID, ids, context=context)
-        res = {}
-        for record in records:
-            sumatoria = 0
-            res[record['id']] = {}
-            for pago in record.plan_pagos_item_ids:
-                sumatoria += pago.valor
-            res[record['id']]['total_pagos_programados'] = sumatoria
-            res[record['id']]['presupuesto_rezago'] = record.presupuesto - sumatoria
-            res[record['id']]['total_programado_rezago'] = sumatoria + (record.presupuesto - sumatoria)
-        return res
+#def _total_pagos_programados(self, cr, SUPERUSER_ID, ids, name, args, context=None):
+#        res = {}
+#    if isinstance(ids, (list, tuple)) and not len(ids):
+#            return res
+#        if isinstance(ids, (long, int)):
+#            ids = [ids]
+#        records = self.browse(cr, SUPERUSER_ID, ids, context=context)
+#        res = {}
+#        for record in records:
+#            sumatoria = 0
+#            res[record['id']] = {}
+#            for pago in record.plan_pagos_item_ids:
+#                sumatoria += pago.valor
+#            res = {'value':{
+#                    'total_pagos_programados':sumatoria,
+#                    'presupuesto_rezago': record.presupuesto - sumatoria,
+#                    'total_programado_rezago': sumatoria + (record.presupuesto - sumatoria)
+#                }
+#            }
+       #     res[record['id']]['total_pagos_programados'] = sumatoria
+        #    res[record['id']]['presupuesto_rezago'] = record.presupuesto - sumatoria
+         #   res[record['id']][)
+#        return res
 
 class plan_contratacion_idu_plan_tipo_proceso(osv.osv):
     _name = "plan_contratacion_idu.plan_tipo_proceso"
