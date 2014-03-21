@@ -12,9 +12,9 @@
                     <field name="state" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager, base.group_erp_manager"/>
                     <field name="open_close_plan" on_change="_onchange_open_close_plan(open_close_plan)" invisible="0"/>
                     <field name="item_ids"/>
-                    <field name="total_pagos_presupuestado_plan"/>
-                    <field name="total_pagos_programados_plan"/>
-                    <field name="total_rezago_plan"/>
+                    <field name="total_pagos_presupuestado_plan" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                    <field name="total_pagos_programados_plan" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                    <field name="total_rezago_plan" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                 </tree>
             </field>
         </record>
@@ -47,12 +47,15 @@
                          <field name="currency_id" invisible="1"/>
                         <group>
                             <group class="oe_subtotal_footer oe_right" name="total_pagos_programado_item">
-                                <field name="total_pagos_presupuestado_plan" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
-                                <label for="total_pagos_programados_plan"/>
+                                <field name="total_pagos_presupuestado_plan" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"
+                                     groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                                <label for="total_pagos_programados_plan" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                                     <div>
-                                        <field name="total_pagos_programados_plan" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1" string="Rezago"/>
+                                        <field name="total_pagos_programados_plan" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1" string="Rezago"
+                                            groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                                     </div>
-                                <field name="total_rezago_plan" widget='monetary' options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
+                                <field name="total_rezago_plan" widget='monetary' options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"
+                                    groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                             </group>
                         </group>
                 </form>
@@ -137,6 +140,7 @@
                        <field name="state" widget="statusbar" colors="blue:state" clickable= 'False'/>
                     </header>
                     <group col="1" colspan="1">
+                    <field name="is_editable" invisible="1"/>
                         <header>
                            <button name="wkf_version_inicial" string="Versión Inicial" type="object" icon="gtk-dnd" groups="base.group_erp_manager"/>
                            <button name="wkf_aprobado" string="Aprobado" type="object" icon="gtk-apply" states="version_inicial" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager, base.group_erp_manager"/>
@@ -153,7 +157,7 @@
                     </group>
                     <sheet>
                         <group>
-                            <field name="is_editable" invisible="1" />
+                            <field name="is_editable" invisible="0"/>
                             <field name="item_a_cambiar" attrs="{'invisible': [('state','!=','solicitud_cambio')]}"/>
                             <field name="plan_id" readonly="1" />
                             <field name="codigo_unspsc" attrs="{'readonly': [('is_editable','=',False)]}"/>
