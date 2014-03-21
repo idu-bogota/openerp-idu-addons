@@ -76,14 +76,13 @@ class plan_contratacion_idu_wizard_solicitar_cambio(osv.osv_memory):
             'state': 'radicado',
         }
         #pregunta solicitudes existesn abiertas para el tipo solicitado
-        if form.tipo in ('modificar','eliminar'):
+        if (form.tipo == 'modificar' or form.tipo =='eliminar'):
             records_ids = solicitud_cambio_pool.search(cr, uid, [
                  ('plan_item_id','=',form.plan_item_id.id),
-                 ('tipo','=',form.tipo),
                  ('state','=','radicado')
             ], context=context)
             if (records_ids):
-                raise osv.except_osv('Error al Radicar Solicitud','El item ya tiene una solicitud de {0} Radicada'.format(form.tipo))
+                raise osv.except_osv('Error al Radicar Solicitud','El item ya tiene una solicitud Radicada')
         if form.tipo == 'modificar':
             vals['item_nuevo_id'] = plan_item_pool.copy(cr, uid, form.plan_item_id.id, default={'message_ids':[], 'state': 'solicitud_cambio', 'is_editable': 'True'}, context=context)
         elif form.tipo == 'adicionar':

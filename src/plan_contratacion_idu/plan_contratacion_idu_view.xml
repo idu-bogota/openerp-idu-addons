@@ -158,7 +158,7 @@
                     <sheet>
                         <group>
                             <field name="is_editable" invisible="0"/>
-                            <field name="item_a_cambiar" attrs="{'invisible': [('state','!=','solicitud_cambio')]}"/>
+                            <field name="item_a_cambiar" attrs="{'invisible': [('state','!=','solicitud_cambio')],'readonly': [('is_editable','=',False)]}"/>
                             <field name="plan_id" readonly="1" />
                             <field name="codigo_unspsc" attrs="{'readonly': [('is_editable','=',False)]}"/>
                             <field name="clasificacion_id" attrs="{'readonly': [('is_editable','=',False)]}"/>
@@ -179,7 +179,8 @@
                             <page string="Detalles">
                                 <group name="detalles">
                                     <field name="localizacion" attrs="{'readonly': [('is_editable','=',False)]}"/>
-                                    <field name="localidad_ids" attrs="{'invisible':[('localizacion','!=','localidad')], 'required':[('localizacion', '=','localidad')]}"/>
+                                    <field name="localidad_ids" attrs="{'invisible':[('localizacion','!=','localidad')], 'required':[('localizacion', '=','localidad')],
+                                        'readonly': [('is_editable','=',False)]}"/>
                                     <field name="description" attrs="{'readonly': [('is_editable','=',False)]}"/>
                                     <field name="plazo_de_ejecucion"
                                         attrs="{
