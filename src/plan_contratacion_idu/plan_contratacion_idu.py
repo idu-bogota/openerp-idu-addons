@@ -271,7 +271,7 @@ class plan_contratacion_idu_item(osv.osv):
         is_valid = True
         for record in records:
             if record.state == 'aprobado':
-                if record.codigo_unspsc and record.centro_costo:
+                if record.codigo_unspsc and record.centro_costo_id:
                     is_valid = True
                 else:
                     is_valid = False
@@ -731,7 +731,7 @@ class plan_contratacion_idu_item(osv.osv):
                     ['fecha_programada_crp','fecha_programada_acta_inicio']),
                     (_check_state_aprobado,
                     "Para cambiar el estado a Aprobado debe ingresar los campos requeridos",
-                    ['state', 'codigo_unspsc', 'centro_costo']),
+                    ['state', 'codigo_unspsc', 'centro_costo_id']),
                     (_check_state_radicado,
                     "Para cambiar el estado a Radicado debe ingresar el un número válido de radicado Orfeo en Fechas de Ejecución",
                     ['state', 'numero_orfeo']),
