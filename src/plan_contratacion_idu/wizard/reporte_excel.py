@@ -30,23 +30,6 @@ from base64 import encodestring
 
 class plan_contratacion_idu_wizard_reporte(osv.osv_memory):
 
-    def _obtener_nombre(self, cr, uid, ids, plan_contratacion, args, context=None):
-        context = context or {}
-        res ={}
-        plan_pool = self.pool.get('plan_contratacion_idu.plan')
-        plan_id = plan_pool.search(cr, uid, [('id','=',plan_contratacion)])
-        plan_records = plan_pool.browse(cr, uid, plan_id, context)
-        for record in plan_records:
-            nombre = record.name
-            version = record.version
-        res = {'value':{
-                 'filename': nombre + "_version_"+ str(version) + ".xls"
-             }
-        }
-        return res
-        #return self.write(cr, uid, ids, {"filename": nombre + " version "+ str(version) + ".xls"})
-
-
     def get_headers(self):
         "Define los encabezados del fichero de excel"
         headers = ['CODIGO UNPSC',
@@ -104,7 +87,7 @@ class plan_contratacion_idu_wizard_reporte(osv.osv_memory):
               'plan_contratacion':fields.many2one('plan_contratacion_idu.plan','Plan de Contratacion',required=True),
               'data':fields.binary('Archivo',readonly=True,filters="xls"),
               #'filename':fields.char('Nombre de Archivo',size=40,readonly=True),
-              'filename':fields.function(_obtener_nombre, stype="string", string='Nombre de Archivo')
+              'filename':fields.char('Nombre de Archivo', size=255)
     }
 
     _defaults = {
@@ -127,7 +110,7 @@ class plan_contratacion_idu_wizard_reporte(osv.osv_memory):
         # Se debería poder crear un wizard o etl o lo que sea para que cualquier módulo se pueda
         # exportar a excel componentizando este fragmento de codigo
         ##############################################################################
-        wizard_obj=self.browse(cr,uid,ids[0],context)
+        wizard_obj=self.browse(cr, uid, ids[0], context)
         plan_contratacion_idu_item_obj = self.pool.get('plan_contratacion_idu.item')
         user = self.pool.get('res.users').browse(cr,uid,uid,context=context)
         is_admin = False
@@ -243,9 +226,11 @@ class plan_contratacion_idu_wizard_reporte(osv.osv_memory):
         return out
 
     def generar(self,cr,uid,ids,context=None):
-        file_data = self.crear_reporte(cr,uid,ids,context)
-        self.write(cr,uid,ids[0],{'data':file_data},context)
-        view_ids = self.pool.get('ir.ui.view').search(cr,uid,[('model','=','plan_contratacion_idu.wizard.reporte'),\
+        wizard_obj = self.browse(cr, uid, ids[0], context)
+        file_data = self.crear_reporte(cr, uid, ids, context)
+        filename = "{0}_version_{1}.xls".format(wizard_obj.plan_contratacion.vigencia, wizard_obj.plan_contratacion.version)
+        self.write(cr, uid, ids[0], {'data':file_data, 'filename': filename}, context)
+        view_ids = self.pool.get('ir.ui.view').search(cr,uid,[('model','=','plan_contratacion_idu.wizard.reporte'),
                                                               ('name','=','Descargar Plan Contratacion a Excel')])
         context["current_ids"]=ids[0]
         return {
@@ -265,10 +250,6 @@ class plan_contratacion_idu_wizard_reporte(osv.osv_memory):
                 res['data']=wizard.data
                 res['filename']=wizard.filename
         return res
-
-    def onchange_plan_contratacion(self, cr, uid, ids, plan_contratacion, context=None):
-        self._obtener_nombre(cr, uid, 1, plan_contratacion, context)
-        return True
 
 plan_contratacion_idu_wizard_reporte()
 

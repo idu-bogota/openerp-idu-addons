@@ -84,7 +84,15 @@ class plan_contratacion_idu_wizard_solicitar_cambio(osv.osv_memory):
             if (records_ids):
                 raise osv.except_osv('Error al Radicar Solicitud','El item ya tiene una solicitud Radicada')
         if form.tipo == 'modificar':
-            vals['item_nuevo_id'] = plan_item_pool.copy(cr, uid, form.plan_item_id.id, default={'message_ids':[], 'state': 'solicitud_cambio', 'is_editable': 'True'}, context=context)
+            vals['item_nuevo_id'] = plan_item_pool.copy(cr, uid, form.plan_item_id.id, default={
+                'message_ids':[],
+                'state': 'solicitud_cambio',
+                'is_editable': 'True',
+                'solicitud_cambio_ids': None,
+                'solicitud_cambio_ids': None,
+                'cambios_propuestos_ids':None,
+                'item_a_cambiar':None,
+            }, context=context)
         elif form.tipo == 'adicionar':
             vals['item_nuevo_id'] = plan_item_pool.create(cr, uid, {'plan_id':form.plan_id.id, 'state': 'version_inicial', 'is_editable':'True'}, context=context)
 

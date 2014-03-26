@@ -628,6 +628,23 @@
         </record>
 
         <!-- Solicitud Cambio -->
+         <record id="plan_contratacion_idu_item_solicitud_cambio_search" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.item_solicitud_cambio.search</field>
+            <field name="model">plan_contratacion_idu.item_solicitud_cambio</field>
+            <field name="arch" type="xml">
+               <search string="Plan Contratación Solicitudes de Cambios">
+                    <filter icon="terp-check" string="Vigencia Actual" name="vigencia_actual" domain="['|',('plan_id.state', '=','inicial'),('plan_id.state', '=','en_ejecucion')]" help="Vigencia del Plan"/>
+                    <separator/>
+                    <filter name="solicitud_cambio" string="Solicitudes de cambio" domain="[('state','=','solicitud_cambio')]" help="Items activos en solicitud de cambio" icon="terp-check"/>
+                    <filter name="aprobado" string="Aprobado" domain="[('state','=','aprobado')]" help="Solicitudes Aprobadas" icon="terp-check"/>
+                    <filter name="rechazado" string="Rechazado" domain="[('state','=','rechazado')]" help="Solicitudes Rechazadas" icon="terp-check"/>
+                    <separator/>
+                    <filter icon="terp-mail-message-new" string="Mensajes no leidos" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <separator/>
+                </search>
+            </field>
+        </record>
+
         <record id="plan_contratacion_idu_item_solicitud_cambio_list" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.item_solicitud_cambio.list</field>
             <field name="model">plan_contratacion_idu.item_solicitud_cambio</field>
@@ -652,7 +669,7 @@
                     <group col="1" colspan="1">
                         <header>
                            <button name="aplicar_cambio" string="Aprobado" type="object" icon="gtk-apply" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager" states="radicado"/>
-                           <button name="aplicar_cambio" string="Rechazado" type="object" icon="gtk-cancel" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager" states="radicado"/>
+                           <button name="rechazar_cambio" string="Rechazado" type="object" icon="gtk-cancel" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager" states="radicado"/>
                         </header>
                     </group>
                     <sheet>
@@ -676,6 +693,7 @@
             <field name="res_model">plan_contratacion_idu.item_solicitud_cambio</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_vigencia_actual':1, 'search_default_solicitud_cambio':1}</field>
             <field name="view_id" ref="plan_contratacion_idu_item_solicitud_cambio_list"/>
         </record>
         <menuitem

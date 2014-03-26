@@ -68,7 +68,7 @@ class plan_contratacion_idu_plan(osv.osv):
             res[plan_id]['total_pagos_presupuestado_plan'] += record.presupuesto
             for pago in record.plan_pagos_item_ids:
                 res[plan_id]['total_pagos_programados_plan'] += pago.valor
-        res[plan_id]['total_rezago_plan'] = res[plan_id]['total_pagos_presupuestado_plan'] - res[plan_id]['total_pagos_programados_plan']
+            res[plan_id]['total_rezago_plan'] = res[plan_id]['total_pagos_presupuestado_plan'] - res[plan_id]['total_pagos_programados_plan']
         return res
 
     def _get_plan_ids_from_items (self, cr, uid, ids, context=None):
@@ -1322,7 +1322,16 @@ hr_department()
 
 class plan_contratacion_idu_item_solicitud_cambio(osv.osv):
     _name = "plan_contratacion_idu.item_solicitud_cambio"
+    _table = 'plan_contr_item_solicitud_cambio'
     _inherit = ['mail.thread']
+    _track = {
+        'state': {
+            'plan_contratacion_idu.item_solicitud_cambio_borrador': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['borrador'],
+            'plan_contratacion_idu.item_solicitud_cambio_radicado': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['radicado'],
+            'plan_contratacion_idu.item_solicitud_cambio_rechazado': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['rechazado'],
+            'plan_contratacion_idu.item_solicitud_cambio_aprobado': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['aprobado'],
+        },
+    }
 
     _rec_name = 'tipo'
     _columns = {
@@ -1331,7 +1340,9 @@ class plan_contratacion_idu_item_solicitud_cambio(osv.osv):
                 ('eliminar', 'Eliminar el item'),
                 ('adicionar', 'Crear un nuevo item'),
             ],
-            'Tipo de cambio'
+            'Tipo de cambio',
+            track_visibility='onchange',
+            readonly= True
         ),
         'state':fields.selection([
                 ('borrador', 'Inicial'),
@@ -1340,19 +1351,24 @@ class plan_contratacion_idu_item_solicitud_cambio(osv.osv):
                 ('aprobado', 'Aprobado')
             ],
             'Estado',
-             required=True
+             required=True,
+             track_visibility='onchange',
+             readonly= True
          ),
         'plan_id': fields.many2one('plan_contratacion_idu.plan','Plan en el que se radica la solicitud de cambio',
              select=True,
              required=True,
+             readonly= True
          ),
         'plan_item_id': fields.many2one('plan_contratacion_idu.item','Item a cambiar',
              select=True,
              required=False,
+             readonly= True
          ),
         'item_nuevo_id': fields.many2one('plan_contratacion_idu.item','Item con los cambios solicitados',
              select=True,
              required=False,
+             readonly= True
         ),
     }
 
@@ -1374,6 +1390,12 @@ class plan_contratacion_idu_item_solicitud_cambio(osv.osv):
         return {
             'type': 'ir.actions.act_window_close',
          }
+
+    def rechazar_cambio(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {
+                                  "state": "rechazado",
+                }
+        )
 
     def _aplicar_modificacion(self, cr, uid, solicitud, context=None):
         plain_fields = [

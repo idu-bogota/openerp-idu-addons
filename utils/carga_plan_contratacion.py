@@ -22,13 +22,13 @@ from openerp_tools import openerp_server_proxy
 from xlrd import open_workbook, xldate_as_tuple, XL_CELL_DATE
 from datetime import date
 
-vigencia = "20132014"
-openerp_server = "I1608"
-pwd = "sigidu"
+vigencia = "2014"
+openerp_server = "A-1502"
+pwd = "admin"
 user = "admin"
-dbname="plan-contratacion"
+dbname="plan_contratacion"
 port ="8069"
-path_excel = "/home/cabaezal1/proyectos/pc2014.xls"
+path_excel = "/home/clreyesb1/Escritorio/datos_plan/pc2014.xls"
 index_hoja = 9
 index_header = 1
 
