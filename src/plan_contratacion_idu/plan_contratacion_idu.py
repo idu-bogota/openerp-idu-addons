@@ -603,6 +603,7 @@ class plan_contratacion_idu_item(osv.osv):
             }),
         'total_programado_rezago': fields.function(_total_pagos_programados,
              type='float',
+             help='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
              multi="presupuesto",
              string='Total',
              obj="res.currency",
@@ -683,7 +684,7 @@ class plan_contratacion_idu_item(osv.osv):
             'item_nuevo_id',
             string='Solicitud de cambio',#de solicitud de cambio a plan_item
         ),
-        'cambios_propuestos_ids': fields.many2many('plan_contratacion_idu.item','plan_contratacion_idu_item_solicitud_cambio',
+        'cambios_propuestos_ids': fields.many2many('plan_contratacion_idu.item','plan_contr_item_solicitud_cambio',
              'plan_item_id',
              'item_nuevo_id',
              'Items con los cambios propuestos',
@@ -698,7 +699,6 @@ class plan_contratacion_idu_item(osv.osv):
             store=False
         ),
     }
-    
 
     def _default_dependencia_id(self, cr, uid, context):
         department_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).department_ids
@@ -1385,7 +1385,7 @@ class plan_contratacion_idu_item_solicitud_cambio(osv.osv):
             elif record.tipo == 'adicionar':
                 plan_item_pool.write(cr, uid, [record.plan_item_id.id], {'state': 'aprobado'}, context=context)
                 plan_item_pool.message_post(cr, uid, [record.plan_item_id.id], 
-                    'Aprobado', 'Aprobador de acuerdo a la solicitud de cambio id:{0}'.format(record.id), context=context)
+                    'Aprobado', 'Aprobado de acuerdo a la solicitud de cambio id:{0}'.format(record.id), context=context)
 
         return {
             'type': 'ir.actions.act_window_close',
@@ -1418,10 +1418,14 @@ class plan_contratacion_idu_item_solicitud_cambio(osv.osv):
             'tipo_proceso_seleccion_id',
             'unidad_meta_fisica_id',
         ]
+        m2o_fields = [
+            'plan_pagos_item_ids',
+        ]
         m2m_fields = [
             'localidad_ids'
         ]
         values = {}
+        plan_pagos_pool = self.pool.get('plan_contratacion_idu.plan_pagos_item')
         plan_item_pool = self.pool.get('plan_contratacion_idu.item')
         item = solicitud.plan_item_id
         cambio = solicitud.item_nuevo_id
@@ -1431,6 +1435,14 @@ class plan_contratacion_idu_item_solicitud_cambio(osv.osv):
         for field in o2m_fields:
             if getattr(item, field).id != getattr(cambio, field).id:
                 values[field] = getattr(cambio, field).id
+        for field in m2o_fields:
+            m2o_origen_ids = [ i.id for i in getattr(item, field)]
+            m2o_cambio_ids = [ i.id for i in getattr(cambio, field)]
+            plan_pagos_pool.unlink(cr, uid, m2o_origen_ids, context=context)
+            for i in m2o_cambio_ids:
+                plan_pagos_pool.copy(cr, uid, i, default={
+                    'plan_contratacion_item_id':item.id,
+                }, context=context)
         for field in m2m_fields:
             m2m_origen_ids = [ i.id for i in getattr(item, field)]
             m2m_cambio_ids = [ i.id for i in getattr(cambio, field)]
