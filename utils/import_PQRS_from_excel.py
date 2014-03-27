@@ -25,9 +25,9 @@ from datetime import date
 openerp_server = "localhost"
 pwd = "admin"
 user = "admin"
-dbname="open_erp_6"
+dbname="openerp-idu-restored"
 port ="8069"
-path_excel = "/home/juanfedo/proyectos/PQRS_Puntos_CREA.xls"
+path_excel = "/home/cinxgler/temp/PQRS_Puntos_CREA.xls"
 index_hoja = 0
 index_header = 2
 error = {}
@@ -154,7 +154,10 @@ def exportar_datos_openerp(_plan_contratacion,_openerp_server,_port, _dbname,_us
                     else:
                         temp = temp + campo + ' '
             if temp:
-                vals_partner['mobile'] = temp
+                if len(temp) > 8:
+                    vals_partner['mobile'] = temp
+                else:
+                    vals_partner['phone'] = temp
 
         vals_partner['street'] = str(item['Dirección correspondencia'])
         barrio_id = openerp.search('ocs.neighborhood',[('name','=',str(item['Barrio Correspondencia']))])
@@ -164,20 +167,22 @@ def exportar_datos_openerp(_plan_contratacion,_openerp_server,_port, _dbname,_us
         localidad_id = openerp.search('ocs.district',[('name','=',str(item['Localidad Correspondencia']))])
         vals_partner['district_id'] = localidad_id[0]
         user_id = {}
-        user_id = openerp.search('res.partner.address',[('email','=',str(item['Datos de contacto']))])
-        
+        if 'email' in vals_partner:
+            user_id = openerp.search('res.partner.address',[
+                ('email','=',vals_partner['email']),
+            ])
         if not str(item['Número documento de identidad'])=="":
             user_id = openerp.search('res.partner.address',[('document_number','=', str("%i" % float(item['Número documento de identidad'])))])
 
         try:
+            print "Exportando a openerp item "+str(item['Fila_excel'])
             if not user_id:
                 vals['partner_address_id'] = openerp.create("res.partner.address",vals_partner)
             else: 
                 vals['partner_address_id'] = user_id[0]
             claim_id = openerp.create("crm.claim",vals)
-            print "Exportando a openerp item "+str(item['Fila_excel'])
         except Exception as e:
-            error[cont] = 'Error en la fila:' + str(item['Fila_excel']) + ' ' + str(e)
+            error[cont] = "Error en la fila: {0}\nException: {1}\nDatos: {2}".format(item['Fila_excel'], e, item)
             cont+=1
             pass
 
