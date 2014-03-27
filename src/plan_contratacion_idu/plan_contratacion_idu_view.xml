@@ -137,7 +137,7 @@
             <field name="arch" type="xml">
                 <form string="Item plan de contratación" version="7.0">
                     <header>
-                       <field name="state" widget="statusbar" colors="blue:state" clickable= 'False'/>
+                       <field name="state" widget="statusbar" colors="blue:state" clickable= "0"/>
                     </header>
                     <group col="1" colspan="1">
                     <field name="is_editable" invisible="1"/>
@@ -157,7 +157,7 @@
                     </group>
                     <sheet>
                         <group>
-                            <field name="is_editable" invisible="0"/>
+                            <field name="is_editable" invisible="1"/>
                             <field name="item_a_cambiar" attrs="{'invisible': [('state','!=','solicitud_cambio')],'readonly': [('is_editable','=',False)]}"/>
                             <field name="plan_id" readonly="1" />
                             <field name="codigo_unspsc" attrs="{'readonly': [('is_editable','=',False)]}"/>
@@ -256,7 +256,6 @@
                                             <div>
                                                 <field name="presupuesto_rezago" string="Rezago" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
                                             </div>
-                                            <field name="total_programado_rezago" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
                                      </group>
                                </group>
                                <group name="giros_realizados" string="Pagos Realizados">
@@ -270,11 +269,6 @@
                                <group>
                                      <group class="oe_subtotal_footer oe_right" name="total_pagos_realizados_item">>
                                          <field name="total_pagos_realizados" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
-                                         <label for="presupuesto_rezago_realizado"/>
-                                            <div>
-                                                <field name="presupuesto_rezago_realizado" string="Rezago" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
-                                            </div>
-                                            <field name="total_realizado_rezago" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
                                      </group>
                                </group>
                             </page>
@@ -664,7 +658,7 @@
             <field name="arch" type="xml">
                 <form string="Item plan de contratación" version="7.0">
                     <header>
-                       <field name="state" widget="statusbar" colors="blue:state" clickable= 'False'/>
+                       <field name="state" widget="statusbar" colors="blue:state" clickable= "0"/>
                     </header>
                     <group col="1" colspan="1">
                         <header>

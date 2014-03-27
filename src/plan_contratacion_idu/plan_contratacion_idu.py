@@ -207,7 +207,6 @@ class plan_contratacion_idu_item(osv.osv):
         if isinstance(ids, (long, int)):
             ids = [ids]
         records = self.browse(cr, uid, ids, context=context)
-        res = {}
         for record in records:
             sumatoria = 0
             res[record['id']] = {}
@@ -215,8 +214,8 @@ class plan_contratacion_idu_item(osv.osv):
                 sumatoria += pago.valor
             res[record['id']]['total_pagos_programados'] = sumatoria
             res[record['id']]['presupuesto_rezago'] = record.presupuesto - sumatoria
-            res[record['id']]['total_programado_rezago'] = sumatoria + (record.presupuesto - sumatoria)
         return res
+
 
     def _total_pagos_realizados(self, cr, uid, ids, name, args, context=None):
         res = {}
@@ -232,8 +231,6 @@ class plan_contratacion_idu_item(osv.osv):
             for pago in record.plan_pagos_giro_ids:
                 sumatoria += pago.valor
             res[record['id']]['total_pagos_realizados'] = sumatoria
-            res[record['id']]['presupuesto_rezago_realizado'] = record.presupuesto - sumatoria
-            res[record['id']]['total_realizado_rezago'] = sumatoria + (record.presupuesto - sumatoria)
         return res
 
     def _get_plan_item_from_pago_records(self, cr, uid, pago_ids, context=None):
@@ -588,24 +585,12 @@ class plan_contratacion_idu_item(osv.osv):
              digits_compute=dp.get_precision('Account'),
              store={
                 'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_item_ids', 'presupuesto'], 10),
-                'plan_contratacion_idu.plan_pagos_item': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
+                'plan_contratacion_idu.plan_pagos_item': (_get_plan_item_from_pago_records, ['valor', 'mes', 'plan_contratacion_item_id'], 20),
             }),
         'presupuesto_rezago': fields.function(_total_pagos_programados,
              type='float',
              multi="presupuesto",
              string='Rezago',
-             obj="res.currency",
-             digits_compute=dp.get_precision('Account'),
-             store={
-                'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_item_ids', 'presupuesto'], 10),
-                'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['presupuesto', 'presupuesto'], 10),
-                'plan_contratacion_idu.plan_pagos_item': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
-            }),
-        'total_programado_rezago': fields.function(_total_pagos_programados,
-             type='float',
-             help='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-             multi="presupuesto",
-             string='Total',
              obj="res.currency",
              digits_compute=dp.get_precision('Account'),
              store={
@@ -621,28 +606,6 @@ class plan_contratacion_idu_item(osv.osv):
              digits_compute=dp.get_precision('Account'),
              store={
                 'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_giro_ids', 'presupuesto'], 10),
-                'plan_contratacion_idu.plan_pagos_giro': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
-            }),
-        'presupuesto_rezago_realizado': fields.function(_total_pagos_realizados,
-             type='float',
-             multi="presupuesto",
-             string='Rezago',
-             obj="res.currency",
-             digits_compute=dp.get_precision('Account'),
-             store={
-                'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_giro_ids', 'presupuesto'], 10),
-                'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['presupuesto', 'presupuesto'], 10),
-                'plan_contratacion_idu.plan_pagos_giro': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
-            }),
-        'total_realizado_rezago': fields.function(_total_pagos_realizados,
-             type='float',
-             multi="presupuesto",
-             string='Total',
-             obj="res.currency",
-             digits_compute=dp.get_precision('Account'),
-             store={
-                'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_giro_ids', 'presupuesto'], 10),
-                'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['presupuesto', 'presupuesto'], 10),
                 'plan_contratacion_idu.plan_pagos_giro': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
             }),
         'numero_orfeo':fields.char('Número Radicado Orfeo',
@@ -699,6 +662,8 @@ class plan_contratacion_idu_item(osv.osv):
             store=False
         ),
     }
+
+
 
     def _default_dependencia_id(self, cr, uid, context):
         department_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).department_ids
@@ -825,7 +790,6 @@ class plan_contratacion_idu_item(osv.osv):
             res = {
                 'total_pagos_programados': sumatoria,
                 'presupuesto_rezago': plan_item['presupuesto'] - sumatoria,
-                'total_programado_rezago': sumatoria + (plan_item['presupuesto'] - sumatoria),
             }
         return {
             'value': res
@@ -1200,29 +1164,6 @@ class plan_contratacion_idu_plan_pagos_giro(osv.osv):
 
 plan_contratacion_idu_plan_pagos_giro()
 
-#def _total_pagos_programados(self, cr, SUPERUSER_ID, ids, name, args, context=None):
-#        res = {}
-#    if isinstance(ids, (list, tuple)) and not len(ids):
-#            return res
-#        if isinstance(ids, (long, int)):
-#            ids = [ids]
-#        records = self.browse(cr, SUPERUSER_ID, ids, context=context)
-#        res = {}
-#        for record in records:
-#            sumatoria = 0
-#            res[record['id']] = {}
-#            for pago in record.plan_pagos_item_ids:
-#                sumatoria += pago.valor
-#            res = {'value':{
-#                    'total_pagos_programados':sumatoria,
-#                    'presupuesto_rezago': record.presupuesto - sumatoria,
-#                    'total_programado_rezago': sumatoria + (record.presupuesto - sumatoria)
-#                }
-#            }
-       #     res[record['id']]['total_pagos_programados'] = sumatoria
-        #    res[record['id']]['presupuesto_rezago'] = record.presupuesto - sumatoria
-         #   res[record['id']][)
-#        return res
 
 class plan_contratacion_idu_plan_tipo_proceso(osv.osv):
     _name = "plan_contratacion_idu.plan_tipo_proceso"
