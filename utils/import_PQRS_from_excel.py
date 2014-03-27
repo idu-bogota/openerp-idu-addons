@@ -142,16 +142,20 @@ def exportar_datos_openerp(_plan_contratacion,_openerp_server,_port, _dbname,_us
         elif 'xtranj' in str(item['Tipo de documento']):
             vals_partner['document_type'] = 'CE'
 
-        if '@' in str(item['Datos de contacto']):
-            vals_partner['email'] = str(item['Datos de contacto'])
-        else:
-            if not str(item['Datos de contacto'])=="":
-                numeros = str(item['Datos de contacto']).split()
-                temp = ''
-                for numero in numeros:
-                    temp = temp + numero[:-2] + ' '
+        if not str(item['Datos de contacto'])=="":
+            campos = str(item['Datos de contacto']).split()
+            temp = ''
+            for campo in campos:
+                if '@' in campo:
+                    vals_partner['email'] = campo
+                else:
+                    if '.' in campo:
+                        temp = temp + campo[:-2] + ' '
+                    else:
+                        temp = temp + campo + ' '
+            if temp:
                 vals_partner['mobile'] = temp
-                
+
         vals_partner['street'] = str(item['Dirección correspondencia'])
         barrio_id = openerp.search('ocs.neighborhood',[('name','=',str(item['Barrio Correspondencia']))])
         if barrio_id:
@@ -164,7 +168,7 @@ def exportar_datos_openerp(_plan_contratacion,_openerp_server,_port, _dbname,_us
         
         if not str(item['Número documento de identidad'])=="":
             user_id = openerp.search('res.partner.address',[('document_number','=', str("%i" % float(item['Número documento de identidad'])))])
-        
+
         try:
             if not user_id:
                 vals['partner_address_id'] = openerp.create("res.partner.address",vals_partner)
