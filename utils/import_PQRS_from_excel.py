@@ -105,8 +105,8 @@ def exportar_datos_openerp(_plan_contratacion,_openerp_server,_port, _dbname,_us
         requerimiento_id = openerp.search('crm.case.categ',[('name','=',str(item['Tipo requerimiento']))])
         vals['categ_id'] = requerimiento_id[0]
 
-        vals['description'] = str(item['Asunto'])
-        vals_partner['resolution'] = str(item['Solución'])
+        vals['description'] = 'Fecha de solicitud: ' + str(date(*fr[:3])) + '  ' + str(item['Asunto'])
+        vals['resolution'] = str(item['Solución'])
         
         canal_id = openerp.search('crm.case.channel',[('name','=',str(item['Canal de atención']))])
         vals['channel'] = canal_id[0]
@@ -145,9 +145,14 @@ def exportar_datos_openerp(_plan_contratacion,_openerp_server,_port, _dbname,_us
         if '@' in str(item['Datos de contacto']):
             vals_partner['email'] = str(item['Datos de contacto'])
         else:
-            vals_partner['mobile'] = str(item['Datos de contacto'])
+            if not str(item['Datos de contacto'])=="":
+                numeros = str(item['Datos de contacto']).split()
+                temp = ''
+                for numero in numeros:
+                    temp = temp + numero[:-2] + ' '
+                vals_partner['mobile'] = temp
+                
         vals_partner['street'] = str(item['Dirección correspondencia'])
-
         barrio_id = openerp.search('ocs.neighborhood',[('name','=',str(item['Barrio Correspondencia']))])
         if barrio_id:
             vals_partner['neighborhood_id'] = barrio_id[0]
@@ -168,7 +173,6 @@ def exportar_datos_openerp(_plan_contratacion,_openerp_server,_port, _dbname,_us
             claim_id = openerp.create("crm.claim",vals)
             print "Exportando a openerp item "+str(item['Fila_excel'])
         except Exception as e:
-            print 'Error en la fila:' + str(item['Fila_excel']) + ' ' + str(e)
             error[cont] = 'Error en la fila:' + str(item['Fila_excel']) + ' ' + str(e)
             cont+=1
             pass
