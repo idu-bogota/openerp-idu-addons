@@ -232,8 +232,7 @@ def exportar_datos_openerp(_plan_contratacion,_openerp_server,_port, _dbname,_us
         print "Exportando a openerp item "+str(item['Fila_excel'])
         #Prueba de fuego, pa mostrarle al Cinxgler:
         openerp.create("plan_contratacion_idu.item",vals)
-        
-
+        #openerp.execute_method('plan_contratacion_idu.item','on_change_centro_costo',0,ccosto,{})
 
 
         #Verificar si proyecto prioritario y proyecto de inversion en el clasificador

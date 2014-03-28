@@ -152,13 +152,13 @@ class plan_contratacion_idu_plan(osv.osv):
         self.pool.get('plan_contratacion_idu.item')._check_is_editable()
 
     def wkf_open(self, cr, uid, ids,context=None):
-        self.write(cr, uid, ids, {"open_close_plan": True})
-
-    def wkf_close(self, cr, uid, ids, context=None):
         records = self.read(cr, uid, ids, ['version'],context=context)
         for record in records:
             contador = record['version'] + 1
         self.write(cr, uid, ids, {"version": contador})
+        self.write(cr, uid, ids, {"open_close_plan": True})
+
+    def wkf_close(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {"open_close_plan": False})
 
 plan_contratacion_idu_plan()
@@ -463,6 +463,7 @@ class plan_contratacion_idu_item(osv.osv):
              ('no_realizado', 'No realizado'), ('solicitud_cambio', 'Solicitud de Cambio')],'State',
              track_visibility='onchange',
              required=True,
+             readonly=True,
              states={'solicitud_cambio':[('required',False)]}),
         'fecha_programada_radicacion': fields.date ('Fecha Radicacion en DTPS y/o DTGC',
              help="Fecha estimada de inicio de proceso de selección",
@@ -712,7 +713,7 @@ class plan_contratacion_idu_item(osv.osv):
                     ]
 
 #FIXME: Aqui esta llamando al centro_costo.write y create, esto centralizarse solo en strone_erp_idu.
-    def on_change_centro_costo(self,cr,uid,ids,centro_costo,context=None):
+    def on_change_centro_costo(self, cr, uid, plan_item_ids, centro_costo, context=None):
         centro_costo_obj=self.pool.get('stone_erp_idu.centro_costo')
         #Verificacion que el centro de costo este guardado en la base de datos
         ids = centro_costo_obj.search(cr,uid,[('codigo','=',centro_costo)])
@@ -725,7 +726,6 @@ class plan_contratacion_idu_item(osv.osv):
             if (det_cc == False):
                 raise osv.except_osv('Error','No existe el Centro de Costo')
             else :
-                
                 #Mejor guardar provisionalmente y despues se hace la actualizacion y se le pone el nombre jaja
                 id_cc = centro_costo_obj.create(cr,1,{'codigo':det_cc['centro_costo'],'name':det_cc['centro_costo']})
                 centro_costo_obj.actualizar_centros_costo(cr,uid,context)

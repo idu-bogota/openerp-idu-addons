@@ -83,7 +83,7 @@ class openerp_proxy():
         print "hecho"
         return id_object
     
-    def execute_method(self,object,method,args):
+    def execute_method(self,object,method,**args):
         if not self._isLoggedIn:
             self.__login()
         print "Ejecutando método "+method+" en objeto "+object+" en openerp"

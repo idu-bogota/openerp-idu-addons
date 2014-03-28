@@ -137,7 +137,7 @@
             <field name="arch" type="xml">
                 <form string="Item plan de contratación" version="7.0">
                     <header>
-                       <field name="state" widget="statusbar" colors="blue:state" clickable= "0"/>
+                       <field name="state" widget="statusbar" colors="blue:state" clickable="False"/>
                     </header>
                     <group col="1" colspan="1">
                     <field name="is_editable" invisible="1"/>
@@ -152,6 +152,7 @@
                            <button name="%(plan_contratacion_idu.action_plan_contratacion_idu_wizard_solicitud_cambio)d" string="Solicitar Cambio"
                               type="action" icon="gtk-ok" context="{'plan_item_id': id, 'plan_id': plan_id, }"
                               states="aprobado, radicado, suscrito"
+                              attrs="{'invisible': [('is_editable','=',False)]}"
                            />
                         </header>
                     </group>
@@ -658,7 +659,7 @@
             <field name="arch" type="xml">
                 <form string="Item plan de contratación" version="7.0">
                     <header>
-                       <field name="state" widget="statusbar" colors="blue:state" clickable= "0"/>
+                       <field name="state" widget="statusbar" colors="blue:state" clickable="False"/>
                     </header>
                     <group col="1" colspan="1">
                         <header>
