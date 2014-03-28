@@ -169,7 +169,7 @@ class project_pmi_wbs_wizard_create_wbs_from_file(osv.osv_memory):
     def take_leaves_as_tasks(self,struct,struct_type,outline_number,task,parent_ids,outline_level,context,data,name,cr,uid,add_days,wizard):
         type = self.get_type(struct, outline_number, 1)
         self.save_info_leave_task(struct,struct_type, outline_number ,data, task, add_days, name, parent_ids, outline_level, cr, uid, context, wizard, type)
-
+        
     def action_create(self, cr, uid, ids, context=None):
         wizards = self.pool.get('project_pmi_wbs.wizard.create_wbs_from_file').browse(cr,uid,ids,context=None)
         struct = {}

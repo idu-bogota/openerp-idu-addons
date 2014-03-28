@@ -487,14 +487,16 @@ class project_pmi_wbs_item(osv.osv):
                 if sibling.date_start and sibling.date_deadline and  sibling.state != 'cancelled':
                     weight_sum += self.calculate_days(sibling.date_start, sibling.date_deadline)
                 else:
-                    min_max_date = self.get_min_max_date(sibling.child_ids)
-                    weight_sum += self.calculate_days(min_max_date['min_date'], min_max_date['max_date']) 
+                    if sibling.child_ids:
+                        min_max_date = self.get_min_max_date(sibling.child_ids)
+                        weight_sum += self.calculate_days(min_max_date['min_date'], min_max_date['max_date']) 
         #calcula el %
         if obj.parent_id and obj.state in ['open','done','pending','draft']:
             for sibling in obj.parent_id.child_ids:
                 if sibling.state != 'cancelled' and sibling.type != 'deliverable':
-                    weight = (self.calculate_days(sibling.date_start, sibling.date_deadline) / weight_sum) * 100
-                    self.write(cr, uid,sibling.id, {'weight': weight} , context)
+                    if sibling.date_start and sibling.date_deadline and weight_sum >= 0:
+                        weight = (self.calculate_days(sibling.date_start, sibling.date_deadline) / weight_sum) * 100
+                        self.write(cr, uid,sibling.id, {'weight': weight} , context)
 
     def get_min_max_date(self,child_ids):
         min_date = '9999-01-01' 
@@ -517,10 +519,13 @@ class project_pmi_wbs_item(osv.osv):
                     if sibling.type == 'deliverable':
                         min_max_date = self.get_min_max_date(sibling.child_ids)
                         duration = self.calculate_days(min_max_date['min_date'], min_max_date['max_date']) 
-                        deliverable_dur[sibling.id] = duration
+                        if duration >= 0:
+                            deliverable_dur[sibling.id] = duration
                     else:
-                        duration = self.calculate_days(sibling.date_start, sibling.date_deadline)
-                        deliverable_dur[sibling.id] = duration
+                        if sibling.date_start and sibling.date_deadline:
+                            duration = self.calculate_days(sibling.date_start, sibling.date_deadline)
+                            if duration >= 0:
+                                deliverable_dur[sibling.id] = duration
         for k,v in deliverable_dur.items():
             weight_sum += v
         for k,v in deliverable_dur.items():
