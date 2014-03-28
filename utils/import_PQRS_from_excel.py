@@ -25,7 +25,7 @@ from datetime import date
 openerp_server = "localhost"
 pwd = "admin"
 user = "admin"
-dbname="openerp-idu-restored"
+dbname="openerp-idu"
 port ="8069"
 path_excel = "/home/cinxgler/temp/PQRS_Puntos_CREA.xls"
 index_hoja = 0
@@ -125,58 +125,64 @@ def exportar_datos_openerp(_plan_contratacion,_openerp_server,_port, _dbname,_us
         
         if not str(item['Número documento de identidad'])=="":
             vals_partner['document_number'] = str("%i" % float(item['Número documento de identidad']))
-        vals_partner['name'] = str(item['Nombres'])
-        vals_partner['last_name'] = str(item['Apellidos'])
 
-        if 'M' == str(item['Genero'])[0]:
-            vals_partner['gender'] = 'm'
-        else:
-            vals_partner['gender'] = 'f'
-
-        if 'udada' in str(item['Tipo de documento']):
-            vals_partner['document_type'] = 'CC'
-        elif 'denti' in str(item['Tipo de documento']):
-            vals_partner['document_type'] = 'TI'
-        elif 'saporte' in str(item['Tipo de documento']):
-            vals_partner['document_type'] = 'Pasaporte'
-        elif 'xtranj' in str(item['Tipo de documento']):
-            vals_partner['document_type'] = 'CE'
-
-        if not str(item['Datos de contacto'])=="":
-            campos = str(item['Datos de contacto']).split()
-            temp = ''
-            for campo in campos:
-                if '@' in campo:
-                    vals_partner['email'] = campo
-                else:
-                    if '.' in campo:
-                        temp = temp + campo[:-2] + ' '
-                    else:
-                        temp = temp + campo + ' '
-            if temp:
-                if len(temp) > 8:
-                    vals_partner['mobile'] = temp
-                else:
-                    vals_partner['phone'] = temp
-
-        vals_partner['street'] = str(item['Dirección correspondencia'])
-        barrio_id = openerp.search('ocs.neighborhood',[('name','=',str(item['Barrio Correspondencia']))])
-        if barrio_id:
-            vals_partner['neighborhood_id'] = barrio_id[0]
-
-        localidad_id = openerp.search('ocs.district',[('name','=',str(item['Localidad Correspondencia']))])
-        vals_partner['district_id'] = localidad_id[0]
+        if (len(str(item['Nombres']))):
+            vals_partner['name'] = str(item['Nombres'])
+            vals_partner['last_name'] = str(item['Apellidos'])
         user_id = {}
-        if 'email' in vals_partner:
-            user_id = openerp.search('res.partner.address',[
-                ('email','=',vals_partner['email']),
-            ])
-        if not str(item['Número documento de identidad'])=="":
-            user_id = openerp.search('res.partner.address',[('document_number','=', str("%i" % float(item['Número documento de identidad'])))])
+        if 'Genero' in item and len(item['Genero']):
+            if 'M' == str(item['Genero'])[0]:
+                vals_partner['gender'] = 'm'
+            else:
+                vals_partner['gender'] = 'f'
+
+            if 'udada' in str(item['Tipo de documento']):
+                vals_partner['document_type'] = 'CC'
+            elif 'denti' in str(item['Tipo de documento']):
+                vals_partner['document_type'] = 'TI'
+            elif 'saporte' in str(item['Tipo de documento']):
+                vals_partner['document_type'] = 'Pasaporte'
+            elif 'xtranj' in str(item['Tipo de documento']):
+                vals_partner['document_type'] = 'CE'
+
+            if not str(item['Datos de contacto'])=="":
+                campos = str(item['Datos de contacto']).split()
+                temp = ''
+                for campo in campos:
+                    if '@' in campo:
+                        vals_partner['email'] = campo
+                    else:
+                        if '.' in campo:
+                            temp = temp + campo[:-2] + ' '
+                        else:
+                            temp = temp + campo + ' '
+                if temp:
+                    if len(temp) > 8:
+                        vals_partner['mobile'] = temp
+                    else:
+                        vals_partner['phone'] = temp
+
+            if len(str(item['Dirección correspondencia'])):
+                vals_partner['street'] = str(item['Dirección correspondencia'])
+            barrio_id = openerp.search('ocs.neighborhood',[('name','=',str(item['Barrio Correspondencia']))])
+            if barrio_id:
+                vals_partner['neighborhood_id'] = barrio_id[0]
+
+            localidad_id = openerp.search('ocs.district',[('name','=',str(item['Localidad Correspondencia']))])
+            if localidad_id:
+                vals_partner['district_id'] = localidad_id[0]
+
+            if 'email' in vals_partner:
+                user_id = openerp.search('res.partner.address',[
+                    ('email','=',vals_partner['email']),
+                ])
+            if not str(item['Número documento de identidad'])=="":
+                user_id = openerp.search('res.partner.address',[('document_number','=', str("%i" % float(item['Número documento de identidad'])))])
 
         try:
             print "Exportando a openerp item "+str(item['Fila_excel'])
-            if not user_id:
+            if not user_id and vals_partner:
+                print vals_partner
                 vals['partner_address_id'] = openerp.create("res.partner.address",vals_partner)
             else: 
                 vals['partner_address_id'] = user_id[0]
@@ -184,7 +190,6 @@ def exportar_datos_openerp(_plan_contratacion,_openerp_server,_port, _dbname,_us
         except Exception as e:
             error[cont] = "Error en la fila: {0}\nException: {1}\nDatos: {2}".format(item['Fila_excel'], e, item)
             cont+=1
-            pass
 
 plan_values = cargar_fichero_excel(path_excel,index_hoja,index_header)
 exportar_datos_openerp(plan_values,openerp_server,port,dbname,user,pwd)
