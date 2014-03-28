@@ -20,7 +20,7 @@ CRM CASE CHANNEL
         <field name="inherit_id" ref="crm.crm_case_categ-view"/>
         <field name="arch" type="xml">
             <field name="section_id" position="after">
-                <field name="active" select ="1"/>
+                <field name="active" select ="1"/>             
             </field>
         </field>
 </record>
@@ -625,7 +625,7 @@ Claims
           <page string="Follow Up" position="replace">
             <page string="Follow Up" >
                  <separator col="8" colspan="4" string="Stage" />
-                 <field name="stage_id" widget="url"/><!--Nasty, how can i set a simple input text field? -->
+                 <field name="stage_id" domain="[('section_ids','=',section_id)]" readonly="1" widget="url"/><!--Nasty, how can i set a simple input text field? -->
                  <button name="stage_previous" string="Etapa anterior" type="object" icon="gtk-go-back" />
                  <button name="stage_next" string="Etapa siguiente" type="object" icon="gtk-go-forward" />
                  <separator string="Solution" colspan="4" />
@@ -735,7 +735,7 @@ Claims
                     />
                     <separator orientation="vertical"/>
                     <field name="partner_address_id"/>
-                    <field name="user_id" widget="selection">
+                    <field name="user_id" widget="selection" groups="ocs.group_ocs_manager">
                             <filter icon="terp-personal-"
                                 domain="[('user_id','=', False)]"
                                 help="Unassigned Claims" />
@@ -744,6 +744,7 @@ Claims
                     <group expand="0" string="Group By...">
                         <filter string="Responsible" icon="terp-personal"
                             domain="[]" help="Responsible User"
+                            groups = "group_ocs_manager"
                             context="{'group_by':'user_id'}" />
                         <separator orientation="vertical"/>
                         <filter string="Type" icon="terp-stock_symbol-selection"

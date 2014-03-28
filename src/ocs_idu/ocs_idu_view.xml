@@ -202,11 +202,6 @@
                 <field name="damage_length_by_citizen" />
                 <field name="damage_deep_by_citizen" />
                 <field name="damage_element_by_citizen" />
-                <button name="%(ocs_idu.action_ocs_idu_wizard_classify_damage)d" string="Clasificar"
-                    type="action" icon="gtk-ok" context="{'claim_id': id}"
-                    attrs="{'invisible': [('damage_id','!=',False)]}" 
-                />
-                <field name="damage_id" colspan="4" attrs="{'invisible': [('damage_id','==',False)]}" readonly="1"/>
             </page>
         </page>
     </field>
@@ -364,7 +359,7 @@
 
             <separator orientation="vertical"/>
             <field name="partner_address_id"/>
-            <field name="user_id" widget="selection">
+            <field name="user_id" widget="selection" groups="ocs_idu.group_ocs_outsourced_manager">
                     <filter icon="terp-personal-"
                         domain="[('user_id','=', False)]"
                         help="Unassigned Claims" />
@@ -456,159 +451,6 @@
 <menuitem name="Construction Claims" id="menu_ocs_construction_claim"
     action="action_ocs_construction_claim" parent="menu_ocs_construction_issues"
     sequence="3" />
-
-<!--
-;==============================================================
-    Claim Damage
-;==============================================================
--->
-<!-- Form -->
-<record model="ir.ui.view" id="view_ocs_claim_damage_form">
-        <field name="name">ocs.claim_damage.form</field>
-        <field name="model">ocs.claim_damage</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Damage">
-                <group col="8" colspan="4">
-                    <field name="dependencia_id" />
-                    <field name="res_user_id" />
-                    <field name="id" select="1" />
-                    <field name="segment_id" />
-                    <field name="priority" />
-                    <field name="classification_id" />
-                    <field name="state" />
-                </group>
-                <notebook>
-                    <page string="Description">
-                        <field name="description" nolabel="1" colspan="4" />
-                        <field name="element"/>
-                        <field name="width"/>
-                        <field name="length"/>
-                        <field name="deep"/>
-                        <field name="image" widget="image" nolabel="1" colspan="4" width="840" height="600" attrs="{'invisible': [('image','==',False)]}"/>
-                    </page>
-                    <page string="Claims">
-                        <field name="crm_claim_id" nolabel="1" readonly="1">
-                            <tree>
-                                <field name="partner_address_id"/>
-                                <field name="user_id" />
-                                <field name="date"/>
-                                <field name="name"/>
-                                <field name="categ_id" string="Type" select="1"/>
-                                <field name="state"/>
-                            </tree>
-                        </field>
-                    </page>
-                    <page string="Communication &amp; History" groups="base.group_extended">
-                        <field name="message_ids" colspan="4" nolabel="1" mode="tree" readonly="1">
-                            <tree string="History">
-                                <field name="display_text" string="History Information"/>
-                                <field name="email_from" invisible="1"/>
-                                <button
-                                    string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
-                                    name="%(mail.action_email_compose_message_wizard)d"
-                                    context="{'mail.compose.message.mode':'reply'}"
-                                    icon="terp-mail-replied" type="action" />
-                            </tree>
-                        </field>
-                        <button string="Add Internal Note"
-                            name="%(crm.action_crm_add_note)d"
-                            context="{'model': 'crm.lead' }"
-                            icon="terp-document-new" type="action" />
-                        <!-- <button string="Send New Email"
-                            name="%(mail.action_email_compose_message_wizard)d"
-                            icon="terp-mail-message-new" type="action"/> -->
-                    </page>
-                    <page string="Follow-Up">
-                        <field name="next_action" />
-                        <field name="date" />
-                        <field name="alarm_id" />
-                    </page>
-                </notebook>
-            </form>
-        </field>
-</record>
-
-<!-- Requests Links -->
-<record id="req_link_claim_damage" model="res.request.link">
-    <field name="name">Claim Damage</field>
-    <field name="object">ocs.claim_damage</field>
-</record>
-
-<!-- Tree -->
-<record model="ir.ui.view" id="view_ocs_claim_damage_tree">
-        <field name="name">ocs.claim_damage.tree</field>
-        <field name="model">ocs.claim_damage</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Damages">
-                <field name="element" />
-                <field name="classification_id" />
-                <field name="priority" />
-                <field name="segment_id" />
-                <field name="crm_claim_id" />
-                <field name="res_user_id" />
-                <field name="dependencia_id" />
-                <field name="state" />
-            </tree>
-        </field>
-</record>
-
-<!-- Geoengine View -->
-<record id="ir_ui_view_claim_damage_basic_view" model="ir.ui.view">
-            <field name="name">ocs.claim_damage.map</field>
-            <field name="arch"><![CDATA[
-                <form >
-                    <field name="name"/>
-                    <field name="description"/>
-                </form>]]></field>
-            <field eval="16" name="priority"/>
-            <field name="type">geoengine</field>
-            <field name="model">ocs.claim_damage</field>
-</record>
-
-<record id="geoengine_raster_layer_crm_claim_camage" model="geoengine.raster.layer">
-            <field name="raster_type">osm</field>
-            <field name="name">crm_claim_damage OSM</field>
-            <field name="view_id" ref="ir_ui_view_claim_damage_basic_view"/>
-            <field eval="0" name="overlay"/>
-</record>
-
-<record id="geoengine_vector_layer_claim_damage_main_point" model="geoengine.vector.layer">
-            <field name="geo_field_id" ref="ocs_idu.field_ocs_claim_damage_geo_point"/>
-            <field name="name">claim_damage</field>
-            <field name="view_id" ref="ir_ui_view_claim_damage_basic_view"/>
-            <field name="geo_repr">basic</field>
-            <field name="begin_color">#F7F80A</field>
-</record>
-
-<!-- Calendar View -->
-<record model="ir.ui.view" id="claim_damage_calendar_view">
-    <field name="name">Claim Damages</field>
-    <field name="model">ocs.claim_damage</field>
-    <field name="type">calendar</field>
-    <field name="priority" eval="2"/>
-    <field name="arch" type="xml">
-        <calendar string="Claim Damages"
-            date_start="date" color="user_id">
-            <field name="name" />
-            <field name="state" />
-            <field name="next_action" />
-        </calendar>
-    </field>
-</record>
-
-<!-- Action -->
-<record model="ir.actions.act_window" id="action_ocs_claim_damage">
-        <field name="name">Damages</field>
-        <field name="res_model">ocs.claim_damage</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form,calendar,geoengine</field>
-</record>
-
-<menuitem name="Damages" id="menu_ocs_damages" parent="ocs.menu_ocs" sequence="3" />
-
-<menuitem name="Damages" id="menu_ocs_claim_damage" action="action_ocs_claim_damage" parent ="menu_ocs_damages" sequence="2" />
 
 </data>
 </openerp>
