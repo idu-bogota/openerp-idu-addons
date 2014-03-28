@@ -591,15 +591,20 @@ class project_pmi_wbs_item(osv.osv):
         return self.write(cr, uid, item_ids, {'state': 'done'}, context)
 
     def set_weight_on(self, cr, uid, ids, context=None):
-        item_ids = self.search(cr, uid, [('child_ids','child_of',ids)], context=context)
-        for item in ids:item_ids.remove(item) 
+        item_ids = []
+        child_parent = self._get_wbs_item_and_children(cr, uid, ids, context)
+        for k,v in child_parent.items():
+            if k != ids[0]:
+                item_ids.append(k)
         return self.write(cr, uid, item_ids, {'use_weight': True}, context)
 
     def set_weight_off(self, cr, uid, ids, context=None):
-        item_ids = self.search(cr, uid, [('child_ids','child_of',ids)], context=context)
-        for item in ids:item_ids.remove(item)
+        item_ids = []
+        child_parent = self._get_wbs_item_and_children(cr, uid, ids, context)
+        for k,v in child_parent.items():
+            if k != ids[0]:
+                item_ids.append(k)
         return self.write(cr, uid, item_ids, {'use_weight': False}, context)
-
 
 project_pmi_wbs_item()
 
