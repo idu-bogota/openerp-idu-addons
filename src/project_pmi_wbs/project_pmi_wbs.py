@@ -191,6 +191,7 @@ class project_pmi_wbs_item(osv.osv):
                         if number > 0:
                             value *= number
                         res[id]['progress_rate'] += progress / value
+                        progress = 0
                     id = child_parent[id]
         if len(res) == 1:
             if len(child_parent) == 1:
