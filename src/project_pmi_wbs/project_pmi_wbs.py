@@ -21,7 +21,7 @@
 from openerp.osv import fields, osv
 import time
 import logging
-from datetime import datetime,date,timedelta
+from datetime import datetime, date, timedelta
 from osv import osv
 
 _logger = logging.getLogger(__name__)
@@ -472,13 +472,15 @@ class project_pmi_wbs_item(osv.osv):
         item_ids = self.search(cr, uid, [('child_ids','child_of',ids)], context=context)
         return self.write(cr, uid, item_ids, {'state': 'template'}, context)
 
-    def calculate_days(self,date1,date2):
-        date_start = date(int(date1[0:4]), int(date1[5:7]), int(date1[8:10]))
-        date_end = date(int(date2[0:4]), int(date2[5:7]), int(date2[8:10]))
+    def calculate_days(self, date1, date2):
+        if not date1 or not date2:
+            raise Exception('Please provide valid dates')
+        date_start = datetime.strptime(date1,"%Y-%m-%d")
+        date_end = datetime.strptime(date2,"%Y-%m-%d")
         days = date_end - date_start
         return days.days
 
-    def calculate_weith(self, obj,cr,uid,context):
+    def calculate_weigth(self, obj, cr, uid, context):
         weight_sum = 0.0
         weight = 0.0
         #realiza la sumatoria
@@ -539,7 +541,8 @@ class project_pmi_wbs_item(osv.osv):
             try:
                 for id in sorted(child_parent.keys(), reverse=True):
                     if self._get_values_dictionary(child_parent,id) == 0 and id not in nodes:
-                        self.calculate_weith(self.browse(cr,uid,id,context=None), cr, uid, context)
+                        wbs_item = self.browse(cr, uid, id, context=None)
+                        self.calculate_weigth(wbs_item, cr, uid, context)
                         while id:
                             id_parent = child_parent[id]
                             if id_parent not in nodes:
@@ -548,12 +551,15 @@ class project_pmi_wbs_item(osv.osv):
                                     if temp.type == 'deliverable':
                                         self.calcule_weight_deliverable(temp,cr,uid,context)
                                     else:
-                                        self.calculate_weith(temp, cr, uid, context)
+                                        self.calculate_weigth(temp, cr, uid, context)
                                 nodes.append(id_parent)
                             id = child_parent[id]
             except Exception as e:
                 _logger.exception('Error calculating weight')
-                raise osv.except_osv('Error calculating weight', str(e))
+                message = 'Error calculating weight'
+                if wbs_item:
+                    message = "{0} for {1}".format(message, wbs_item.name)
+                raise osv.except_osv(message, str(e))
 
     def set_bulk_project(self, cr, uid, ids, context=None):
         item_ids = self.search(cr, uid, [('child_ids','child_of',ids)], context=context)
