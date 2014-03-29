@@ -137,7 +137,7 @@
             <field name="arch" type="xml">
                 <form string="Item plan de contratación" version="7.0">
                     <header>
-                       <field name="state" widget="statusbar" colors="blue:state" clickable="False"/>
+                       <field name="state" widget="statusbar" attrs="{'readonly':True}"/>
                     </header>
                     <group col="1" colspan="1">
                     <field name="is_editable" invisible="1"/>
@@ -659,7 +659,7 @@
             <field name="arch" type="xml">
                 <form string="Item plan de contratación" version="7.0">
                     <header>
-                       <field name="state" widget="statusbar" colors="blue:state" clickable="False"/>
+                       <field name="state" widget="statusbar" attrs="{'readonly':True}"/>
                     </header>
                     <group col="1" colspan="1">
                         <header>
