@@ -93,11 +93,11 @@ class plan_contratacion_idu_plan(osv.osv):
              required=True
          ),
         'active':fields.boolean('Activo'),
-        'open_close_plan':fields.boolean('Abierto'),
+        'open_close_plan':fields.boolean('Abierto', readonly=True),
         'item_ids': fields.one2many('plan_contratacion_idu.item', 'plan_id', 'Items Plan de Contratacion'),
         'version': fields.integer('Versión',
              help="Versión del archivo para exportar, conteo de versiones del plan",
-             readonly=False),
+             readonly=True),
         'currency_id': fields.function(_get_currency,
              type='many2one',
              relation="res.currency",
@@ -376,6 +376,10 @@ class plan_contratacion_idu_item(osv.osv):
                 res[record['id']]['progress_rate']=100
             if record.state == 'no_realizado':
                 res[record['id']]['progress_rate']=0
+        return res
+
+    def _get_llave_item(self,cr,uid,ids,context=None):
+        res = {}
         return res
 
     _columns = {
@@ -676,6 +680,11 @@ class plan_contratacion_idu_item(osv.osv):
             string="Item del plan a ser cambiado",
             store=False
         ),
+        'llave_item': fields.function(_get_llave_item,
+             type='string',
+             string='llave',
+             store={
+            }),
     }
 
 

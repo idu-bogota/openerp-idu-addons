@@ -164,6 +164,13 @@ class plan_contratacion_idu_wizard_reporte(osv.osv_memory):
                 ws.write(row_index,headers.index("ESTADO"),self._format_item(estado))
                 ws.write(row_index,headers.index("PROCESO"),self._format_item(item.tipo_proceso_id.name))
                 # proyecto_inversion
+                ws.write(row_index,headers.index('LLAVE'),self._format_item(str(item.clasificacion_id.parent_id.codigo) + "-" +
+                                                                    str(item.cod_proyecto_idu) + "-" +
+                                                                    str(item.centro_costo) + "-" +
+                                                                    str(item.cod_punto_inversion) + "-" +
+                                                                    str(item.fuente_id.codigo_fuente) + "-" +
+                                                                    str(item.cod_fase_intervencion))
+                )
                 ws.write(row_index,headers.index('COD PROYECTO PRIORITARIO'),self._format_item(item.clasificacion_id.codigo))
                 ws.write(row_index,headers.index('NOMBRE PROYECTO PRIORITARIO'),self._format_item(item.clasificacion_id.name))
                 ws.write(row_index,headers.index('COD PROY INV'),self._format_item(item.clasificacion_id.parent_id.codigo))

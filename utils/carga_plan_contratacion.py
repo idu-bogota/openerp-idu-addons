@@ -189,6 +189,7 @@ def exportar_datos_openerp(_plan_contratacion,_openerp_server,_port, _dbname,_us
         if (ids_centro_costo.__len__()==0):
             raise Exception ('El centro de costo no existe , revisar excel línea' + str(item['Fila_excel']))
         vals['centro_costo_id']=ids_centro_costo[0]
+        vals['centro_costo']= ccosto
         #Fecha de radicacion
         #Si la fecha esta mal definida simplemente no la coge
         try:
