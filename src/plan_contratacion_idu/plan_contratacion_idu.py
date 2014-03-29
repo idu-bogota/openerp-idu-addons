@@ -389,6 +389,13 @@ class plan_contratacion_idu_item(osv.osv):
              type='boolean',
              string='Verifica si el item del plan es editable',
              method=True),
+        'is_plan_open': fields.related(
+            'plan_id','open_close_plan',
+             type="boolean",
+             string="Está el plan contractual esta abierto para edición?",
+             store=False,
+             readonly=True
+        ),
         'codigo_unspsc': fields.char('Codigo UNSPSC',
              help='Codificación de bienes y servicios, Colombia compra eficiente',
              readonly=False,
