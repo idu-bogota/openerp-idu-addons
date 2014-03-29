@@ -194,8 +194,15 @@ class plan_contratacion_idu_item(osv.osv):
         records = self.browse(cr, uid, ids, context=context)
         for record in records:
             plan_record = record.plan_id
-            if plan_record.open_close_plan and (record.state=='version_inicial' or record.state=='solicitud_cambio'):
-                res[record.id] = True
+            res[record.id] = False
+            if plan_record.open_close_plan:
+                if record.state == 'version_inicial':
+                    res[record.id] = True
+                elif(record.state == 'solicitud_cambio'
+                    and len(record.solicitud_cambio_id)
+                    and record.solicitud_cambio_id[0].state in ['borrador','radicado']
+                ):
+                    res[record.id] = True
             else:
                 res[record.id] = False
         return  res
@@ -1261,6 +1268,7 @@ class hr_department(osv.osv):
 
 hr_department()
 
+
 class plan_contratacion_idu_item_solicitud_cambio(osv.osv):
     _name = "plan_contratacion_idu.item_solicitud_cambio"
     _table = 'plan_contr_item_solicitud_cambio'
@@ -1275,6 +1283,29 @@ class plan_contratacion_idu_item_solicitud_cambio(osv.osv):
     }
 
     _rec_name = 'tipo'
+    #===========================================================================
+    # Despues de instalar el módulo se requiere ejecutar:
+    # ALTER TABLE plan_contr_item_solicitud_cambio ADD COLUMN id serial;
+    # ALTER TABLE plan_contr_item_solicitud_cambio ADD PRIMARY KEY (id);
+    # Ya que al utilizarse la tabla en una relacion m2m en plan_item, el id no se genera y es necesario para manejar este objeto de negocio.
+    #===========================================================================
+    def _auto_init(self, cr, context=None):
+        res = super(plan_contratacion_idu_item_solicitud_cambio, self)._auto_init(cr, context=context)
+        pk_sql = """
+            DO $$
+                BEGIN
+                    BEGIN
+                        ALTER TABLE plan_contr_item_solicitud_cambio ADD COLUMN id serial;
+                        ALTER TABLE plan_contr_item_solicitud_cambio ADD PRIMARY KEY (id);
+                    EXCEPTION
+                        WHEN duplicate_column THEN RAISE NOTICE 'column id already exists in plan_contr_item_solicitud_cambio';
+                    END;
+                END;
+            $$
+        """
+        cr.execute(pk_sql)
+        return res
+
     _columns = {
         'tipo':fields.selection([
                 ('modificar', 'Modificar el item'),
