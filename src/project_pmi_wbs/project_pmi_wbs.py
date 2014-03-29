@@ -111,7 +111,7 @@ class project_pmi_wbs_item(osv.osv):
         # compute planned_hours, total_hours, effective_hours specific to each project
         cr.execute("""
             SELECT
-                wbs_item.id, COALESCE(wbs_item.quantity, 0.0), COALESCE(SUM(wr.quantity), 0.0), wbs_item.type,wbs_item.weight, wbs_item.tracking_type, COUNT(t.id), SUM(t.progress),wbs_item.state
+                wbs_item.id, COALESCE(wbs_item.quantity, 0.0), COALESCE(SUM(wr.quantity), 0.0), wbs_item.type,wbs_item.weight,wbs_item.use_weight, wbs_item.tracking_type, COUNT(t.id), SUM(t.progress),wbs_item.state
             FROM
                 project_pmi_wbs_item wbs_item
                 LEFT JOIN project_pmi_wbs_work_record wr ON wr.wbs_item_id = wbs_item.id
@@ -124,9 +124,10 @@ class project_pmi_wbs_item(osv.osv):
         res = dict([(id, {'progress_rate':0.0,'planned_quantity':0.0,'effective_quantity':0.0,'excess_progress':0.0}) for id in child_parent])
         all_records = cr.fetchall()
 
-        for id, planned, effective, type, weight, tracking_type, task_count, task_progress, state in all_records:
+        for id, planned, effective, type, weight,use_weight, tracking_type, task_count, task_progress, state in all_records:
             res[id]['type'] = type
             res[id]['state'] = state
+            res[id]['use_weight'] = use_weight
             res[id]['progress_rate'] = 0
             task_progress = task_progress or 0
             # add the values specific to id to all parent wbs_items of id in the result
@@ -147,7 +148,7 @@ class project_pmi_wbs_item(osv.osv):
                 records = self.read(cr, uid, child_parent[id], ['use_weight'], context=context)
             else:
                 records['use_weight'] = False
-            if records['use_weight']:
+            if res[id]['use_weight']:
                 if self._get_values_dictionary(child_parent,id) == 0:
                     if res[id]['planned_quantity'] and res[id]['type'] == 'work_package':
                         progress = round(100.0 * res[id]['effective_quantity'] / res[id]['planned_quantity'], 2)
