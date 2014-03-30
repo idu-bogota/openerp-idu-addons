@@ -1,0 +1,70 @@
+-
+  Set de Pruebas para el Plan de Contratacion
+-
+  Crear plan de contratacion
+-
+  !record {model: plan_contratacion_idu.plan, id: plan_1}:
+    vigencia: '1978'
+-
+  !assert {model: plan_contratacion_idu.plan, id: plan_1, string: Verificando los valores por defecto}:
+    - state == 'inicial'
+    - active == True
+    - open_close_plan == True
+    - version == 1
+    - total_pagos_presupuestado_plan == 0
+    - total_pagos_programados_plan == 0
+    - total_rezago_plan == 0
+-
+  Adicionar plan item
+-
+  !record {model: plan_contratacion_idu.item, id: plan_item_1}:
+    plan_id: plan_1
+    clasificacion_id: clasificador_proyectos_1
+    dependencia_id: dependencia_1
+    fuente_id: fuente_1
+    tipo_proceso_id: tipo_proceso_1
+    tipo_proceso_seleccion_id: tipo_proceso_seleccion_1
+    localizacion: 'localidad'
+    description: 'esto es una prueba'
+    presupuesto: 10
+    plazo_de_ejecucion: 1
+    no_aplica_unidad_mf: True
+-
+  Probar el item
+-
+  !assert {model: plan_contratacion_idu.item, id: plan_item_1, string: Verificando los valores por defecto del item}:
+    - state == 'version_inicial'
+    - total_pagos_programados == 0
+    - total_pagos_realizados == 0
+-
+  Probar el plan luego del item
+-
+  !assert {model: plan_contratacion_idu.plan, id: plan_1, string: Verificando plan luego de adicionar item}:
+    - state == 'inicial'
+    - total_pagos_presupuestado_plan == 10.0
+    - total_pagos_programados_plan == 0
+    - total_rezago_plan == 10.0
+-
+  Intentar aprobar el item del plan incompleto
+-
+  !python {model: plan_contratacion_idu.item}: |
+    item = self.browse(cr, uid, ref("plan_item_1"))
+    try:
+      item.wkf_aprobado([ref('plan_item_1')], 0)
+      assert False, "No se debe permitir pasar a estado aprobado"
+    except:
+      assert True, "Exception lanzada para no pasar al estado aprobado"
+-
+  Completar el objeto y pasarlo a aprobado
+-
+  !record {model: plan_contratacion_idu.item, id: plan_item_1}:
+    codigo_unspsc: 'codigo_unspsc'
+    centro_costo_id: centro_costo_1
+-
+  !python {model: plan_contratacion_idu.item}: |
+    item = self.browse(cr, uid, ref("plan_item_1"))
+    try:
+      item.wkf_aprobado([ref('plan_item_1')], 0)
+      assert True, "Cambiado a estado aprobado"
+    except:
+      assert False, "Exception lanzada para no pasar al estado aprobado"

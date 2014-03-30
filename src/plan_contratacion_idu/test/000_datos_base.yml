@@ -1,0 +1,30 @@
+-
+  Datos base para las pruebas
+-
+  !record {model: plan_contratacion_idu.clasificador_proyectos, id: clasificador_proyectos_1}:
+    name: 'clasificador proyectos'
+    tipo: 'proyecto_inversion'
+    codigo: 1
+-
+  !record {model: hr.department, id: dependencia_1}:
+    name: 'dependencia'
+    abreviatura: 'DEP'
+    codigo: 1
+-
+  !record {model: plan_contratacion_idu.fuente, id: fuente_1}:
+    name: 'fuente'
+    codigo_fuente: 'codigo'
+    codigo_fuente_sdh: 'sdh'
+    nombre_fuente_sdh: 'fuente sdh'
+    codigo_detalle_fuente_sdh: 'cod_detalle sdh'
+    nombre_detalle_fuente_sdh: 'detalle_sdh'
+-
+  !record {model: plan_contratacion_idu.plan_tipo_proceso, id: tipo_proceso_1}:
+    name: 'tipo'
+-
+  !record {model: plan_contratacion_idu.plan_tipo_proceso_seleccion, id: tipo_proceso_seleccion_1}:
+    name: 'tipo seleccion'
+-
+  !record {model: stone_erp_idu.centro_costo, id: centro_costo_1}:
+    name: 'centro 1'
+    codigo: 1

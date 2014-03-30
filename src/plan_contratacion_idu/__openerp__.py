@@ -38,6 +38,11 @@
         'wizard/reporte_excel_view.xml',
         'security/ir.model.access.csv',
     ],
+    'test': [
+        'test/000_datos_base.yml',
+        'test/010_plan_contratacion.yml',
+    ],
+
     'installable': True,
     'auto_install': False,
 }
