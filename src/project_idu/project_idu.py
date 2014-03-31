@@ -130,8 +130,23 @@ class project_phase(osv.osv):
             res[id] = 'Etapas Proyecto'
         return res
 
+    def _get_wbs_progress(self,cr, uid, ids,names, arg, context=None):
+        res={}
+        progress = 0
+        parent = 1000
+        edts_ids = self.pool.get('project_pmi.wbs_item').search(cr, uid, [('phase_id','in',ids)], context=context)
+        wbss = self.pool.get('project_pmi.wbs_item').browse(cr, uid, edts_ids, context=context)
+        for wbs in wbss:
+            if wbs.parent_left + wbs.parent_right < parent:
+                parent = wbs.parent_left + wbs.parent_right
+                progress = wbs.progress_rate 
+        for id in ids:
+            res[id] = progress
+        return res
+
     _columns = {
         'etapa_nombre': fields.function(_etapa_nombre, type='char', store=True, help='Guarda el nombre de la etapa, corrige bug se llama la vista desde el kanban de proyectos agrupado por etapa'),
+        'wbs_progress': fields.function(_get_wbs_progress,type='integer',store=False, string='WBS Progress'),
     }
 
 project_phase()

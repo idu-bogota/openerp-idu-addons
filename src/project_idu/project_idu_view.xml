@@ -100,6 +100,7 @@
             <field name="arch" type="xml">
                 <field name="state" position="after">
                     <field name="etapa_nombre" invisible="1"/>
+                    <field name="wbs_progress" widget="progressbar"/>
                 </field>
             </field>
         </record>
