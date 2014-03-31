@@ -44,6 +44,19 @@
         </record>
 
         <!-- Project Views -->
+
+        <record id="view_project" model="ir.ui.view">
+            <field name="name">project.project.tree</field>
+            <field name="model">project.project</field>
+            <field name="field_parent">child_ids</field>
+            <field name="inherit_id" ref="project.view_project"/>
+            <field name="arch" type="xml">
+                <tree fonts="bold:message_unread==True" colors="red:date and (date&lt;current_date) and (state == 'open');blue:state in ('draft','pending');grey: state in ('close','cancelled')" string="Projects">
+                    <field name="wbs_progress" widget="progressbar"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="project_form" model="ir.ui.view">
             <field name="name">project_idu.project.form</field>
             <field name="model">project.project</field>

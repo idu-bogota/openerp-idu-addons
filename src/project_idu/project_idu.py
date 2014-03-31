@@ -35,6 +35,20 @@ class project(osv.osv):
             res[phase.project_id.id] = phase.name
         return res
 
+    def _get_wbs_progress(self,cr, uid, ids,names, arg, context=None):
+        res={}
+        progress = 0
+        parent = 1000
+        edts_ids = self.pool.get('project_pmi.wbs_item').search(cr, uid, [('project_id','in',ids)], context=context)
+        wbss = self.pool.get('project_pmi.wbs_item').browse(cr, uid, edts_ids, context=context)
+        for wbs in wbss:
+            if wbs.parent_left + wbs.parent_right < parent:
+                parent = wbs.parent_left + wbs.parent_right
+                progress = wbs.progress_rate 
+        for id in ids:
+            res[id] = progress
+        return res
+
     def _get_ids_from_phases(self, cr, uid, ids, context=None):
         phases = self.pool.get('project.phase').browse(cr, uid, ids, context=context)
         project_ids = [wr.project_id.id for wr in phases if wr.project_id]
@@ -42,6 +56,7 @@ class project(osv.osv):
 
     _columns = {
         'clasificacion_id': fields.many2one('project_idu.proyecto_tipificacion','Clasificación', select=True),
+        'wbs_progress': fields.function(_get_wbs_progress,type='integer',store=False, string='WBS Progress'),
         'etapa_nombre': fields.function(_etapa_id, string='Etapa actual del proyecto', type='char', help="Indica las etapas que estan en progreso para el proyecto", 
             store = {
                 'project.project': (lambda self, cr, uid, ids, c={}: ids, ['phase_id'], 10),
@@ -89,7 +104,7 @@ class task(osv.osv):
             domain="[('project_id','=',project_id)]"),
         'numero_convocados': fields.integer('Número de convocados'),
         'numero_asistentes': fields.integer('Número de asistentes'),
-        'participacion_ciudadana': fields.function(_participacion_ciudadana, type="boolean",
+        'participacion_ciudadana': fields.function(_participacion_ciudadana, type="integer",
             string='Participación ciudadana',
             help='Requiere de participación ciudadana? debe indicar número de convocados y número de participantes',
             store={
