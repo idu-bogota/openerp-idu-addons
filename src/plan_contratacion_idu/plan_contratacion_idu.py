@@ -786,20 +786,20 @@ class plan_contratacion_idu_item(osv.osv):
         id_item = super(plan_contratacion_idu_item,self).create(cr,uid,vals,context=context)
         return id_item
 
-    def onchange_plan_pagos_item_ids(self, cr, uid, ids, pagos_ids, context=None):
+    def onchange_plan_pagos_item_ids(self, cr, uid, ids, plan_pagos_item_ids, context=None):
         context = context or {}
         pagos_pool = self.pool.get('plan_contratacion_idu.plan_pagos_item')
-        if not pagos_ids:
-            pagos_ids = []
+        if not plan_pagos_item_ids:
+            plan_pagos_item_ids = []
         sumatoria = 0
         res = {
                 'total_pagos_programados': 0,
                 'presupuesto_rezago': 0,
         }
-        pagos_ids = resolve_o2m_operations(cr, uid, pagos_pool, pagos_ids, ['valor'], context)
+        plan_pagos_item_ids = resolve_o2m_operations(cr, uid, pagos_pool, plan_pagos_item_ids, ['valor'], context)
         if ids:
             plan_item = self.read(cr, uid, ids[0], ['presupuesto'], context=context)
-            for pago in pagos_ids:
+            for pago in plan_pagos_item_ids:
                 sumatoria += pago.get('valor',0.0)
             res = {
                 'total_pagos_programados': sumatoria,
@@ -808,6 +808,9 @@ class plan_contratacion_idu_item(osv.osv):
         return {
             'value': res
         }
+
+    def onchange_plan_pagos_giro_ids(self, cr, uid, ids, plan_pagos_giro_ids, context=None):
+        self.pool.get('plan_contratacion_idu.item')._total_pagos_realizados
 
     def onchange_presupuesto(self, cr, uid, ids, presupuesto, context=None):
         self.pool.get('plan_contratacion_idu.item')._total_pagos_programados

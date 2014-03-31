@@ -26,7 +26,7 @@
     tipo_proceso_seleccion_id: tipo_proceso_seleccion_1
     localizacion: 'localidad'
     description: 'esto es una prueba'
-    presupuesto: 10
+    presupuesto: 50000000
     plazo_de_ejecucion: 1
     no_aplica_unidad_mf: True
 -
@@ -41,9 +41,9 @@
 -
   !assert {model: plan_contratacion_idu.plan, id: plan_1, string: Verificando plan luego de adicionar item}:
     - state == 'inicial'
-    - total_pagos_presupuestado_plan == 10.0
+    - total_pagos_presupuestado_plan == 50000000
     - total_pagos_programados_plan == 0
-    - total_rezago_plan == 10.0
+    - total_rezago_plan == 50000000
 -
   Intentar aprobar el item del plan incompleto
 -
@@ -68,3 +68,28 @@
       assert True, "Cambiado a estado aprobado"
     except:
       assert False, "Exception lanzada para no pasar al estado aprobado"
+-
+  Adicionar un pago programado al plan item
+-
+  !record {model: plan_contratacion_idu.plan_pagos_item, id: plan_pagos_item_1}:
+    mes: 8
+    valor: 30000000
+    plan_contratacion_item_id: plan_item_1
+-
+  Probar los totales de pagos programados luego de ingresar un pago programado al item
+-
+  !assert {model: plan_contratacion_idu.item, id: plan_item_1, string: Verificando item luego de adicionar pago programado al item}:
+    - total_pagos_programados == 30000000
+    - presupuesto_rezago == 20000000
+-
+  Adicionar un giro al plan item
+-
+  !record {model: plan_contratacion_idu.plan_pagos_giro, id: plan_pagos_giro_1}:
+    date: 2013-02-10
+    valor: 20000000
+    plan_contratacion_item_id: plan_item_1
+-
+  Probar el total_pagos_realizados luego de ingresar un giro al item
+-
+  !assert {model: plan_contratacion_idu.item, id: plan_item_1, string: Verificando item luego de adicionar pago realizado al item}:
+    - total_pagos_realizados == 20000000

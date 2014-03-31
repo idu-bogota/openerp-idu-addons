@@ -260,7 +260,7 @@
                                      </group>
                                </group>
                                <group name="giros_realizados" string="Pagos Realizados">
-                                    <field name="plan_pagos_giro_ids" nolabel="1">
+                                    <field name="plan_pagos_giro_ids" on_change="onchange_plan_pagos_giro_ids(plan_pagos_giro_ids)" nolabel="1">
                                         <tree string="Giros Realizados" editable="bottom">
                                             <field name="date"/>
                                             <field name="valor" widget="monetary" options="{'currency_field': 'currency_id'}"/>
