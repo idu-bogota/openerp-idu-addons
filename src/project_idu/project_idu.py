@@ -38,13 +38,24 @@ class project(osv.osv):
     def _get_wbs_progress(self,cr, uid, ids,names, arg, context=None):
         res={}
         progress = 0
-        parent = 1000
+        parent_deep = 0
+        parent_left = 100000
+        global_deep = 100000
         edts_ids = self.pool.get('project_pmi.wbs_item').search(cr, uid, [('project_id','in',ids)], context=context)
         wbss = self.pool.get('project_pmi.wbs_item').browse(cr, uid, edts_ids, context=context)
         for wbs in wbss:
-            if wbs.parent_left + wbs.parent_right < parent:
-                parent = wbs.parent_left + wbs.parent_right
-                progress = wbs.progress_rate 
+            record = wbs.parent_id
+            while record.id:
+                parent_deep = parent_deep + 1
+                record = record.parent_id
+            if parent_deep < global_deep:
+                global_deep = parent_deep
+                progress = wbs.progress_rate
+            elif parent_deep == global_deep:
+                if wbs.parent_left < parent_left :
+                    parent_left = wbs.parent_left
+                    progress = wbs.progress_rate 
+            parent_deep = 0 
         for id in ids:
             res[id] = progress
         return res
@@ -63,7 +74,6 @@ class project(osv.osv):
                 'project.phase': (_get_ids_from_phases, ['state', 'project_id'], 20),
             }
          ),
-
         #Punto de inversion
         #Centro de costo
         #Fuente de Financiacion
@@ -133,13 +143,24 @@ class project_phase(osv.osv):
     def _get_wbs_progress(self,cr, uid, ids,names, arg, context=None):
         res={}
         progress = 0
-        parent = 1000
-        edts_ids = self.pool.get('project_pmi.wbs_item').search(cr, uid, [('phase_id','in',ids)], context=context)
+        parent_deep = 0
+        parent_left = 100000
+        global_deep = 100000
+        edts_ids = self.pool.get('project_pmi.wbs_item').search(cr, uid, [('project_id','in',ids)], context=context)
         wbss = self.pool.get('project_pmi.wbs_item').browse(cr, uid, edts_ids, context=context)
         for wbs in wbss:
-            if wbs.parent_left + wbs.parent_right < parent:
-                parent = wbs.parent_left + wbs.parent_right
-                progress = wbs.progress_rate 
+            record = wbs.parent_id
+            while record.id:
+                parent_deep = parent_deep + 1
+                record = record.parent_id
+            if parent_deep < global_deep:
+                global_deep = parent_deep
+                progress = wbs.progress_rate
+            elif parent_deep == global_deep:
+                if wbs.parent_left < parent_left :
+                    parent_left = wbs.parent_left
+                    progress = wbs.progress_rate 
+            parent_deep = 0 
         for id in ids:
             res[id] = progress
         return res
