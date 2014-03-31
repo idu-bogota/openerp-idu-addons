@@ -378,10 +378,6 @@ class plan_contratacion_idu_item(osv.osv):
                 res[record['id']]['progress_rate']=0
         return res
 
-    def _get_llave_item(self,cr,uid,ids,context=None):
-        res = {}
-        return res
-
     _columns = {
         'name': fields.function(_get_name,
              type='char',
@@ -680,11 +676,6 @@ class plan_contratacion_idu_item(osv.osv):
             string="Item del plan a ser cambiado",
             store=False
         ),
-        'llave_item': fields.function(_get_llave_item,
-             type='string',
-             string='llave',
-             store={
-            }),
     }
 
 
