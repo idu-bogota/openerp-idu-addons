@@ -25,7 +25,7 @@ from datetime import date
 openerp_server = "localhost"
 pwd = "admin"
 user = "admin"
-dbname="openerp-idu"
+dbname="openerp-idu-restored"
 port ="8069"
 path_excel = "/home/cinxgler/temp/PQRS_Puntos_CREA.xls"
 index_hoja = 0
@@ -184,7 +184,7 @@ def exportar_datos_openerp(_plan_contratacion,_openerp_server,_port, _dbname,_us
             if not user_id and vals_partner:
                 print vals_partner
                 vals['partner_address_id'] = openerp.create("res.partner.address",vals_partner)
-            else: 
+            if user_id:
                 vals['partner_address_id'] = user_id[0]
             claim_id = openerp.create("crm.claim",vals)
         except Exception as e:
