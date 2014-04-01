@@ -28,3 +28,7 @@
   !record {model: stone_erp_idu.centro_costo, id: centro_costo_1}:
     name: 'centro 1'
     codigo: 1
+-
+  !record {model: ir.config_parameter, id: ir_config_parameter_1}:
+    key: 'siac_idu.webservice.wsdl'
+    value: 'http://172.16.2.233:9763/services/ws_siac?wsdl'

@@ -223,7 +223,6 @@ class plan_contratacion_idu_item(osv.osv):
             res[record['id']]['presupuesto_rezago'] = record.presupuesto - sumatoria
         return res
 
-
     def _total_pagos_realizados(self, cr, uid, ids, name, args, context=None):
         res = {}
         if isinstance(ids, (list, tuple)) and not len(ids):
@@ -244,9 +243,16 @@ class plan_contratacion_idu_item(osv.osv):
         """
         Retorna los IDs del plan_item a ser recalculados cuando cambia un pago_item
         """
-        plan_item_ids = self.pool.get('plan_contratacion_idu.plan_pagos_item').read(cr, uid, pago_ids, ['plan_contratacion_item_id'], context=context)
-        plan_item_ids = [ i['plan_contratacion_item_id'][0] for i in plan_item_ids if 'plan_contratacion_item_id' in plan_item_ids ] 
-        plan_item_ids = list(set(plan_item_ids)) #obtiene solo valores unicos
+        records = self.pool.get('plan_contratacion_idu.plan_pagos_item').browse(cr, uid, pago_ids, context=context)
+        plan_item_ids = [record.plan_contratacion_item_id.id for record in records if record.id]
+        return plan_item_ids
+
+    def _get_plan_item_from_pago_giro_records(self, cr, uid, pago_ids, context=None):
+        """
+        Retorna los IDs del plan_item a ser recalculados cuando cambia un pago_item
+        """
+        records = self.pool.get('plan_contratacion_idu.plan_pagos_giro').browse(cr, uid, pago_ids, context=context)
+        plan_item_ids = [record.plan_contratacion_item_id.id for record in records if record.id]
         return plan_item_ids
 
     def _check_fechas_programadas(self,cr,uid,ids,context=None):
@@ -610,8 +616,8 @@ class plan_contratacion_idu_item(osv.osv):
              digits_compute=dp.get_precision('Account'),
              store={
                 'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_item_ids', 'presupuesto'], 10),
-                'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['presupuesto', 'presupuesto'], 10),
-                'plan_contratacion_idu.plan_pagos_item': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
+                'plan_contratacion_idu.plan_pagos_item': (_get_plan_item_from_pago_records, ['valor', 'mes', 'plan_contratacion_item_id'], 20),
+                'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['presupuesto', 'presupuesto'], 30),
             }),
         'total_pagos_realizados': fields.function(_total_pagos_realizados,
              type='float',
@@ -621,7 +627,7 @@ class plan_contratacion_idu_item(osv.osv):
              digits_compute=dp.get_precision('Account'),
              store={
                 'plan_contratacion_idu.item': (lambda self, cr, uid, ids, c={}: ids, ['plan_pagos_giro_ids', 'presupuesto'], 10),
-                'plan_contratacion_idu.plan_pagos_giro': (_get_plan_item_from_pago_records, ['valor', 'plan_contratacion_item_id'], 20),
+                'plan_contratacion_idu.plan_pagos_giro': (_get_plan_item_from_pago_giro_records, ['valor', 'plan_contratacion_item_id'], 20),
             }),
         'numero_orfeo':fields.char('Número Radicado Orfeo',
              help='Validado desde Orfeo',
@@ -794,7 +800,7 @@ class plan_contratacion_idu_item(osv.osv):
         sumatoria = 0
         res = {
                 'total_pagos_programados': 0,
-                'presupuesto_rezago': 0,
+                #'presupuesto_rezago': 0,
         }
         plan_pagos_item_ids = resolve_o2m_operations(cr, uid, pagos_pool, plan_pagos_item_ids, ['valor'], context)
         if ids:
@@ -810,10 +816,10 @@ class plan_contratacion_idu_item(osv.osv):
         }
 
     def onchange_plan_pagos_giro_ids(self, cr, uid, ids, plan_pagos_giro_ids, context=None):
-        self.pool.get('plan_contratacion_idu.item')._total_pagos_realizados
+        self.pool.get('plan_contratacion_idu.item')._total_pagos_realizados()
 
     def onchange_presupuesto(self, cr, uid, ids, presupuesto, context=None):
-        self.pool.get('plan_contratacion_idu.item')._total_pagos_programados
+        self.pool.get('plan_contratacion_idu.item')._total_pagos_programados()
         self.pool.get('plan_contratacion_idu.plan')._total_pagos_plan()
 
     def onchange_a_monto_agotable(self, cr, uid, ids, a_monto_agotable, context=None):
@@ -891,6 +897,10 @@ class plan_contratacion_idu_item(osv.osv):
             if (datos_contrato):
                 self.write(cr, uid, record.id, {"fecha_acta_inicio": datos_contrato['fecha_acta_inicio']})
                 self.write(cr, uid, record.id, {"state": "ejecucion"})
+        id_records_ejecucion = self.search(cr, uid,[('state', '=', 'ejecucion')],context=context)
+        for record in self.browse(cr, uid, id_records_ejecucion, context):
+            datos_contrato = siac_ws.obtener_datos_contrato(wsdl_url, record.numero_contrato)
+            if (datos_contrato):
                 if datos_contrato['fecha_acta_liquidacion']:
                     self.write(cr, uid, record.id, {"fecha_acta_liquidacion": datos_contrato['fecha_acta_liquidacion']})
                     self.write(cr, uid, record.id, {"state": "ejecutado"})
@@ -911,7 +921,7 @@ class plan_contratacion_idu_item(osv.osv):
             for k in dato_giros:
                     vals = {
                         'plan_contratacion_item_id': record_plan_item.id,
-                        'date': k['pre_op_fecha'].strftime('%m-%d-%Y'),
+                        'date': k['pre_op_fecha'],
                         'valor': k['pre_crp_valor'],
                         'currency_id': record_plan_item.id
                     }
@@ -1111,7 +1121,7 @@ class plan_contratacion_idu_plan_pagos_item(osv.osv):
     _name = "plan_contratacion_idu.plan_pagos_item"
 
     def _check_pagos_programados(self,cr,uid,ids,context=None):
-        """valida si los datos son ingresados"""
+        """valida que el valor del pago sea mayor a $0"""
         res = {}
         if isinstance(ids, (list, tuple)) and not len(ids):
             return res
@@ -1145,7 +1155,6 @@ class plan_contratacion_idu_plan_pagos_item(osv.osv):
     _sql_constraints =[
         ('unique_mes','unique(mes,plan_contratacion_item_id)','El mes debe ser único'),
     ]
-
     _constraints = [
         (_check_pagos_programados, 'Error! Necesita adicionar un valor mayor que $0.', ['valor']),
     ]

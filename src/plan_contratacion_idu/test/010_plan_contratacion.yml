@@ -93,3 +93,72 @@
 -
   !assert {model: plan_contratacion_idu.item, id: plan_item_1, string: Verificando item luego de adicionar pago realizado al item}:
     - total_pagos_realizados == 20000000
+-
+ Intentar cambiar el estado del item a radicado sin los datos del radicado orfeo
+-
+  !python {model: plan_contratacion_idu.item}: |
+    item = self.browse(cr, uid, ref("plan_item_1"))
+    try:
+      item.wkf_radicado([ref('plan_item_1')], 0)
+      assert False, "No se debe permitir pasar a estado radicado"
+    except:
+      assert True, "Exception lanzada para no pasar al estado radicado"
+-
+  Completar el objeto y pasarlo a radicado
+-
+  !record {model: plan_contratacion_idu.item, id: plan_item_1}:
+    numero_orfeo: '20145260001301'
+-
+  !python {model: plan_contratacion_idu.item}: |
+    item = self.browse(cr, uid, ref("plan_item_1"))
+    try:
+      item.wkf_radicado([ref('plan_item_1')], 0)
+      assert True, "Cambiado a estado radicado"
+    except:
+      assert False, "Exception lanzada para no pasar al estado radicado"
+-
+ Intentar cambiar el estado del item a contrato suscrito sin los datos del contrato
+-
+  !python {model: plan_contratacion_idu.item}: |
+    item = self.browse(cr, uid, ref("plan_item_1"))
+    try:
+      item.wkf_suscrito([ref('plan_item_1')], 0)
+      assert False, "No se debe permitir pasar a estado contrato suscrito"
+    except:
+      assert True, "Exception lanzada para no pasar al estado contrato suscrito"
+-
+  Completar el objeto y pasarlo a contrato suscrito
+-
+  !record {model: plan_contratacion_idu.item, id: plan_item_1}:
+    numero_contrato: 'IDU-1916-2013'
+-
+  !python {model: plan_contratacion_idu.item}: |
+    item = self.browse(cr, uid, ref("plan_item_1"))
+    try:
+      item.wkf_suscrito([ref('plan_item_1')], 0)
+      assert True, "Cambiado a estado contrato suscrito"
+    except:
+      assert False, "Exception lanzada para no pasar al estado contrato suscrito"
+-
+  Intentar cambiar el estado del item a ejecucion sin los datos de fecha de acta de inicio
+-
+  !python {model: plan_contratacion_idu.item}: |
+    item = self.browse(cr, uid, ref("plan_item_1"))
+    try:
+      item.wkf_suscrito([ref('plan_item_1')], 0)
+      assert False, "No se debe permitir pasar a estado ejecucion"
+    except:
+      assert True, "Exception lanzada para no pasar al estado ejecucion"
+-
+  Completar el objeto y pasarlo a estado en Ejecucion
+-
+  !record {model: plan_contratacion_idu.item, id: plan_item_1}:
+    fecha_acta_inicio: 2013-12-24
+-
+  !python {model: plan_contratacion_idu.item}: |
+    item = self.browse(cr, uid, ref("plan_item_1"))
+    try:
+      item.wkf_ejecucion([ref('plan_item_1')], 0)
+      assert True, "Cambiado a estado en Ejecucion"
+    except:
+      assert False, "Exception lanzada para no pasar al estado en Ejecucion"
