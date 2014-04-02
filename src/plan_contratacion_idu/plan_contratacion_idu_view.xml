@@ -18,6 +18,15 @@
                 </tree>
             </field>
         </record>
+        <record id="plan_contratacion_idu_item_para_plan_action" model="ir.actions.act_window">
+            <field name="name">Item Plan Contratación</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">plan_contratacion_idu.item</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_items_activos':1, 'search_default_plan_id':[active_id], 'default_plan_id': active_id}</field>
+        </record>
+
         <record id="plan_contratacion_idu_form" model="ir.ui.view">
             <field name="name">plan_contratacion_idu.plan.form</field>
             <field name="model">plan_contratacion_idu.plan</field>
@@ -29,6 +38,9 @@
                        <button name="%(plan_contratacion_idu.action_plan_contratacion_idu_wizard_solicitud_cambio)d" string="Solicitar adición de un nuevo item"
                            type="action" icon="gtk-ok" context="{'plan_id': id, }"
                            attrs="{'invisible': [('open_close_plan','=',False)]}"
+                       />
+                       <button name="%(plan_contratacion_idu_item_para_plan_action)d"
+                            string="Items del plan" type="action"
                        />
                        <field name="state" widget="statusbar" attrs="{'readonly':True}"/>
                     </header>
@@ -118,6 +130,7 @@
             <field name="arch" type="xml">
                 <tree string="Item Plan de contratación">
                     <field name="is_editable" invisible="1"/>
+                    <field name="plan_id"/>
                     <field name="clasificacion_id"/>
                     <field name="state"/>
                     <field name="dependencia_id"/>
