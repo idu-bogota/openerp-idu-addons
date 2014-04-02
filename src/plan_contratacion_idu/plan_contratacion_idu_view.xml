@@ -23,41 +23,40 @@
             <field name="model">plan_contratacion_idu.plan</field>
             <field name="arch" type="xml">
                 <form string="Plan de contratación" version="7.0">
+                    <header>
+                       <button name="wkf_open" string="Abrir" type="object" icon="gtk-yes" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager" attrs="{'invisible': [('open_close_plan','=',True)]}"/>
+                       <button name="wkf_close" string="Cerrar" type="object" icon="gtk-no" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager" attrs="{'invisible': [('open_close_plan','=',False)]}"/>
+                       <button name="%(plan_contratacion_idu.action_plan_contratacion_idu_wizard_solicitud_cambio)d" string="Solicitar adición de un nuevo item"
+                           type="action" icon="gtk-ok" context="{'plan_id': id, }"
+                           attrs="{'invisible': [('open_close_plan','=',False)]}"
+                       />
+                       <field name="state" widget="statusbar" attrs="{'readonly':True}"/>
+                    </header>
+                    <sheet>
                         <div class="oe_title">
                             <label for="vigencia" class="oe_edit_only"/>
                             <h1>
                                 <field name="vigencia"/>
                             </h1>
                         </div>
-                        <group name="estado">
+                        <group col="2">
+                            <group>
                             <field name="open_close_plan" invisible="0"/>
                             <field name="version"/>
                             <field name="state" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                             <field name="active" groups="base.group_erp_manager"/>
-                        </group>
-                        <group col="2" colspan="1">
-                            <button name="wkf_open" string="Abrir" type="object" icon="gtk-yes" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager" attrs="{'invisible': [('open_close_plan','=',True)]}"/>
-                            <button name="wkf_close" string="Cerrar" type="object" icon="gtk-no" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager" attrs="{'invisible': [('open_close_plan','=',False)]}"/>
-                            <button name="%(plan_contratacion_idu.action_plan_contratacion_idu_wizard_solicitud_cambio)d" string="Solicitar adición de un nuevo item"
-                               type="action" icon="gtk-ok" context="{'plan_id': id, }"
-                               attrs="{'invisible': [('open_close_plan','=',False)]}"
-                            />
-                        </group>
-                        <field name="item_ids" context="{'plan_id': active_id}" />
-                         <field name="currency_id" invisible="1"/>
-                        <group>
-                            <group class="oe_subtotal_footer oe_right" name="total_pagos_programado_item">
-                                <field name="total_pagos_presupuestado_plan" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"
-                                     groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
-                                <label for="total_pagos_programados_plan" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
-                                    <div>
-                                        <field name="total_pagos_programados_plan" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1" string="Rezago"
-                                            groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
-                                    </div>
-                                <field name="total_rezago_plan" widget='monetary' options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"
-                                    groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                            <field name="currency_id" invisible="1"/>
+                            </group>
+                            <group>
+                            <field name="total_pagos_presupuestado_plan" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"
+                                 groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                            <field name="total_pagos_programados_plan" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1" string="Rezago"
+                                groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
+                            <field name="total_rezago_plan" widget='monetary' options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"
+                                groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                             </group>
                         </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -140,7 +139,7 @@
                        <field name="state" widget="statusbar" attrs="{'readonly':True}"/>
                     </header>
                     <group col="1" colspan="1">
-                    <field name="is_editable" invisible="1"/>
+                        <field name="is_editable" invisible="1"/>
                         <header>
                            <button name="wkf_version_inicial" string="Versión Inicial" type="object" icon="gtk-dnd" groups="base.group_erp_manager"/>
                            <button name="wkf_aprobado" string="Aprobado" type="object" icon="gtk-apply" states="version_inicial" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager, base.group_erp_manager"/>
@@ -153,6 +152,7 @@
                               type="action" icon="gtk-ok" context="{'plan_item_id': id, 'plan_id': plan_id, }"
                               attrs="{'invisible': ['|',('state','not in',['aprobado','radicado','suscrito']), ('is_plan_open','=',False)]}"
                            />
+                           <button name="obtener_pagos_realizados" string="Obtener Giros" type="object" icon="gtk-yes" groups="base.group_erp_manager"/>
                         </header>
                     </group>
                     <sheet>
@@ -362,13 +362,8 @@
             <field name="arch" type="xml">
             <form string="Clasificación de Proyectos" version="7.0">
                 <sheet string="Clasificación">
-                    <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="tipo"/>
-                        </h1>
-                    </div>
                     <group name="detalles">
+                        <field name="tipo"/>
                         <field name="codigo"/>
                         <field name="name"/>
                         <field name="parent_id" />

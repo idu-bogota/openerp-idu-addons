@@ -907,7 +907,8 @@ class plan_contratacion_idu_item(osv.osv):
 
     def obtener_pagos_realizados(self, cr, uid, ids=None, context=None):
         dato_giros={}
-        ids = self.search(cr, uid,[('state', '=', 'ejecucion')],context=context)
+        if not ids:
+            ids = self.search(cr, uid,[('state', '=', 'ejecucion')],context=context)
         records_plan_item = self.browse(cr, uid, ids, context=context)
         wsdl = self.pool.get('ir.config_parameter').get_param(cr,uid,'stone_idu.webservice.wsdl',default=False,context=context)
         pago_realizado_pool = self.pool.get('plan_contratacion_idu.plan_pagos_giro')
