@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <menuitem id="base.menu_project_report" name="Project"
+            groups="project.group_project_manager"
+            parent="base.menu_reporting" sequence="30"/>
+
+        <record id="view_workpackage_project_user_tree" model="ir.ui.view">
+            <field name="name">report.project.workpackage.tree</field>
+            <field name="model">report.project.workpackage</field>
+            <field name="arch" type="xml">
+                <tree string="workpackages Analysis" create="false">
+                    <field name="name" invisible="1"/>
+                    <field name="project_id" invisible="1"/>
+                    <field name="phase_id" invisible="1"/>
+                    <field name="id" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                    <field name="nbr" sum='# of workpackage'/>
+                    <field name="no_of_days" sum="# of Days"/>
+                    <field name="delay_endings_days" sum="# of delay days"/>
+                    <field name="average_progress" avg="Average progress"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_workpackage_project_user_graph" model="ir.ui.view">
+            <field name="name">report.project.workpackage.graph</field>
+            <field name="model">report.project.workpackage</field>
+            <field name="arch" type="xml">
+                <graph string="workpackages Analysis" type="bar">
+                     <field name="name"/>
+                     <field name="no_of_days" operator="+"/>
+                     <field name="average_progress" group="True"/>
+                 </graph>
+             </field>
+        </record>
+
+        <record id="view_workpackage_project_user_search" model="ir.ui.view">
+            <field name="name">report.project.workpackage.search</field>
+            <field name="model">report.project.workpackage</field>
+            <field name="arch" type="xml">
+                <search string="Workpackage Analysis">
+                    <field name="no_of_days"/>
+                    <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help = "New workpackages"/>
+                    <filter string="In progress" icon="terp-check" domain="[('state', '=' ,'open')]" help = "In progress workpackages"/>
+                    <filter string="Pending" icon="terp-gtk-media-pause" domain="[('state','=','pending')]" help = "Pending workpackages"/>
+                    <filter string="Done" icon="terp-dialog-close" name="done" domain="[('state','=','done')]"/>
+                    <separator/>
+                    <filter icon="terp-folder-violet" string="My Projects" help="My Projects" domain="[('project_id.user_id','=',uid)]"/>
+                    <separator/>
+                    <group expand="1" string="Group By...">
+                        <filter string="Project" name="project" icon="terp-folder-violet" context="{'group_by':'project_id'}"/>
+                        <filter string="Workpackage" icon="terp-stock_align_left_24" context="{'group_by':'name'}" />
+                        <filter string="Phase" name="phase" icon="terp-folder-violet" context="{'group_by':'phase_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+       <record id="action_project_workpackage_user_tree" model="ir.actions.act_window">
+            <field name="name">Workpackage Analysis</field>
+            <field name="res_model">report.project.workpackage</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="search_view_id" ref="view_workpackage_project_user_search"/>
+            <field name="context">{'search_default_year':1,'search_default_project':1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="help">This report allows you to analyse the performance of your projects and users.</field>
+        </record>
+
+        <menuitem action="action_project_workpackage_user_tree" id="menu_project_workpackage_workpackage_tree" parent="base.menu_project_report"/>
+
+    </data>
+</openerp>
