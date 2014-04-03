@@ -167,13 +167,12 @@ class project_pmi_wbs_item(osv.osv):
                             if id_parent:
                                 if ('progress_rate' in res[id_parent]):
                                     if(progress):
-                                        res[id_parent]['progress_rate'] += round(progress * res[id]['weight'], 2)
-                                        progress = 0
+                                        progress = round(progress * res[id]['weight'], 2)
+                                        res[id_parent]['progress_rate'] += progress
                                     else:
                                         res[id_parent]['progress_rate'] += round(res[id]['progress_rate'] * res[id]['weight'], 2)
                             id = child_parent[id]
             else:
-                value = 1
                 while id:
                     if res[id]['planned_quantity'] and res[id]['type'] == 'work_package':
                         progress = round(100.0 * res[id]['effective_quantity'] / res[id]['planned_quantity'], 2)
@@ -189,9 +188,8 @@ class project_pmi_wbs_item(osv.osv):
                     else:
                         number = self._get_values_dictionary(child_parent,id)
                         if number > 0:
-                            value *= number
-                        res[id]['progress_rate'] += progress / value
-                        progress = 0
+                            progress = progress / number
+                        res[id]['progress_rate'] += progress 
                     id = child_parent[id]
         if len(res) == 1:
             if len(child_parent) == 1:
