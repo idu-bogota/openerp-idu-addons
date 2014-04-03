@@ -1,0 +1,34 @@
+-
+  Create a new WBS structure and check all restrictions
+-
+  !record {model: project_pmi.wbs_item, id: wbs_item_1}:
+    name: '1. wbs item'
+    type: 'deliverable'
+-
+  !record {model: project_pmi.wbs_item, id: wbs_item_1_1_tasks}:
+    name: '1.1 wbs item'
+    type: 'work_package'
+    tracking_type: 'tasks'
+    parent_id: wbs_item_1
+-
+  !record {model: project_pmi.wbs_item, id: wbs_item_1_2_units}:
+    name: '1.2 wbs item'
+    type: 'work_package'
+    tracking_type: 'units'
+    uom_id: product.product_uom_day
+    quantity: 10
+    parent_id: wbs_item_1
+-
+  Don't allow children in a work package 
+-
+  !python {model: project_pmi.wbs_item}: |
+    vals = {
+        'name': 'FAIL',
+        'type': 'deliverable',
+        'parent_id': ref("wbs_item_1_1_tasks"),
+    }
+    try:
+      wbs_item = self.create(cr, uid, ref("plan_item_1"))
+      assert False, "Must not allow create a wbs_item under a work package - exception not raised"
+    except:
+      assert True, "Must not allow create a wbs_item under a work package - exception raised"

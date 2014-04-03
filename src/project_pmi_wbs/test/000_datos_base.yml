@@ -1,0 +1,13 @@
+-
+  Create basic data to use in the tests
+-
+  Create project and phase
+-
+  !record {model: project.project, id: project_pmi_1}:
+    name: 'Test project'
+-
+  !record {model: project.phase, id: project_pmi_phase_1}:
+    name: 'phase test'
+    product_uom: product.product_uom_day
+    duration: 10
+    project_id: project_pmi_1

@@ -40,6 +40,11 @@ This module adds the WBS support for Projects.
         'security/security.xml',
         'security/ir.model.access.csv',
     ],
+    'test': [
+        'test/000_datos_base.yml',
+        'test/010_wbs_structure.yml',
+        'test/020_wbs_progress_rate.yml',
+    ],
     'demo': [],
     'installable': True,
     'auto_install': False,

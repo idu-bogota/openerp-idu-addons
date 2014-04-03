@@ -1,0 +1,16 @@
+-
+  Add activity related to the WBS and check progress is calculated ok
+-
+  !record {model: project_pmi.wbs_work_record, id: wbs_item_1_2_work}:
+    name: '1. wbs item'
+    wbs_item_id: wbs_item_1_2_units
+    quantity: 1
+-
+  !assert {model: project_pmi.wbs_item, id: wbs_item_1, string: Check WBS 1.0 progress is OK}:
+    - progress_rate == 5
+-
+  !assert {model: project_pmi.wbs_item, id: wbs_item_1_1_tasks, string: Check WBS 1.1 progress is OK}:
+    - progress_rate == 0
+-
+  !assert {model: project_pmi.wbs_item, id: wbs_item_1_2_units, string: Check WBS 1.2 progress is OK}:
+    - progress_rate == 10
