@@ -22,14 +22,13 @@
     parent_id: wbs_item_1_calcule_weight
 -
   !python {model: project_pmi.wbs_item}: |
-    try:
-      wbs_item = self.weight_assigned_by_duration(cr, uid, ref("wbs_item_1_calcule_weight"),None)
-      assert False, "Must not allow create a wbs_item under a work package - exception not raised"
-    except:
+    wbs_item = self.weight_assigned_by_duration(cr, uid, [ref("wbs_item_1_calcule_weight")],None)
+    items = self.pool.get('project_pmi.wbs_item').browse(cr, uid, [ref("wbs_item_1_1_use_calcule_weight"),ref("wbs_item_1_2_use_calcule_weight")], context=None)
+    if round(items[0].weight,2) == 14.29:
       assert True, "Must not allow create a wbs_item under a work package - exception raised"
--
-  !assert {model: project_pmi.wbs_item, id: wbs_item_1_1_use_calcule_weight, string: Check WBS weight 1.1 progress is OK}:
-    - weight == 14.29
--
-  !assert {model: project_pmi.wbs_item, id: wbs_item_1_2_use_calcule_weight, string: Check WBS weight 1.2 progress is OK}:
-    - weight == 85.71
+    else:
+      assert False, "Must not allow create a wbs_item under a work package - exception not raised in conditional"
+    if round(items[1].weight,2) == 85.71:
+      assert True, "Must not allow create a wbs_item under a work package - exception raised"
+    else:
+      assert False, "Must not allow create a wbs_item under a work package - exception not raised in conditional"

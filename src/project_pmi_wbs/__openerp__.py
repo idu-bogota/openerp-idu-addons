@@ -47,6 +47,7 @@ This module adds the WBS support for Projects.
         'test/030_wbs_progress_rate_with_weight.yml',
         'test/040_wbs_use_weight.yml',
         'test/050_wbs_weight_assigned_by_duration.yml',
+        'test/060_wbs_set_bulk_project_and_phase.yml',
     ],
     'demo': [],
     'installable': True,

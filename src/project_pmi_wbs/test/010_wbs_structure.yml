@@ -28,7 +28,7 @@
         'parent_id': ref("wbs_item_1_1_tasks"),
     }
     try:
-      wbs_item = self.create(cr, uid, ref("plan_item_1"),vals)
+      wbs_item = self.create(cr, uid, ref("wbs_item_1_1_tasks"),vals)
       assert False, "Must not allow create a wbs_item under a work package - exception not raised"
     except:
       assert True, "Must not allow create a wbs_item under a work package - exception raised"
