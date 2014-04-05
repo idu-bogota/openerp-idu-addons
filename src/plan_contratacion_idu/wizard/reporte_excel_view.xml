@@ -43,6 +43,6 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem name="Exportar a Excel" id="reporte_exportar_a_excel" parent="plan_contratacion_idu.menu_plan_contratacion" action="action_plan_contratacion_idu_wizard_reporte"/>
+        <menuitem name="Exportar a Excel" id="reporte_exportar_a_excel" parent="base.menu_plan_contratacion_idu_report" action="action_plan_contratacion_idu_wizard_reporte"/>
 </data>
 </openerp>

@@ -1,2 +1,3 @@
 import plan_contratacion_idu
 import wizard
+import report

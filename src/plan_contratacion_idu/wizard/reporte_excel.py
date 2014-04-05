@@ -17,12 +17,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
-#
-#
-#    Autor Andres Ignacio Báez Alba
-#
-#
-#########t#####################################################################
+########t#####################################################################
 from osv import fields, osv
 import cStringIO as StringIO
 import xlwt

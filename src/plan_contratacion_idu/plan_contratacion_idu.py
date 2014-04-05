@@ -862,32 +862,71 @@ class plan_contratacion_idu_item(osv.osv):
         return res
 
     def onchange_numero_contrato(self, cr, uid, ids, numero_contrato, context=None):
-        res={}
+        res = {}
+        if not context:
+            context = {}
         wsdl_url = self.pool.get('ir.config_parameter').get_param(cr,uid,'siac_idu.webservice.wsdl',default=False,context=context)
         datos_contrato = siac_ws.obtener_datos_contrato(wsdl_url,numero_contrato)
         if (datos_contrato):
-            self.write(cr, uid, ids, {"state": "suscrito",
-                                      "numero_crp":datos_contrato['numero_crp'],
-                                      "numero_contrato":datos_contrato['codigo_contrato'],
-                                      "nit_beneficiario": datos_contrato['nit_contratista']
-                       }
-            )
-            res = {'value':{
-                       'numero_crp':datos_contrato['numero_crp'],
+            crp_list = datos_contrato['numero_crp']
+            lista_crp = ()
+            if isinstance(crp_list, int):
+                lista_crp = [(crp_list, crp_list)]
+                self.write(cr, uid, ids, {
+                  "state": 'suscrito',
+                  'numero_crp':  datos_contrato['numero_crp'],
+                  "numero_contrato": datos_contrato['codigo_contrato'],
+                  "nit_beneficiario": datos_contrato['nit_contratista']
+                })
+                res = {
+                   'value': {
+                       'numero_crp':  datos_contrato['numero_crp'],
                        'numero_contrato':datos_contrato['codigo_contrato'],
                        'nit_beneficiario': datos_contrato['nit_contratista'],
                        'state': 'suscrito'
-                   }
-            }
+                    }
+                }
+            else:
+                self.write(cr, uid, ids, {
+                  "numero_contrato": datos_contrato['codigo_contrato'][0],
+                  "nit_beneficiario": datos_contrato['nit_contratista'][0]
+                })
+                res = {
+                   'value': {
+                       'numero_contrato':datos_contrato['codigo_contrato'][0],
+                       'nit_beneficiario': datos_contrato['nit_contratista'][0],
+                    },
+                    'warning': {
+                        'message': 'Este contrato tiene mas de un número CRP relacionado, Seleccione el correspondiente al Item'
+                    }
+                 }
+                for crp in crp_list:
+                    lista_crp = lista_crp + ((crp, crp),)
+                context['crp_list'] = lista_crp
+                self.abrir_obtener_crp_wizard(cr, uid, ids, context=context)
         else :
-            res = {'value':{
-                       'numero_crp':"",
-                       'numero_contrato':"",
-                       'nit_beneficiario':False
-                   }
+            res = {
+               'value':{
+                   'numero_crp':"",
+                   'numero_contrato':"",
+                   'nit_beneficiario':False
+               }
             }
             raise osv.except_osv('Error','No existe información para este número de contrato')
         return res
+
+    def abrir_obtener_crp_wizard(self, cr, uid, ids, context=None):
+        wizard_id = self.pool['plan_contratacion_idu.wizard.crp'].create(cr, uid, vals={}, context=context)
+        return {
+            'name': 'Seleccionar CRP',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'plan_contratacion_idu.wizard.crp',
+            'res_id': wizard_id,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': context,
+        }
 
     def obtener_datos_contrato(self, cr, uid, ids=None, context=None):
         wsdl_url = self.pool.get('ir.config_parameter').get_param(cr,uid,'siac_idu.webservice.wsdl',default=False,context=context)
@@ -927,40 +966,6 @@ class plan_contratacion_idu_item(osv.osv):
                         'currency_id': record_plan_item.id
                     }
                     pago_realizado_pool.create(cr, uid, vals, context=context)
-
-    def action_invoice_sent(self, cr, uid, ids, context=None):
-        '''
-        This function opens a window to compose an email, with the edi invoice template message loaded by default
-        '''
-        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
-        ir_model_data = self.pool.get('ir.model.data')
-        try:
-            template_id = ir_model_data.get_object_reference(cr, uid, 'account', 'email_template_edi_invoice')[1]
-        except ValueError:
-            template_id = False
-        try:
-            compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
-        except ValueError:  
-            compose_form_id = False
-        ctx = dict(context)
-        ctx.update({
-            'default_model': 'plan_contratacion_idu.item',
-            'default_res_id': ids[0],
-            'default_use_template': bool(template_id),
-            'default_template_id': template_id,
-            'default_composition_mode': 'comment',
-            'mark_invoice_as_sent': True,
-            })
-        return {
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'mail.compose.message',
-            'views': [(compose_form_id, 'form')],
-            'view_id': compose_form_id,
-            'target': 'new',
-            'context': ctx,
-        }
 
     def wkf_version_inicial(self, cr, uid, ids, plan_items, context=None):
         self.write(cr, uid, ids, {
@@ -1260,10 +1265,10 @@ class hr_department(osv.osv):
             context = {}
         if not ids:
             return []
-        reads = self.read(cr, uid, ids, ['name'], context=context)
+        reads = self.read(cr, uid, ids, ['name','abreviatura'], context=context)
         res = []
         for record in reads:
-            name = record['name']
+            name = record['abreviatura']
             res.append((record['id'], name))
         return res
 
@@ -1275,7 +1280,7 @@ class hr_department(osv.osv):
         reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
         for record in reads:
-            name = record['name']
+            name = record['abreviatura']
             if record['parent_id']:
                 name = record['parent_id'][1]+' / '+name
             res.append((record['id'], name))

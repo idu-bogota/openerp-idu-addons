@@ -17,11 +17,8 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-#    Realizado por: Andrés Ignacio Báez Alba andresignaciob@gmail.com
-#
-#
-#    Febrero de 2014
 #
 ##############################################################################
 import reporte_excel
 import solicitar_cambio
+import obtener_crp

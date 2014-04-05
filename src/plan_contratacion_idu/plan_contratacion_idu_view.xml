@@ -62,7 +62,7 @@
                             <group>
                             <field name="total_pagos_presupuestado_plan" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"
                                  groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
-                            <field name="total_pagos_programados_plan" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1" string="Rezago"
+                            <field name="total_pagos_programados_plan" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"
                                 groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
                             <field name="total_rezago_plan" widget='monetary' options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"
                                 groups="plan_contratacion_idu.group_plan_contratacion_idu_manager"/>
@@ -119,6 +119,8 @@
                         <filter string="Fuente de Financiación" icon="terp-go-month" domain="[]" context="{'group_by':'fuente_id''}" groups="base.group_no_one"/>
                         <filter string="Tipo Proceso" icon="terp-go-month" domain="[]" context="{'group_by':'tipo_proceso_id'}" groups="base.group_no_one"/>
                         <filter string="Tipo Proceso de Selección" icon="terp-go-month" domain="[]" context="{'group_by':'tipo_proceso_seleccion_id'}" groups="base.group_no_one"/>
+                        <filter string="Fecha Radicacion" icon="terp-go-month" domain="[]" context="{'group_by':'fecha_programada_radicacion'}" groups="base.group_no_one"/>
+                        <filter string="Estado" icon="terp-go-month" domain="[]" context="{'group_by':'state'}" groups="base.group_no_one"/>
                    </group>
                 </search>
             </field>
@@ -132,13 +134,14 @@
                     <field name="is_editable" invisible="1"/>
                     <field name="plan_id"/>
                     <field name="clasificacion_id"/>
+                    <field name="description"/>
                     <field name="state"/>
                     <field name="dependencia_id"/>
                     <field name="fuente_id"/>
                     <field name="plazo_de_ejecucion"/>
-                    <field name="fecha_programada_radicacion"/>
+<!--                     <field name="fecha_programada_radicacion"/>
                     <field name="fecha_programada_crp"/>
-                    <field name="fecha_programada_acta_inicio"/>
+                    <field name="fecha_programada_acta_inicio"/>-->
                     <field name="presupuesto" sum="Presupuesto" on_change="onchange_presupuesto(presupuesto)"/>
                 </tree>
             </field>
@@ -160,7 +163,7 @@
                            <button name="wkf_suscrito" string="Contrato Suscrito" type="object" icon="gtk-edit" groups="base.group_erp_manager"/>
                            <button name="wkf_ejecucion" string="Iniciar ejecución" type="object" icon="gtk-yes" groups="base.group_erp_manager"/>
                            <button name="wkf_ejecutado" string="Finalizar Ejecución" type="object" icon="kanban-stop" groups="base.group_erp_manager"/>
-                           <button name="wkf_no_realizado" string="No Realizado" icon="gtk-cancel" type="object" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager, base.group_erp_manager"/>
+                           <button name="wkf_no_realizado" string="No Realizado" icon="gtk-cancel" type="object" states="version_inicial" groups="plan_contratacion_idu.group_plan_contratacion_idu_manager, base.group_erp_manager"/>
                            <button name="%(plan_contratacion_idu.action_plan_contratacion_idu_wizard_solicitud_cambio)d" string="Solicitar Cambio"
                               type="action" icon="gtk-ok" context="{'plan_item_id': id, 'plan_id': plan_id, }"
                               attrs="{'invisible': ['|',('state','not in',['aprobado','radicado','suscrito']), ('is_plan_open','=',False)]}"
@@ -237,19 +240,29 @@
                                     <field name="nombre_fase_intervencion"/>
                                 </group>
                             </page>
-                            <page string="Fechas">
-                                <group name="fechas" string="Fechas Planificadas">
+                            <page string="Fechas Planificadas">
+                                <group>
                                     <separator colspan="2"/>
                                     <field name="fecha_programada_radicacion" attrs="{'readonly': [('is_editable','=',False)]}"/>
                                     <field name="fecha_programada_crp" attrs="{'readonly': [('is_editable','=',False)]}"/>
                                     <field name="fecha_programada_acta_inicio" attrs="{'readonly': [('is_editable','=',False)]}"/>
                                  </group>
-                                 <group name="informacion_verificacion" string="Fechas de Ejecución" col="4" colspan="1">
+                             </page>
+                             <page string="Seguimiento">
+                                 <group name="informacion_verificacion" col="4" colspan="1">
                                     <field name="numero_orfeo" on_change="onchange_numero_orfeo(numero_orfeo)"/>
                                     <field name="fecha_radicado_orfeo"/>
                                     <field name="numero_contrato" on_change="onchange_numero_contrato(numero_contrato)"/>
-                                    <field name="numero_crp"/>
                                     <field name="nit_beneficiario"/>
+                                </group>
+                                <group name="informacion_crp" col="4" colspan="1">
+                                    <button name="%(plan_contratacion_idu.action_plan_contratacion_idu_wizard_crp)d" string="Obtener CRP"
+                                        type="action" icon="gtk-ok" context="{'plan_item_id': id, 'plan_id': plan_id, }"
+                                        attrs="{'invisible': ['|',('numero_contrato','=',False), ('state','in',['suscrito','ejecucion','ejecutado', 'no realizado'])]}"
+                                    />
+                                </group>
+                                <group name="informacion_crp" col="4" colspan="1">
+                                    <field name="numero_crp"/>
                                     <field name="fecha_acta_inicio"/>
                                     <field name="fecha_acta_liquidacion"/>
                                 </group>
@@ -705,5 +718,7 @@
             parent="menu_plan_contratacion"
             sequence="0"
         />
+        <menuitem id="base.menu_plan_contratacion_idu_report" name="Plan contratacion"
+            parent="base.menu_reporting" sequence="25"/>
     </data>
 </openerp>

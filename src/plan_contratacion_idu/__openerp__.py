@@ -157,9 +157,12 @@
         'security/plan_contratacion_idu_security.xml',
         'plan_contratacion_idu_data.xml',
         'wizard/solicitar_cambio_view.xml',
+        'wizard/obtener_crp_view.xml',
         'plan_contratacion_idu_view.xml',
         'wizard/reporte_excel_view.xml',
         'security/ir.model.access.csv',
+        'report/plan_contratacion_idu_report_view.xml',
+        'report/plan_contratacion_idu_report_presupuesto_view.xml'
     ],
     'test': [
         'test/000_datos_base.yml',
