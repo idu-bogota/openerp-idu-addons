@@ -1,0 +1,35 @@
+-
+  Verifica el calculo del peso basado en la duración
+-
+  !record {model: project_pmi.wbs_item, id: wbs_item_1_calcule_weight}:
+    name: '1. wbs item'
+    type: 'deliverable'
+-
+  !record {model: project_pmi.wbs_item, id: wbs_item_1_1_use_calcule_weight}:
+    name: '1.1 wbs item'
+    date_start: '2014-04-07'
+    date_deadline: '2014-04-09'
+    type: 'work_package'
+    tracking_type: 'tasks'
+    parent_id: wbs_item_1_calcule_weight
+-
+  !record {model: project_pmi.wbs_item, id: wbs_item_1_2_use_calcule_weight}:
+    name: '1.2 wbs item'
+    date_start: '2014-04-07'
+    date_deadline: '2014-04-19'
+    type: 'work_package'
+    tracking_type: 'tasks'
+    parent_id: wbs_item_1_calcule_weight
+-
+  !python {model: project_pmi.wbs_item}: |
+    try:
+      wbs_item = self.weight_assigned_by_duration(cr, uid, ref("wbs_item_1_calcule_weight"),None)
+      assert False, "Must not allow create a wbs_item under a work package - exception not raised"
+    except:
+      assert True, "Must not allow create a wbs_item under a work package - exception raised"
+-
+  !assert {model: project_pmi.wbs_item, id: wbs_item_1_1_use_calcule_weight, string: Check WBS weight 1.1 progress is OK}:
+    - weight == 14.29
+-
+  !assert {model: project_pmi.wbs_item, id: wbs_item_1_2_use_calcule_weight, string: Check WBS weight 1.2 progress is OK}:
+    - weight == 85.71

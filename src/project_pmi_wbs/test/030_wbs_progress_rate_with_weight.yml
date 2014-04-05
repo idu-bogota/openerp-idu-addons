@@ -1,0 +1,38 @@
+-
+  Verifica el calculo usando pesos
+-
+  !record {model: project_pmi.wbs_item, id: wbs_item_1_weight}:
+    name: '1. wbs item'
+    type: 'deliverable'
+-
+  !record {model: project_pmi.wbs_item, id: wbs_item_1_1_weight}:
+    name: '1.1 wbs item'
+    use_weight: True
+    weight: 20
+    type: 'work_package'
+    tracking_type: 'tasks'
+    parent_id: wbs_item_1_weight
+-
+  !record {model: project_pmi.wbs_item, id: wbs_item_1_2_weight}:
+    name: '1.2 wbs item'
+    type: 'work_package'
+    use_weight: True
+    weight: 80
+    tracking_type: 'units'
+    uom_id: product.product_uom_day
+    quantity: 10
+    parent_id: wbs_item_1_weight
+-
+  !record {model: project_pmi.wbs_work_record, id: wbs_item_1_2_work_weight}:
+    name: '1. wbs item'
+    wbs_item_id: wbs_item_1_2_weight
+    quantity: 3
+-
+  !assert {model: project_pmi.wbs_item, id: wbs_item_1_weight, string: Check WBS weight 1.0 progress is OK}:
+    - progress_rate == 24
+-
+  !assert {model: project_pmi.wbs_item, id: wbs_item_1_1_weight, string: Check WBS weight 1.1 progress is OK}:
+    - progress_rate == 0
+-
+  !assert {model: project_pmi.wbs_item, id: wbs_item_1_2_weight, string: Check WBS weight 1.2 progress is OK}:
+    - progress_rate == 30
