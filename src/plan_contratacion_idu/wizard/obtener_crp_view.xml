@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+    <record id="view_plan_contratacion_idu_wizard_crp_form" model="ir.ui.view">
+        <field name="name">CRP</field>
+        <field name="model">plan_contratacion_idu.wizard.crp</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Radicar CRP">
+                <field name="crps"/>
+                <separator colspan="4"/>
+                <group col="4" colspan="4">
+                    <label string="" colspan="2"/>
+                    <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                    <button name="radicar" string="Radicar" type="object" icon="gtk-ok"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="action_plan_contratacion_idu_wizard_crp" model="ir.actions.act_window">
+        <field name="name">Seleccionar CRP</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">plan_contratacion_idu.wizard.crp</field>
+        <field name="src_model">plan_contratacion_idu.wizard.crp</field>
+        <field name="view_id" ref="view_plan_contratacion_idu_wizard_crp_form"/>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</data>
+</openerp>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_plan_contratacion_idu_report_tree" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.report.pagos_programados.tree</field>
+            <field name="model">plan_contratacion_idu.report.pagos_programados</field>
+            <field name="arch" type="xml">
+                <tree string="Proyección Flujo Financiero" create="false">
+                    <field name="mes"/>
+                    <field name="valor" sum="Valor" options="{'currency_field': 'currency_id'}" />
+                    <field name="dependencia_id"/>
+                    <field name="plan_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_plan_contratacion_idu_report_graph" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.report.pagos_programados.graph</field>
+            <field name="model">plan_contratacion_idu.report.pagos_programados</field>
+            <field name="arch" type="xml">
+                <graph string="Proyección Flujo Financiero" type="bar">
+                     <field name="mes" />
+                     <field name="valor" operator="+"/>
+                     <field name="plan_id" group="True"/>
+                </graph>
+             </field>
+        </record>
+
+        <record id="view_plan_contratacion_idu_report_search" model="ir.ui.view">
+            <field name="name">plan_contratacion_idu.report.pagos_programados.search</field>
+            <field name="model">plan_contratacion_idu.report.pagos_programados</field>
+            <field name="arch" type="xml">
+                <search string="Proyección Flujo Financiero">
+                    <field name="dependencia_id" string="Dependencia"/>
+                    <field name="plan_id" string="Vigencia"/>
+                    <separator/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Vigencia" name="group_plan_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'plan_id'}"/>
+                        <filter string="Dependencia" name="group_dependencia_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'dependencia_id'}"/>
+                        <filter string="Mes" name="group_mes" icon="terp-folder-violet" domain="[]" context="{'group_by':'mes'}"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+
+       <record id="action_plan_contratacion_idu_report_tree" model="ir.actions.act_window">
+            <field name="name">Proyección Flujo Financiero</field>
+            <field name="res_model">plan_contratacion_idu.report.pagos_programados</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="search_view_id" ref="view_plan_contratacion_idu_report_search"/>
+            <field name="context">{'search_default_group_plan_id':1, 'search_default_group_dependencia_id':1, 'search_default_group_mes':1}</field>
+            <field name="help">Este reporte muestra la informacion del flujo financieron por mes</field>
+        </record>
+
+        <menuitem action="action_plan_contratacion_idu_report_tree" id="menu_plan_contratacion_idu_report_tree" parent="base.menu_plan_contratacion_idu_report"/>
+
+    </data>
+</openerp>
