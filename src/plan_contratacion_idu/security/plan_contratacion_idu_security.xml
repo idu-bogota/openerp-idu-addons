@@ -50,6 +50,14 @@
                 <field eval="[(3, ref('group_plan_contratacion_idu_user')),(4, ref('group_plan_contratacion_idu_manager')),(3, ref('group_plan_contratacion_idu_analyst'))]" name="groups_id"/>
         </record>
 
+        <record model="ir.ui.menu" id="menu_plan_contratacion_idu_report_presupuesto_tree">
+                <field eval="[(4, ref('group_plan_contratacion_idu_user')),(4, ref('group_plan_contratacion_idu_manager')),(4, ref('group_plan_contratacion_idu_analyst'))]" name="groups_id"/>
+        </record>
+
+        <record model="ir.ui.menu" id="menu_plan_contratacion_idu_report_tree">
+                <field eval="[(4, ref('group_plan_contratacion_idu_user')),(4, ref('group_plan_contratacion_idu_manager')),(4, ref('group_plan_contratacion_idu_analyst'))]" name="groups_id"/>
+        </record>
+
 <!-- =============================================================================
                                 Domain Constraints
 ;============================================================================= -->

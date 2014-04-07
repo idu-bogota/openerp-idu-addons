@@ -48,7 +48,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="search_view_id" ref="view_plan_contratacion_idu_report_presupuesto_search"/>
-            <field name="context">{'search_default_group_plan_id':1, 'search_default_group_dependencia_id':1}</field>
+            <field name="context">{'search_default_group_dependencia_id':1, 'search_default_group_plan_id':2}</field>
             <field name="help">Este reporte muestra la informacion del flujo financieron por mes</field>
         </record>
 

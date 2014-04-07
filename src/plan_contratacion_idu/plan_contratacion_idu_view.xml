@@ -169,6 +169,7 @@
                               attrs="{'invisible': ['|',('state','not in',['aprobado','radicado','suscrito']), ('is_plan_open','=',False)]}"
                            />
                            <button name="obtener_pagos_realizados" string="Obtener Giros" type="object" icon="gtk-yes" groups="base.group_erp_manager"/>
+                           <button name="obtener_datos_contrato" string="Obtener datos contrato" type="object" icon="gtk-yes" groups="base.group_erp_manager"/>
                         </header>
                     </group>
                     <sheet>

@@ -23,6 +23,7 @@ from suds.client import Client
 from stone_erp_idu import stone_client_ws
 from openerp import SUPERUSER_ID
 from contrato_idu import siac_ws
+from datetime import date
 
 wsdl_url_orfeo='http://gesdocpru/desarrollo/webServices/orfeoIduWebServices.php?wsdl'
 client = Client(wsdl_url_orfeo)
@@ -934,15 +935,24 @@ class plan_contratacion_idu_item(osv.osv):
         for record in self.browse(cr, uid, id_records, context):
             datos_contrato = siac_ws.obtener_datos_contrato(wsdl_url, record.numero_contrato)
             if (datos_contrato):
-                self.write(cr, uid, record.id, {"fecha_acta_inicio": datos_contrato['fecha_acta_inicio']})
-                self.write(cr, uid, record.id, {"state": "ejecucion"})
+                contrato_fecha_acta_inicio = datos_contrato['fecha_acta_inicio']
+                if isinstance(contrato_fecha_acta_inicio, date):
+                    self.write(cr, uid, record.id, {"fecha_acta_inicio": datos_contrato['fecha_acta_inicio']})
+                    self.write(cr, uid, record.id, {"state": "ejecucion"})
+                else:
+                    self.write(cr, uid, record.id, {"fecha_acta_inicio": datos_contrato['fecha_acta_inicio'][0]})
+                    self.write(cr, uid, record.id, {"state": "ejecucion"})
         id_records_ejecucion = self.search(cr, uid,[('state', '=', 'ejecucion')],context=context)
         for record in self.browse(cr, uid, id_records_ejecucion, context):
             datos_contrato = siac_ws.obtener_datos_contrato(wsdl_url, record.numero_contrato)
             if (datos_contrato):
                 if datos_contrato['fecha_acta_liquidacion']:
-                    self.write(cr, uid, record.id, {"fecha_acta_liquidacion": datos_contrato['fecha_acta_liquidacion']})
-                    self.write(cr, uid, record.id, {"state": "ejecutado"})
+                    if isinstance(datos_contrato['fecha_acta_liquidacion'], date):
+                        self.write(cr, uid, record.id, {"fecha_acta_liquidacion": datos_contrato['fecha_acta_liquidacion']})
+                        self.write(cr, uid, record.id, {"state": "ejecutado"})
+                    else:
+                        self.write(cr, uid, record.id, {"fecha_acta_liquidacion": datos_contrato['fecha_acta_liquidacion'][0]})
+                        self.write(cr, uid, record.id, {"state": "ejecutado"})
 
     def obtener_pagos_realizados(self, cr, uid, ids=None, context=None):
         dato_giros={}
@@ -959,6 +969,7 @@ class plan_contratacion_idu_item(osv.osv):
             numero = numero.split('-')
             dato_giros = stone_client_ws.obtener_giros(wsdl,numero[0],numero[1],numero[2],nit)
             for k in dato_giros:
+                if str(k['pre_crp_numero']) == record_plan_item.numero_crp:
                     vals = {
                         'plan_contratacion_item_id': record_plan_item.id,
                         'date': k['pre_op_fecha'],
@@ -966,6 +977,8 @@ class plan_contratacion_idu_item(osv.osv):
                         'currency_id': record_plan_item.id
                     }
                     pago_realizado_pool.create(cr, uid, vals, context=context)
+                else:
+                    print "no"
 
     def wkf_version_inicial(self, cr, uid, ids, plan_items, context=None):
         self.write(cr, uid, ids, {

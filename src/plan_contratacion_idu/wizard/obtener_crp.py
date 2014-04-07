@@ -28,11 +28,10 @@ class  plan_contratacion_idu_wizard_crp(osv.osv_memory):
 
     def _get_numero_crp(self, cr, uid, context=None):
         res = ()
-        if not context or not 'crp_list' in context:
+        if not context or not 'plan_item_id' in context:
             return res
-        return context['crp_list']
         wsdl_url = self.pool.get('ir.config_parameter').get_param(cr,uid,'siac_idu.webservice.wsdl',default=False,context=context)
-        record = self.pool.get('plan_contratacion_idu.item').browse(cr, uid, context['active_id'], context=context)
+        record = self.pool.get('plan_contratacion_idu.item').browse(cr, uid, context['plan_item_id'], context=context)
         if record.numero_contrato:
             datos_contrato = siac_ws.obtener_datos_contrato(wsdl_url, record.numero_contrato)
             if (datos_contrato):
@@ -47,31 +46,14 @@ class  plan_contratacion_idu_wizard_crp(osv.osv_memory):
         return res
 
     _columns = {
-        #'crps': fields.text('Número de CRP')
         'crps': fields.selection(_get_numero_crp, 'Número de CRP')
     }
 
-#    def default_get(self, cr, uid, fields, context=None):
-#        res = super(plan_contratacion_idu_wizard_crp, self).default_get(cr, uid, fields, context=context)
-#        res.update({'crps': self.pool.get('plan_contratacion_idu.wizard.crp').radicar(cr, uid, context['plan_item_id'])})
-#        return res
-
     def radicar(self, cr, uid, ids, context=None):
-        res = ()
-        wsdl_url = self.pool.get('ir.config_parameter').get_param(cr,uid,'siac_idu.webservice.wsdl',default=False,context=context)
-        record = self.pool.get('plan_contratacion_idu.item').browse(cr, uid, context['plan_item_id'], context=context)
-        if record.numero_contrato:
-            datos_contrato = siac_ws.obtener_datos_contrato(wsdl_url, "IDU-924-2013")
-            res = ()
-            if (datos_contrato):
-                crp_list = datos_contrato['numero_crp']
-                if isinstance(crp_list, int):
-                    res =((crp_list, crp_list))
-                else:
-                    for crp in crp_list:
-                        res = res + ((crp, crp),)
-        return res 
-        #self.write(cr, uid, ids, {"crps": res})
-        #return {'type': 'ir.actions.act_window_close'}
+        wizard_obj=self.browse(cr, uid, ids[0], context)
+        plan_contratacion_idu_item_obj = self.pool.get('plan_contratacion_idu.item')
+        plan_contratacion_idu_item_obj.write(cr, uid, context['plan_item_id'], {'numero_crp':wizard_obj.crps, 'state': 'suscrito' }, context)
+        return {'type': 'ir.actions.act_window_close'}
+
 
 plan_contratacion_idu_wizard_crp()
