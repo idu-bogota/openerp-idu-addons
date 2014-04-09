@@ -22,14 +22,14 @@
             <field name="model">stone_erp_idu.centro_costo</field>
             <field name="arch" type="xml">
                 <form string="Detalle del Centro de Costo">
-                        <field name="codigo"/>
-                        <field name="name"/>
-                        <field name="proyecto_idu_id"/>
-                        <field name="nombre_proyecto_idu"/>
-                        <field name="punto_inversion_id"/>
-                        <field name="nombre_punto_inversion"/>
-                        <field name="fase_intervencion_id"/>
-                        <field name="nombre_fase_intervencion"/>
+                    <field name="codigo"/>
+                    <field name="name"/>
+                    <field name="proyecto_idu_id"/>
+                    <field name="nombre_proyecto_idu"/>
+                    <field name="punto_inversion_id"/>
+                    <field name="nombre_punto_inversion"/>
+                    <field name="fase_intervencion_id"/>
+                    <field name="nombre_fase_intervencion"/>
                 </form>
             </field>
         </record>

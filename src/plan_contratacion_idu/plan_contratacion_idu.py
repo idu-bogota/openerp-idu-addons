@@ -972,13 +972,12 @@ class plan_contratacion_idu_item(osv.osv):
                 if str(k['pre_crp_numero']) == record_plan_item.numero_crp:
                     vals = {
                         'plan_contratacion_item_id': record_plan_item.id,
+                        'orden_pago': k['pre_op_numero'],
                         'date': k['pre_op_fecha'],
                         'valor': k['pre_crp_valor'],
                         'currency_id': record_plan_item.id
                     }
                     pago_realizado_pool.create(cr, uid, vals, context=context)
-                else:
-                    print "no"
 
     def wkf_version_inicial(self, cr, uid, ids, plan_items, context=None):
         self.write(cr, uid, ids, {
@@ -1034,7 +1033,7 @@ class plan_contratacion_idu_item(osv.osv):
     def wkf_ejecucion(self, cr, uid, ids, plan_items, context=None):
         self.write(cr, uid, ids, {
                                   "state": "ejecucion",
-                                  "fecha_acta_inicio": None
+                                  "fecha_acta_liquidacion": None
                     }
         )
 
@@ -1159,7 +1158,7 @@ class plan_contratacion_idu_plan_pagos_item(osv.osv):
         'mes': fields.selection([(1,'Enero'), (2,'Febrero'), (3,'Marzo'), (4,'Abril'),
             (5,'Mayo'), (6,'Junio'), (7,'Julio'), (8,'Agosto'), (9,'Septiembre'),
             (10,'Octubre'), (11,'Noviembre'), (12,'Diciembre')],'Mes', required=True),
-        'valor': fields.float('Valor', select=True, obj="res.currency"),
+        'valor': fields.float('Valor', select=True, obj="res.currency", digits_compute=dp.get_precision('Account')),
         'plan_contratacion_item_id': fields.many2one('plan_contratacion_idu.item','Item Plan de Contratacion',
             select=True,
             ondelete='cascade'),
@@ -1190,8 +1189,9 @@ plan_contratacion_idu_plan_pagos_item()
 class plan_contratacion_idu_plan_pagos_giro(osv.osv):
     _name = "plan_contratacion_idu.plan_pagos_giro"
     _columns = {
+        'orden_pago': fields.char('Orden de Pago'),
         'date':fields.datetime("Fecha"),
-        'valor':fields.integer("Valor"),
+        'valor':fields.integer("Valor", obj="res.currency", digits_compute=dp.get_precision('Account')),
         'plan_contratacion_item_id': fields.many2one('plan_contratacion_idu.item',
               'Item Plan de Contratacion',
               select=True,
