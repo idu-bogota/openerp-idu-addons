@@ -99,6 +99,50 @@ class stone_erp_idu_centro_costo(osv.osv):
         vals['fase_intervencion_id']=id_fase_interv
         return vals
 
+    def obtener_informacion_centro_costo(self,cr,uid,ids,context=None):
+        wsdl = self.pool.get('ir.config_parameter').get_param(cr,uid,'stone_idu.webservice.wsdl',default=False,context=context)
+        for record in self.browse(cr, uid, ids, context):
+            det_cc = stone_client_ws.completar_datos_centro_costo(wsdl, record['codigo'])
+            #Actualizar proyecto IDU Relacionado
+            proyecto_idu_obj = self.pool.get('stone_erp_idu.proyecto_idu')
+            ids_proy_idu = proyecto_idu_obj.search(cr,uid,[('codigo','=',det_cc['cod_proyecto_idu'])],context=context)
+            vals_proyecto_idu = {'codigo':det_cc['cod_proyecto_idu'],'name':det_cc['nombre_proyecto_idu']}
+            id_proy_idu = 0
+            if (ids_proy_idu.__len__()==0):
+                #insertar
+                id_proy_idu = proyecto_idu_obj.create(cr,uid,vals_proyecto_idu,context)
+            else:
+                #actualizar
+                id_proy_idu=ids_proy_idu[0]
+                proyecto_idu_obj.write(cr,uid,id_proy_idu,vals_proyecto_idu,context)
+                #Actualizar Punto de Inversion relacionado
+            punto_inversion_obj=self.pool.get('stone_erp_idu.punto_inversion')
+            ids_punto_inversion=punto_inversion_obj.search(cr,uid,[('codigo','=',det_cc['cod_punto_inversion'])],context=context) 
+            id_punto_inv = 0
+            vals_punto_inversion = {'codigo':det_cc['cod_punto_inversion'],'name':det_cc['nombre_punto_inversion']}
+            if (ids_punto_inversion.__len__()==0):
+                #insertar nuevo valor
+                id_punto_inv = punto_inversion_obj.create(cr,uid,vals_punto_inversion,context)
+            else :
+                #actualizar nuevo valor
+                id_punto_inv = ids_punto_inversion[0]
+                punto_inversion_obj.write(cr,uid,id_punto_inv,vals_punto_inversion,context)
+            fase_intervencion_obj=self.pool.get('stone_erp_idu.fase_intervencion')
+            ids_fase_intervencion = fase_intervencion_obj.search(cr,uid,[('codigo','=',det_cc['cod_fase_intervencion'])])
+            id_fase_interv = 0
+            vals_fase_interv = {'codigo':det_cc['cod_fase_intervencion'],'name':det_cc['nombre_fase_intervencion']}
+            if (ids_fase_intervencion.__len__()==0):
+                id_fase_interv=fase_intervencion_obj.create(cr,uid,vals_fase_interv,context)
+            else :
+                id_fase_interv=ids_fase_intervencion[0]
+                fase_intervencion_obj.write(cr,uid,id_fase_interv,vals_fase_interv,context)
+            vals = {
+                        'proyecto_idu_id': id_proy_idu,
+                        'punto_inversion_id': id_punto_inv,
+                        'fase_intervencion_id': id_fase_interv
+                    }
+            return self.write(cr, uid, ids, vals)
+
 stone_erp_idu_centro_costo()
 
 class stone_erp_idu_punto_inversion (osv.osv):
