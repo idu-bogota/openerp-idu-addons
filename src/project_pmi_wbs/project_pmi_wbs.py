@@ -326,6 +326,7 @@ class project_pmi_wbs_item(osv.osv):
         'use_weight': fields.boolean('Uses weight?',help='If active, weight is used to calculate progress rate'),
 #         'child_use_weight': fields.boolean('child_use_weight uses weight',store=False, help='If active, weight is used to calculate progress rate'),
         'children_use_weight': fields.function(_get_children_use_weight,type='boolean',store=False),
+        'wbs_dependence_ids' : fields.one2many('project_pmi.wbs_dependence', 'wbs_item_id', 'Dependence'),
     }
     _defaults = {
         'active': True,
@@ -613,6 +614,15 @@ class project_pmi_wbs_item(osv.osv):
         return self.write(cr, uid, item_ids, {'use_weight': False}, context)
 
 project_pmi_wbs_item()
+
+class project_pmi_wbs_dependence(osv.osv):
+    _name = "project_pmi.wbs_dependence"
+    _description = "Project dependence"
+    _columns = {
+        'type': fields.selection([('task', 'Task'),('wbs_item', 'Wbs item')],'Dependence of', required=True),
+        'wbs_item_id': fields.many2one('project_pmi.wbs_item', 'Wbs_Item', ondelete='cascade', required=False, select="1"),
+        'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=False, select="1"),
+    }
 
 class project_pmi_wbs_work_record(osv.osv):
     _name = "project_pmi.wbs_work_record"

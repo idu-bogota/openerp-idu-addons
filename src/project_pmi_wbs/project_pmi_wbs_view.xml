@@ -5,6 +5,35 @@
 
         <menuitem id="menu_project_wbs" name="WBS" parent="base.menu_main_pm" groups="project.group_project_manager,project.group_project_user"/>
 
+<!--==================================================================================== -->
+<!-- Form -->
+<record model="ir.ui.view" id="project_pmi_dependence_form">
+        <field name="name">project_pmi.wbs_dependence.form</field>
+        <field name="model">project_pmi.wbs_dependence</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Wbs Dependence">
+                <group colspan="1" col="6">
+                    <field name="type" />
+                    <field name="task_id" attrs="{'invisible': [('type','!=','task')],'required':[('type','=','task')]}"/>
+                    <field name="wbs_item_id" attrs="{'invisible': [('type','!=','wbs_item')],'required':[('type','=','wbs_item')]}"/>
+                </group>
+            </form>
+        </field>
+</record>
+<!-- Tree -->
+<record model="ir.ui.view" id="project_pmi_dependence_tree">
+        <field name="name">project_pmi.wbs_dependence.tree</field>
+        <field name="model">project_pmi.wbs_dependence</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Wbs Dependence">
+                <field name="type" />
+            </tree>
+        </field>
+</record>
+
+<!-- ====================================================================================== -->
         <!-- WBS Views -->
         <record id="project_pmi_deliverable_search" model="ir.ui.view">
             <field name="name">project_pmi.wbs_item.search</field>
@@ -113,6 +142,7 @@
                             <field name="weight" attrs="{'invisible': [('use_weight','=',False)]}"/>
                             <field name="progress_rate" widget="progressbar"/>
                             <field name="parent_id" />
+                            <field name="wbs_dependence_ids" />
                         </group>
                         <group name="work_package_gantt" string="Dates">
                             <group>
