@@ -26,7 +26,7 @@ class  plan_contratacion_idu_wizard_crp(osv.osv_memory):
     _name = 'plan_contratacion_idu.wizard.crp'
     _description = 'lista CRP relacionados al numero de contrato del item'
 
-    def _get_numero_crp(self, cr, uid, context=None):
+    def _get_crp(self, cr, uid, context=None):
         res = ()
         if not context or not 'plan_item_id' in context:
             return res
@@ -46,7 +46,7 @@ class  plan_contratacion_idu_wizard_crp(osv.osv_memory):
         return res
 
     _columns = {
-        'crps': fields.selection(_get_numero_crp, 'Número de CRP')
+        'crps': fields.selection(_get_crp, 'CRPs según número de contrato')
     }
 
     def radicar(self, cr, uid, ids, context=None):

@@ -51,5 +51,6 @@
             id="menu_stone_erp_idu_centro_costo_list"
             parent="menu_stone_erp_idu"
             sequence="0"/>
+
     </data>
 </openerp>

@@ -722,5 +722,6 @@
         />
         <menuitem id="base.menu_plan_contratacion_idu_report" name="Plan contratacion"
             parent="base.menu_reporting" sequence="25"/>
+
     </data>
 </openerp>

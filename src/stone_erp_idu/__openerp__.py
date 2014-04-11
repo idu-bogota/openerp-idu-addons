@@ -38,6 +38,7 @@
     'update_xml': ['security/stone_idu_security.xml',
                    'security/ir.model.access.csv',
                    'stone_erp_idu_view.xml',
+                   'wizard/obtener_centro_costo_view.xml'
                ],
     'installable': True,
     'auto_install': False,

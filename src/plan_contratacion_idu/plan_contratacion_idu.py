@@ -578,7 +578,7 @@ class plan_contratacion_idu_item(osv.osv):
              required=False,
              states={'version_inicial':[('required',True)]},
              track_visibility='onchange'),
-        'tipo_proceso_seleccion_id': fields.many2one('plan_contratacion_idu.plan_tipo_proceso_seleccion','Tipo Proceso de Selección',
+        'tipo_proceso_seleccion_id': fields.many2one('plan_contratacion_idu.plan_tipo_proceso_seleccion','Modalidad de Selección',
              select=True,
              ondelete='cascade',
              readonly=False,
@@ -874,10 +874,10 @@ class plan_contratacion_idu_item(osv.osv):
             if isinstance(crp_list, int):
                 lista_crp = [(crp_list, crp_list)]
                 self.write(cr, uid, ids, {
-                  "state": 'suscrito',
-                  'numero_crp':  datos_contrato['numero_crp'],
-                  "numero_contrato": datos_contrato['codigo_contrato'],
-                  "nit_beneficiario": datos_contrato['nit_contratista']
+                  'state': 'suscrito',
+                  'numero_crp': datos_contrato['numero_crp'],
+                  'numero_contrato': datos_contrato['codigo_contrato'],
+                  'nit_beneficiario': datos_contrato['nit_contratista']
                 })
                 res = {
                    'value': {

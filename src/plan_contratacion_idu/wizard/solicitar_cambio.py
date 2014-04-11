@@ -92,6 +92,7 @@ class plan_contratacion_idu_wizard_solicitar_cambio(osv.osv_memory):
                 'solicitud_cambio_ids': None,
                 'cambios_propuestos_ids':None,
                 'item_a_cambiar':None,
+                'plan_pagos_giro_ids': None,
             }, context=context)
         elif form.tipo == 'adicionar':
             vals['item_nuevo_id'] = plan_item_pool.create(cr, uid, {'plan_id':form.plan_id.id, 'state': 'version_inicial', 'is_editable':'True'}, context=context)
