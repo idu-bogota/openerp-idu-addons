@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+<menuitem name="Cartografia Social" id="ocs_mapidu_main"/>
+<menuitem name="Reporte Ciudadano" id="ocs_mapidu_reporte_ciudadano" parent="ocs_mapidu_main"/>
+<menuitem name="Ciudadanos" id="ocs_mapidu_res_partner" parent="ocs_mapidu_reporte_ciudadano"
+sequence="1" action="action_ocs_mapidu_res_partner"/>
+
+<!-- ============================================================
+        Ciudadanos
+============================================================-->
+
+<record model="ir.ui.view" id="view_ocs_mapidu_res_partner_form">
+    <field name="name">ocs_mapidu.res_partner.form</field>
+    <field name="model">res.parner</field>
+    <field name="type">form</field>    
+    <field name="arch" type="xml">
+        <tree string="Ciudadanos">
+            <field name="nombres"/>
+            <field name="apellidos"/>
+            <field name="tipo_documento"/>
+            <field name="documento"/>
+            <field name="email"/>
+            <field name="telefono_fijo"/>
+            <field name="celular"/>
+            <field name="direccion"/>
+    	</tree>
+    </field>
+</record>
+
+
+<record model="ir.ui.view" id="view_ocs_mapidu_res_partner_tree">
+    <field name="name">ocs_mapidu.res_partner.tree</field>
+    <field name="model">res.parner</field>
+    <field name="type">tree</field>    
+    <field name="arch" type="xml">
+    	<tree string="Ciudadanos">
+    		<field name="nombre_completo"/>
+    		<field name="tipo_documento"/>
+    		<field name="documento"/>
+    	</tree>        
+    </field>
+</record>
+
+<record model="ir.actions.act_window" id="action_ocs_mapidu_res_partner">
+    <field name="name">Ciudadanos</field>
+    <field name="res_model">res.partner</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>    
+    <field name="context">{'form_view_ref':'ocs_mapidu.view_ocs_mapidu_res_partner_form','tree_view_ref':'ocs_mapidu.view_ocs_mapidu_res_partner_tree'}</field>
+</record>
+
+<!-- ==========================================================================
+                                    Problemas Sociales
+=============================================================================== -->
+
+<!-- Geoengine View -->
+<record  model="ir.ui.view" id="ir_ui_view_ocs_mapidu_problema_social_OSM" >
+            <field name="name">ocs_mapidu.problema_social.geo_view</field>
+            <field name="arch"><![CDATA[
+                <form >
+                    <field name="tipo_problema"/>
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">ocs_mapidu.problema_social</field>
+</record>
+
+<!-- Geoengine Base Raster -->
+<record model="geoengine.raster.layer" id="geoengine_raster_layer_ocs_mapidu_problema_social">
+            <field name="raster_type">osm</field>
+            <field name="name">Problemas Sociales  OSM</field>
+            <field name="view_id" ref="ir_ui_view_ocs_mapidu_problema_social_OSM"/>
+            <field eval="0" name="overlay"/>
+</record>
+
+<!-- Geoengine Vector Layer -->
+
+<record  model="geoengine.vector.layer" id="geoengine_vector_layer_ocs_mapidu_problema_social_plain">
+            <field name="geo_field_id" ref="ocs_mapidu.field_ocs_mapidu_problema_social_shape"/>
+            <field name="name">Problemas Sociales</field>
+            <field name="view_id" ref="ir_ui_view_ocs_mapidu_problema_social_OSM"/>
+            <field name="geo_repr">basic</field>
+            <field name="attribute_field_id" ref="ocs_mapidu.field_ocs_mapidu_problema_social_tipo_problema"/>
+            <field name="begin_color">#FF680A</field>
+</record>
+
+<!-- Form View -->
+
+<record model="ir.ui.view" id="view_ocs_mapidu_problema_social_form">
+    <field name="name">ocs_mapidu.problema_social.form</field>
+    <field name="model">ocs_mapidu.problema_social</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+        <form string="Ciudadanos">
+            <field name="ciudadano_id"/>
+            <field name="tipo_problema"/>
+            <field name="tipo_problema_movilidad"/>
+            <group colspan="4" col="4">
+            <notebook>
+            <page string="Descripcion">
+                <group colspan="4" col="2">
+                    <field name="descripcion"/>
+                    <field name="shape" widget="geo_edit_map"/>
+                </group>
+            </page>
+            <page string="imagen">
+                <group colspan="4" col="2">
+                    <field name="imagen" widget='image' img_width="840" img_height="600" width="840" height="600" nolabel="1"/>
+                </group>
+            </page>
+            </notebook>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record model="ir.ui.view" id="view_ocs_mapidu_problema_social_tree">
+    <field name="name">ocs_mapidu.problema_social.tree</field>
+    <field name="model">ocs_mapidu.problema_social</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+        <tree string="Ciudadanos">
+            <field name="ciudadano_id"/>
+            <field name="tipo_problema"/>
+            <field name="tipo_problema_movilidad"/>
+        </tree>
+    </field>
+</record>
+
+<record model="ir.actions.act_window" id="action_ocs_mapidu_problema_social">
+    <field name="name">Percepcion Ciudadana</field>
+    <field name="res_model">ocs_mapidu.problema_social</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+</record>
+<menuitem name="Percepcion Ciudadana" id="ocs_mapidu_problema_social" parent="ocs_mapidu_reporte_ciudadano"
+sequence="1" action="action_ocs_mapidu_problema_social"/>
+
+
+
+
+
+</data>
+</openerp>
