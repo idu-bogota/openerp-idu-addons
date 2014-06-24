@@ -99,6 +99,7 @@ class res_partner(osv.osv):
         ('unique_cc_document_number','unique(tipo_documento,documento)','Este documento ya se encuentra registrado'),
         ('unique_cc_email','unique(email)','El email ya se encuentra registrado'),
     ]
+res_partner()
 
 class ocs_mapidu_problema_social(geo_model.GeoModel):
     _name="ocs_mapidu.problema_social"
@@ -124,6 +125,7 @@ class ocs_mapidu_problema_social(geo_model.GeoModel):
         'descripcion':fields.text('Descripción',required=True),
         'shape':fields.geo_point('Ubicacion',readonly=False),
     }
+ocs_mapidu_problema_social()
 
 
 class ocs_mapidu_reunion(geo_model.GeoModel):
@@ -156,6 +158,7 @@ class ocs_mapidu_reunion(geo_model.GeoModel):
         'localidad':fields.function(_get_district,string='Districts',method=True,type="char"),
         'shape':fields.geo_point('Lugar'),
     }
+ocs_mapidu_reunion()
     
 
 class ocs_mapidu_proyecto(osv.osv):
@@ -166,17 +169,36 @@ class ocs_mapidu_proyecto(osv.osv):
         'codigo':fields.integer('Codigo de proyecto'),
         'descripcion':fields.text('Descripcion')
     }
+ocs_mapidu_proyecto()
 
 class ocs_mapidu_tramo(geo_model.GeoModel):
     _name="ocs_mapidu.tramo"
     _columns={
+        'proyecto_id':fields.many2one('ocs_mapidu.proyecto','Proyecto'),
         'nombre':fields.char('Nombre',size=256),
         'descripcion':fields.text('Descripcion'),
         'shape':fields.geo_polygon('Shape'),
     }
+ocs_mapidu_tramo()
+    
 class ocs_mapidu_reporte_social(osv.osv):
-    _name="ocs_mapidu"
+    _name="ocs_mapidu.reporte_social"
     _columns={
         'district_id':fields.many2one('base_map.district','Localidad'),
         'proyecto_id':fields.many2one('ocs_mapidu.proyecto','Proyecto'),
+        'tramo_id':fields.many2one('ocs_mapidu.tramo','Tramo'),
+        'descripcion':fields.char('Descripcion',size=256),
+        'reporte_adjunto':fields.binary('Reporte Social Adjunto'),
+        'cartografia':fields.binary('Reporte Cartografia Social'),
+    }
+ocs_mapidu_reporte_social()
+
+class ocs_mapidu_matriz_multicriterio(osv.osv):
+    _name="ocs_mapidu.matriz_multicriterio"
+    _columns = {
+        'district_id':fields.many2one('base_map.district','Localidad'),
+        'proyecto_id':fields.many2one('ocs_mapidu.proyecto','Proyecto'),
+        'tramo_id':fields.many2one('ocs_mapidu.tramo','Tramo'),
+        'descripcion':fields.char('Descripcion',size=256),
+        'adjunto':fields.binary('Adjunto'),
     }

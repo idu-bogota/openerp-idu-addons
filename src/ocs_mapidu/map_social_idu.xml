@@ -3,8 +3,9 @@
 <data>
 <menuitem name="Cartografia Social" id="ocs_mapidu_main"/>
 <menuitem name="Reporte Ciudadano" id="ocs_mapidu_reporte_ciudadano" parent="ocs_mapidu_main"/>
-<menuitem name="Ciudadanos" id="ocs_mapidu_res_partner" parent="ocs_mapidu_reporte_ciudadano"
-sequence="1" action="action_ocs_mapidu_res_partner"/>
+<menuitem name="Gestion de Documentos" id="ocs_mapidu_gestion_documental" parent="ocs_mapidu_main"/>
+<menuitem name="Administracion" id="ocs_mapidu_administracion" parent="ocs_mapidu_main"/>
+
 
 <!-- ============================================================
         Ciudadanos
@@ -49,6 +50,9 @@ sequence="1" action="action_ocs_mapidu_res_partner"/>
     <field name="view_mode">tree,form</field>    
     <field name="context">{'form_view_ref':'ocs_mapidu.view_ocs_mapidu_res_partner_form','tree_view_ref':'ocs_mapidu.view_ocs_mapidu_res_partner_tree'}</field>
 </record>
+
+<menuitem name="Ciudadanos" id="ocs_mapidu_res_partner" parent="ocs_mapidu_reporte_ciudadano"
+sequence="1" action="action_ocs_mapidu_res_partner"/>
 
 <!-- ==========================================================================
                                     Problemas Sociales
@@ -137,8 +141,185 @@ sequence="1" action="action_ocs_mapidu_res_partner"/>
 <menuitem name="Percepcion Ciudadana" id="ocs_mapidu_problema_social" parent="ocs_mapidu_reporte_ciudadano"
 sequence="1" action="action_ocs_mapidu_problema_social"/>
 
+<!-- ================================================================================================ 
+                Matriz Multicriterio
+ ================================================================================================ -->
+
+<record model="ir.ui.view" id="view_ocs_mapidu_matriz_multicriterio_form">
+    <field name="name">ocs_mapidu.matriz_multicriterio.form</field>
+    <field name="model">ocs_mapidu.matriz_multicriterio</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+        <form string="Matriz Multicriterio">
+            <field name="district_id"/>
+            <field name="proyecto_id"/>
+            <field name="tramo_id"/>
+            <field name="adjunto"/>
+        </form>
+    </field>
+</record>
 
 
+
+<record model="ir.ui.view" id="view_ocs_mapidu_matriz_multicriterio_tree">
+    <field name="name">ocs_mapidu.matriz_multicriterio.tree</field>
+    <field name="model">ocs_mapidu.matriz_multicriterio</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+        <tree string="Matriz Multicriterio">
+            <field name="district_id"/>
+            <field name="proyecto_id"/>
+            <field name="tramo_id"/>
+            <field name="descripcion"/>
+        </tree>
+    </field>
+</record>
+
+<record model="ir.actions.act_window" id="action_ocs_mapidu_matriz_multicriterio">
+    <field name="name">Matriz Multicriterio</field>
+    <field name="res_model">ocs_mapidu.matriz_multicriterio</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem name="Matriz Multicriterio" id="ocs_mapidu_matriz_multicriterio" parent="ocs_mapidu_gestion_documental"
+sequence="1" action="action_ocs_mapidu_matriz_multicriterio"/>
+
+<!-- ============================================================================================= 
+                   Tramo
+ ================================================================================================= -->
+
+<!-- Geoengine View -->
+<record  model="ir.ui.view" id="ir_ui_view_ocs_mapidu_tramo_OSM" >
+            <field name="name">ocs_mapidu.tramo.geo_view</field>
+            <field name="arch"><![CDATA[
+                <form >
+                    <field name="proyecto_id"/>
+                </form>]]></field>
+            <field eval="16" name="priority"/>
+            <field name="type">geoengine</field>
+            <field name="model">ocs_mapidu.tramo</field>
+</record>
+
+<!-- Geoengine Base Raster -->
+<record model="geoengine.raster.layer" id="geoengine_raster_layer_ocs_mapidu_tramo">
+            <field name="raster_type">osm</field>
+            <field name="name">Tramo de Proyectos  OSM</field>
+            <field name="view_id" ref="ir_ui_view_ocs_mapidu_tramo_OSM"/>
+            <field eval="0" name="overlay"/>
+</record>
+
+<!-- Geoengine Vector Layer -->
+
+<record  model="geoengine.vector.layer" id="geoengine_vector_layer_ocs_mapidu_tramo_plain">
+            <field name="geo_field_id" ref="ocs_mapidu.field_ocs_mapidu_tramo_shape"/>
+            <field name="name">Tramo</field>
+            <field name="view_id" ref="ir_ui_view_ocs_mapidu_tramo_OSM"/>
+            <field name="geo_repr">basic</field>
+            <field name="attribute_field_id" ref="ocs_mapidu.field_ocs_mapidu_tramo_proyecto_id"/>
+            <field name="begin_color">#FF680A</field>
+</record>
+
+<!-- Form View -->
+
+
+<record model="ir.ui.view" id="view_ocs_mapidu_tramo_form">
+    <field name="name">ocs_mapidu.tramo.form</field>
+    <field name="model">ocs_mapidu.tramo</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+        <form string="Tramo">
+            <field name="proyecto_id"/>
+            <field name="nombre"/>
+            <group colspan="4" col="2">
+                <field name="descripcion"/>
+                <field name="shape" widget="geo_edit_map"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record model="ir.ui.view" id="view_ocs_mapidu_tramo_tree">
+    <field name="name">ocs_mapidu.tramo.tree</field>
+    <field name="model">ocs_mapidu.tramo</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+        <tree string="Tramo">
+            <field name="proyecto_id"/>
+            <field name="nombre"/>
+        </tree>
+    </field>
+</record>
+
+
+<record model="ir.actions.act_window" id="action_ocs_mapidu_tramo">
+    <field name="name">Tramo</field>
+    <field name="res_model">ocs_mapidu.tramo</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+
+<menuitem name="Tramo" id="menu_ocs_mapidu_tramo" parent="ocs_mapidu_administracion"
+sequence="1" action="action_ocs_mapidu_tramo"/>
+
+
+
+
+
+<!-- ================================================================================================ 
+                    Reporte Social
+ ================================================================================================ -->
+
+
+
+<record model="ir.ui.view" id="view_ocs_mapidu_reporte_social_form">
+    <field name="name">ocs_mapidu.reporte_social.form</field>
+    <field name="model">ocs_mapidu.reporte_social</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+        <form string="Reporte Social">
+            <field name="district_id"/>
+            <field name="proyecto_id"/>
+            <field name="tramo_id"/>
+            <field name="descripcion"/>
+            <newline />
+            <group colspan="4" col="2">
+                <field name="reporte_adjunto"/>
+                <field name="cartografia"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+
+
+<record model="ir.ui.view" id="view_ocs_mapidu_reporte_social_tree">
+    <field name="name">ocs_mapidu.reporte_social.tree</field>
+    <field name="model">ocs_mapidu.reporte_social</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+        <tree string="Reporte Social">
+            <field name="district_id"/>
+            <field name="proyecto_id"/>
+            <field name="tramo_id"/>
+            <field name="descripcion"/>
+        </tree>
+    </field>
+</record>
+
+
+
+
+<record model="ir.actions.act_window" id="action_ocs_mapidu_reporte_social">
+    <field name="name">Reporte Social</field>
+    <field name="res_model">ocs_mapidu.reporte_social</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem name="Reporte Social" id="ocs_mapidu_reporte_social" parent="ocs_mapidu_gestion_documental"
+sequence="1" action="action_ocs_mapidu_reporte_social"/>
 
 
 </data>
