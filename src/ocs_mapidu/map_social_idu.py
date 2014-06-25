@@ -165,9 +165,10 @@ class ocs_mapidu_proyecto(osv.osv):
     _name="ocs_mapidu.proyecto"
     _rec_name="nombre"
     _columns={
-        'nombre':fields.char('Nombre del Proyecto',size=256),
-        'codigo':fields.integer('Codigo de proyecto'),
-        'descripcion':fields.text('Descripcion')
+        'nombre':fields.char('Nombre del Proyecto',size=256, required = True),
+        'codigo':fields.integer('Codigo de proyecto', required = True),
+        'descripcion':fields.text('Descripcion', required =True),
+        'tramos':fields.one2many('ocs_mapidu.tramo','proyecto_id','Tramos'),
     }
 ocs_mapidu_proyecto()
 

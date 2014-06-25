@@ -5,6 +5,7 @@
 <menuitem name="Reporte Ciudadano" id="ocs_mapidu_reporte_ciudadano" parent="ocs_mapidu_main"/>
 <menuitem name="Gestion de Documentos" id="ocs_mapidu_gestion_documental" parent="ocs_mapidu_main"/>
 <menuitem name="Administracion" id="ocs_mapidu_administracion" parent="ocs_mapidu_main"/>
+<menuitem name="Ajendamiento JAL" id="ocs_mapidu_agendamientojal" parent="ocs_mapidu_main"/>
 
 
 <!-- ============================================================
@@ -263,9 +264,49 @@ sequence="1" action="action_ocs_mapidu_matriz_multicriterio"/>
 <menuitem name="Tramo" id="menu_ocs_mapidu_tramo" parent="ocs_mapidu_administracion"
 sequence="1" action="action_ocs_mapidu_tramo"/>
 
+<!-- ================================================================================= 
+                    Proyecto
+================================================================================= -->
 
 
+<record model="ir.ui.view" id="view_ocs_mapidu_proyecto_form">
+    <field name="name">ocs_mapidu.proyecto.form</field>
+    <field name="model">ocs_mapidu.proyecto</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+        <form string="Proyecto">
+            <field name="nombre"/>
+            <field name="codigo"/>
+            <group colspan="4" col="2">
+                <field name="descripcion"/>
+                <field name="tramos"/>
+            </group>
+        </form>
+    </field>
+</record>
 
+
+<record model="ir.ui.view" id="view_ocs_mapidu_proyecto_tree">
+    <field name="name">ocs_mapidu.proyecto.tree</field>
+    <field name="model">ocs_mapidu.proyecto</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+        <tree string="Proyecto">
+            <field name="nombre"/>
+            <field name="codigo"/>
+        </tree>
+    </field>
+</record>
+
+<record model="ir.actions.act_window" id="action_ocs_mapidu_proyecto">
+    <field name="name">Tramo</field>
+    <field name="res_model">ocs_mapidu.proyecto</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem name="Proyectos" id="ocs_mapidu_proyecto" parent="ocs_mapidu_administracion"
+sequence="1" action="action_ocs_mapidu_proyecto"/>
 
 <!-- ================================================================================================ 
                     Reporte Social
