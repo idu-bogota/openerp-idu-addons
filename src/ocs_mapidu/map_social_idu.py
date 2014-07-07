@@ -91,7 +91,7 @@ class res_partner(osv.osv):
         'email':fields.char('E-mail',size=256,),
         'telefono_fijo':fields.integer('Telefono fijo'),
         'celular':fields.integer('Celular'),
-        'direccion':fields.char('Dirección',size=512,),
+        'direccion':fields.char('Dirección',size=512,),  
         'nombre_completo':fields.function(_get_full_name,type='char',string='Nombre Completo',method=True),
     }
     
@@ -100,6 +100,25 @@ class res_partner(osv.osv):
         ('unique_cc_email','unique(email)','El email ya se encuentra registrado'),
     ]
 res_partner()
+
+
+
+
+
+
+
+
+
+
+
+class ocs_mapidu_lideres_sociales(osv.osv):
+    _name="ocs_mapidu.lideres_sociales"
+    _inherit="res.partner"
+    _columns = {
+        'district_id':fields.many2one('base_map.district','Localidad'),
+        'sector':fields.char('Sector al que representa',size=256),
+        'photo':fields.binary('Foto'),
+    }
 
 class ocs_mapidu_problema_social(geo_model.GeoModel):
     _name="ocs_mapidu.problema_social"

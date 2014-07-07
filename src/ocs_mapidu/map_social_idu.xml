@@ -56,7 +56,7 @@
 sequence="1" action="action_ocs_mapidu_res_partner"/>
 
 <!-- ==========================================================================
-                                    Problemas Sociales
+           Problemas Sociales
 =============================================================================== -->
 
 <!-- Geoengine View -->
@@ -361,6 +361,61 @@ sequence="1" action="action_ocs_mapidu_proyecto"/>
 
 <menuitem name="Reporte Social" id="ocs_mapidu_reporte_social" parent="ocs_mapidu_gestion_documental"
 sequence="1" action="action_ocs_mapidu_reporte_social"/>
+
+<!-- ==========================================================================
+                        Lideres Sociales
+=============================================================================== -->
+
+
+
+<record model="ir.ui.view" id="view_ocs_mapidu_lideres_sociales_form">
+    <field name="name">ocs_mapidu.lideres_sociales.form</field>
+    <field name="model">ocs_mapidu.lideres_sociales</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+        <form string="Lideres Sociales">
+           <group colspan="4" col="4">
+                <group colspan="2" col="2">
+                    <field name="photo" img_width="120" img_height="200" width="120" height="200" widget="image"/>
+                </group>
+                <group colspan="2" col="2">
+                    <field name="district_id"/>
+                    <field name="nombres"/>
+                    <field name="apellidos"/>
+                    <field name="sector"/>
+                    <field name="email"/>
+                </group>
+           </group>
+        </form>
+    </field>
+</record>
+
+
+<record model="ir.ui.view" id="view_ocs_mapidu_lideres_sociales_tree">
+    <field name="name">ocs_mapidu.lideres_sociales.tree</field>
+    <field name="model">ocs_mapidu.lideres_sociales</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+        <tree string="Lideres Sociales">
+            <field name="nombres"/>
+            <field name="apellidos"/>
+            <field name="district_id"/>
+            <field name="sector"/>
+        </tree>
+    </field>
+</record>
+
+<record model="ir.actions.act_window" id="action_ocs_mapidu_lideres_sociales">
+    <field name="name">Ciudadanos</field>
+    <field name="res_model">ocs_mapidu.lideres_sociales</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+    
+</record>
+
+<menuitem name="Lideres Sociales" id="ocs_mapidu_menu_lideres_sociales" parent="ocs_mapidu_agendamientojal"
+sequence="1" action="action_ocs_mapidu_lideres_sociales"/>
+
 
 
 </data>
