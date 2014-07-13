@@ -94,22 +94,28 @@ class res_partner(osv.osv):
         'direccion':fields.char('Dirección',size=512,),  
         'nombre_completo':fields.function(_get_full_name,type='char',string='Nombre Completo',method=True),
     }
-    
+
     _sql_constraints = [
         ('unique_cc_document_number','unique(tipo_documento,documento)','Este documento ya se encuentra registrado'),
         ('unique_cc_email','unique(email)','El email ya se encuentra registrado'),
     ]
 res_partner()
 
-
-
-
-
-
-
-
-
-
+class ocs_mapidu_reuniones(osv.osv):
+    """
+    Reunione sociales
+    """
+    _name="ocs_mapidu.reuniones"
+    _columns={
+        'proyecto_id':fields.many2one('ocs_mapidu.proyecto','Proyecto'),
+        'tramo_id':fields.many2one('ocs_mapidu.tramo','Tramo'),
+        'localidad_id':fields.many2one('base_map.district','Localidad'),
+        'lugar':fields.char('Lugar',size=50),
+        'fecha':fields.datetime('Fecha'),
+        'descripcion':fields.text('Descripcion'),
+        'asistentes_id':fields.many2many('ocs_mapidu.lideres_sociales','ocs_mapidu_reuniones_lideres_rel','reunion_id','lider_id','Asistentes'),
+    }
+ocs_mapidu_reuniones()
 
 class ocs_mapidu_lideres_sociales(osv.osv):
     _name="ocs_mapidu.lideres_sociales"
@@ -119,6 +125,7 @@ class ocs_mapidu_lideres_sociales(osv.osv):
         'sector':fields.char('Sector al que representa',size=256),
         'photo':fields.binary('Foto'),
     }
+ocs_mapidu_lideres_sociales()
 
 class ocs_mapidu_problema_social(geo_model.GeoModel):
     _name="ocs_mapidu.problema_social"
@@ -146,40 +153,6 @@ class ocs_mapidu_problema_social(geo_model.GeoModel):
     }
 ocs_mapidu_problema_social()
 
-
-class ocs_mapidu_reunion(geo_model.GeoModel):
-    _name="ocs_mapidu.reunion"
-    
-    def _get_district(self,cr,uid,ids,fieldname,arg,context=None):
-        res = {}
-        #Este bloque try es porque a veces los datos vienen con inconsistencia topológica y se pretende evitar que deje de funcionar
-        #la página cuando se manda el query, en ves de eso mejor que siga funcionando y deje un log de eventos        
-        for reunion in self.browse(cr, uid, ids, context = context):
-            try:
-                geom = reunion.shape.wkt
-                districts=""
-                if geom != False:
-                    if reunion.shape.is_valid:
-                        query = "SELECT name FROM base_map_district WHERE st_intersects(shape,st_geomfromtext('{0}',900913)) = true".format(geom)
-                        cr.execute(query)
-                        for row in cr.fetchall():
-                            districts = row[0]+","+districts
-                res[reunion.id] = districts
-            except Exception as e:
-                _logger.debug("Geoprocessing error: {0}".format(e))
-                res[reunion.id] = ""
-        return res
-    
-    _columns={
-        'fecha':fields.datetime('Fecha y Hora de Reunion'),  
-        'descriptcion':fields.text('Descripcion'),
-        'asistentes':fields.many2many('res.partner.address','ocs_mapidu_reunion_partner_rel','reunion_id','asistente_id','Asistentes'),
-        'localidad':fields.function(_get_district,string='Districts',method=True,type="char"),
-        'shape':fields.geo_point('Lugar'),
-    }
-ocs_mapidu_reunion()
-    
-
 class ocs_mapidu_proyecto(osv.osv):
     _name="ocs_mapidu.proyecto"
     _rec_name="nombre"
@@ -193,6 +166,7 @@ ocs_mapidu_proyecto()
 
 class ocs_mapidu_tramo(geo_model.GeoModel):
     _name="ocs_mapidu.tramo"
+    _rec_name="nombre"
     _columns={
         'proyecto_id':fields.many2one('ocs_mapidu.proyecto','Proyecto'),
         'nombre':fields.char('Nombre',size=256),
@@ -222,3 +196,4 @@ class ocs_mapidu_matriz_multicriterio(osv.osv):
         'descripcion':fields.char('Descripcion',size=256),
         'adjunto':fields.binary('Adjunto'),
     }
+ocs_mapidu_matriz_multicriterio()
