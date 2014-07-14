@@ -429,7 +429,9 @@ sequence="1" action="action_ocs_mapidu_lideres_sociales"/>
             <field name="proyecto_id"/>
             <field name="tramo_id"/>
             <field name="localidad_id"/>
+            <field name="descripcion_corta"/>
             <field name="fecha"/>
+            <field name="duracion"/>
             <field name="lugar"/>
             </group>
             <group colspan="4" col="2">
@@ -448,15 +450,29 @@ sequence="1" action="action_ocs_mapidu_lideres_sociales"/>
 
 
 
+
+<record model="ir.ui.view" id="view_ocs_mapidu_reuniones_calendar">
+    <field name="name">ocs_mapidu.reuniones.calendar</field>
+    <field name="model">ocs_mapidu.reuniones</field>
+    <field name="type">calendar</field>
+    <field name="arch" type="xml">
+        <calendar date_delay="duracion" date_start="fecha" string="Reuniones" mode="week">
+            <field name="proyecto_id"/>
+            <field name="descripcion_corta"/>
+        </calendar>
+    </field>
+</record>
+
 <record model="ir.ui.view" id="view_ocs_mapidu_reuniones_tree">
     <field name="name">ocs_mapidu.reuniones.tree</field>
     <field name="model">ocs_mapidu.reuniones</field>
     <field name="type">tree</field>
     <field name="arch" type="xml">
-        <tree string="Lideres Sociales">
+        <tree string="Reuniones Sociales">
             <field name="proyecto_id"/>
             <field name="tramo_id"/>
             <field name="localidad_id"/>
+            <field name="descripcion_corta"/>
             <field name="fecha"/>
         </tree>
     </field>
@@ -467,7 +483,7 @@ sequence="1" action="action_ocs_mapidu_lideres_sociales"/>
     <field name="name">Reuniones</field>
     <field name="res_model">ocs_mapidu.reuniones</field>
     <field name="view_type">form</field>
-    <field name="view_mode">tree,form</field>
+    <field name="view_mode">tree,form,calendar</field>
 </record>
 
 <menuitem name="Reuniones" id="ocs_mapidu_menu_reuniones" parent="ocs_mapidu_agendamientojal"

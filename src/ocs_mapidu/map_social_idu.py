@@ -112,6 +112,8 @@ class ocs_mapidu_reuniones(osv.osv):
         'localidad_id':fields.many2one('base_map.district','Localidad'),
         'lugar':fields.char('Lugar',size=50),
         'fecha':fields.datetime('Fecha'),
+        'duracion':fields.float('Duracion (horas)'),
+        'descripcion_corta':fields.char('Descripcion (corta)',size=20,required=True),
         'descripcion':fields.text('Descripcion'),
         'asistentes_id':fields.many2many('ocs_mapidu.lideres_sociales','ocs_mapidu_reuniones_lideres_rel','reunion_id','lider_id','Asistentes'),
     }
