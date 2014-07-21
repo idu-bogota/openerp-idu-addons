@@ -13,9 +13,9 @@
 ============================================================-->
 
 <record model="ir.ui.view" id="view_ocs_mapidu_res_partner_form">
-    <field name="name">ocs_mapidu.res_partner.form</field>
-    <field name="model">res.parner</field>
-    <field name="type">form</field>    
+    <field name="name">ocs_mapidu.ciudadano.form</field>
+    <field name="model">ocs_mapidu.ciudadano</field>
+    <field name="type">form</field>
     <field name="arch" type="xml">
         <tree string="Ciudadanos">
             <field name="nombres"/>
@@ -32,24 +32,24 @@
 
 
 <record model="ir.ui.view" id="view_ocs_mapidu_res_partner_tree">
-    <field name="name">ocs_mapidu.res_partner.tree</field>
-    <field name="model">res.parner</field>
-    <field name="type">tree</field>    
+    <field name="name">ocs_mapidu.ciudadano.tree</field>
+    <field name="model">ocs_mapidu.ciudadano</field>
+    <field name="type">tree</field>
     <field name="arch" type="xml">
-    	<tree string="Ciudadanos">
-    		<field name="nombre_completo"/>
-    		<field name="tipo_documento"/>
-    		<field name="documento"/>
-    	</tree>        
+        <tree string="Ciudadanos">
+            <field name="nombre_completo"/>
+            <field name="tipo_documento"/>
+            <field name="documento"/>
+            <field name="telefono_fijo"/>
+        </tree>
     </field>
 </record>
 
 <record model="ir.actions.act_window" id="action_ocs_mapidu_res_partner">
     <field name="name">Ciudadanos</field>
-    <field name="res_model">res.partner</field>
+    <field name="res_model">ocs_mapidu.ciudadano</field>
     <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
-    <field name="context">{'form_view_ref':'ocs_mapidu.view_ocs_mapidu_res_partner_form','tree_view_ref':'ocs_mapidu.view_ocs_mapidu_res_partner_tree'}</field>
 </record>
 
 <menuitem name="Ciudadanos" id="ocs_mapidu_res_partner" parent="ocs_mapidu_reporte_ciudadano"

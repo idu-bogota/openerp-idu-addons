@@ -25,8 +25,7 @@ _logger = logging.getLogger(__name__)
 
 
 class res_partner(osv.osv):
-    _name="res.partner"
-    _inherit="res.partner"
+    _name="ocs_mapidu.ciudadano"
     _rec_name = "documento"
     
     def name_get(self, cr, user, ids, context=None):
@@ -132,7 +131,7 @@ ocs_mapidu_lideres_sociales()
 class ocs_mapidu_problema_social(geo_model.GeoModel):
     _name="ocs_mapidu.problema_social"
     _columns={
-        'ciudadano_id':fields.many2one('res.partner','Ciudadano',required=True),
+        'ciudadano_id':fields.many2one('ocs_mapidu.ciudadano','Ciudadano',required=True),
         'tipo_problema':fields.selection([
                                           ('economico','Economico'),
                                           ('social','Social'),
