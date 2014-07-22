@@ -24,7 +24,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class res_partner(osv.osv):
+class ocs_mapidu_ciudadano(osv.osv):
     _name="ocs_mapidu.ciudadano"
     _rec_name = "documento"
     
@@ -98,7 +98,7 @@ class res_partner(osv.osv):
         ('unique_cc_document_number','unique(tipo_documento,documento)','Este documento ya se encuentra registrado'),
         ('unique_cc_email','unique(email)','El email ya se encuentra registrado'),
     ]
-res_partner()
+ocs_mapidu_ciudadano()
 
 class ocs_mapidu_reuniones(osv.osv):
     """
