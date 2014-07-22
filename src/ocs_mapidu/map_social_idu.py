@@ -120,7 +120,7 @@ ocs_mapidu_reuniones()
 
 class ocs_mapidu_lideres_sociales(osv.osv):
     _name="ocs_mapidu.lideres_sociales"
-    _inherit="res.partner"
+    _inherit="ocs_mapidu.ciudadano"
     _columns = {
         'district_id':fields.many2one('base_map.district','Localidad'),
         'sector':fields.char('Sector al que representa',size=256),
