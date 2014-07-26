@@ -105,8 +105,13 @@ sequence="1" action="action_ocs_mapidu_res_partner"/>
             <notebook>
             <page string="Descripcion">
                 <group colspan="4" col="2">
-                    <field name="descripcion"/>
+                    <field name="ubicacion"/>
                     <field name="shape" widget="geo_edit_map"/>
+                </group>
+            </page>
+            <page string="Descripcion">
+                <group colspan="4" col="2">
+                    <field name="descripcion"/>
                 </group>
             </page>
             <page string="imagen">

@@ -22,7 +22,7 @@ from osv import fields,osv
 from base_geoengine import geo_model
 import logging
 _logger = logging.getLogger(__name__)
-
+from shapely.wkt import dumps,loads
 
 class ocs_mapidu_ciudadano(osv.osv):
     _name="ocs_mapidu.ciudadano"
@@ -130,6 +130,38 @@ ocs_mapidu_lideres_sociales()
 
 class ocs_mapidu_problema_social(geo_model.GeoModel):
     _name="ocs_mapidu.problema_social"
+    
+    def crear_peticion(self,cr,uid,vals,context=None):
+        """
+        Metodo consumido por el web service para crear la peticion
+        recibe el metodo fraccionado en dos pedazos:
+        {ciudadano:{'datos del ciudadano'},
+        {problema_social:{'detalles del problema social'}
+        """
+        id_problema = 0
+        if ('ciudadano' in vals):
+            ciudadano = vals['ciudadano']
+            #Verificar si el ciudadano existe
+            ciudadano_obj = self.pool.get('ocs_mapidu.ciudadano')
+            ids_ciudadano = ciudadano_obj.search(cr,uid,[
+                                                        ('tipo_documento','=',ciudadano['tipo_documento']),
+                                                        ('documento','=',ciudadano['documento'])])
+            id_ciudadano = 0
+            if (len(ids_ciudadano)):
+                id_ciudadano = ids_ciudadano[0]
+                ciudadano_obj.write(cr,uid,id_ciudadano,ciudadano,context)
+            else:
+                id_ciudadano = ciudadano_obj.create(cr,uid,ciudadano,context)
+            if ('problema_social' in vals):
+                problema_social=vals['problema_social']
+                wkt = problema_social["shape"]
+                if ((wkt is not None) or (wkt is not False)):
+                    shape = loads(wkt)
+                    problema_social["shape"]=shape
+                problema_social['ciudadano_id']=id_ciudadano
+                id_problema = self.create(cr,uid,problema_social,context)
+        return id_problema
+    
     _columns={
         'ciudadano_id':fields.many2one('ocs_mapidu.ciudadano','Ciudadano',required=True),
         'tipo_problema':fields.selection([
@@ -148,6 +180,7 @@ class ocs_mapidu_problema_social(geo_model.GeoModel):
                                                     ],
                                                    'Tipo de Problema de Movilidad'
                                                    ),
+        'ubicacion':fields.text('Descripcion sobre la Ubicación'),
         'imagen':fields.binary('Imagen'),
         'descripcion':fields.text('Descripción',required=True),
         'shape':fields.geo_point('Ubicacion',readonly=False),
