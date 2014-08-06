@@ -23,6 +23,7 @@ from base_geoengine import geo_model
 import logging
 _logger = logging.getLogger(__name__)
 from shapely.wkt import dumps,loads
+import geojson 
 
 class ocs_mapidu_ciudadano(osv.osv):
     _name="ocs_mapidu.ciudadano"
@@ -83,13 +84,14 @@ class ocs_mapidu_ciudadano(osv.osv):
                                            ('cc','Cedula de Ciudadanía'),
                                            ('ti','Tarjeta de Identidad'),
                                            ('ce','Cedula de Extrangería'),
+                                           ('pasaporte','Pasaporte'),
                                            ('nit','NIT'),
                                            ]
                                           ,'Tipo de Documento',required=True),
         'documento':fields.char('Documento',size=50,required=True),
         'email':fields.char('E-mail',size=256,),
-        'telefono_fijo':fields.integer('Telefono fijo'),
-        'celular':fields.integer('Celular'),
+        'telefono_fijo':fields.char('Telefono fijo',size=30),
+        'celular':fields.char('Celular',size=30),
         'direccion':fields.char('Dirección',size=512,),  
         'nombre_completo':fields.function(_get_full_name,type='char',string='Nombre Completo',method=True),
     }
@@ -138,28 +140,38 @@ class ocs_mapidu_problema_social(geo_model.GeoModel):
         {ciudadano:{'datos del ciudadano'},
         {problema_social:{'detalles del problema social'}
         """
-        id_problema = 0
-        if ('ciudadano' in vals):
-            ciudadano = vals['ciudadano']
-            #Verificar si el ciudadano existe
-            ciudadano_obj = self.pool.get('ocs_mapidu.ciudadano')
-            ids_ciudadano = ciudadano_obj.search(cr,uid,[
-                                                        ('tipo_documento','=',ciudadano['tipo_documento']),
-                                                        ('documento','=',ciudadano['documento'])])
-            id_ciudadano = 0
-            if (len(ids_ciudadano)):
-                id_ciudadano = ids_ciudadano[0]
-                ciudadano_obj.write(cr,uid,id_ciudadano,ciudadano,context)
-            else:
-                id_ciudadano = ciudadano_obj.create(cr,uid,ciudadano,context)
-            if ('problema_social' in vals):
-                problema_social=vals['problema_social']
-                wkt = problema_social["shape"]
-                if ((wkt is not None) or (wkt is not False)):
-                    shape = loads(wkt)
-                    problema_social["shape"]=shape
-                problema_social['ciudadano_id']=id_ciudadano
-                id_problema = self.create(cr,uid,problema_social,context)
+        ciudadano = {
+           'nombres':vals['nombres'],
+           'apellidos':vals['apellidos'],
+           'documento':vals['documento'],
+           'tipo_documento':vals['tipo_documento'],
+           'email':vals['email'],
+           'telefono_fijo':vals['telefono_fijo'],
+           'celular':vals['celular'],
+           'direccion':vals['direccion'],
+         }
+        ciudadano_obj = self.pool.get('ocs_mapidu.ciudadano')
+        ids_ciudadano = ciudadano_obj.search(cr,uid,[
+                                            ('tipo_documento','=',ciudadano['tipo_documento']),
+                                            ('documento','=',ciudadano['documento'])])
+        id_ciudadano = 0
+        if (len(ids_ciudadano)):
+            id_ciudadano = ids_ciudadano[0]
+            ciudadano_obj.write(cr,uid,id_ciudadano,ciudadano,context)
+        else:
+            id_ciudadano = ciudadano_obj.create(cr,uid,ciudadano,context)
+        str_shape = vals['shape']
+        shape = geojson.loads(str_shape)
+        problema_social = {
+            'ciudadano_id':id_ciudadano,
+            'tipo_problema':vals['tipo_problema'],
+            'tipo_problema_movilidad':vals['tipo_problema_movilidad'],
+            'ubicacion':vals['ubicacion'],
+            'descripcion':vals['descripcion'],
+            'shape':str_shape,
+            'imagen':vals['attachment']
+        }
+        id_problema = self.create(cr,uid,problema_social,context)
         return id_problema
     
     _columns={
