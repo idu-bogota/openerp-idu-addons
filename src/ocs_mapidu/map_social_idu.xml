@@ -37,8 +37,8 @@
     <field name="type">tree</field>
     <field name="arch" type="xml">
         <tree string="Ciudadanos">
-            <field name="nombre_completo"/>
-            <field name="tipo_documento"/>
+            <field name="nombres"/>
+            <field name="apellidos"/>
             <field name="documento"/>
             <field name="telefono_fijo"/>
         </tree>

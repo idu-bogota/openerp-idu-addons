@@ -64,19 +64,6 @@ class ocs_mapidu_ciudadano(osv.osv):
                     limit=limit, context=context)
         return self.name_get(cr, user, ids, context)
     
-    
-    def _get_full_name(self,cr,uid,ids,fieldname,arg,context=None):
-        """Get Full Name of Citizen """
-        res = {}
-        for citizen in self.browse(cr, uid, ids, context = context):
-            if citizen.apellidos == False and citizen.nombres == False:
-                res[citizen.id] = "-"
-            elif citizen.nombres == False:
-                res[citizen.id] = "{0}".format(citizen.nombres)
-            else:
-                res[citizen.id] = "{0},{1}".format(citizen.apellidos, citizen.nombres)
-        return  res
-    
     _columns = {
         'nombres':fields.char('Nombres',size=256,required=True),
         'apellidos':fields.char('Apellidos',size=256,required=True),
@@ -93,7 +80,6 @@ class ocs_mapidu_ciudadano(osv.osv):
         'telefono_fijo':fields.char('Telefono fijo',size=30),
         'celular':fields.char('Celular',size=30),
         'direccion':fields.char('Dirección',size=512,),  
-        'nombre_completo':fields.function(_get_full_name,type='char',string='Nombre Completo',method=True),
     }
 
     _sql_constraints = [
@@ -140,7 +126,10 @@ class ocs_mapidu_problema_social(geo_model.GeoModel):
         {ciudadano:{'datos del ciudadano'},
         {problema_social:{'detalles del problema social'}
         """
-        ciudadano = {
+        result = {}
+        try:
+            
+            ciudadano = {
            'nombres':vals['nombres'],
            'apellidos':vals['apellidos'],
            'documento':vals['documento'],
@@ -149,32 +138,37 @@ class ocs_mapidu_problema_social(geo_model.GeoModel):
            'telefono_fijo':vals['telefono_fijo'],
            'celular':vals['celular'],
            'direccion':vals['direccion'],
-         }
-        ciudadano_obj = self.pool.get('ocs_mapidu.ciudadano')
-        ids_ciudadano = ciudadano_obj.search(cr,uid,[
+           }
+            ciudadano_obj = self.pool.get('ocs_mapidu.ciudadano')
+            ids_ciudadano = ciudadano_obj.search(cr,uid,[
                                             ('tipo_documento','=',ciudadano['tipo_documento']),
                                             ('documento','=',ciudadano['documento'])])
-        id_ciudadano = 0
-        if (len(ids_ciudadano)):
-            id_ciudadano = ids_ciudadano[0]
-            ciudadano_obj.write(cr,uid,id_ciudadano,ciudadano,context)
-        else:
-            id_ciudadano = ciudadano_obj.create(cr,uid,ciudadano,context)
-        str_shape = vals['shape']
-        shape = geojson.loads(str_shape)
-        problema_social = {
-            'ciudadano_id':id_ciudadano,
-            'tipo_problema':vals['tipo_problema'],
-            'tipo_problema_movilidad':vals['tipo_problema_movilidad'],
-            'ubicacion':vals['ubicacion'],
-            'descripcion':vals['descripcion'],
-            'shape':str_shape,
-            'imagen':vals['attachment']
-        }
-        id_problema = self.create(cr,uid,problema_social,context)
-        return id_problema
+            id_ciudadano = 0
+            if (len(ids_ciudadano)):
+                id_ciudadano = ids_ciudadano[0]
+                ciudadano_obj.write(cr,uid,id_ciudadano,ciudadano,context)
+            else:
+                id_ciudadano = ciudadano_obj.create(cr,uid,ciudadano,context)
+            str_shape = vals['shape']
+            problema_social = {
+                    'ciudadano_id':id_ciudadano,
+                    'tipo_problema':vals['tipo_problema'],
+                    'tipo_problema_movilidad':vals['tipo_problema_movilidad'],
+                    'ubicacion':vals['ubicacion'],
+                    'descripcion':vals['descripcion'],
+                    'shape':str_shape,
+                    'imagen':vals['attachment']
+                    }
+            id_problema = self.create(cr,uid,problema_social,context)
+            result['status']='success'
+            result['result']={'id':id_problema}
+        except Exception as e:
+            result['message']=str(e)
+            result['status']='error'
+        return result
     
     _columns={
+        'create_date':fields.datetime('Fecha de registro'),
         'ciudadano_id':fields.many2one('ocs_mapidu.ciudadano','Ciudadano',required=True),
         'tipo_problema':fields.selection([
                                           ('economico','Economico'),
