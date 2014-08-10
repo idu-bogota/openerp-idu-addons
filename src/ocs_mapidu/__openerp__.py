@@ -31,7 +31,6 @@
                         """,
         "depends" : ['base',
                      'base_geoengine',
-                     'base_map',
                      ],
         "init_xml" : [
                       'map_social_idu.xml',
@@ -39,6 +38,8 @@
         "demo_xml" : [],
         "update_xml" : [
                         'map_social_idu.xml',
+                        'security/ocs_mapidu_security.xml',
+                        'security/ir.model.access.csv',
                         ],
         "installable": True
 }

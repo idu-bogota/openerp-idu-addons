@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--=============================================================================
+                Group Definitions
+        ;=============================================================================-->
+        <record id="group_ocs_mapidu_coordinador" model="res.groups">
+            <field name="name">Cartografía Social / Coordinador</field>
+        </record>
+        <!--=============================================================================
+                Menu Access
+        ;============================================================================= -->
+
+        <record model="ir.ui.menu" id="ocs_mapidu_main">
+                <field eval="[(4, ref('group_ocs_mapidu_coordinador'))]" name="groups_id"/>
+        </record>
+
+        <!-- =============================================================================
+                                Menu Constraints
+            ;============================================================================= -->
+    </data>
+</openerp>
