@@ -38,7 +38,8 @@
         Roads
         """,
         "depends" : ['base',
-                     'base_geoengine'
+                     'base_geoengine',
+                     'base_map'
                      ],
         "init_xml" : ['base_map.xml'],
         "demo_xml" : [],
