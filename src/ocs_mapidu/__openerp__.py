@@ -31,6 +31,7 @@
                         """,
         "depends" : ['base',
                      'base_geoengine',
+                     'base_map',
                      ],
         "init_xml" : [
                       'map_social_idu.xml',
