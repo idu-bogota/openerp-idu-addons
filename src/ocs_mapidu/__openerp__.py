@@ -19,7 +19,7 @@
 #
 ##############################################################################
 {
-        "name" : "Bridge Management System",
+        "name" : "Sistema de Gestión de Cartografía Social",
         "version" : "0.1",
         "author" : "Jorge Hernandez",
         "website" : "www.idu.gov.co",
