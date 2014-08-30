@@ -167,7 +167,22 @@ class ocs_mapidu_problema_social(geo_model.GeoModel):
             result['status']='error'
         return result
     
-    _columns={
+    def _correct_problema_social(self,vals):
+        if ('tipo_problema' in vals):
+            tipo_problema = vals['tipo_problema']
+            if (tipo_problema != 'movilidad'):
+                vals['tipo_problema_movilidad']=False
+        return vals
+    
+    def create(self,cr,uid,vals,context = None):
+        vals = self._correct_problema_social(vals)
+        return super(ocs_mapidu_problema_social,self).create(cr,uid,vals,context=context)
+
+    def write (self,cr,uid,ids,vals,context = None):
+        vals = self._correct_problema_social(vals)
+        return super(ocs_mapidu_problema_social,self).write(cr,uid,ids,vals,context=context)
+
+    _columns = { 
         'create_date':fields.datetime('Fecha de registro'),
         'ciudadano_id':fields.many2one('ocs_mapidu.ciudadano','Ciudadano',required=True),
         'tipo_problema':fields.selection([

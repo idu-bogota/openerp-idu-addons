@@ -4,8 +4,8 @@
 <menuitem name="Cartografia Social" id="ocs_mapidu_main"/>
 <menuitem name="Reporte Ciudadano" id="ocs_mapidu_reporte_ciudadano" parent="ocs_mapidu_main"/>
 <menuitem name="Gestion de Documentos" id="ocs_mapidu_gestion_documental" parent="ocs_mapidu_main"/>
-<menuitem name="Administracion" id="ocs_mapidu_administracion" parent="ocs_mapidu_main"/>
-<menuitem name="Ajendamiento JAL" id="ocs_mapidu_agendamientojal" parent="ocs_mapidu_main"/>
+<menuitem name="Administración" id="ocs_mapidu_administracion" parent="ocs_mapidu_main"/>
+<menuitem name="Agendamiento JAL" id="ocs_mapidu_agendamientojal" parent="ocs_mapidu_main"/>
 
 
 <!-- ============================================================
@@ -100,7 +100,7 @@ sequence="1" action="action_ocs_mapidu_res_partner"/>
         <form string="Ciudadanos">
             <field name="ciudadano_id"/>
             <field name="tipo_problema"/>
-            <field name="tipo_problema_movilidad"/>
+            <field name="tipo_problema_movilidad" attrs="{'invisible':[('tipo_problema','!=','movilidad')]}"/>
             <group colspan="4" col="4">
             <notebook>
             <page string="Descripcion">
